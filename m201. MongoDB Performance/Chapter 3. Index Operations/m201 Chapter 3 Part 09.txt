@@ -1,0 +1,101 @@
+Now, most of these tools can be run by you or you can just review the published results.
+
+That's all fine.
+
+You can pick a tool of choice and run tests on MongoDB or any other database.
+
+But let's make sure that you understand the conditions by which those tools and those tests are going to be run.
+
+Again, majority of the tooling for benchmarking existing today had been built with relational systems in mind.
+
+And those conditions not always apply to MongoDB and other modern databases.
+
+Now, if you're only interested on doing a small set of testing using read and write ratios from MongoDB, my good friend, John Page, this young, attractive fellow over here, built the POC driver.
+
+It's a small project written in Java that allows you to put to test your MondoDB cluster to a set of conditions and a set of different variations that you can set by yourself.
+
+All of the previous are great.
+
+You can run it yourself.
+
+You can just run the tests which are genetically available online, or even use John Page's POC driver.
+
+But sometimes they are not really what we need, perhaps because they do not capture the essence of your use case or they are missing out on some specific functionality of MongoDB that you are interested in.
+
+But let's not forget about benchmarking anti-patterns.
+
+Because if you're running you're testing yourself, let's make sure you do it right.
+
+Now, those anti-patterns can be things like database swap replace.
+
+Let's say, for example, that we are comparing MongoDB with a relational system where your relational system would be something like this where you have some sort of relations and tables and the relationships between those tables.
+
+Now, if you are expecting to replace the exact same schema from your relational world to MongoDB collection world, probably a one-by-one one relationship between tables and collections might not be the best way to go forward.
+
+This may not be reflecting MongoDB's capabilities and, therefore, will not be a truly comparison between two different systems.
+
+You need to think a little bit more about how you're going to operate data, how are you going to insert, how are you going to read, how you're going to structure your documents.
+
+All of that will be a great deal of concern if you do not do so.
+
+Also, using MongoDB tools to test performance of MongoDB is probably not a great idea.
+
+If you're building your application on top of the mongo shell, for example, where all requests of your code invoke the mongo shell and perform an operation, then yes.
+
+Then that will be the ideal scenario to test the performance using the mongo shell.
+
+And by that we mean by testing these sort of things where you can run some sort of cycle inside of mongo shell, insert a bunch of documents, and then you get a response at the end saying how much time did it execute.
+
+If that's your use case, where you invoke the mongo shell from your application, then go ahead.
+
+That's a good way of benchmarking.
+
+But I'm not really sure that that's exactly what you want.
+
+Also, using mongoimports to test write response of your MondoDB installation is also kind of dubious in terms of what you are really trying to achieve there.
+
+Your laptop might be great.
+
+I'm pretty sure it's a nice machine with a bunch of stickers on it and all of that.
+
+But assuming that any performance testing that you run from your laptop, aside from any unit tests or development testing that you might be interested on, might not be the best way to assess if MongoDB or any database by that matter actually performs accordingly with your expectations.
+
+Please use a purpose server to run your tests.
+
+And, finally, using MongoDB out-of-the-box parameters probably is not what you're going to find in production.
+
+That means that if you're going to run your application with MongoDB installed on it and the only thing that you do is download the binary and boot it up, that's great.
+
+That's how MongoDB works.
+
+But you might want to consider things like authentication.
+
+Now you may want to consider, how do you going to be dealing with the high availability.
+
+And testing, especially benchmarking for performance without those conditions in place, will be shooting yourselves in the foot.
+
+So be careful about that.
+
+And that drives to the benchmarking conditions.
+
+Make sure you're fair, you're fair in terms of the comparisons that you do concerning the hardware that you're utilizing the type of clients and the type of operations that you're doing, and the kind of load that you're going to be subjecting your systems to.
+
+Either different systems or different versions of the systems that you are testing, they should have a fair ground in all those three dimensions.
+
+Let's recap this lesson.
+
+So, in this lesson, we talked about the different types of benchmarking that you can do, either using publicly-available data sets and tools or building your own.
+
+There's different types like low-level, high-level, distributed, load, a bunch of different ones.
+
+You can even do your own specific benchmarking.
+
+There's obviously different public tools available out there that benchmark databases.
+
+But make sure that you are using the one that is more suited to the database that you are interested in testing.
+
+And don't forget about the anti-patterns of MongoDB benchmarking.
+
+These are very, very important to for you to get a truthful view of how the system is actually going to be behaving.
+
+And that's all we have for basic benchmarking.

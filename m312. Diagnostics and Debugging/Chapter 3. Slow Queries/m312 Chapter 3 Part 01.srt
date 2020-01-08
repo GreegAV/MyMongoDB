@@ -1,0 +1,779 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.470
+In this lesson, we will look
+into a common issue regarding
+
+3
+00:00:03.470 --> 00:00:04.850
+applications.
+
+4
+00:00:04.850 --> 00:00:07.820
+Response time degradation.
+
+5
+00:00:07.820 --> 00:00:10.100
+What we mean is that
+the application response
+
+6
+00:00:10.100 --> 00:00:13.490
+time, measured generally
+in milliseconds,
+
+7
+00:00:13.490 --> 00:00:17.331
+will become higher
+as time goes by.
+
+8
+00:00:17.331 --> 00:00:18.830
+And there's a couple
+of factors that
+
+9
+00:00:18.830 --> 00:00:22.740
+will drive you to get into
+a situation like this.
+
+10
+00:00:22.740 --> 00:00:24.650
+So in this lesson,
+we will look into how
+
+11
+00:00:24.650 --> 00:00:28.880
+to determine the culprits,
+how to fix them, and more
+
+12
+00:00:28.880 --> 00:00:32.380
+importantly, how to avoid them.
+
+13
+00:00:32.380 --> 00:00:35.440
+There are a few scenarios
+that may lead to response time
+
+14
+00:00:35.440 --> 00:00:36.470
+degradation.
+
+15
+00:00:36.470 --> 00:00:40.500
+There are a few culprits that
+we might have to look into.
+
+16
+00:00:40.500 --> 00:00:42.720
+Those scenarios can
+be, the working set
+
+17
+00:00:42.720 --> 00:00:47.670
+exceeding RAM, queries taking
+longer as the data set grows,
+
+18
+00:00:47.670 --> 00:00:51.270
+growing pool of clients,
+unbounded array growth, or even
+
+19
+00:00:51.270 --> 00:00:53.520
+excessive number of indexes.
+
+20
+00:00:53.520 --> 00:00:55.680
+We're going to be looking
+to a couple of those--
+
+21
+00:00:55.680 --> 00:00:58.320
+working set exceeding
+RAM and queries taking
+
+22
+00:00:58.320 --> 00:01:00.504
+longer as the data set grows.
+
+23
+00:01:00.504 --> 00:01:01.920
+Those are the two
+more common ones
+
+24
+00:01:01.920 --> 00:01:05.340
+that we see coming in
+to our support queue.
+
+25
+00:01:05.340 --> 00:01:08.940
+When are working sets,
+which compromises
+
+26
+00:01:08.940 --> 00:01:11.790
+the data set that is most
+often accessed by our client
+
+27
+00:01:11.790 --> 00:01:16.760
+application, requires more RAM
+than the server has available,
+
+28
+00:01:16.760 --> 00:01:19.530
+or configured, one of
+the possible symptoms
+
+29
+00:01:19.530 --> 00:01:22.290
+is that the application
+becomes slower over time
+
+30
+00:01:22.290 --> 00:01:24.480
+and the response time
+of incoming requests
+
+31
+00:01:24.480 --> 00:01:26.340
+takes longer and longer.
+
+32
+00:01:26.340 --> 00:01:27.910
+Let's see an example.
+
+33
+00:01:27.910 --> 00:01:30.570
+Let's start by creating our
+folder our dbpath, which
+
+34
+00:01:30.570 --> 00:01:32.700
+is going to be our rtd.
+
+35
+00:01:32.700 --> 00:01:35.952
+I'm using our vacant
+box to do this,
+
+36
+00:01:35.952 --> 00:01:37.410
+so I recommend you
+guys if you want
+
+37
+00:01:37.410 --> 00:01:39.270
+to follow along to do the same.
+
+38
+00:01:39.270 --> 00:01:43.470
+So in this dbpath we are going
+to be launching a new MongoD.
+
+39
+00:01:43.470 --> 00:01:46.870
+Now, within the
+handouts of this lesson
+
+40
+00:01:46.870 --> 00:01:51.420
+you will find this
+file, which should
+
+41
+00:01:51.420 --> 00:01:53.760
+be placed under
+the shared folder,
+
+42
+00:01:53.760 --> 00:01:57.180
+and it's called rtd.cfg.
+
+43
+00:01:57.180 --> 00:01:59.640
+And you can see there are
+some instructions on how
+
+44
+00:01:59.640 --> 00:02:01.900
+to run our MongoD.
+
+45
+00:02:01.900 --> 00:02:05.100
+Now, as you all know by
+now, what we need to do
+
+46
+00:02:05.100 --> 00:02:07.320
+is, basically, call
+our MongoD, pass along
+
+47
+00:02:07.320 --> 00:02:09.870
+the file, which
+should be on shared,
+
+48
+00:02:09.870 --> 00:02:13.380
+and it should be
+named rtd-config file.
+
+49
+00:02:13.380 --> 00:02:14.700
+There we go.
+
+50
+00:02:14.700 --> 00:02:16.620
+Once this is up
+and running we will
+
+51
+00:02:16.620 --> 00:02:21.210
+be able to see that we have
+a clear MongoD up and running
+
+52
+00:02:21.210 --> 00:02:22.200
+in our system.
+
+53
+00:02:22.200 --> 00:02:23.340
+And there it is.
+
+54
+00:02:23.340 --> 00:02:26.560
+Now, if you look closely
+into this rtd config file,
+
+55
+00:02:26.560 --> 00:02:28.230
+you will see that
+we are setting are
+
+56
+00:02:28.230 --> 00:02:32.160
+wiredTiger size to a
+very small value, only
+
+57
+00:02:32.160 --> 00:02:35.070
+0.25% of a gigabyte.
+
+58
+00:02:35.070 --> 00:02:39.840
+Roughly, or exactly, 256
+megabytes of cache size.
+
+59
+00:02:39.840 --> 00:02:42.270
+Now what we are trying
+to simulate here
+
+60
+00:02:42.270 --> 00:02:46.262
+is when you do not have enough
+resources for your MongoD.
+
+61
+00:02:46.262 --> 00:02:48.840
+And we will be loading
+some large data
+
+62
+00:02:48.840 --> 00:02:51.180
+set that will be requiring
+a little bit more
+
+63
+00:02:51.180 --> 00:02:54.720
+than this to operate correctly.
+
+64
+00:02:54.720 --> 00:02:57.600
+Now that we have our MongoD
+up and running, let's go ahead
+
+65
+00:02:57.600 --> 00:02:58.950
+and import a data set.
+
+66
+00:02:58.950 --> 00:03:00.750
+The londonbikes data set.
+
+67
+00:03:00.750 --> 00:03:02.790
+You should also have
+access to that data
+
+68
+00:03:02.790 --> 00:03:05.750
+set through the
+handouts of this lesson.
+
+69
+00:03:05.750 --> 00:03:07.560
+Once I put it up
+and running, you'll
+
+70
+00:03:07.560 --> 00:03:09.900
+see that I'll start
+restoring that data.
+
+71
+00:03:09.900 --> 00:03:11.430
+Since we configured
+this instance
+
+72
+00:03:11.430 --> 00:03:15.870
+to run only on 256
+megabytes of cache size,
+
+73
+00:03:15.870 --> 00:03:19.240
+this may take longer
+than expected.
+
+74
+00:03:19.240 --> 00:03:22.290
+In normal conditions,
+with a bit more memory
+
+75
+00:03:22.290 --> 00:03:24.270
+to allow us to
+operate correctly,
+
+76
+00:03:24.270 --> 00:03:28.620
+this process should take a
+very, very small amount of time.
+
+77
+00:03:28.620 --> 00:03:31.100
+Or not such a big
+amount of time.
+
+78
+00:03:31.100 --> 00:03:34.560
+But given the fact that we
+are using a very tiny amount
+
+79
+00:03:34.560 --> 00:03:39.330
+of memory, the minimum
+that MongoD requires,
+
+80
+00:03:39.330 --> 00:03:41.280
+this will take a
+little bit longer.
+
+81
+00:03:41.280 --> 00:03:43.630
+How can we detect that into
+a production environment?
+
+82
+00:03:43.630 --> 00:03:48.400
+Let's go into a different tab
+and let's connect to this box.
+
+83
+00:03:48.400 --> 00:03:52.140
+Now, if we connect to this
+machine using our mongostat
+
+84
+00:03:52.140 --> 00:03:55.000
+we will see some interesting
+data coming along.
+
+85
+00:03:55.000 --> 00:03:56.790
+There's a bunch of
+information here
+
+86
+00:03:56.790 --> 00:03:59.520
+that I might not be
+so much interested in,
+
+87
+00:03:59.520 --> 00:04:04.800
+but I'm starting to see that
+my used memory is pretty
+
+88
+00:04:04.800 --> 00:04:09.090
+high, in my dirty memory,
+the amount which is currently
+
+89
+00:04:09.090 --> 00:04:11.310
+used, pretty low.
+
+90
+00:04:11.310 --> 00:04:12.960
+And this might be
+an indicator that we
+
+91
+00:04:12.960 --> 00:04:15.630
+don't have enough
+space for accommodating
+
+92
+00:04:15.630 --> 00:04:17.790
+all the data set that we need.
+
+93
+00:04:17.790 --> 00:04:20.610
+But let's make this a
+little bit more streamlined.
+
+94
+00:04:20.610 --> 00:04:22.170
+With this instruction
+over here we
+
+95
+00:04:22.170 --> 00:04:24.720
+are trimming out only the
+fields in the output that we
+
+96
+00:04:24.720 --> 00:04:26.100
+are really interested in.
+
+97
+00:04:26.100 --> 00:04:29.110
+We are going to be looking to
+the time, the amount of memory
+
+98
+00:04:29.110 --> 00:04:30.180
+which is dirty--
+
+99
+00:04:30.180 --> 00:04:33.870
+or the amount of memory which
+is currently being used--
+
+100
+00:04:33.870 --> 00:04:35.540
+the number of inserts,
+the queues for
+
+101
+00:04:35.540 --> 00:04:39.750
+reads and writes, and then the
+active readers and writers.
+
+102
+00:04:39.750 --> 00:04:43.290
+Once we do this we can see that
+we have more sane information
+
+103
+00:04:43.290 --> 00:04:44.610
+in front of our eyes.
+
+104
+00:04:44.610 --> 00:04:49.720
+And we can see here that our
+dirty amount of information
+
+105
+00:04:49.720 --> 00:04:51.930
+and our used amount
+of information
+
+106
+00:04:51.930 --> 00:04:54.210
+is quite off balance.
+
+107
+00:04:54.210 --> 00:04:59.100
+Generally, what we see is
+that this value of used memory
+
+108
+00:04:59.100 --> 00:05:03.189
+is quite smaller than it
+is showing right here.
+
+109
+00:05:03.189 --> 00:05:04.980
+And it's much more
+balanced with the amount
+
+110
+00:05:04.980 --> 00:05:06.540
+of dirty information.
+
+111
+00:05:06.540 --> 00:05:09.540
+Dirty means, all the pages,
+or memory allocation,
+
+112
+00:05:09.540 --> 00:05:11.890
+that is constantly being used.
+
+113
+00:05:11.890 --> 00:05:15.510
+So if we are doing a bunch
+of inserts, around 8,000
+
+114
+00:05:15.510 --> 00:05:20.340
+or between 8,000 and 7,000,
+and we are only dirtying up,
+
+115
+00:05:20.340 --> 00:05:23.490
+let's say, this small
+amount, but we're still
+
+116
+00:05:23.490 --> 00:05:27.390
+using a quite significant
+amount allocated--
+
+117
+00:05:27.390 --> 00:05:31.560
+meaning that we are using this
+amount of information in RAM--
+
+118
+00:05:31.560 --> 00:05:34.650
+there's probably,
+or more likely,
+
+119
+00:05:34.650 --> 00:05:38.670
+the indicator is that our
+total data set is exceeding
+
+120
+00:05:38.670 --> 00:05:40.230
+the amount of memory available.
+
+121
+00:05:40.230 --> 00:05:43.370
+We know this because we are
+simulating that situation.
+
+122
+00:05:43.370 --> 00:05:45.450
+But in a production
+environment if you would not
+
+123
+00:05:45.450 --> 00:05:48.240
+know exactly what was
+going on and if we just
+
+124
+00:05:48.240 --> 00:05:51.800
+see a spike in the response
+time per application
+
+125
+00:05:51.800 --> 00:05:54.450
+that will probably be the cause.
+
+126
+00:05:54.450 --> 00:05:58.050
+If we don't have enough memory
+to allocate all of our data
+
+127
+00:05:58.050 --> 00:06:00.870
+sets this will imply
+that we are paging out
+
+128
+00:06:00.870 --> 00:06:02.200
+a lot of information.
+
+129
+00:06:02.200 --> 00:06:06.030
+So the actual amount of
+dirty pages coming in
+
+130
+00:06:06.030 --> 00:06:08.160
+is not being able
+to be allocated
+
+131
+00:06:08.160 --> 00:06:11.555
+on our total amount of
+memory, and therefore, we
+
+132
+00:06:11.555 --> 00:06:14.280
+will need to page a
+bunch of information
+
+133
+00:06:14.280 --> 00:06:17.850
+out to be able to accommodate
+new incoming data.
+
+134
+00:06:17.850 --> 00:06:21.870
+We can also see that from
+our queues and active readers
+
+135
+00:06:21.870 --> 00:06:25.380
+and writers if we don't
+have a lot of pending jobs
+
+136
+00:06:25.380 --> 00:06:29.820
+to do it means that our
+system is actually quite idle.
+
+137
+00:06:29.820 --> 00:06:31.830
+It just processes
+everything that it needs
+
+138
+00:06:31.830 --> 00:06:34.020
+to process, no big problem.
+
+139
+00:06:34.020 --> 00:06:36.720
+The problem here is that
+the response time taken back
+
+140
+00:06:36.720 --> 00:06:39.390
+to the client and say, OK,
+I got that and I read it,
+
+141
+00:06:39.390 --> 00:06:41.760
+or I wrote it.
+
+142
+00:06:41.760 --> 00:06:43.860
+It's taking a lot
+more time because we
+
+143
+00:06:43.860 --> 00:06:47.730
+need to make space in our
+memory to actually allocate
+
+144
+00:06:47.730 --> 00:06:51.180
+the memory, or the data, which
+is incoming to the server.
+
+145
+00:06:51.180 --> 00:06:54.360
+Now, if we go back and shut down
+the server in a controlled way
+
+146
+00:06:54.360 --> 00:06:56.670
+by emitting the shut
+down server command
+
+147
+00:06:56.670 --> 00:07:00.840
+and we edit our
+shared config file,
+
+148
+00:07:00.840 --> 00:07:06.450
+and raise the level of this
+cache size to two gigabytes,
+
+149
+00:07:06.450 --> 00:07:10.260
+and we run again, or
+relaunch back our MongoD,
+
+150
+00:07:10.260 --> 00:07:13.680
+and try to reload the
+information that we
+
+151
+00:07:13.680 --> 00:07:15.210
+got before--
+
+152
+00:07:15.210 --> 00:07:18.192
+the same exact data sets, we
+are actually going to say,
+
+153
+00:07:18.192 --> 00:07:19.650
+we are going to
+drop it so we don't
+
+154
+00:07:19.650 --> 00:07:24.450
+have any errors of, for
+example, unique key violations--
+
+155
+00:07:24.450 --> 00:07:27.870
+And if we look back into
+our mongostat again,
+
+156
+00:07:27.870 --> 00:07:30.150
+we start seeing a completely
+different scenario
+
+157
+00:07:30.150 --> 00:07:33.900
+where the amount of used data
+and the amount of dirty data
+
+158
+00:07:33.900 --> 00:07:36.810
+are pretty much aligned.
+
+159
+00:07:36.810 --> 00:07:40.410
+And also as you can see from
+this table here indicating
+
+160
+00:07:40.410 --> 00:07:44.070
+amount of inserts per second
+that we might be getting,
+
+161
+00:07:44.070 --> 00:07:46.150
+which we already
+finished for example,
+
+162
+00:07:46.150 --> 00:07:48.930
+it's a clear indicator
+that things went way,
+
+163
+00:07:48.930 --> 00:07:51.770
+way faster than before.

@@ -1,0 +1,261 @@
+
+1
+00:00:00.000 --> 00:00:00.090
+
+
+2
+00:00:00.090 --> 00:00:01.950
+One of the cool new
+features of Compass
+
+3
+00:00:01.950 --> 00:00:05.550
+is the ability to see real
+time performance statistics
+
+4
+00:00:05.550 --> 00:00:07.154
+for the node I'm connected to.
+
+5
+00:00:07.154 --> 00:00:08.820
+And so if I click on
+the Performance tab
+
+6
+00:00:08.820 --> 00:00:10.740
+up at the top
+here, what I'll see
+
+7
+00:00:10.740 --> 00:00:13.890
+is I actually get four
+charts presented back
+
+8
+00:00:13.890 --> 00:00:16.320
+to me in the interface
+that represent
+
+9
+00:00:16.320 --> 00:00:19.980
+key metrics that are occurring
+on the MongoDB server
+
+10
+00:00:19.980 --> 00:00:20.910
+right now.
+
+11
+00:00:20.910 --> 00:00:22.680
+And so you can see
+in the top chart here
+
+12
+00:00:22.680 --> 00:00:25.040
+we actually have an
+Operations chart.
+
+13
+00:00:25.040 --> 00:00:28.210
+It's made up of inserts,
+queries, updates,
+
+14
+00:00:28.210 --> 00:00:30.600
+deletes, commands,
+and get mores.
+
+15
+00:00:30.600 --> 00:00:33.360
+And then we have a chart that
+represents read and write
+
+16
+00:00:33.360 --> 00:00:37.950
+load on the server plus any
+network load or memory usage
+
+17
+00:00:37.950 --> 00:00:39.090
+on the machine.
+
+18
+00:00:39.090 --> 00:00:42.990
+On the right-hand side here
+what we see is two tables.
+
+19
+00:00:42.990 --> 00:00:46.080
+One represents the hottest
+collections in the server
+
+20
+00:00:46.080 --> 00:00:48.180
+right now, and we'll
+see for example
+
+21
+00:00:48.180 --> 00:00:51.270
+that actually a MongoDB
+database and fan club
+
+22
+00:00:51.270 --> 00:00:54.690
+collection is at 0% usage.
+
+23
+00:00:54.690 --> 00:00:57.285
+This is a test box and
+there's no traffic going on
+
+24
+00:00:57.285 --> 00:00:58.900
+on this machine right now.
+
+25
+00:00:58.900 --> 00:01:02.370
+But if there were you would see
+a percentage increase of read
+
+26
+00:01:02.370 --> 00:01:05.489
+and write traffic
+displayed on this bar here.
+
+27
+00:01:05.489 --> 00:01:08.110
+If there are any slow operations
+going on on the server,
+
+28
+00:01:08.110 --> 00:01:10.080
+they'll be listed here, too.
+
+29
+00:01:10.080 --> 00:01:12.990
+And what we effectively
+see is the output
+
+30
+00:01:12.990 --> 00:01:17.700
+from DB dot current up, which is
+a core server internal command
+
+31
+00:01:17.700 --> 00:01:21.870
+that you can run to get an
+understanding of any operations
+
+32
+00:01:21.870 --> 00:01:24.600
+that are occurring at
+that time on the server.
+
+33
+00:01:24.600 --> 00:01:27.600
+And they'll be displayed
+here in a table form,
+
+34
+00:01:27.600 --> 00:01:30.480
+and you'll be able to see
+the type of operation,
+
+35
+00:01:30.480 --> 00:01:36.360
+whether it's a query or a
+insert, and the operation ID,
+
+36
+00:01:36.360 --> 00:01:39.420
+and specifically what
+the operation is.
+
+37
+00:01:39.420 --> 00:01:41.640
+You'll notice that the
+data in these charts
+
+38
+00:01:41.640 --> 00:01:43.080
+moves fairly quickly.
+
+39
+00:01:43.080 --> 00:01:46.860
+These charts represent
+roughly about 30-second window
+
+40
+00:01:46.860 --> 00:01:48.570
+of metric collection.
+
+41
+00:01:48.570 --> 00:01:51.810
+Now it may be that we
+see a spike that we
+
+42
+00:01:51.810 --> 00:01:53.790
+want to drill into,
+and we may want
+
+43
+00:01:53.790 --> 00:01:57.470
+to drill into it before we see
+it disappearing off the window.
+
+44
+00:01:57.470 --> 00:01:59.940
+What we can do is actually
+hit the Pause button
+
+45
+00:01:59.940 --> 00:02:02.910
+in the top right up
+here to pause the charts
+
+46
+00:02:02.910 --> 00:02:08.550
+from adding any more data points
+in before our spike ages out.
+
+47
+00:02:08.550 --> 00:02:10.050
+And when we're ready
+we can actually
+
+48
+00:02:10.050 --> 00:02:12.570
+hover over and take
+a look, and you'll
+
+49
+00:02:12.570 --> 00:02:15.900
+notice there's a trend line
+down between all the charts
+
+50
+00:02:15.900 --> 00:02:19.290
+to indicate that this moment
+in time was happening.
+
+51
+00:02:19.290 --> 00:02:21.330
+And we can take a
+look, see if there's
+
+52
+00:02:21.330 --> 00:02:24.210
+anything interesting for
+us to take a look at there.
+
+53
+00:02:24.210 --> 00:02:28.440
+When we're ready we can go
+ahead and click Play again,
+
+54
+00:02:28.440 --> 00:02:33.740
+and the charts will simply catch
+back up to the present time.

@@ -1,0 +1,83 @@
+In this lesson, we are going to look into writing new data into a collection.
+
+Specifically, we are going to review the insertOne, insertMany, and update methods with upsert true options in the Java driver.
+
+We are going to start by instantiating a collection called videoGames from our test database.
+
+Once we have a collection to write to, let's create a Document object instance that will hold some information.
+
+In this case, we will be having documents that represents a video game.
+
+We can start by setting up the first key of that video game right from the constructor.
+
+And then we can add a new set of document fields, like year of the launch of the game, by appending a new key-value pair using the .append method of the document.
+
+And another one using the put method by putting label equals Epic Games.
+
+Now, these are two different ways of constructing our documents.
+
+One is appending, which sets a specific order in our documents.
+
+And the put will just replace values if they already exist, but keeping the order of the original setting of the document mapping.
+
+Not really relevant right now, but just something to keep in mind that you can use both methods to append or put values into the document.
+
+Then we can insert this document by calling the collection insertOne method.
+
+As you probably noticed, the insertOne method returns void.
+
+So how do we know if the document has been correctly inserted?
+
+If an error occurs during the insert of a given document, a MongoDB write exception will be thrown, stating the origin and cause of the error.
+
+In later lessons, we'll look into which kind of exceptions we should be prepared to handle and what causes such exceptions.
+
+Otherwise, everything gets correctly written and the document is stored in the database.
+
+However, the avid MongoDB expert in you is wondering, where can we see the _id fields, our primary key.
+
+We did not set one, so surely it would still need to be set.
+
+And you are right.
+
+On insert, the driver will set the _id field if it is not set by the application, with the default data type of ObjectId.
+
+Then we can assert here that it's not null after the insert.
+
+This basically means that if we try to recover the document back from the database using the _id value that not now we have, we will get exactly the same documents back from the database.
+
+By asserting that here and running this query, expressing the equality filter _id with the document ObjectId field, we can assert that it is true.
+
+So let's do that.
+
+By running a test, we can see that everything passes with flying colors.
+
+Another option to insert new data into a collection is to insert it in bulk, or better saying several documents at once.
+
+In this case, I'm going to set up a list of two documents.
+
+This list is called someGames and will have two of those documents.
+
+Here, I'm going to construct the Hitman object of the video game by just using the put and the constructor.
+
+And this one, I'm going to use something a little bit more elaborate by using an HashMap, by setting all the key-value pairs, and then putting them all into the second doc2 document object.
+
+All different ways of achieving exactly the same result.
+
+Once we have the two documents, we can add them to the list of documents, someGames, and, finally, insert all of these documents using insertMany.
+
+The same logic applies as in insert.
+
+If an error occurs that prevents documents to be inserted, you will need to capture the runtime exception.
+
+If we look back into the object references, we can see that _id fields are correctly set.
+
+If we assert for them for not null, we will get those values correctly asserted.
+
+So let's go ahead and list them here into this list of ObjectId fields.
+
+If you want to guarantee that those ObjectId fields, those documents are really in the database, we can still search for them by counting the number of documents that match the filter in condition of _id, passing back those list of _id fields.
+
+And the expected count should be 2.
+
+After running the tests, we can see that everything is correctly asserted.

@@ -1,0 +1,262 @@
+	
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.940
+In this video,
+we're going to talk
+
+3
+00:00:01.940 --> 00:00:05.900
+about the authorization model
+that is used with MongoDB.
+
+4
+00:00:05.900 --> 00:00:09.730
+MongoDB actually follows a
+very straightforward and common
+
+5
+00:00:09.730 --> 00:00:12.210
+authorization model,
+and that model
+
+6
+00:00:12.210 --> 00:00:15.260
+is role based access control.
+
+7
+00:00:15.260 --> 00:00:18.720
+Role based access control,
+as the name implies,
+
+8
+00:00:18.720 --> 00:00:21.880
+is a model where
+for any given user
+
+9
+00:00:21.880 --> 00:00:27.090
+we're going to go ahead and
+assign a role to that user.
+
+10
+00:00:27.090 --> 00:00:30.420
+And that role is going to be
+assigned over a given name
+
+11
+00:00:30.420 --> 00:00:32.060
+space.
+
+12
+00:00:32.060 --> 00:00:37.020
+And in the context of MongoDB,
+a namespace is just a database.
+
+13
+00:00:37.020 --> 00:00:40.800
+So for example, here we
+have a user named Kirby,
+
+14
+00:00:40.800 --> 00:00:43.590
+and Kirby has the
+readWrite roll,
+
+15
+00:00:43.590 --> 00:00:47.264
+which has been granted to him
+for the products database.
+
+16
+00:00:47.264 --> 00:00:49.680
+And this makes a lot of sense
+given the command that we've
+
+17
+00:00:49.680 --> 00:00:52.280
+been using to create users.
+
+18
+00:00:52.280 --> 00:00:54.070
+As you can see
+here, this is really
+
+19
+00:00:54.070 --> 00:00:56.380
+just a one to one relationship.
+
+20
+00:00:56.380 --> 00:01:01.400
+We have a user named Kirby, a
+roll called the readWrite role,
+
+21
+00:01:01.400 --> 00:01:05.319
+and the readWrite role is
+for the products database.
+
+22
+00:01:05.319 --> 00:01:08.670
+Now that we have a general
+idea of what role based
+
+23
+00:01:08.670 --> 00:01:12.070
+access control is, let's
+go ahead and break down
+
+24
+00:01:12.070 --> 00:01:13.540
+what a role is.
+
+25
+00:01:13.540 --> 00:01:16.430
+The formal definition
+of a role with regards
+
+26
+00:01:16.430 --> 00:01:20.030
+to role based access
+control is the following.
+
+27
+00:01:20.030 --> 00:01:24.710
+Roles are groups of privileges,
+actions over resources,
+
+28
+00:01:24.710 --> 00:01:28.280
+that are granted to users
+over a given namespace,
+
+29
+00:01:28.280 --> 00:01:30.620
+commonly referred
+to as a database.
+
+30
+00:01:30.620 --> 00:01:33.380
+So we know what users
+are and we obviously
+
+31
+00:01:33.380 --> 00:01:40.530
+know what databases are, but
+what are privileges, actions,
+
+32
+00:01:40.530 --> 00:01:42.210
+and resources?
+
+33
+00:01:42.210 --> 00:01:45.130
+Well, let's go ahead and take
+a closer look at these three
+
+34
+00:01:45.130 --> 00:01:49.770
+things and how they relate
+together to define roles.
+
+35
+00:01:49.770 --> 00:01:52.480
+Let's first talk about actions.
+
+36
+00:01:52.480 --> 00:01:57.640
+All operations and commands that
+a user can perform in MongoDB
+
+37
+00:01:57.640 --> 00:01:59.670
+are called actions.
+
+38
+00:01:59.670 --> 00:02:03.530
+And actions are performed
+on the resources.
+
+39
+00:02:03.530 --> 00:02:07.560
+Resources are any objects that
+hold state in our database.
+
+40
+00:02:07.560 --> 00:02:10.220
+So for example, a
+collection, a database,
+
+41
+00:02:10.220 --> 00:02:12.960
+or a database cluster.
+
+42
+00:02:12.960 --> 00:02:16.560
+And when a user performs an
+action on a given resource
+
+43
+00:02:16.560 --> 00:02:18.820
+that constitutes a privilege.
+
+44
+00:02:18.820 --> 00:02:20.890
+And if we then go
+ahead and group
+
+45
+00:02:20.890 --> 00:02:23.270
+a bunch of these
+privileges together,
+
+46
+00:02:23.270 --> 00:02:26.800
+we can go ahead and rename
+that group of privileges
+
+47
+00:02:26.800 --> 00:02:28.220
+just a role.
+
+48
+00:02:28.220 --> 00:02:30.630
+This sentence should make
+a lot more sense now.
+
+49
+00:02:30.630 --> 00:02:32.750
+I'm going to go ahead
+and say it again.
+
+50
+00:02:32.750 --> 00:02:37.590
+Roles are groups or privileges,
+actions over resources,
+
+51
+00:02:37.590 --> 00:02:42.160
+that are granted to users
+over a given database.
+
+52
+00:02:42.160 --> 00:02:45.920
+We've now looked at all of the
+different parts that make up
+
+53
+00:02:45.920 --> 00:02:47.597
+this definition of a role.
+
+54
+00:02:47.597 --> 00:02:49.680
+And so you should have a
+much better understanding
+
+55
+00:02:49.680 --> 00:02:53.250
+of what roles are in
+the context of MongoDB.

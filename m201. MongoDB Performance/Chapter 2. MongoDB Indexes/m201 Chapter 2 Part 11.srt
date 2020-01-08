@@ -1,0 +1,466 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:05.070
+Collations allow users to
+specify language specific rules
+
+3
+00:00:05.070 --> 00:00:08.820
+for string comparison, such
+as rules for letter, case,
+
+4
+00:00:08.820 --> 00:00:10.380
+and accent marks.
+
+5
+00:00:10.380 --> 00:00:12.420
+A collation is
+defined in MongoDB
+
+6
+00:00:12.420 --> 00:00:14.430
+by the following options.
+
+7
+00:00:14.430 --> 00:00:18.390
+Locale determines the
+ICU supported locale
+
+8
+00:00:18.390 --> 00:00:20.190
+for such a collation.
+
+9
+00:00:20.190 --> 00:00:24.380
+And then we have caseLevel,
+caseFirst, strength,
+
+10
+00:00:24.380 --> 00:00:28.980
+numericOrdering, alternate,
+maxVariable, and backwards.
+
+11
+00:00:28.980 --> 00:00:32.540
+These specific options
+and what they represent
+
+12
+00:00:32.540 --> 00:00:34.250
+are out of scope.
+
+13
+00:00:34.250 --> 00:00:36.570
+However, you should
+be aware that there
+
+14
+00:00:36.570 --> 00:00:40.380
+are multiple different
+settings that collations allow.
+
+15
+00:00:40.380 --> 00:00:44.130
+Now, collations can be defined
+at several different levels.
+
+16
+00:00:44.130 --> 00:00:47.670
+We can define a collation
+for a collection, which
+
+17
+00:00:47.670 --> 00:00:50.790
+means that all queries
+and indexes created
+
+18
+00:00:50.790 --> 00:00:56.010
+in such collection will be
+using that particular collation.
+
+19
+00:00:56.010 --> 00:00:58.350
+In this case, we
+have a collation
+
+20
+00:00:58.350 --> 00:01:03.360
+for the Portuguese language
+on foreign_text collection.
+
+21
+00:01:03.360 --> 00:01:05.670
+I'm going to insert
+this documents
+
+22
+00:01:05.670 --> 00:01:09.510
+on my recently created
+collection using the Portuguese
+
+23
+00:01:09.510 --> 00:01:12.030
+collation for that effect.
+
+24
+00:01:12.030 --> 00:01:14.490
+Once I insert the
+document, I can [INAUDIBLE]
+
+25
+00:01:14.490 --> 00:01:18.140
+find on that
+particular collection.
+
+26
+00:01:18.140 --> 00:01:21.950
+After it executes the
+explain plan on this query,
+
+27
+00:01:21.950 --> 00:01:26.180
+I can see that the collation
+used for this particular query
+
+28
+00:01:26.180 --> 00:01:28.920
+will be the
+Portuguese collation.
+
+29
+00:01:28.920 --> 00:01:31.160
+We'll have a
+winningPlan, where we
+
+30
+00:01:31.160 --> 00:01:37.970
+will use a indexed query using
+that collation for the results.
+
+31
+00:01:37.970 --> 00:01:41.360
+We can use collations
+for specific requests,
+
+32
+00:01:41.360 --> 00:01:45.410
+like queries and
+aggregations, for example,
+
+33
+00:01:45.410 --> 00:01:49.910
+where we're defining a different
+collation than the one used
+
+34
+00:01:49.910 --> 00:01:53.600
+and defined for the particular
+collection that supports those
+
+35
+00:01:53.600 --> 00:01:56.120
+find requests or aggregates.
+
+36
+00:01:56.120 --> 00:01:59.360
+That is totally
+possible, and we can even
+
+37
+00:01:59.360 --> 00:02:03.890
+specify different
+collations for our indexes.
+
+38
+00:02:03.890 --> 00:02:06.530
+This way, we can
+create an index or name
+
+39
+00:02:06.530 --> 00:02:11.330
+that overrides the default
+collation or any collection
+
+40
+00:02:11.330 --> 00:02:13.280
+level defined collations.
+
+41
+00:02:13.280 --> 00:02:15.710
+So in this case, we
+have foreign_text
+
+42
+00:02:15.710 --> 00:02:18.530
+being defined as the
+collation of Portuguese,
+
+43
+00:02:18.530 --> 00:02:22.190
+but we are creating the
+index using a collation
+
+44
+00:02:22.190 --> 00:02:24.290
+using the Italian language.
+
+45
+00:02:24.290 --> 00:02:28.100
+If we execute a query using
+that particular field,
+
+46
+00:02:28.100 --> 00:02:32.130
+you might expect that we'll
+be using this particular index
+
+47
+00:02:32.130 --> 00:02:32.960
+here.
+
+48
+00:02:32.960 --> 00:02:34.750
+Now, there's a small caveat.
+
+49
+00:02:34.750 --> 00:02:40.290
+First, we enable the use of this
+index on this particular query.
+
+50
+00:02:40.290 --> 00:02:42.220
+So we have an index
+on name, and we are
+
+51
+00:02:42.220 --> 00:02:44.870
+querying on that same field.
+
+52
+00:02:44.870 --> 00:02:48.590
+First, to use that
+index, the query
+
+53
+00:02:48.590 --> 00:02:53.690
+must match the collation of
+the index, which in this case
+
+54
+00:02:53.690 --> 00:02:55.400
+is Italian.
+
+55
+00:02:55.400 --> 00:02:59.340
+That means that if we run
+this query without specifying
+
+56
+00:02:59.340 --> 00:03:04.250
+or overriding the underlying
+defined collection collation,
+
+57
+00:03:04.250 --> 00:03:07.400
+we will not be using this
+index, because it will not
+
+58
+00:03:07.400 --> 00:03:10.190
+match the required collation.
+
+59
+00:03:10.190 --> 00:03:13.790
+If you run this query, we
+will see that, first of all,
+
+60
+00:03:13.790 --> 00:03:17.540
+we are using a
+collection scan, meaning
+
+61
+00:03:17.540 --> 00:03:20.680
+that we are not using the
+index that we recently created.
+
+62
+00:03:20.680 --> 00:03:24.250
+And the collation used
+to satisfy this query
+
+63
+00:03:24.250 --> 00:03:28.500
+is the underlying collation
+of our collection.
+
+64
+00:03:28.500 --> 00:03:31.740
+First, to use that
+index, our query
+
+65
+00:03:31.740 --> 00:03:37.830
+should specify the matching
+collation for that index.
+
+66
+00:03:37.830 --> 00:03:40.470
+If we do so, once
+we run the query,
+
+67
+00:03:40.470 --> 00:03:45.990
+we can see that we are, in
+fact, having an index scan
+
+68
+00:03:45.990 --> 00:03:50.660
+that matches the index pattern
+that we want using the index
+
+69
+00:03:50.660 --> 00:03:55.660
+that we specified, since the
+collation matches the index
+
+70
+00:03:55.660 --> 00:03:56.970
+collation.
+
+71
+00:03:56.970 --> 00:04:00.300
+Being able to correctly
+match and sort
+
+72
+00:04:00.300 --> 00:04:06.670
+text space on a given locale is
+mandatory for many use cases.
+
+73
+00:04:06.670 --> 00:04:09.900
+So collations allow
+that correctness
+
+74
+00:04:09.900 --> 00:04:14.580
+in terms of sorting and
+matching on different locales.
+
+75
+00:04:14.580 --> 00:04:18.810
+Now, we're testing collations
+offer a marginal performance
+
+76
+00:04:18.810 --> 00:04:21.089
+impact and should
+most definitely be
+
+77
+00:04:21.089 --> 00:04:23.620
+used for correctness.
+
+78
+00:04:23.620 --> 00:04:26.700
+Another benefit of
+introducing collations
+
+79
+00:04:26.700 --> 00:04:31.650
+is the ability to support
+case insensitive indexes.
+
+80
+00:04:31.650 --> 00:04:35.430
+To enable these, we can
+simply define a collection
+
+81
+00:04:35.430 --> 00:04:38.260
+with a given locale
+on our collation
+
+82
+00:04:38.260 --> 00:04:40.890
+and setting the strength
+of that collation
+
+83
+00:04:40.890 --> 00:04:45.270
+to 1, which offers primary
+level of comparison,
+
+84
+00:04:45.270 --> 00:04:48.180
+ignoring case and diacritics.
+
+85
+00:04:48.180 --> 00:04:53.340
+If we do so, and if we insert
+a few documents that only vary
+
+86
+00:04:53.340 --> 00:04:57.970
+on the case, for example,
+if we express a sort query,
+
+87
+00:04:57.970 --> 00:05:00.720
+ascending on name,
+we will see that we
+
+88
+00:05:00.720 --> 00:05:02.970
+have a particular ordering.
+
+89
+00:05:02.970 --> 00:05:07.410
+If we execute the same
+query but by changing
+
+90
+00:05:07.410 --> 00:05:11.430
+the order of our
+sort, now descending,
+
+91
+00:05:11.430 --> 00:05:16.560
+we will get the exact
+same set of results.
+
+92
+00:05:16.560 --> 00:05:21.120
+This means that regardless
+of the accent, case,
+
+93
+00:05:21.120 --> 00:05:25.620
+or even diacritics, this
+particular collation defined
+
+94
+00:05:25.620 --> 00:05:28.230
+for this collection
+will allow us
+
+95
+00:05:28.230 --> 00:05:31.980
+to have case insensitive
+queries, and therefore,
+
+96
+00:05:31.980 --> 00:05:33.420
+indexes as well.
+
+97
+00:05:33.420 --> 00:05:37.070
+And that's how collations
+work in MongoDB.

@@ -1,0 +1,109 @@
+Here's the scenario, you've got an application.
+
+And as your user base grows, your user activity grows and your server speed is dropping.
+
+You've got a dev environment that's set up just like prod, and your goal is to figure out what's going on.
+
+Let's check it out.
+
+First, let's go into our VM and start a replica set.
+
+Great.
+
+Next, let's generate our data set with this script.
+
+This might take a few minutes.
+
+OK, so the next script is going to simulate a home page for a user at an e-commerce web site.
+
+I just wrote something to print everything out in the shell, but it should give you an idea of what the web site would look like and what data it would display.
+
+OK so at this point when I hit Enter, I'm going to do a simulated user log in on my site's landing page.
+
+This is an e-commerce site.
+
+That's what it's going to display.
+
+Again, we're assuming we're doing this in a development environment.
+
+Let's turn on the profiler first.
+
+I'll do this in a new tab.
+
+OK now that my profiler is on, I'm going to go back, hit Enter, and see what happens.
+
+So I want you to imagine that a log-in page is displayed-- something like this.
+
+It's saying hello.
+
+This is your name.
+
+Here's your username.
+
+I know it was generated randomly, so the user name doesn't look much like the name.
+
+Tells us when our last log-in was.
+
+Looks like we have a cart ready for checkout.
+
+We're buying some forks, pillow, etc.
+
+We've got some contact information to review, some phone numbers, an address.
+
+OK, well let's go back, shut off our profiler, and let's see how many documents we got.
+
+15.
+
+OK, so this is my first sign that something went wrong.
+
+Here, I just went to a landing page.
+
+I did one thing and I've got 15 queries that seem to have hit my database.
+
+That doesn't look good.
+
+Let's just look at these planned summaries real quick.
+
+Index scan, index scan, ID hack, which is basically an index scan using the underscore ID field.
+
+OK everything is using an index, so that's good.
+
+My queries are efficient, it's just that I've got so many of them.
+
+Let's look a little deeper.
+
+OK, query on phone numbers.
+
+Query on phone numbers.
+
+Query on phone numbers.
+
+That's a good piece of information.
+
+When a collection is being queried multiple times, that's a sign that the application is just finding one document at a time when it might be able to find multiple ones.
+
+Right now the database is asking for these phone numbers by their underscore ID three times in a row all for a single user.
+
+And I know it was a single user because I generated this set of queries by logging in as just that user.
+
+Now, the underscore IDs that we're looking for are actually all different.
+
+Note that this one ends with a 9.
+
+This one ends with a b.
+
+This one ends with a d.
+
+So they're not quite asking the exact same question, but it's asking very similar questions all in a group.
+
+This is an anti-pattern in any database, by the way-- and that includes MongoDB, relational databases, whatever you're looking at.
+
+The problem is with how the application was written.
+
+Instead of doing a query for just one record at a time, a smart application would group together the phone number queries and then query the database for an underscore ID that matches any from that set of three underscore IDs.
+
+That's really not a schema design issue and it wouldn't require a change of schema to fix.
+
+But it is an anti-pattern and it's worth noticing.
+
+OK let's move on, I'm going to use a little aggregation to eliminate the redundant queries on each namespace.

@@ -1,0 +1,1063 @@
+
+1
+00:00:00.000 --> 00:00:01.300
+
+
+2
+00:00:01.300 --> 00:00:03.040
+In the early days
+of programming,
+
+3
+00:00:03.040 --> 00:00:05.260
+you would feed the giant
+computers with punch cards,
+
+4
+00:00:05.260 --> 00:00:06.760
+like this one on the left.
+
+5
+00:00:06.760 --> 00:00:09.340
+Each instruction would
+store on a separate card.
+
+6
+00:00:09.340 --> 00:00:10.780
+And yes, it was
+preferable to not
+
+7
+00:00:10.780 --> 00:00:13.720
+draw the ordered stack of
+cards, especially if you did not
+
+8
+00:00:13.720 --> 00:00:16.270
+use some kind of
+label to reorder them.
+
+9
+00:00:16.270 --> 00:00:18.880
+Just a little later,
+the advent of terminals
+
+10
+00:00:18.880 --> 00:00:21.880
+permitted the developers to
+put all these instruction
+
+11
+00:00:21.880 --> 00:00:24.760
+in a file, like the one
+we have on the right.
+
+12
+00:00:24.760 --> 00:00:25.480
+This was better.
+
+13
+00:00:25.480 --> 00:00:28.570
+However, as programs got
+bigger, the files got larger,
+
+14
+00:00:28.570 --> 00:00:31.510
+and it was not a viable
+solution anymore.
+
+15
+00:00:31.510 --> 00:00:33.460
+The solution at that
+time was to group
+
+16
+00:00:33.460 --> 00:00:35.470
+a set of instructions together.
+
+17
+00:00:35.470 --> 00:00:38.200
+Call it files, classes,
+libraries-- this
+
+18
+00:00:38.200 --> 00:00:40.550
+is still the system
+in use today.
+
+19
+00:00:40.550 --> 00:00:42.700
+The point I want to make
+is that sometimes you need
+
+20
+00:00:42.700 --> 00:00:46.180
+a middle-of-the-road solution,
+because both extreme are not
+
+21
+00:00:46.180 --> 00:00:49.360
+working well and far
+from being optimal.
+
+22
+00:00:49.360 --> 00:00:52.060
+The punch card is too
+granular, while the single file
+
+23
+00:00:52.060 --> 00:00:56.200
+solution is too broad and does
+not provide enough granularity.
+
+24
+00:00:56.200 --> 00:00:58.720
+Translating that to MongoDB
+and the document model,
+
+25
+00:00:58.720 --> 00:01:00.220
+let's look at an
+example of Internet
+
+26
+00:01:00.220 --> 00:01:03.580
+of things devices, which
+I will refer as IoT
+
+27
+00:01:03.580 --> 00:01:05.290
+for the rest of the lesson.
+
+28
+00:01:05.290 --> 00:01:08.050
+Let's say we have 10
+million temperature sensors,
+
+29
+00:01:08.050 --> 00:01:11.650
+and each sensor is sending us
+a piece of data every minute,
+
+30
+00:01:11.650 --> 00:01:13.360
+the temperature it's measuring.
+
+31
+00:01:13.360 --> 00:01:16.630
+This is 36 billion pieces
+of information per hour.
+
+32
+00:01:16.630 --> 00:01:18.700
+Trying to store each
+piece in a document
+
+33
+00:01:18.700 --> 00:01:22.060
+may not work as we get too
+many documents to manage.
+
+34
+00:01:22.060 --> 00:01:25.150
+On the other end, if we keep
+one document per device,
+
+35
+00:01:25.150 --> 00:01:27.580
+each document is likely
+to reach the maximum size
+
+36
+00:01:27.580 --> 00:01:30.010
+of 16 megabytes after a while.
+
+37
+00:01:30.010 --> 00:01:31.960
+Even if it does not
+reach that size,
+
+38
+00:01:31.960 --> 00:01:34.150
+it may still be
+unmanageable and not
+
+39
+00:01:34.150 --> 00:01:36.820
+very efficient to handle
+these large documents.
+
+40
+00:01:36.820 --> 00:01:38.265
+So what should we do?
+
+41
+00:01:38.265 --> 00:01:40.360
+Here, we'll make
+some suggestions.
+
+42
+00:01:40.360 --> 00:01:42.100
+However, if you recall
+their methodology,
+
+43
+00:01:42.100 --> 00:01:44.140
+the suggestions make
+more sense if we
+
+44
+00:01:44.140 --> 00:01:47.260
+know the workload of the
+problem and the main queries
+
+45
+00:01:47.260 --> 00:01:48.760
+of our system.
+
+46
+00:01:48.760 --> 00:01:52.720
+One suggestion is to have one
+document per device, per day.
+
+47
+00:01:52.720 --> 00:01:54.820
+Each document would
+only carry information
+
+48
+00:01:54.820 --> 00:01:57.550
+for a single device
+on a single day.
+
+49
+00:01:57.550 --> 00:02:01.060
+Then the next day, we will
+create a new document.
+
+50
+00:02:01.060 --> 00:02:04.433
+I decided to create
+one array per hour.
+
+51
+00:02:04.433 --> 00:02:06.100
+This translates in
+an easy to understand
+
+52
+00:02:06.100 --> 00:02:07.121
+document for a human.
+
+53
+00:02:07.121 --> 00:02:09.204
+However, it makes it a
+little bit more complicated
+
+54
+00:02:09.204 --> 00:02:10.810
+for a program.
+
+55
+00:02:10.810 --> 00:02:12.280
+If the application
+wants to average
+
+56
+00:02:12.280 --> 00:02:13.750
+a temperature for
+a given period,
+
+57
+00:02:13.750 --> 00:02:16.060
+it needs to retrieve
+the array or the section
+
+58
+00:02:16.060 --> 00:02:17.880
+of the array for each
+hour of that period
+
+59
+00:02:17.880 --> 00:02:19.760
+and do the calculation.
+
+60
+00:02:19.760 --> 00:02:21.760
+If this is a common
+query, then maybe
+
+61
+00:02:21.760 --> 00:02:25.030
+a single array for the
+whole day makes more sense.
+
+62
+00:02:25.030 --> 00:02:28.820
+Another option is to have one
+document per device, per hour.
+
+63
+00:02:28.820 --> 00:02:32.590
+Here, our time stamps includes
+the date and the hour.
+
+64
+00:02:32.590 --> 00:02:36.760
+We have one document for 1:00
+PM and one document for 2:00 PM.
+
+65
+00:02:36.760 --> 00:02:40.790
+There are more documents, 24
+times more than this example.
+
+66
+00:02:40.790 --> 00:02:43.060
+However, the
+documents are smaller.
+
+67
+00:02:43.060 --> 00:02:45.460
+Note that I'm also using
+a different way to store
+
+68
+00:02:45.460 --> 00:02:47.110
+the temperature values.
+
+69
+00:02:47.110 --> 00:02:50.020
+Here, instead of
+using a single array,
+
+70
+00:02:50.020 --> 00:02:53.530
+we use a document where
+the keys are the minutes.
+
+71
+00:02:53.530 --> 00:02:57.350
+In the first set of documents,
+I must fill the empty positions.
+
+72
+00:02:57.350 --> 00:03:00.430
+For example, if I don't get
+the data for the fifth minute,
+
+73
+00:03:00.430 --> 00:03:04.620
+I must put something-- zero
+or null, but something.
+
+74
+00:03:04.620 --> 00:03:08.170
+As for these documents, I simply
+insert the values I receive.
+
+75
+00:03:08.170 --> 00:03:09.790
+In the event I did
+not get a piece
+
+76
+00:03:09.790 --> 00:03:12.200
+of data for the fifth
+minute, the field temp
+
+77
+00:03:12.200 --> 00:03:14.960
+dot five will not exist.
+
+78
+00:03:14.960 --> 00:03:17.590
+Again, there are a ton of
+possible configurations.
+
+79
+00:03:17.590 --> 00:03:19.480
+So unless you know
+the workload, it
+
+80
+00:03:19.480 --> 00:03:22.460
+is difficult to tell
+which one is the best.
+
+81
+00:03:22.460 --> 00:03:24.640
+This concept of
+grouping information
+
+82
+00:03:24.640 --> 00:03:26.747
+together is called bucketing.
+
+83
+00:03:26.747 --> 00:03:28.330
+And as you guessed,
+the bucket pattern
+
+84
+00:03:28.330 --> 00:03:31.910
+is often used in
+the IoT scenarios.
+
+85
+00:03:31.910 --> 00:03:33.140
+Here's another example.
+
+86
+00:03:33.140 --> 00:03:35.200
+We will build a
+collaboration platform.
+
+87
+00:03:35.200 --> 00:03:36.880
+The platform will
+have chat windows
+
+88
+00:03:36.880 --> 00:03:39.100
+that we'll call channels.
+
+89
+00:03:39.100 --> 00:03:42.180
+One solution is to keep
+one document per message.
+
+90
+00:03:42.180 --> 00:03:45.460
+However, this may become messy
+and may require more processing
+
+91
+00:03:45.460 --> 00:03:47.680
+to organize the
+messages together.
+
+92
+00:03:47.680 --> 00:03:50.980
+An alternative is to keep
+all the messages for a given
+
+93
+00:03:50.980 --> 00:03:52.810
+chat in a single document.
+
+94
+00:03:52.810 --> 00:03:54.940
+That may work, but over
+time, each document
+
+95
+00:03:54.940 --> 00:03:57.040
+may become bigger
+than what we want,
+
+96
+00:03:57.040 --> 00:04:00.580
+as we care more for a recent
+message than the old one.
+
+97
+00:04:00.580 --> 00:04:02.140
+Again, the middle
+solution will be
+
+98
+00:04:02.140 --> 00:04:04.420
+to arrange the messages
+in the bucket--
+
+99
+00:04:04.420 --> 00:04:08.200
+All messages for a
+channel for a given day.
+
+100
+00:04:08.200 --> 00:04:10.120
+One nice thing
+about this design is
+
+101
+00:04:10.120 --> 00:04:13.750
+that it's very easy to delete
+documents older than x days,
+
+102
+00:04:13.750 --> 00:04:15.710
+or then archive them.
+
+103
+00:04:15.710 --> 00:04:17.980
+I can use zone charting
+and move my old messages
+
+104
+00:04:17.980 --> 00:04:20.980
+to a chart that resides
+on cheaper hardware.
+
+105
+00:04:20.980 --> 00:04:23.140
+One final note on this example.
+
+106
+00:04:23.140 --> 00:04:25.000
+When you think
+about bucketing, you
+
+107
+00:04:25.000 --> 00:04:27.310
+refer to two
+independent variables.
+
+108
+00:04:27.310 --> 00:04:30.400
+One will be the big
+container, the main document,
+
+109
+00:04:30.400 --> 00:04:33.130
+here identified by
+your underscore ID.
+
+110
+00:04:33.130 --> 00:04:36.580
+And the other part of the
+one-to-many relationship
+
+111
+00:04:36.580 --> 00:04:37.720
+will be your bucket.
+
+112
+00:04:37.720 --> 00:04:40.210
+This is where you will
+put N piece of data
+
+113
+00:04:40.210 --> 00:04:44.050
+from the one many
+relationship in the bucket.
+
+114
+00:04:44.050 --> 00:04:46.570
+That brings us to the last
+use case I want to describe.
+
+115
+00:04:46.570 --> 00:04:49.120
+The NoSQL database
+family is composed
+
+116
+00:04:49.120 --> 00:04:51.550
+of document databases
+like MongoDB,
+
+117
+00:04:51.550 --> 00:04:54.350
+but also for the members like
+key value databases, graph
+
+118
+00:04:54.350 --> 00:04:56.710
+databases, and
+column-based databases.
+
+119
+00:04:56.710 --> 00:04:59.540
+What if our solution requires a
+document databases for most use
+
+120
+00:04:59.540 --> 00:05:00.520
+scenario?
+
+121
+00:05:00.520 --> 00:05:02.460
+But one use case
+scenario is better
+
+122
+00:05:02.460 --> 00:05:04.540
+served by a
+column-based database.
+
+123
+00:05:04.540 --> 00:05:07.800
+A column-based database
+stores information per column
+
+124
+00:05:07.800 --> 00:05:09.730
+instead of per row or document.
+
+125
+00:05:09.730 --> 00:05:12.360
+So when you want to process
+only one column across all
+
+126
+00:05:12.360 --> 00:05:15.480
+the documents, like it is
+frequently done in analytics,
+
+127
+00:05:15.480 --> 00:05:17.690
+it's very efficient,
+as it brings in memory
+
+128
+00:05:17.690 --> 00:05:19.680
+only the data it needs.
+
+129
+00:05:19.680 --> 00:05:23.250
+As you know, MongoDB brings
+in memory full documents.
+
+130
+00:05:23.250 --> 00:05:24.990
+If we have a use case
+that will benefit
+
+131
+00:05:24.990 --> 00:05:27.150
+a lot from a
+column-based approach,
+
+132
+00:05:27.150 --> 00:05:29.790
+we could install a separate
+database next to MongoDB
+
+133
+00:05:29.790 --> 00:05:31.060
+to handle this use case.
+
+134
+00:05:31.060 --> 00:05:33.440
+However, in order to
+make our deployment model
+
+135
+00:05:33.440 --> 00:05:36.510
+as streamlined as possible,
+adding different technology for
+
+136
+00:05:36.510 --> 00:05:39.060
+this alone will come with
+an unnecessary technical
+
+137
+00:05:39.060 --> 00:05:40.170
+complexity.
+
+138
+00:05:40.170 --> 00:05:44.730
+Let's use MongoDB to model data
+that is column-based oriented.
+
+139
+00:05:44.730 --> 00:05:46.952
+Going back to our earlier
+example of IoT device,
+
+140
+00:05:46.952 --> 00:05:48.660
+let's assume these
+device are [INAUDIBLE]
+
+141
+00:05:48.660 --> 00:05:50.850
+station that returns
+a bunch of information
+
+142
+00:05:50.850 --> 00:05:53.790
+like temperature,
+pressure, and lightning.
+
+143
+00:05:53.790 --> 00:05:56.010
+If we were to store all
+the info for a given
+
+144
+00:05:56.010 --> 00:05:59.730
+device in each document, we
+could query across variables.
+
+145
+00:05:59.730 --> 00:06:02.350
+However, this ability
+is not needed.
+
+146
+00:06:02.350 --> 00:06:05.340
+But what is really needed is
+to process all data regarding
+
+147
+00:06:05.340 --> 00:06:08.860
+one field at the time, meaning
+one column, for example,
+
+148
+00:06:08.860 --> 00:06:10.170
+the intensity of light.
+
+149
+00:06:10.170 --> 00:06:13.380
+We may want to break up the
+measurement in many documents
+
+150
+00:06:13.380 --> 00:06:17.070
+so processing one type
+of data does not require
+
+151
+00:06:17.070 --> 00:06:19.050
+bringing everything in memory.
+
+152
+00:06:19.050 --> 00:06:22.500
+When processing light, we bring
+these documents in memory.
+
+153
+00:06:22.500 --> 00:06:25.650
+When processing pressure,
+we bring these documents
+
+154
+00:06:25.650 --> 00:06:26.700
+in memory.
+
+155
+00:06:26.700 --> 00:06:29.340
+Note that both sides are
+using the bucket pattern.
+
+156
+00:06:29.340 --> 00:06:31.470
+It is just that the
+one on the right
+
+157
+00:06:31.470 --> 00:06:34.250
+has a structure more
+similar to columns.
+
+158
+00:06:34.250 --> 00:06:36.150
+Also, know that
+information for the device,
+
+159
+00:06:36.150 --> 00:06:38.880
+like the location and anything
+else about the device,
+
+160
+00:06:38.880 --> 00:06:41.730
+has been left out of the
+documents on the right side
+
+161
+00:06:41.730 --> 00:06:43.170
+and put somewhere else.
+
+162
+00:06:43.170 --> 00:06:45.060
+If you need to search
+or aggregate results
+
+163
+00:06:45.060 --> 00:06:49.140
+on these fields, you should
+keep them in the documents.
+
+164
+00:06:49.140 --> 00:06:50.820
+Again, this is
+not going to be as
+
+165
+00:06:50.820 --> 00:06:52.730
+optimal as a column-based
+database system.
+
+166
+00:06:52.730 --> 00:06:54.450
+However, it's a good
+work-around if you
+
+167
+00:06:54.450 --> 00:06:57.520
+don't want to install
+two database systems.
+
+168
+00:06:57.520 --> 00:06:59.520
+Let's look at some
+restriction or gotchas
+
+169
+00:06:59.520 --> 00:07:01.800
+when using the bucket pattern.
+
+170
+00:07:01.800 --> 00:07:04.710
+If you need to frequently
+access elements in the buckets
+
+171
+00:07:04.710 --> 00:07:06.630
+to do updates,
+deletions, or want
+
+172
+00:07:06.630 --> 00:07:09.030
+to insert in specific
+locations, this may not
+
+173
+00:07:09.030 --> 00:07:10.800
+be the best pattern to use.
+
+174
+00:07:10.800 --> 00:07:13.133
+If you need to get the
+data sorted in any way,
+
+175
+00:07:13.133 --> 00:07:14.550
+it is preferable
+to have it sorted
+
+176
+00:07:14.550 --> 00:07:15.690
+in the buckets themselves.
+
+177
+00:07:15.690 --> 00:07:18.000
+In this example, all the
+temperature in the buckets
+
+178
+00:07:18.000 --> 00:07:20.115
+were already sorted
+by date and time.
+
+179
+00:07:20.115 --> 00:07:22.590
+Ad hoc queries may
+be difficult to do,
+
+180
+00:07:22.590 --> 00:07:24.880
+as you need to understand
+the underlying structure.
+
+181
+00:07:24.880 --> 00:07:27.390
+So this pattern works better
+when the storage representation
+
+182
+00:07:27.390 --> 00:07:30.360
+is hidden [INAUDIBLE]
+by the application.
+
+183
+00:07:30.360 --> 00:07:33.080
+Time to formalize
+our bucket pattern.
+
+184
+00:07:33.080 --> 00:07:36.300
+The problems the bucket
+pattern address are helping us
+
+185
+00:07:36.300 --> 00:07:39.200
+size our documents to satisfy
+the combination of read
+
+186
+00:07:39.200 --> 00:07:41.820
+and write operations
+of our workload.
+
+187
+00:07:41.820 --> 00:07:44.310
+This helps embed a
+one-to-many relationship,
+
+188
+00:07:44.310 --> 00:07:48.210
+where the many side is too
+big or grows beyond bounds.
+
+189
+00:07:48.210 --> 00:07:50.880
+The solution is to find
+the optimal amount of info,
+
+190
+00:07:50.880 --> 00:07:53.310
+then store it in arrays
+or arrays of arrays
+
+191
+00:07:53.310 --> 00:07:54.900
+in our main objects.
+
+192
+00:07:54.900 --> 00:07:57.780
+The one-to-many relationship
+is transformed so the one
+
+193
+00:07:57.780 --> 00:08:00.970
+side becomes N documents.
+
+194
+00:08:00.970 --> 00:08:02.910
+What are the common use cases?
+
+195
+00:08:02.910 --> 00:08:06.360
+Obviously IoT systems,
+then data warehouse
+
+196
+00:08:06.360 --> 00:08:08.910
+is a good candidate, as you
+can analyze larger chunks
+
+197
+00:08:08.910 --> 00:08:11.130
+of time-based data at once.
+
+198
+00:08:11.130 --> 00:08:14.070
+In short, any one object
+that has ton of information
+
+199
+00:08:14.070 --> 00:08:16.140
+associated to it.
+
+200
+00:08:16.140 --> 00:08:17.880
+The right size of
+your documents will
+
+201
+00:08:17.880 --> 00:08:20.250
+translate into the right
+number of disk accesses
+
+202
+00:08:20.250 --> 00:08:24.150
+and the right amount of data
+transfer by these accesses.
+
+203
+00:08:24.150 --> 00:08:25.890
+It makes the data
+more manageable.
+
+204
+00:08:25.890 --> 00:08:28.860
+For example, it is easy to
+delete section of your data
+
+205
+00:08:28.860 --> 00:08:32.520
+by simply deleting the documents
+corresponding to that period.
+
+206
+00:08:32.520 --> 00:08:34.320
+On the trade-offs,
+ensure you know
+
+207
+00:08:34.320 --> 00:08:36.600
+all you want to query the data.
+
+208
+00:08:36.600 --> 00:08:39.330
+If every query translate to
+an aggregation query, that
+
+209
+00:08:39.330 --> 00:08:42.510
+will first [INAUDIBLE] the
+data, the schema you choose
+
+210
+00:08:42.510 --> 00:08:44.430
+may not be the right one.
+
+211
+00:08:44.430 --> 00:08:47.280
+Also, it may not be
+friendly to all BI Tools,
+
+212
+00:08:47.280 --> 00:08:51.150
+as your users need to understand
+the schema to do the queries.
+
+213
+00:08:51.150 --> 00:08:53.310
+What may have been a
+simple MongoDB or SQL
+
+214
+00:08:53.310 --> 00:08:57.400
+query may become much
+more difficult to express.
+
+215
+00:08:57.400 --> 00:08:59.880
+So this is our bucket pattern.
+
+216
+00:08:59.880 --> 00:09:02.460
+In summary, the bucket
+pattern is a great pattern
+
+217
+00:09:02.460 --> 00:09:04.500
+if you want a middle
+ground solution
+
+218
+00:09:04.500 --> 00:09:07.650
+between fully embedding
+and fully linking data.
+
+219
+00:09:07.650 --> 00:09:09.540
+However, this is
+an advanced pattern
+
+220
+00:09:09.540 --> 00:09:11.250
+that should be used
+only when you have
+
+221
+00:09:11.250 --> 00:09:13.880
+a good grasp of your workload.

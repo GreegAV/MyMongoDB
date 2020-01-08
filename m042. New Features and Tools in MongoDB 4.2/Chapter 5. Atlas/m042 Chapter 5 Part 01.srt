@@ -1,0 +1,409 @@
+
+1
+00:00:00.000 --> 00:00:00.288
+
+
+2
+00:00:00.288 --> 00:00:02.830
+In this lesson, we're going to
+discuss a new feature in Atlas
+
+3
+00:00:02.830 --> 00:00:04.960
+called the Sample Data Set.
+
+4
+00:00:04.960 --> 00:00:06.940
+Atlas now exposes
+some sample data
+
+5
+00:00:06.940 --> 00:00:09.070
+that you can load
+directly into Atlas
+
+6
+00:00:09.070 --> 00:00:11.170
+for users who want to
+explore data immediately
+
+7
+00:00:11.170 --> 00:00:13.060
+after creating their cluster.
+
+8
+00:00:13.060 --> 00:00:15.460
+Some users create Atlas
+clusters for production use,
+
+9
+00:00:15.460 --> 00:00:18.250
+and they know exactly what
+data they want to work with.
+
+10
+00:00:18.250 --> 00:00:20.080
+Those users might
+already have their data
+
+11
+00:00:20.080 --> 00:00:22.390
+in a bsondump or a JSON file.
+
+12
+00:00:22.390 --> 00:00:23.980
+So they can use the
+command-line tools
+
+13
+00:00:23.980 --> 00:00:27.900
+mongorestore and mongoimport
+to load that data into Atlas.
+
+14
+00:00:27.900 --> 00:00:30.280
+And until this release,
+those command-line tools
+
+15
+00:00:30.280 --> 00:00:32.920
+were the only means of
+getting data into Atlas.
+
+16
+00:00:32.920 --> 00:00:35.980
+But this requires users
+to leave the Atlas site,
+
+17
+00:00:35.980 --> 00:00:38.590
+open a terminal window or
+command prompt, and then use
+
+18
+00:00:38.590 --> 00:00:41.610
+a command-line tool, which
+can be time consuming.
+
+19
+00:00:41.610 --> 00:00:43.820
+Another caveat of using
+the command-line tools
+
+20
+00:00:43.820 --> 00:00:45.440
+is that you already
+have some sample
+
+21
+00:00:45.440 --> 00:00:47.420
+data that you want to import.
+
+22
+00:00:47.420 --> 00:00:49.400
+Finding good sample
+data, the kind
+
+23
+00:00:49.400 --> 00:00:52.572
+that facilitates exploration,
+can be difficult.
+
+24
+00:00:52.572 --> 00:00:54.530
+And we want to make sure
+users can explore data
+
+25
+00:00:54.530 --> 00:00:56.060
+right off the bat.
+
+26
+00:00:56.060 --> 00:00:57.590
+So we've released
+a new feature that
+
+27
+00:00:57.590 --> 00:01:00.470
+allows users to load a sample
+data set into Atlas directly
+
+28
+00:01:00.470 --> 00:01:02.210
+from the Atlas UI.
+
+29
+00:01:02.210 --> 00:01:04.830
+This sample data set
+was curated internally,
+
+30
+00:01:04.830 --> 00:01:07.760
+and it's intended to give users
+a decently large-sized data set
+
+31
+00:01:07.760 --> 00:01:10.100
+to play around with.
+
+32
+00:01:10.100 --> 00:01:11.980
+So we can load the
+sample data set as soon
+
+33
+00:01:11.980 --> 00:01:14.210
+as we've created a cluster.
+
+34
+00:01:14.210 --> 00:01:16.660
+If we navigate to
+the Collections tab,
+
+35
+00:01:16.660 --> 00:01:18.640
+Atlas will notice that
+there's no data in here,
+
+36
+00:01:18.640 --> 00:01:20.330
+and it'll give us two options.
+
+37
+00:01:20.330 --> 00:01:23.230
+The first is to load the sample
+data set into our cluster,
+
+38
+00:01:23.230 --> 00:01:25.720
+and the other option will allow
+us to manually create data
+
+39
+00:01:25.720 --> 00:01:28.300
+using the Atlas Data Explorer.
+
+40
+00:01:28.300 --> 00:01:29.950
+Choosing to load
+the sample data set
+
+41
+00:01:29.950 --> 00:01:32.440
+shows us this modal,
+which has a link
+
+42
+00:01:32.440 --> 00:01:35.050
+to the docs page explaining
+the different collections
+
+43
+00:01:35.050 --> 00:01:36.880
+in the sample data set.
+
+44
+00:01:36.880 --> 00:01:38.980
+And this docs page is
+very detailed with respect
+
+45
+00:01:38.980 --> 00:01:41.020
+to sample documents
+from the collection,
+
+46
+00:01:41.020 --> 00:01:43.075
+the indexes in each collection.
+
+47
+00:01:43.075 --> 00:01:45.623
+If we look in the
+Airbnb listings,
+
+48
+00:01:45.623 --> 00:01:47.290
+we can see the indexes
+that have already
+
+49
+00:01:47.290 --> 00:01:50.650
+been created on this data set
+as well as a sample document
+
+50
+00:01:50.650 --> 00:01:51.943
+from the collection.
+
+51
+00:01:51.943 --> 00:01:53.860
+So we can actually learn
+a bit about this data
+
+52
+00:01:53.860 --> 00:01:55.480
+before we even import it.
+
+53
+00:01:55.480 --> 00:01:57.710
+But we're just doing some
+exploration on free tier
+
+54
+00:01:57.710 --> 00:01:59.628
+so we can load this
+without actually worrying.
+
+55
+00:01:59.628 --> 00:02:01.420
+So here, I'm just going
+to click the option
+
+56
+00:02:01.420 --> 00:02:03.366
+to load the sample data set.
+
+57
+00:02:03.366 --> 00:02:05.910
+It should take a minute.
+
+58
+00:02:05.910 --> 00:02:07.410
+So after loading
+the data set, we
+
+59
+00:02:07.410 --> 00:02:09.630
+can immediately explore the
+data using the Atlas Data
+
+60
+00:02:09.630 --> 00:02:12.600
+Explorer, which is very similar
+to the interface provided
+
+61
+00:02:12.600 --> 00:02:14.430
+by Compass.
+
+62
+00:02:14.430 --> 00:02:16.200
+One of the reasons
+this is so powerful
+
+63
+00:02:16.200 --> 00:02:19.110
+is because it allows us to
+start exploring data in MongoDB
+
+64
+00:02:19.110 --> 00:02:20.978
+without ever leaving
+the Atlas site.
+
+65
+00:02:20.978 --> 00:02:23.520
+And if we get the motivation to
+write some application backed
+
+66
+00:02:23.520 --> 00:02:25.260
+by this Atlas
+cluster, we'll already
+
+67
+00:02:25.260 --> 00:02:27.850
+know a bit about this data.
+
+68
+00:02:27.850 --> 00:02:29.620
+This data set
+contains a diverse set
+
+69
+00:02:29.620 --> 00:02:32.200
+of data spanning a few
+different industries, including
+
+70
+00:02:32.200 --> 00:02:37.050
+movies in the mflix data set,
+weather in the weatherdata data
+
+71
+00:02:37.050 --> 00:02:40.580
+set, and housing data
+in the Airbnb data set.
+
+72
+00:02:40.580 --> 00:02:42.580
+The collections contain
+a few different document
+
+73
+00:02:42.580 --> 00:02:44.710
+shapes with varying
+degrees of complexity
+
+74
+00:02:44.710 --> 00:02:48.070
+and just about every data
+type that we allow in MongoDB.
+
+75
+00:02:48.070 --> 00:02:50.800
+This data set is intended to
+be a playground for newcomers
+
+76
+00:02:50.800 --> 00:02:54.162
+or really anyone interested
+in exploring data on MongoDB.
+
+77
+00:02:54.162 --> 00:02:56.620
+We hope that it will cultivate
+the kind of exploration that
+
+78
+00:02:56.620 --> 00:02:59.500
+excites users about MongoDB
+without ever leaving their web
+
+79
+00:02:59.500 --> 00:03:00.740
+browser.
+
+80
+00:03:00.740 --> 00:03:03.100
+So just to recap, this
+new sample data set
+
+81
+00:03:03.100 --> 00:03:05.680
+can be loaded directly
+from the Atlas website,
+
+82
+00:03:05.680 --> 00:03:08.170
+mitigating the need for
+a command-line tool.
+
+83
+00:03:08.170 --> 00:03:10.950
+The data set is intended to
+facilitate data explorations,
+
+84
+00:03:10.950 --> 00:03:12.700
+so it contains a few
+different collections
+
+85
+00:03:12.700 --> 00:03:15.310
+that vary in
+industry, data types,
+
+86
+00:03:15.310 --> 00:03:17.760
+as well as document shapes.

@@ -1,0 +1,685 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,960
+So far, we've been briefly
+discussing the term
+
+3
+00:00:03,960 --> 00:00:06,670
+chunks in a quite loose way.
+
+4
+00:00:06,670 --> 00:00:09,630
+So let's take a few minutes
+to review what chunks are
+
+5
+00:00:09,630 --> 00:00:11,970
+and what can we do with them.
+
+6
+00:00:11,970 --> 00:00:13,920
+In a prior lecture,
+we've mentioned
+
+7
+00:00:13,920 --> 00:00:19,090
+that the config servers
+hold the cluster metadata.
+
+8
+00:00:19,090 --> 00:00:22,180
+Things like how
+many shards we have,
+
+9
+00:00:22,180 --> 00:00:25,720
+which databases are sharded,
+and the configuration
+
+10
+00:00:25,720 --> 00:00:28,580
+settings of our shard cluster.
+
+11
+00:00:28,580 --> 00:00:30,320
+But one of the most
+important pieces
+
+12
+00:00:30,320 --> 00:00:32,600
+of information that the
+config servers hold,
+
+13
+00:00:32,600 --> 00:00:36,790
+is the mapping of
+the chunks to shards.
+
+14
+00:00:36,790 --> 00:00:41,000
+Right, let's jump into our
+terminal to see this in action.
+
+15
+00:00:41,000 --> 00:00:43,160
+If I jump into the
+config database
+
+16
+00:00:43,160 --> 00:00:46,190
+and show the collections,
+you'll see a long list
+
+17
+00:00:46,190 --> 00:00:49,040
+of different collections
+that hold information
+
+18
+00:00:49,040 --> 00:00:51,650
+about this shard cluster.
+
+19
+00:00:51,650 --> 00:00:55,740
+Within the chunks collection,
+if we find one document,
+
+20
+00:00:55,740 --> 00:00:59,000
+we will see the
+definition of a chunk.
+
+21
+00:00:59,000 --> 00:01:02,180
+In this case, we can see
+what's the name space
+
+22
+00:01:02,180 --> 00:01:05,480
+that this chunk belongs to?
+
+23
+00:01:05,480 --> 00:01:09,510
+When was this chunk
+last modified?
+
+24
+00:01:09,510 --> 00:01:12,810
+Which shard holds this chunk?
+
+25
+00:01:12,810 --> 00:01:14,940
+But more importantly,
+we can see the chunk
+
+26
+00:01:14,940 --> 00:01:20,570
+bounce the Min and max
+fields indicate exactly that.
+
+27
+00:01:20,570 --> 00:01:22,880
+But let's step
+back a little bit.
+
+28
+00:01:22,880 --> 00:01:25,830
+Once we add documents
+in our collections,
+
+29
+00:01:25,830 --> 00:01:29,990
+these documents contain fields
+that we can use as shard keys.
+
+30
+00:01:29,990 --> 00:01:34,670
+For example, if we decide to
+use field x as our shard key,
+
+31
+00:01:34,670 --> 00:01:36,980
+the minute we shard
+our collection,
+
+32
+00:01:36,980 --> 00:01:40,930
+we immediately define
+one initial chunk.
+
+33
+00:01:40,930 --> 00:01:45,305
+This initial chunk goes
+from minKey to maxKey.
+
+34
+00:01:45,305 --> 00:01:48,630
+An important thing to note
+is that chunks lower bound
+
+35
+00:01:48,630 --> 00:01:53,830
+is inclusive, while chunks
+upper bound is exclusive.
+
+36
+00:01:53,830 --> 00:01:57,750
+The different values that
+our shard key may hold
+
+37
+00:01:57,750 --> 00:02:03,080
+will define the keyspace
+of our sharding collection.
+
+38
+00:02:03,080 --> 00:02:05,840
+As time progresses, the
+cluster will split up
+
+39
+00:02:05,840 --> 00:02:08,479
+that initial chunk
+into several others
+
+40
+00:02:08,479 --> 00:02:12,890
+to allow data to be evenly
+distributed between shards.
+
+41
+00:02:12,890 --> 00:02:18,170
+All documents of the same
+chunk live in the same shard.
+
+42
+00:02:18,170 --> 00:02:21,800
+If we would have only
+one magnanimous chunk,
+
+43
+00:02:21,800 --> 00:02:26,450
+we could only have one
+single shard in our cluster.
+
+44
+00:02:26,450 --> 00:02:31,370
+The number of chunks
+that our shard key allows
+
+45
+00:02:31,370 --> 00:02:36,220
+may define the max number
+of shards of our system.
+
+46
+00:02:36,220 --> 00:02:39,000
+This is why cardinality
+of the shard key
+
+47
+00:02:39,000 --> 00:02:41,550
+is an important
+aspect to consider.
+
+48
+00:02:41,550 --> 00:02:44,400
+There are other aspects that
+will determine the number
+
+49
+00:02:44,400 --> 00:02:47,490
+of chunks within your shard.
+
+50
+00:02:47,490 --> 00:02:51,250
+The first one is our chunk size.
+
+51
+00:02:51,250 --> 00:02:55,660
+By default, MongoDB takes 64
+megabytes as the default chunk
+
+52
+00:02:55,660 --> 00:02:56,800
+size.
+
+53
+00:02:56,800 --> 00:03:01,060
+That means that if a chunk
+is about 64 megabytes,
+
+54
+00:03:01,060 --> 00:03:05,690
+or within 64 megatons
+range, it will be split.
+
+55
+00:03:05,690 --> 00:03:08,890
+We can define a chunk size
+between the values of one
+
+56
+00:03:08,890 --> 00:03:13,130
+megabyte and 1024
+and one gigabyte.
+
+57
+00:03:13,130 --> 00:03:17,330
+The chunk size is
+configurable during runtime.
+
+58
+00:03:17,330 --> 00:03:19,690
+So if we decide to
+change a chunk size,
+
+59
+00:03:19,690 --> 00:03:21,850
+we can easily do so.
+
+60
+00:03:21,850 --> 00:03:24,910
+But before we go in
+changing our chunk size,
+
+61
+00:03:24,910 --> 00:03:28,850
+let's have a look to how many
+chunks we currently hold.
+
+62
+00:03:28,850 --> 00:03:31,060
+As you can see here,
+from our sh.status,
+
+63
+00:03:31,060 --> 00:03:34,780
+the chunks mark
+tells me that shard--
+
+64
+00:03:34,780 --> 00:03:37,420
+m103 shard 1 has two chunks.
+
+65
+00:03:37,420 --> 00:03:40,890
+While m103 shard
+2 has one chunk.
+
+66
+00:03:40,890 --> 00:03:44,470
+But I want to lower my chunk
+size to see what happens.
+
+67
+00:03:44,470 --> 00:03:46,330
+To do that, what
+I need to do is,
+
+68
+00:03:46,330 --> 00:03:48,820
+basically, go to my
+settings collection
+
+69
+00:03:48,820 --> 00:03:52,600
+and save a document
+with ID chunk size,
+
+70
+00:03:52,600 --> 00:03:56,530
+with the determined value that
+I intend the chunk size to be,
+
+71
+00:03:56,530 --> 00:03:58,090
+in megabytes.
+
+72
+00:03:58,090 --> 00:04:03,760
+Once I've done so, if
+I run again, sh.status,
+
+73
+00:04:03,760 --> 00:04:05,960
+I can see that nothing changed.
+
+74
+00:04:05,960 --> 00:04:07,740
+Well, why?
+
+75
+00:04:07,740 --> 00:04:12,690
+Well, the component responsible
+for the thing is the mongos,
+
+76
+00:04:12,690 --> 00:04:17,070
+and since we have not given any
+indication or signal to mongos
+
+77
+00:04:17,070 --> 00:04:18,990
+that it needs to
+split anything--
+
+78
+00:04:18,990 --> 00:04:21,660
+because no new data came in--
+
+79
+00:04:21,660 --> 00:04:23,550
+it will basically do
+absolutely nothing.
+
+80
+00:04:23,550 --> 00:04:27,390
+If something is working, why
+Porter bother trying to fix it?
+
+81
+00:04:27,390 --> 00:04:31,380
+So, for us to see some action
+going on, what we need to do
+
+82
+00:04:31,380 --> 00:04:34,630
+is tell the mongos to
+actually do something.
+
+83
+00:04:34,630 --> 00:04:36,120
+So I'm going to go
+ahead and import
+
+84
+00:04:36,120 --> 00:04:40,350
+this other file, products part
+2 that I just recently changed,
+
+85
+00:04:40,350 --> 00:04:44,190
+so I can see some
+splitting going on.
+
+86
+00:04:44,190 --> 00:04:46,470
+Once I import this
+data, we'll connect back
+
+87
+00:04:46,470 --> 00:04:49,389
+to see if there is
+any more chunks.
+
+88
+00:04:49,389 --> 00:04:49,930
+Right, sweet.
+
+89
+00:04:49,930 --> 00:04:54,450
+So we're done with our
+imports, so let's connect back.
+
+90
+00:04:54,450 --> 00:04:59,670
+And again, let's do our
+sh.status for a second.
+
+91
+00:04:59,670 --> 00:05:00,840
+Sweet.
+
+92
+00:05:00,840 --> 00:05:05,400
+Now I have a lot more
+chunks, all kind of still
+
+93
+00:05:05,400 --> 00:05:07,900
+not very well balanced,
+but that's fine.
+
+94
+00:05:07,900 --> 00:05:10,200
+It will take them some
+time to actually balance
+
+95
+00:05:10,200 --> 00:05:12,224
+everything between all shards.
+
+96
+00:05:12,224 --> 00:05:13,890
+But, the good thing
+is that, I no longer
+
+97
+00:05:13,890 --> 00:05:16,770
+have just one and
+two chunks spread
+
+98
+00:05:16,770 --> 00:05:18,840
+across two different shards.
+
+99
+00:05:18,840 --> 00:05:22,340
+I have around 51
+chunks right now.
+
+100
+00:05:22,340 --> 00:05:26,040
+And if I run it again, I'll see
+that, eventually, the system
+
+101
+00:05:26,040 --> 00:05:28,270
+will be balanced.
+
+102
+00:05:28,270 --> 00:05:30,850
+Another aspect that will
+be important for the number
+
+103
+00:05:30,850 --> 00:05:34,120
+of chunks that we can generate
+will be the shard key values
+
+104
+00:05:34,120 --> 00:05:35,350
+frequency.
+
+105
+00:05:35,350 --> 00:05:38,740
+Now, let's consider that
+the chosen shard key
+
+106
+00:05:38,740 --> 00:05:40,630
+wasn't that good after all.
+
+107
+00:05:40,630 --> 00:05:43,690
+Although the cardinality
+initially was very good,
+
+108
+00:05:43,690 --> 00:05:45,970
+we have an abnormal
+high frequency
+
+109
+00:05:45,970 --> 00:05:48,320
+of some keys over time.
+
+110
+00:05:48,320 --> 00:05:51,400
+So let's say, for example,
+if 90% of our new documents
+
+111
+00:05:51,400 --> 00:05:54,970
+have the same shard
+key value, this
+
+112
+00:05:54,970 --> 00:05:58,990
+might generate an
+abnormal situation.
+
+113
+00:05:58,990 --> 00:06:01,810
+What do we call jumbo chunks?
+
+114
+00:06:01,810 --> 00:06:04,990
+Jumbo chunks can be
+damaging because they
+
+115
+00:06:04,990 --> 00:06:08,200
+are chunks which are way
+larger than the default
+
+116
+00:06:08,200 --> 00:06:10,870
+or defined chunk size.
+
+117
+00:06:10,870 --> 00:06:12,700
+The minute a chunk
+becomes larger
+
+118
+00:06:12,700 --> 00:06:15,550
+than the defined
+chunk size, they
+
+119
+00:06:15,550 --> 00:06:17,790
+will be marked as jumbo chunks.
+
+120
+00:06:17,790 --> 00:06:20,020
+Jumbo chunks cannot be moved.
+
+121
+00:06:20,020 --> 00:06:23,740
+If the balancer sees a chunk
+which is marked as jumbo,
+
+122
+00:06:23,740 --> 00:06:25,690
+you will not even
+try to balance it.
+
+123
+00:06:25,690 --> 00:06:28,210
+You will just leave
+it in its place,
+
+124
+00:06:28,210 --> 00:06:32,080
+because it's basically marked
+as too big to be moved.
+
+125
+00:06:32,080 --> 00:06:33,940
+In very extreme
+cases, there will
+
+126
+00:06:33,940 --> 00:06:37,120
+be no split point
+on those chunks,
+
+127
+00:06:37,120 --> 00:06:40,000
+and therefore, they will
+not be able to be moved
+
+128
+00:06:40,000 --> 00:06:42,970
+at all, or even
+split, and that can be
+
+129
+00:06:42,970 --> 00:06:45,310
+very, very damaging situation.
+
+130
+00:06:45,310 --> 00:06:47,780
+So, keep an eye for that.
+
+131
+00:06:47,780 --> 00:06:50,270
+Please do consider the
+frequency of our shard key,
+
+132
+00:06:50,270 --> 00:06:55,830
+to avoid situations like jumbo
+chunks as much as possible.
+
+133
+00:06:55,830 --> 00:06:57,200
+So, let's recap.
+
+134
+00:06:57,200 --> 00:06:59,900
+Chunks are logical
+groups of documents
+
+135
+00:06:59,900 --> 00:07:03,650
+that are based out of
+the shard key key space,
+
+136
+00:07:03,650 --> 00:07:06,620
+and have bounds
+associated to it.
+
+137
+00:07:06,620 --> 00:07:08,690
+Min bound, inclusive.
+
+138
+00:07:08,690 --> 00:07:11,870
+Max bound, exclusive.
+
+139
+00:07:11,870 --> 00:07:15,850
+A chunk can only live at one
+designated shard at the time.
+
+140
+00:07:15,850 --> 00:07:19,420
+And all documents within the
+bound defined by the chunk
+
+141
+00:07:19,420 --> 00:07:22,120
+live in the same shard.
+
+142
+00:07:22,120 --> 00:07:26,470
+Shard key cardinality frequency
+and configured chunk size
+
+143
+00:07:26,470 --> 00:07:28,390
+will determine the
+number of chunks
+
+144
+00:07:28,390 --> 00:00:00,000
+in your sharded collection.
+

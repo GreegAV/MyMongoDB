@@ -1,0 +1,757 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:02,930
+In this lesson, we will
+cover the file structure
+
+3
+00:00:02,930 --> 00:00:06,140
+of a MongoDB standalone server.
+
+4
+00:00:06,140 --> 00:00:08,090
+This is a list of the
+files you can expect
+
+5
+00:00:08,090 --> 00:00:11,450
+to find in a data directory of
+a MongoDB server or standalone
+
+6
+00:00:11,450 --> 00:00:12,530
+process.
+
+7
+00:00:12,530 --> 00:00:14,324
+You typically never
+need to interact
+
+8
+00:00:14,324 --> 00:00:15,740
+with the files in
+this data folder
+
+9
+00:00:15,740 --> 00:00:19,000
+unless directed to by
+MongoDB support personnel
+
+10
+00:00:19,000 --> 00:00:21,920
+or through a procedure
+detailed in our documentation.
+
+11
+00:00:21,920 --> 00:00:24,650
+None of these files are
+designed for user access
+
+12
+00:00:24,650 --> 00:00:26,690
+or modification,
+and modifying them
+
+13
+00:00:26,690 --> 00:00:28,940
+can cause crashes or data loss.
+
+14
+00:00:28,940 --> 00:00:30,890
+If you want to explore,
+please take time
+
+15
+00:00:30,890 --> 00:00:35,070
+to make sure you are
+performing read functions only.
+
+16
+00:00:35,070 --> 00:00:38,680
+Let's take a look at a
+real MongoDB deployment.
+
+17
+00:00:38,680 --> 00:00:40,360
+This group of files
+here is related
+
+18
+00:00:40,360 --> 00:00:42,370
+to how the WiredTiger
+storage engine keeps
+
+19
+00:00:42,370 --> 00:00:43,780
+track of information
+like cluster
+
+20
+00:00:43,780 --> 00:00:47,140
+metadata and WiredTiger-specific
+configuration options.
+
+21
+00:00:47,140 --> 00:00:50,230
+The WiredTiger.lock
+file acts as a safety.
+
+22
+00:00:50,230 --> 00:00:52,870
+If you ran a second
+simultaneous MongoDB process
+
+23
+00:00:52,870 --> 00:00:55,900
+and pointed at this
+folder, the lock file
+
+24
+00:00:55,900 --> 00:00:58,060
+helps prevent that
+second MongoDB process
+
+25
+00:00:58,060 --> 00:00:59,500
+from starting up.
+
+26
+00:00:59,500 --> 00:01:01,390
+If you experience an
+unclean shutdown such,
+
+27
+00:01:01,390 --> 00:01:04,599
+as the host machine losing
+power or a crash of some sort,
+
+28
+00:01:04,599 --> 00:01:07,240
+you may find that you cannot
+start up the MongoD due to this
+
+29
+00:01:07,240 --> 00:01:08,410
+lock file.
+
+30
+00:01:08,410 --> 00:01:10,390
+You may be instructed
+to delete lock files
+
+31
+00:01:10,390 --> 00:01:12,760
+before restarting the MongoD.
+
+32
+00:01:12,760 --> 00:01:14,350
+Remember that if
+you are not guided
+
+33
+00:01:14,350 --> 00:01:16,810
+by MongoDB support or
+a documented procedure,
+
+34
+00:01:16,810 --> 00:01:21,010
+do not interact with
+any of these files.
+
+35
+00:01:21,010 --> 00:01:24,280
+This next group of files
+ending in .wt are related
+
+36
+00:01:24,280 --> 00:01:27,610
+to collection and
+index the data itself.
+
+37
+00:01:27,610 --> 00:01:32,230
+These are your collection data,
+and these are your index data.
+
+38
+00:01:32,230 --> 00:01:34,450
+MongoDB WiredTiger
+stores index data
+
+39
+00:01:34,450 --> 00:01:37,030
+as a separate structure
+from collection data.
+
+40
+00:01:37,030 --> 00:01:40,120
+Each collection an
+index gets its own file.
+
+41
+00:01:40,120 --> 00:01:42,430
+Even in a brand new
+MongoDB deployment,
+
+42
+00:01:42,430 --> 00:01:44,650
+you typically have a few
+databases and collections
+
+43
+00:01:44,650 --> 00:01:48,070
+by default, so you should always
+see some collection in index
+
+44
+00:01:48,070 --> 00:01:49,770
+.wt files.
+
+45
+00:01:49,770 --> 00:01:51,520
+You can try to introspect
+these data files
+
+46
+00:01:51,520 --> 00:01:53,470
+using a program like
+Strings, but there's not
+
+47
+00:01:53,470 --> 00:01:55,970
+much human readable data here.
+
+48
+00:01:55,970 --> 00:01:57,760
+These files are designed
+to be interacted
+
+49
+00:01:57,760 --> 00:01:59,860
+with through the MongoDB
+server process, rather
+
+50
+00:01:59,860 --> 00:02:01,480
+than a third party tool.
+
+51
+00:02:01,480 --> 00:02:05,320
+Modifying these tools can
+lead to data loss and crashes.
+
+52
+00:02:05,320 --> 00:02:08,180
+Now this diagnostic.data folder
+looks pretty interesting.
+
+53
+00:02:08,180 --> 00:02:10,050
+Let's take a quick look.
+
+54
+00:02:10,050 --> 00:02:13,650
+This data contains diagnostic
+data captured for specific use
+
+55
+00:02:13,650 --> 00:02:15,750
+by MongoDB support.
+
+56
+00:02:15,750 --> 00:02:18,660
+To be very clear, we
+are not capturing any
+
+57
+00:02:18,660 --> 00:02:20,640
+of your actual private data.
+
+58
+00:02:20,640 --> 00:02:23,940
+The diagnostic data is captured
+by our Full Time Data Capture,
+
+59
+00:02:23,940 --> 00:02:26,050
+or FTDC module.
+
+60
+00:02:26,050 --> 00:02:29,190
+FTDC collects data from
+the following commands.
+
+61
+00:02:29,190 --> 00:02:32,370
+If you try to take a look at
+the data produced by the FTDC
+
+62
+00:02:32,370 --> 00:02:34,380
+module using something
+like Strings,
+
+63
+00:02:34,380 --> 00:02:37,620
+you'll find that it's
+not human readable.
+
+64
+00:02:37,620 --> 00:02:41,040
+This data is only used
+for diagnostic purposes
+
+65
+00:02:41,040 --> 00:02:43,170
+by MongoDB support engineers.
+
+66
+00:02:43,170 --> 00:02:45,270
+And they can only
+look at that data
+
+67
+00:02:45,270 --> 00:02:48,490
+if you explicitly provide it.
+
+68
+00:02:48,490 --> 00:02:51,550
+Moving forward, let's take
+a look at our journal files.
+
+69
+00:02:51,550 --> 00:02:53,800
+Each of these journal files
+are part of the WiredTiger
+
+70
+00:02:53,800 --> 00:02:55,300
+journaling system.
+
+71
+00:02:55,300 --> 00:02:57,820
+Let's talk about
+that just briefly.
+
+72
+00:02:57,820 --> 00:03:00,010
+With MongoDB WiredTiger,
+write operations
+
+73
+00:03:00,010 --> 00:03:03,310
+are buffered in memory and
+are flushed every 60 seconds,
+
+74
+00:03:03,310 --> 00:03:05,200
+creating a checkpoint of data.
+
+75
+00:03:05,200 --> 00:03:07,990
+WiredTiger also uses a
+write ahead logging system
+
+76
+00:03:07,990 --> 00:03:10,060
+to an on disk journal file.
+
+77
+00:03:10,060 --> 00:03:12,179
+Journal entries are
+first buffered in memory,
+
+78
+00:03:12,179 --> 00:03:13,720
+and then WiredTiger
+syncs the journal
+
+79
+00:03:13,720 --> 00:03:16,120
+to disk every 50 milliseconds.
+
+80
+00:03:16,120 --> 00:03:19,200
+Each journal file is limited
+to 100 megabytes of size.
+
+81
+00:03:19,200 --> 00:03:21,340
+WiredTiger uses a
+file rotation method
+
+82
+00:03:21,340 --> 00:03:23,800
+for syncing data to disk.
+
+83
+00:03:23,800 --> 00:03:25,540
+In the event of a
+failure, WiredTiger
+
+84
+00:03:25,540 --> 00:03:27,280
+can use the journal
+to recover data that
+
+85
+00:03:27,280 --> 00:03:29,380
+occurred between checkpoints.
+
+86
+00:03:29,380 --> 00:03:31,300
+For example, during
+normal operations,
+
+87
+00:03:31,300 --> 00:03:34,060
+WiredTiger flushes data
+to disk every 60 seconds,
+
+88
+00:03:34,060 --> 00:03:36,990
+or when the journal file
+has 2 gigabytes of data.
+
+89
+00:03:36,990 --> 00:03:40,240
+These flushes again create
+a durable checkpoint.
+
+90
+00:03:40,240 --> 00:03:43,640
+If the MongoD crashes
+between checkpoints,
+
+91
+00:03:43,640 --> 00:03:45,550
+there is a possibility
+that data was not
+
+92
+00:03:45,550 --> 00:03:47,890
+safely and fully written.
+
+93
+00:03:47,890 --> 00:03:50,200
+When the MongoDB
+gets back online,
+
+94
+00:03:50,200 --> 00:03:53,800
+WiredTiger can check if there
+is any recovery to be made.
+
+95
+00:03:53,800 --> 00:03:55,920
+In case that there are
+some incomplete writes,
+
+96
+00:03:55,920 --> 00:03:57,850
+WiredTiger looks at
+the existing data
+
+97
+00:03:57,850 --> 00:04:00,940
+files to find the identifier
+of the last checkpoint.
+
+98
+00:04:00,940 --> 00:04:02,620
+It then searches
+the journal files
+
+99
+00:04:02,620 --> 00:04:04,900
+for the record that
+matches the identifier
+
+100
+00:04:04,900 --> 00:04:06,610
+of the last checkpoint.
+
+101
+00:04:06,610 --> 00:04:09,250
+Finally, it applies operations
+in the journal files
+
+102
+00:04:09,250 --> 00:04:11,110
+since the last checkpoint.
+
+103
+00:04:11,110 --> 00:04:15,080
+At the end, the MongoDB server
+can resume normal execution.
+
+104
+00:04:15,080 --> 00:04:17,660
+Let's take a look at
+the last group of files.
+
+105
+00:04:17,660 --> 00:04:19,899
+The mongod.lock file
+has a similar function
+
+106
+00:04:19,899 --> 00:04:22,029
+to the WiredTiger.lock file.
+
+107
+00:04:22,029 --> 00:04:24,010
+If this file is
+not empty, it means
+
+108
+00:04:24,010 --> 00:04:25,660
+that a MongoDB
+process is currently
+
+109
+00:04:25,660 --> 00:04:27,460
+active in this directory.
+
+110
+00:04:27,460 --> 00:04:29,440
+Any other MongoDB
+process attempting
+
+111
+00:04:29,440 --> 00:04:33,520
+to access this directory will
+fail to startup in that event.
+
+112
+00:04:33,520 --> 00:04:36,070
+If this file is empty,
+then everything is clear.
+
+113
+00:04:36,070 --> 00:04:39,070
+In some unusual situations,
+like an unclean shutdown,
+
+114
+00:04:39,070 --> 00:04:40,960
+the mongod.lock
+file won't be empty,
+
+115
+00:04:40,960 --> 00:04:44,230
+even though the MongoD
+is no longer running.
+
+116
+00:04:44,230 --> 00:04:46,330
+You may need to delete
+the mongod.lock file
+
+117
+00:04:46,330 --> 00:04:49,700
+if directed to by support
+or our documentation.
+
+118
+00:04:49,700 --> 00:04:52,630
+These remaining two files are
+more support and metadata files
+
+119
+00:04:52,630 --> 00:04:53,980
+for WiredTiger.
+
+120
+00:04:53,980 --> 00:04:55,870
+Remember, you should
+never need to interact
+
+121
+00:04:55,870 --> 00:04:59,320
+with any of these files
+and modifying them may
+
+122
+00:04:59,320 --> 00:05:02,545
+result in crashes or data loss.
+
+123
+00:05:02,545 --> 00:05:04,920
+In addition to the files held
+here in the data directory,
+
+124
+00:05:04,920 --> 00:05:06,420
+there is also the log file.
+
+125
+00:05:06,420 --> 00:05:07,920
+We're going to be
+going over logging
+
+126
+00:05:07,920 --> 00:05:09,520
+in more detail in
+the later lesson.
+
+127
+00:05:09,520 --> 00:05:12,410
+But just to give you a quick
+look, you can see in my log,
+
+128
+00:05:12,410 --> 00:05:14,785
+there's not a whole lot of
+information in here right now.
+
+129
+00:05:14,785 --> 00:05:17,400
+That's because I'm not really
+doing anything with my server.
+
+130
+00:05:17,400 --> 00:05:19,440
+As you use your MongoDB
+server, the log file
+
+131
+00:05:19,440 --> 00:05:21,930
+will fill with
+additional information.
+
+132
+00:05:21,930 --> 00:05:24,450
+These log files are vital
+for post failure diagnostics
+
+133
+00:05:24,450 --> 00:05:26,667
+and should be treated
+with care as well.
+
+134
+00:05:26,667 --> 00:05:28,500
+It's up to you if you
+want to place your log
+
+135
+00:05:28,500 --> 00:05:31,000
+files in the same directory
+as your data files.
+
+136
+00:05:31,000 --> 00:05:33,160
+It's not a bad idea to
+keep them separate though.
+
+137
+00:05:33,160 --> 00:05:35,160
+There's one more file
+that we should talk about,
+
+138
+00:05:35,160 --> 00:05:36,960
+but it's in neither
+of the two directories
+
+139
+00:05:36,960 --> 00:05:39,180
+we've talked about so far.
+
+140
+00:05:39,180 --> 00:05:44,520
+This mongodb-27017.sock file is
+a socket file used by MongoDB
+
+141
+00:05:44,520 --> 00:05:47,900
+to create a socket connection
+at the specified port.
+
+142
+00:05:47,900 --> 00:05:51,540
+MongoDB needs to use sockets
+for interprocess communications.
+
+143
+00:05:51,540 --> 00:05:54,210
+Without this file, the
+MongoDB cannot function.
+
+144
+00:05:54,210 --> 00:05:57,180
+This file is created at startup
+and lets the MongoDB server
+
+145
+00:05:57,180 --> 00:05:58,890
+own this port.
+
+146
+00:05:58,890 --> 00:06:00,870
+If there is a crash or
+other unclean shutdown,
+
+147
+00:06:00,870 --> 00:06:04,110
+you might find an error on
+startup related to this file.
+
+148
+00:06:04,110 --> 00:06:06,900
+You can safely delete it
+if directed to by support
+
+149
+00:06:06,900 --> 00:06:09,450
+or our documentation
+in that event.
+
+150
+00:06:09,450 --> 00:06:10,830
+Let's recap.
+
+151
+00:06:10,830 --> 00:06:13,590
+Some files, such as
+diagnostic.data and your log
+
+152
+00:06:13,590 --> 00:06:15,900
+files, are used
+by MongoDB support
+
+153
+00:06:15,900 --> 00:06:18,630
+for helping you resolve
+problems with your database.
+
+154
+00:06:18,630 --> 00:06:20,970
+The rest are exclusively
+used by the MongoDB server
+
+155
+00:06:20,970 --> 00:06:22,950
+process for normal
+operations and should not
+
+156
+00:06:22,950 --> 00:06:26,640
+be modified without specific
+direction from MongoDB support.
+
+157
+00:06:26,640 --> 00:06:29,580
+Defer to the MongoDB
+support or our documentation
+
+158
+00:06:29,580 --> 00:00:00,000
+for instructions on interacting
+with any of these files.
+

@@ -1,0 +1,733 @@
+
+1
+00:00:00.000 --> 00:00:00.580
+
+
+2
+00:00:00.580 --> 00:00:03.790
+SCRAM-SHA-1 is one of the five
+mechanisms for authentication
+
+3
+00:00:03.790 --> 00:00:06.400
+to MongoDB as a client user.
+
+4
+00:00:06.400 --> 00:00:08.440
+It's also the default
+authentication mechanism
+
+5
+00:00:08.440 --> 00:00:09.850
+for MongoDB.
+
+6
+00:00:09.850 --> 00:00:13.990
+SCRAM-SHA-1 is a client response
+mechanism for authentication.
+
+7
+00:00:13.990 --> 00:00:16.840
+In the case of MongoDB, it's
+a username and password way
+
+8
+00:00:16.840 --> 00:00:19.060
+to authenticate to MongoDB.
+
+9
+00:00:19.060 --> 00:00:21.484
+Just remember that when
+we say SCRAM-SHA-1,
+
+10
+00:00:21.484 --> 00:00:22.900
+we're talking about
+authenticating
+
+11
+00:00:22.900 --> 00:00:25.550
+via your username and password.
+
+12
+00:00:25.550 --> 00:00:27.820
+SCRAM-SHA-1 is an internet
+engineering task force
+
+13
+00:00:27.820 --> 00:00:28.810
+standard.
+
+14
+00:00:28.810 --> 00:00:31.660
+It defines best practice
+methods for implementation
+
+15
+00:00:31.660 --> 00:00:34.330
+of challenge/response mechanisms
+for authenticating users
+
+16
+00:00:34.330 --> 00:00:35.289
+with passwords.
+
+17
+00:00:35.289 --> 00:00:37.330
+I don't want to get into
+the nitty gritty details
+
+18
+00:00:37.330 --> 00:00:40.120
+of SCRAM-SHA-1, but you can
+know that it'll protect you
+
+19
+00:00:40.120 --> 00:00:41.920
+from the following attacks.
+
+20
+00:00:41.920 --> 00:00:43.534
+First there's eavesdropping.
+
+21
+00:00:43.534 --> 00:00:44.950
+This is where an
+attacker can read
+
+22
+00:00:44.950 --> 00:00:46.783
+all the traffic exchanged
+between the client
+
+23
+00:00:46.783 --> 00:00:47.890
+and the server.
+
+24
+00:00:47.890 --> 00:00:49.780
+To protect against
+this, a client
+
+25
+00:00:49.780 --> 00:00:53.450
+never sends their password as
+plain text over the network.
+
+26
+00:00:53.450 --> 00:00:54.459
+Then we have replay.
+
+27
+00:00:54.459 --> 00:00:56.500
+This is where an attacker
+can resend the client's
+
+28
+00:00:56.500 --> 00:00:59.090
+valid responses to the server.
+
+29
+00:00:59.090 --> 00:01:02.050
+This is mitigated because
+each authentication session is
+
+30
+00:01:02.050 --> 00:01:05.379
+made up by unique [INAUDIBLE],
+so that each protocol
+
+31
+00:01:05.379 --> 00:01:08.480
+messages are only valid
+for a single session.
+
+32
+00:01:08.480 --> 00:01:10.444
+Database compromise.
+
+33
+00:01:10.444 --> 00:01:11.860
+This is where an
+attacker can read
+
+34
+00:01:11.860 --> 00:01:14.950
+the contents of the
+servers persistent memory.
+
+35
+00:01:14.950 --> 00:01:17.440
+SCRAM-SHA-1 mitigates this
+by salting and iteratively
+
+36
+00:01:17.440 --> 00:01:20.320
+hashing the passwords
+before storing them.
+
+37
+00:01:20.320 --> 00:01:23.470
+With SCRAM-SHA-1, an attacker
+is unable to pose as a server
+
+38
+00:01:23.470 --> 00:01:25.570
+without the knowledge of
+a client's credentials,
+
+39
+00:01:25.570 --> 00:01:29.940
+therefore completely mitigating
+the malicious server attack.
+
+40
+00:01:29.940 --> 00:01:32.560
+MongoDB-CR is another
+one of the five client
+
+41
+00:01:32.560 --> 00:01:34.480
+or user authentication
+mechanisms
+
+42
+00:01:34.480 --> 00:01:36.770
+supported by MongoDB.
+
+43
+00:01:36.770 --> 00:01:39.010
+MongoDB-CR is another
+challenge/response
+
+44
+00:01:39.010 --> 00:01:40.750
+authentication mechanism.
+
+45
+00:01:40.750 --> 00:01:43.780
+It is also another user name
+and password authentication
+
+46
+00:01:43.780 --> 00:01:45.040
+mechanism.
+
+47
+00:01:45.040 --> 00:01:48.280
+With the release of 3.0,
+SCRAM-SHA-1 has effectively
+
+48
+00:01:48.280 --> 00:01:50.860
+replaced MongoDB-CR.
+
+49
+00:01:50.860 --> 00:01:56.980
+This means that, as of 3.0,
+MongoDB-CR has been deprecated.
+
+50
+00:01:56.980 --> 00:01:59.350
+You will only
+encounter MongoDB-CR
+
+51
+00:01:59.350 --> 00:02:03.690
+on versions of MongoDB
+older than 3.0 or on servers
+
+52
+00:02:03.690 --> 00:02:06.670
+that were upgraded from
+a previous version to 3.0
+
+53
+00:02:06.670 --> 00:02:08.259
+or above.
+
+54
+00:02:08.259 --> 00:02:10.750
+If you do encounter
+MongoDB-Cr in production,
+
+55
+00:02:10.750 --> 00:02:14.260
+it's highly recommended that you
+upgrade to a version of MongoDB
+
+56
+00:02:14.260 --> 00:02:16.750
+where SCRAM-SHA-1 is
+supported, and that you then
+
+57
+00:02:16.750 --> 00:02:22.249
+migrate this old users from
+MongoDB-CR to SCRAM-SHA-1.
+
+58
+00:02:22.249 --> 00:02:24.790
+We'll have a lesson that walks
+you through this process later
+
+59
+00:02:24.790 --> 00:02:26.480
+in the course.
+
+60
+00:02:26.480 --> 00:02:28.720
+Another commonly used
+authentication mechanism
+
+61
+00:02:28.720 --> 00:02:31.990
+by MongoDB is X.509.
+
+62
+00:02:31.990 --> 00:02:36.880
+X.509 is a certificate-based
+authentication mechanism.
+
+63
+00:02:36.880 --> 00:02:42.130
+It became an authentication
+option as of version 2.6.
+
+64
+00:02:42.130 --> 00:02:46.120
+With X.509, you are required
+to have a TLS connection.
+
+65
+00:02:46.120 --> 00:02:50.170
+If you're using MongoDB
+3.2.6 or greater,
+
+66
+00:02:50.170 --> 00:02:51.940
+then your version of
+MongoDB is already
+
+67
+00:02:51.940 --> 00:02:54.610
+compiled with TLS support.
+
+68
+00:02:54.610 --> 00:02:57.310
+If it's not, then it's easy
+to compile a version that
+
+69
+00:02:57.310 --> 00:03:00.630
+has TLS support included.
+
+70
+00:03:00.630 --> 00:03:03.220
+LDAP is yet another
+authentication mechanism
+
+71
+00:03:03.220 --> 00:03:06.840
+for client authentication
+with MongoDB.
+
+72
+00:03:06.840 --> 00:03:11.110
+It stands for Lightweight
+Directory Access Protocol.
+
+73
+00:03:11.110 --> 00:03:13.420
+It's important to note
+that LDAP support is only
+
+74
+00:03:13.420 --> 00:03:16.300
+provided in the Enterprise
+version of MongoDB.
+
+75
+00:03:16.300 --> 00:03:19.210
+LDAP is a directory service
+protocol commonly used
+
+76
+00:03:19.210 --> 00:03:20.590
+within companies.
+
+77
+00:03:20.590 --> 00:03:23.410
+It provides a mechanism for
+accessing and maintaining
+
+78
+00:03:23.410 --> 00:03:26.140
+distributed directory
+information.
+
+79
+00:03:26.140 --> 00:03:29.470
+LDAP provides a mechanism
+for accessing and maintaining
+
+80
+00:03:29.470 --> 00:03:33.310
+distributed directory
+information over a network.
+
+81
+00:03:33.310 --> 00:03:35.500
+This protocol is
+thus frequently used
+
+82
+00:03:35.500 --> 00:03:38.350
+by email and other programs
+to look up information
+
+83
+00:03:38.350 --> 00:03:39.550
+from a server.
+
+84
+00:03:39.550 --> 00:03:41.470
+With LDAP of
+authentication support,
+
+85
+00:03:41.470 --> 00:03:43.330
+users can authenticate
+to MongoDB
+
+86
+00:03:43.330 --> 00:03:45.430
+using their LDAP credentials.
+
+87
+00:03:45.430 --> 00:03:48.490
+This makes LDAP an external
+authentication mechanism.
+
+88
+00:03:48.490 --> 00:03:50.320
+This means that the
+actual credentials
+
+89
+00:03:50.320 --> 00:03:52.210
+used to authenticate
+the client are not
+
+90
+00:03:52.210 --> 00:03:54.460
+stored directly in MongoDB.
+
+91
+00:03:54.460 --> 00:03:57.100
+Kerberos is the last client
+authentication mechanism
+
+92
+00:03:57.100 --> 00:03:59.140
+for MongoDB.
+
+93
+00:03:59.140 --> 00:04:02.230
+It's important to note that like
+LDAP, Kerberos authentication
+
+94
+00:04:02.230 --> 00:04:07.030
+support is only provided in the
+Enterprise version of MongoDB.
+
+95
+00:04:07.030 --> 00:04:09.700
+Developed at MIT,
+Kerberos is an industry
+
+96
+00:04:09.700 --> 00:04:12.460
+standard authentication
+protocol for large client server
+
+97
+00:04:12.460 --> 00:04:14.380
+systems.
+
+98
+00:04:14.380 --> 00:04:17.680
+Kerberos is widely accepted to
+be a very secure authentication
+
+99
+00:04:17.680 --> 00:04:19.269
+mechanism.
+
+100
+00:04:19.269 --> 00:04:21.279
+Kerberos differs
+from LDAP in that
+
+101
+00:04:21.279 --> 00:04:24.800
+it was designed specifically for
+the purpose of authentication.
+
+102
+00:04:24.800 --> 00:04:27.490
+LDAP, on the other hand,
+wasn't designed specifically
+
+103
+00:04:27.490 --> 00:04:30.610
+for authentication but
+rather for storing metadata
+
+104
+00:04:30.610 --> 00:04:33.730
+about users in an organization.
+
+105
+00:04:33.730 --> 00:04:36.190
+Like LDAP, Kerberos
+authentication support
+
+106
+00:04:36.190 --> 00:04:39.130
+can authenticate a user to
+MongoDB using their Kerberos
+
+107
+00:04:39.130 --> 00:04:40.750
+credentials.
+
+108
+00:04:40.750 --> 00:04:43.420
+Again, this makes Kerberos
+an external authentication
+
+109
+00:04:43.420 --> 00:04:44.557
+mechanism.
+
+110
+00:04:44.557 --> 00:04:46.140
+This means that the
+actual credentials
+
+111
+00:04:46.140 --> 00:04:49.907
+used to authenticate the client
+are not stored in MongoDB.
+
+112
+00:04:49.907 --> 00:04:52.240
+Not only is it important to
+ensure that your clients can
+
+113
+00:04:52.240 --> 00:04:55.390
+securely connect to MongoDB,
+but it's also important
+
+114
+00:04:55.390 --> 00:04:57.670
+that the nodes in a replica
+set or sharded cluster
+
+115
+00:04:57.670 --> 00:05:00.310
+are able to
+communicate securely.
+
+116
+00:05:00.310 --> 00:05:02.470
+If your MongoDB
+replica set or sharded
+
+117
+00:05:02.470 --> 00:05:05.200
+cluster spans multiple
+data centers or touches
+
+118
+00:05:05.200 --> 00:05:07.630
+the internet in any
+way, it's very important
+
+119
+00:05:07.630 --> 00:05:10.490
+that you enable
+internal authentication.
+
+120
+00:05:10.490 --> 00:05:12.930
+However, even while
+most internal networks
+
+121
+00:05:12.930 --> 00:05:15.580
+are considered to be
+secure, enabling internal
+
+122
+00:05:15.580 --> 00:05:18.795
+authentication is still highly
+recommended in closed networks
+
+123
+00:05:18.795 --> 00:05:22.290
+to prevent attacks where a
+network becomes compromised.
+
+124
+00:05:22.290 --> 00:05:25.000
+MongoDB currently supports
+two internal authentication
+
+125
+00:05:25.000 --> 00:05:26.410
+mechanisms.
+
+126
+00:05:26.410 --> 00:05:30.010
+There's keyfile authentication
+which uses SCRAM-SHA-1
+
+127
+00:05:30.010 --> 00:05:32.470
+and X.509 authentication.
+
+128
+00:05:32.470 --> 00:05:35.380
+With keyfile authentication,
+the contents of your keyfile
+
+129
+00:05:35.380 --> 00:05:37.210
+essentially act as
+a shared password
+
+130
+00:05:37.210 --> 00:05:41.020
+between the members of your
+replica set or sharded cluster.
+
+131
+00:05:41.020 --> 00:05:43.690
+The same keyfile must be
+present on each member that
+
+132
+00:05:43.690 --> 00:05:45.370
+talks to one another.
+
+133
+00:05:45.370 --> 00:05:47.680
+Because of this,
+it's highly important
+
+134
+00:05:47.680 --> 00:05:50.327
+that you keep this file secure.
+
+135
+00:05:50.327 --> 00:05:51.785
+The actual contents
+of your keyfile
+
+136
+00:05:51.785 --> 00:05:55.130
+must be between 6
+and 1,024 characters,
+
+137
+00:05:55.130 --> 00:05:59.110
+and may only contain characters
+in the Base64 character set.
+
+138
+00:05:59.110 --> 00:06:02.050
+It's important to note that
+all whitespace characters are
+
+139
+00:06:02.050 --> 00:06:03.200
+ignored.
+
+140
+00:06:03.200 --> 00:06:08.150
+So my password and mypassword
+are effectively the same.
+
+141
+00:06:08.150 --> 00:06:11.410
+X.509 is another internal
+authentication mechanism.
+
+142
+00:06:11.410 --> 00:06:13.720
+And it utilizes certificates
+to authenticate members
+
+143
+00:06:13.720 --> 00:06:15.490
+to one another.
+
+144
+00:06:15.490 --> 00:06:17.980
+While you can use the same
+certificate on all members,
+
+145
+00:06:17.980 --> 00:06:19.630
+it is highly
+recommended that you
+
+146
+00:06:19.630 --> 00:06:22.540
+issue a different
+certificate to each member.
+
+147
+00:06:22.540 --> 00:06:25.510
+This way, if one of the
+certificates is compromised,
+
+148
+00:06:25.510 --> 00:06:27.550
+you'll only need to
+reissue and deploy
+
+149
+00:06:27.550 --> 00:06:29.470
+that one certificate
+instead of having
+
+150
+00:06:29.470 --> 00:06:31.420
+to update your entire cluster.
+
+151
+00:06:31.420 --> 00:06:34.420
+Finally, it's important to
+note that whenever you enable
+
+152
+00:06:34.420 --> 00:06:38.980
+internal authentication, either
+with X.509 or with keyfile
+
+153
+00:06:38.980 --> 00:06:41.280
+based authentication,
+this automatically will
+
+154
+00:06:41.280 --> 00:06:43.572
+enable client authentication.
+
+155
+00:06:43.572 --> 00:06:44.072

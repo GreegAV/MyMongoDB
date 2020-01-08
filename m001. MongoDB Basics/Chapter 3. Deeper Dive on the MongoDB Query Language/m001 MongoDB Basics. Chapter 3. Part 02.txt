@@ -1,0 +1,85 @@
+In another lesson I mention that, because of its flexible data model, MongoDB supports operators that allow us to detect the presence or absence of a given field.
+
+Also, as you know, although not usually a good idea, it is possible to have the same field in the collection have a different value type from one document to another.
+
+The MongoDB query language provides operators that enable us to handle both of these situations.
+
+They're called $exists and $type.
+
+So let's take a look at an example of $exists first.
+
+For this we'll look again at the M001 class Atlas cluster and the video.movies collection.
+
+Within the movies collection, we have quite a few old movies.
+
+Many of these movies predate the MPAA movie rating system.
+
+What we might want to do with an application is test for the existence of a rating.
+
+Here in compass, I've connected to the class Atlas cluster.
+
+Let's filter for documents that contain an MPAA rating field.
+
+So the syntax of $exists is that we specify the key were interested in testing for the existence of.
+
+And as the value for that key in our filter, we supply a document that has $exists as the key and a value of either true or false.
+
+If the value we specify here is true, then we will match documents that contain this key.
+
+And if it's false, we'll match documents that do not contain the key.
+
+Note that the documents containing the MPAA rating key are substantially less than the total number of documents in this collection.
+
+Let's do the reverse now and set $exists to false.
+
+Now we can see that movies retrieved in response to this query do not contain an MPAA rating field at all.
+
+If we scroll through the schema view, we see that right here where MPAA rating should appear, it does not.
+
+That's because with this filter applied, compass is only looking at documents that do not have this field.
+
+I should note here something you might run into with respect missing fields.
+
+No is a value that is commonly used in relational databases for rows that do not have any data for a particular column.
+
+And for this example, we're going to switch quickly to our Atlas sandbox cluster and take a look at the movie details collection.
+
+Some MongoDB users prefer to include a key and simply set its value to null for documents that have no value for that field.
+
+In order to support queries for nullish values, if you filter for something like this, tomato.consensus null, this filter will match both documents that explicitly have the value set to null, like we see in this document, and those that do not contain the key tomato.consensus at all, as we see in this document, which not only doesn't have tomato.consensus but doesn't have the tomato field period.
+
+For collections containing documents with null values for some fields, you will inevitably run into this.
+
+So be on the lookout.
+
+Now let's take a look at the $type operator.
+
+We'll continue to work with our video.movies collection for our example.
+
+Take a look at the viewer rating field.
+
+What we see here in the schema view for video.movies is that the value type for viewer rating really depends on which document we look at.
+
+Some have a value type for double, some have a value type of Int32, others have a value type of undefined.
+
+We can filter for documents that have a particular value type for a field using the $type operator.
+
+Let's look at an example.
+
+And for this, I'd like to return to the Mongo shell.
+
+Here I have a shell connected to the M001 class Atlas cluster.
+
+With this command, our filter will match only documents in the video.movies collection that have a value for viewerRating that is a 32-bit integer.
+
+And we can see that in each of these documents, the viewerRating is in fact an integer.
+
+I can flip this and look for just doubles instead.
+
+And here we can see that these are floating point values.
+
+If you'd like to review how to filter for other types, please see the documentation.
+
+It includes comprehensive coverage for all of the value types that you can filter for, along with additional detail about the $type operator.
+
+$exists and $type allow us to ask meta questions of sorts about documents in a collection, and thereby give us some important tools in working with MongoDB support for flexible data models.

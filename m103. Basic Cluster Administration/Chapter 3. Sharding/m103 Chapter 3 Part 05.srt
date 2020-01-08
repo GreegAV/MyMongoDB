@@ -1,0 +1,630 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,360
+In this lesson, we're going
+to talk about the shard key.
+
+3
+00:00:03,360 --> 00:00:05,520
+This is the indexed
+field or fields
+
+4
+00:00:05,520 --> 00:00:09,360
+that MongoDB uses to partition
+data in a sharded collection,
+
+5
+00:00:09,360 --> 00:00:12,580
+and distribute it across
+the shards in your cluster.
+
+6
+00:00:12,580 --> 00:00:14,220
+Let's start with
+how the shard key is
+
+7
+00:00:14,220 --> 00:00:16,230
+used to distribute your data.
+
+8
+00:00:16,230 --> 00:00:19,770
+Consider a collection with some
+number of documents in them.
+
+9
+00:00:19,770 --> 00:00:23,280
+MongoDB uses the shard key
+to divide up these documents
+
+10
+00:00:23,280 --> 00:00:26,610
+into logical groupings that
+MongoDB then distributes
+
+11
+00:00:26,610 --> 00:00:29,040
+across our sharded cluster.
+
+12
+00:00:29,040 --> 00:00:33,120
+MongoDB he refers to
+these groupings as chunks.
+
+13
+00:00:33,120 --> 00:00:36,930
+The value of the field or fields
+we choose as our shard key
+
+14
+00:00:36,930 --> 00:00:39,570
+help to define the
+inclusive lower bound,
+
+15
+00:00:39,570 --> 00:00:42,660
+and the exclusive upper
+bound of each chunk.
+
+16
+00:00:42,660 --> 00:00:45,270
+Because the shard key is used
+to define chunk boundaries,
+
+17
+00:00:45,270 --> 00:00:47,310
+it also defines
+which chunk a given
+
+18
+00:00:47,310 --> 00:00:49,740
+document is going to belong to.
+
+19
+00:00:49,740 --> 00:00:51,420
+Every time you
+write a new document
+
+20
+00:00:51,420 --> 00:00:55,380
+to the collection, the Mongo
+S router checks which shard
+
+21
+00:00:55,380 --> 00:00:59,580
+contains the appropriate chunk
+for that documents key value,
+
+22
+00:00:59,580 --> 00:01:02,990
+and routes the document
+to that shard only.
+
+23
+00:01:02,990 --> 00:01:04,620
+That's how sharded
+clusters handle
+
+24
+00:01:04,620 --> 00:01:06,750
+distributed write operations.
+
+25
+00:01:06,750 --> 00:01:10,320
+Depending on what shard
+is holding a given chunk,
+
+26
+00:01:10,320 --> 00:01:15,390
+a new document is routed to
+that shared and only that shard.
+
+27
+00:01:15,390 --> 00:01:17,310
+This also means that
+your shard key must
+
+28
+00:01:17,310 --> 00:01:20,070
+be present in every
+document in the collection,
+
+29
+00:01:20,070 --> 00:01:22,440
+and every new document inserted.
+
+30
+00:01:22,440 --> 00:01:26,490
+So I could shard
+on as sku or type,
+
+31
+00:01:26,490 --> 00:01:28,980
+but not imdb since
+that field isn't
+
+32
+00:01:28,980 --> 00:01:32,640
+included in every document
+within this collection.
+
+33
+00:01:32,640 --> 00:01:36,120
+Shard keys also support
+distributed read operations.
+
+34
+00:01:36,120 --> 00:01:39,000
+If you specify the shard
+key as part of your queries,
+
+35
+00:01:39,000 --> 00:01:42,240
+MongoDB can redirect the
+query to only those chunks,
+
+36
+00:01:42,240 --> 00:01:45,930
+and therefore, shards that
+contain the related data.
+
+37
+00:01:45,930 --> 00:01:49,020
+Ideally, your shard key should
+support the majority of queries
+
+38
+00:01:49,020 --> 00:01:50,824
+you run on the collection.
+
+39
+00:01:50,824 --> 00:01:52,740
+That way, the majority
+of your read operations
+
+40
+00:01:52,740 --> 00:01:55,320
+can be targeted
+to a single shard.
+
+41
+00:01:55,320 --> 00:01:57,360
+Without the shard
+key in the query,
+
+42
+00:01:57,360 --> 00:02:01,140
+the Mongo S router would need to
+check each shard in the cluster
+
+43
+00:02:01,140 --> 00:02:03,640
+to find the documents
+that match the query.
+
+44
+00:02:03,640 --> 00:02:06,450
+We'll go into the specifics
+of targeted versus broadcast
+
+45
+00:02:06,450 --> 00:02:08,889
+operations in a later lesson.
+
+46
+00:02:08,889 --> 00:02:12,600
+Let's go over a few important
+aspects of your shard key.
+
+47
+00:02:12,600 --> 00:02:15,570
+First, I mentioned
+earlier that the shard key
+
+48
+00:02:15,570 --> 00:02:19,030
+are an index field or
+fields in your collection.
+
+49
+00:02:19,030 --> 00:02:20,280
+This is a hard requirement.
+
+50
+00:02:20,280 --> 00:02:23,400
+You cannot select a field
+or fields for your shard key
+
+51
+00:02:23,400 --> 00:02:26,780
+if you do not have an existing
+index for the field or fields.
+
+52
+00:02:26,780 --> 00:02:30,570
+You'll need to create the index
+first before you can shard.
+
+53
+00:02:30,570 --> 00:02:32,910
+Sharding is a
+permanent operation.
+
+54
+00:02:32,910 --> 00:02:35,580
+Once you have selected
+your shard key, that's it.
+
+55
+00:02:35,580 --> 00:02:38,070
+Furthermore, the shard
+key is immutable.
+
+56
+00:02:38,070 --> 00:02:39,790
+Not only can you
+not change it later,
+
+57
+00:02:39,790 --> 00:02:43,920
+you cannot update the shard key
+values of the shard key fields
+
+58
+00:02:43,920 --> 00:02:47,020
+for any document
+in the collection.
+
+59
+00:02:47,020 --> 00:02:48,600
+So choose carefully.
+
+60
+00:02:48,600 --> 00:02:50,100
+The next lesson
+has some guidance
+
+61
+00:02:50,100 --> 00:02:53,850
+on choosing a good shard
+key, so stay tuned for that.
+
+62
+00:02:53,850 --> 00:02:57,630
+Finally, you cannot
+unshard a collection.
+
+63
+00:02:57,630 --> 00:03:00,660
+This kind of builds off of
+shard keys being immutable.
+
+64
+00:03:00,660 --> 00:03:02,550
+Once you have
+sharded a collection,
+
+65
+00:03:02,550 --> 00:03:05,412
+you cannot unshard it later.
+
+66
+00:03:05,412 --> 00:03:06,870
+The steps for
+sharding are actually
+
+67
+00:03:06,870 --> 00:03:08,320
+pretty straightforward.
+
+68
+00:03:08,320 --> 00:03:11,850
+First, you need to use
+sh.enablesharding, specifying
+
+69
+00:03:11,850 --> 00:03:14,340
+the name of the database,
+to enable sharding
+
+70
+00:03:14,340 --> 00:03:16,380
+for the specified database.
+
+71
+00:03:16,380 --> 00:03:18,954
+This does not automatically
+shard your collections.
+
+72
+00:03:18,954 --> 00:03:20,370
+It just means that
+the collections
+
+73
+00:03:20,370 --> 00:03:23,700
+in this particular database
+are eligible for sharding.
+
+74
+00:03:23,700 --> 00:03:25,230
+This won't affect
+other databases
+
+75
+00:03:25,230 --> 00:03:27,750
+in your MongoDB cluster.
+
+76
+00:03:27,750 --> 00:03:30,120
+Next, you have to
+create the index
+
+77
+00:03:30,120 --> 00:03:33,480
+to back your shard key for the
+collection you want to shard,
+
+78
+00:03:33,480 --> 00:03:36,126
+using db.collection.createindex.
+
+79
+00:03:36,126 --> 00:03:38,250
+Remember, we're going to
+substitute collection here
+
+80
+00:03:38,250 --> 00:03:42,780
+with the name of the collection
+we want to create the index on.
+
+81
+00:03:42,780 --> 00:03:45,630
+Finally, we're going to
+use sh.shardCollection,
+
+82
+00:03:45,630 --> 00:03:47,970
+specifying the full
+path to the collection,
+
+83
+00:03:47,970 --> 00:03:51,930
+and the shard key to shard
+the specified Collection
+
+84
+00:03:51,930 --> 00:03:55,330
+let's actually try this
+in action real quick.
+
+85
+00:03:55,330 --> 00:03:57,780
+So here, you can see I'm
+using sh.status status
+
+86
+00:03:57,780 --> 00:04:01,200
+to show that I have a two
+shard sharded cluster.
+
+87
+00:04:01,200 --> 00:04:03,900
+I'm currently connected
+to the Mongo S.
+
+88
+00:04:03,900 --> 00:04:06,600
+I'm going to switch
+to the m103 database,
+
+89
+00:04:06,600 --> 00:04:08,100
+because I want to
+shard the products
+
+90
+00:04:08,100 --> 00:04:10,500
+collection in that database.
+
+91
+00:04:10,500 --> 00:04:14,960
+I'm going to enable sharding
+on the m103 database first.
+
+92
+00:04:14,960 --> 00:04:16,450
+Now before we
+shard a collection,
+
+93
+00:04:16,450 --> 00:04:19,730
+we need to decide what
+key we will be using.
+
+94
+00:04:19,730 --> 00:04:23,100
+I'm using db.products.find0ne
+to show you those one document
+
+95
+00:04:23,100 --> 00:04:24,930
+from the products collection.
+
+96
+00:04:24,930 --> 00:04:28,055
+I'm going to use the sku
+field for my shard key.
+
+97
+00:04:28,055 --> 00:04:29,430
+Before sharding,
+I need to ensure
+
+98
+00:04:29,430 --> 00:04:33,030
+that the selected key or keys
+that compose my shard key
+
+99
+00:04:33,030 --> 00:04:34,810
+are supported by an index.
+
+100
+00:04:34,810 --> 00:04:37,630
+So let's create an
+index on sku using
+
+101
+00:04:37,630 --> 00:04:40,530
+db.collection.createindex.
+
+102
+00:04:40,530 --> 00:04:43,680
+So here, I'm creating
+the index on sku,
+
+103
+00:04:43,680 --> 00:04:45,480
+and I have specified
+ascending here.
+
+104
+00:04:45,480 --> 00:04:48,190
+It's not super important.
+
+105
+00:04:48,190 --> 00:04:50,430
+And you can see
+here that I now have
+
+106
+00:04:50,430 --> 00:04:53,280
+this additional index on sku.
+
+107
+00:04:53,280 --> 00:04:57,670
+Remember that all collections
+have an index on ID by default.
+
+108
+00:04:57,670 --> 00:04:59,670
+Finally, I'm going to
+shard the collection using
+
+109
+00:04:59,670 --> 00:05:01,520
+the next I just specified.
+
+110
+00:05:01,520 --> 00:05:04,270
+Here, I have the full path
+to the products collection,
+
+111
+00:05:04,270 --> 00:05:07,310
+m103.products, and
+then the shard key
+
+112
+00:05:07,310 --> 00:05:10,062
+that I want to use for
+this collection, sky.
+
+113
+00:05:10,062 --> 00:05:13,680
+If I run sh.status,
+I can now see
+
+114
+00:05:13,680 --> 00:05:18,330
+that the m103.primary
+collection has a shard key,
+
+115
+00:05:18,330 --> 00:05:20,070
+and has actually
+already been broken up
+
+116
+00:05:20,070 --> 00:05:22,750
+into three separate chunks.
+
+117
+00:05:22,750 --> 00:05:26,730
+So if I run sh.status
+again, we can see now
+
+118
+00:05:26,730 --> 00:05:28,650
+that the collection
+is marked as sharded
+
+119
+00:05:28,650 --> 00:05:30,570
+because it has a shard key.
+
+120
+00:05:30,570 --> 00:05:33,960
+My documents have actually been
+already broken up into chunks,
+
+121
+00:05:33,960 --> 00:05:36,840
+and distributed across the
+two shards in my cluster--
+
+122
+00:05:36,840 --> 00:05:40,180
+two chunks in shard 1,
+one chunk in shard 2.
+
+123
+00:05:40,180 --> 00:05:44,820
+And we can even see the ranges
+of values for each chunk.
+
+124
+00:05:44,820 --> 00:05:48,720
+To recap, your shard determines
+the partitioning and data
+
+125
+00:05:48,720 --> 00:05:52,080
+distribution of data across
+your sharted cluster.
+
+126
+00:05:52,080 --> 00:05:53,770
+Shard keys are immutable.
+
+127
+00:05:53,770 --> 00:05:55,950
+You cannot change
+them after sharding.
+
+128
+00:05:55,950 --> 00:05:57,990
+Shard key values
+are also immutable.
+
+129
+00:05:57,990 --> 00:06:00,840
+You cannot update a
+document shard key.
+
+130
+00:06:00,840 --> 00:06:03,270
+And you need to create
+the underlying index first
+
+131
+00:06:03,270 --> 00:00:00,000
+before sharding on the
+indexed field or fields.
+

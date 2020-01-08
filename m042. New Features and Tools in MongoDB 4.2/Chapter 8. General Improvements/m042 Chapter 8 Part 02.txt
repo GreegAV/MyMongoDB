@@ -1,0 +1,89 @@
+Great.
+
+What if we want to make more complex rules for some of our edge cases?
+
+What if a represents a score, and if a person doesn't have a score yet, what if we want to start them with 20 instead of zero, like what happens by default?
+
+So if they get one point, but they didn't have a score before, they should now get 21.
+
+We can now use the conditional expression in aggregation that says, if a was missing, type of a missing, then we give 21, otherwise, we just add the value of a and 21.
+
+Notice that that will also cause that same 21 to show up in an upsert case because an upsert is a document where the existing value of a was missing, and what if we wanted to add another rule that says, you can't get a score higher than 100.
+
+We want to cap everybody at 100.
+
+Well, all we have to do is wrap this conditional inside of a minimum expression, and says, you get the lower of 100 or your calculated score, so when we add 100 and one we get 101.
+
+100 is less than that, so your score's still 100.
+
+Now, when you get something other than a number, you might want to check for it, right?
+
+The aggregation expressions let you access the type of a field, or you can even converted using type conversion expressions, or you can just let the default behavior of some take care of it, but then you might want to save the current value in another field.
+
+So you could just set previous a to current value of a and this is what you will get then.
+
+Pretty powerful.
+
+Let's look at another example.
+
+Here, I have a very simple collection, where across all the documents, they have fields like a, b, and c, but not every document has every one of those fields.
+
+I could do a monthly update that says, if a or b are missing, they're numeric so set them to zero.
+
+If c is missing, set it to the string unset, and it would look something like this.
+
+We apply to all documents multi true, and we're going to replace the document with a merge of two objects.
+
+Root is second, because remember merge objects, the latest value always wins, and the first document that's being merged is the one with default values.
+
+a zero, b zero, c onset.
+
+So if root has any of these fields set, they will override the default values, otherwise, we are left with default values, and you can see that's exactly what happens.
+
+a is zero, b is zero here, c is unset there.
+
+That's pretty cool.
+
+Let's look at the most complex example.
+
+Here, we have some kind of, I don't know, maybe internet of things document, where for each, let's say device id, and date combination.
+
+We have an array of hours that specifies hour and the value for some particular thing that we happen to be collecting, and now, if I receive for id X, day Y, hour Z, some value, VAL.
+
+How would I construct an update that if the document doesn't exist, it would create it, meaning I'd need to specify upsert, but if it exists, it would check the hour's array, and if this hour didn't exist, it would add it to the array, so like an upsert for an array.
+
+But if it did exist, it would add the value to the already existing value.
+
+Sounds pretty complex.
+
+So we probably need more space.
+
+It's going to be an update where the condition is dx-- oh, sorry, that should be id X and day Y.
+
+Now, we have some kind of a pipeline, and we're going to specify upsert true.
+
+Now this pipeline, as you imagine, needs to check whether or not the hour we have is already in this array.
+
+So here it is.
+
+If Z, our hour, is in the h.hour array, now I wrap this in if no so that we use an empty array if the document does not exist at all.
+
+So if it's in the array, then we're going to map or iterate over the array h, and if hour is not our value, then just pass it through.
+
+If it is the value, then we're going to compute.
+
+Our Z value is going to be a sum of what's already there, plus VAL.
+
+Now, that's if Z already was in the array.
+
+If it wasn't, then we want to concatenate the existing array with our Z value, VAL.
+
+Upsert true means the record will be inserted if it doesn't already exist.
+
+It sounds pretty simple and it is.
+
+So let's recap.
+
+Updates can be specified either the old way or with an aggregation pipeline that lets you transform the existing document, as all the fields from the existing document can be accessed to compute new values.
+
+Now, because it's doing more complex computation, it will be slightly slower, but it is a lot more powerful.

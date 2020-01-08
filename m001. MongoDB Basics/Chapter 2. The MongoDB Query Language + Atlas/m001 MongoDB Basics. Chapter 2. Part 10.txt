@@ -1,0 +1,93 @@
+To begin our discussion of read operations in the MongoDB query language, we'll discuss equality filters.
+
+This discussion will set the stage for our more sophisticated types of queries involving the rich set of operators provided by the MongoDB query language.
+
+You've already seen some examples of equality filters from our work with filters in Compass.
+
+Let's look at another filter in Compass first, and then we'll dive into the methods that make up the MongoDB query language as it is implemented in the mongo shell.
+
+For this lesson I'd like to look at movie data.
+
+Let's use a Compass to filter our video.movies collection for films rated PG-13.
+
+The rating we're interested in is stored in the mpaaRating field for documents in this collection.
+
+In this filter I'm specifying that I simply want to see documents that have PG-13 as their value for this field.
+
+Applying the filter here in the Documents tab, we can see that each document returned is in fact rated PG-13.
+
+Note that only 5,297 of the more than one million documents in this collection match this filter.
+
+We can restrict the result set further by adding additional selectors to our query document.
+
+Applying this filter significantly reduces the number of documents that are results set.
+
+So what's important to notice here is that selectors in MongoDB filters are anded together by default, meaning that only documents matching both of these criteria are retrieved.
+
+In other lessons we consider query operators that allow us to express filters that match any of two or more conditions.
+
+Rather than all of two or more conditions as we have here, but that is for another lesson.
+
+Now let's take a look at how to perform this same type of query in the mongo shell.
+
+The method for performing read operations in the MongoDB query language is called, Find.
+
+To find films in our movies.videos collection rated PG-13, we need to first use our video database, and then call find on the movie's collection.
+
+And we can pretty that up a little bit using the pretty command.
+
+And here as we saw in Compass, we can see that all of our results have an mpaaRating of PG-13.
+
+Again, as we did in Compass, we can add an additional selector for year, and restrict our results set to PG-13 movies from the year 2009.
+
+And again, we see that indeed all of these documents match both of those criteria.
+
+Now that we know how to create quality filters on top level fields, let's turn our attention to how we can match for equality against embedded documents.
+
+For this let's look at our 100 year weather data set.
+
+The weather readings in this data set capture quite a few details about wind.
+
+Note that the wind field has the value type document, or Object, as it's called in the documents view in Compass.
+
+If we expand wind, the wind field describes the overall wind conditions.
+
+A value of c for wind type indicates that the wind conditions were calm when this reading was taken.
+
+In the going to be query language our filter would have this form.
+
+And having applied that filter, let's take a look at a couple of matching documents.
+
+We can see here that in fact, wind type is c.
+
+And likewise for this document and all others in this result set.
+
+Taking a closer look at our query syntax, we're using what we call dot notation in order to identify a field of a document nested within the field wind.
+
+Now the dot notation works for documents nested at any level.
+
+For this let's go a level deeper, and look at wind direction angle.
+
+So rather than window type, we'll express our filter as wind.direction.angle.
+
+And because angle is an integer valued field, let's do 290 and then apply our filter.
+
+Taking a look at the results, wind, direction, angle, we can see that in fact, documents in the result set match this query using dot notation.
+
+One thing I very much like about the MongoDB query language is that it's intuitive in many respects.
+
+Dot notation is in my opinion, one example.
+
+Now the Compass is a little bit more flexible about syntax than the shell.
+
+Note that we are not specifying quotes around the key here.
+
+However, when using dot notation in the shell, you must enclose the key in quotes applying the same filter in the MongoDB shell.
+
+First, we use the 100 year database, and then use find to express our filter.
+
+If we try to do this we're going to get an error because as I mentioned, quotes are required around keys that use dot notation in the mongo shell.
+
+And here we can see that in fact, documents matching this query do you have the wind.direction.angle of 290.
+
+To sum up, to drive down the hierarchy of nested documents you reach into documents at each additional level of nesting by stringing field names together using dot notation, and in the shell don't forget the quotes.

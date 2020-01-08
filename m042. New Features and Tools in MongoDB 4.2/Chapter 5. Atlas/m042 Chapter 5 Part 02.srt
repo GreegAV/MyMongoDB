@@ -1,0 +1,412 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.200
+Welcome back.
+
+3
+00:00:01.200 --> 00:00:03.575
+We've made some improvements
+to cloud providers snapshots
+
+4
+00:00:03.575 --> 00:00:04.490
+in Atlas.
+
+5
+00:00:04.490 --> 00:00:06.800
+Atlas now supports
+Cloud Provider Snapshots
+
+6
+00:00:06.800 --> 00:00:10.610
+from Microsoft Azure, Amazon
+Web Services, and Google Cloud
+
+7
+00:00:10.610 --> 00:00:12.693
+Platform-backed clusters.
+
+8
+00:00:12.693 --> 00:00:14.360
+Previously, there
+were some restrictions
+
+9
+00:00:14.360 --> 00:00:16.610
+in the functionality we had
+available for Google Cloud
+
+10
+00:00:16.610 --> 00:00:17.990
+Platform.
+
+11
+00:00:17.990 --> 00:00:20.660
+We've added incremental backup
+functionality using snapshots
+
+12
+00:00:20.660 --> 00:00:21.890
+in GCP--
+
+13
+00:00:21.890 --> 00:00:24.080
+that is to say that we
+only store a copy which
+
+14
+00:00:24.080 --> 00:00:26.450
+contains the documents
+which have been altered
+
+15
+00:00:26.450 --> 00:00:28.460
+since the last full backup.
+
+16
+00:00:28.460 --> 00:00:29.960
+It's important to
+note that we're
+
+17
+00:00:29.960 --> 00:00:32.780
+utilizing the cloud provider's
+native capabilities of taking
+
+18
+00:00:32.780 --> 00:00:33.950
+a snapshot.
+
+19
+00:00:33.950 --> 00:00:36.190
+These snapshots are
+effectively a disk image,
+
+20
+00:00:36.190 --> 00:00:39.590
+and taking these snapshots is
+handled by the cloud provider.
+
+21
+00:00:39.590 --> 00:00:41.510
+The incremental
+approach means that you
+
+22
+00:00:41.510 --> 00:00:43.280
+incur less cost
+due to there being
+
+23
+00:00:43.280 --> 00:00:45.890
+less data stored per snapshot.
+
+24
+00:00:45.890 --> 00:00:47.630
+As the incremental
+approach only requires
+
+25
+00:00:47.630 --> 00:00:50.210
+us to store the delta between
+these snapshots as opposed
+
+26
+00:00:50.210 --> 00:00:52.190
+to storing a full
+copy of the snapshot,
+
+27
+00:00:52.190 --> 00:00:55.130
+incremental backups allow you
+to store multiple snapshots
+
+28
+00:00:55.130 --> 00:00:56.600
+without the disk
+space requirements
+
+29
+00:00:56.600 --> 00:00:58.280
+of a non-incremental approach.
+
+30
+00:00:58.280 --> 00:01:00.710
+This means Atlas now
+supports incremental backups
+
+31
+00:01:00.710 --> 00:01:04.190
+on GCP and AWS using
+Cloud Provider Snapshots.
+
+32
+00:01:04.190 --> 00:01:06.710
+At present, Azure doesn't
+offer this incremental backup
+
+33
+00:01:06.710 --> 00:01:08.030
+capability.
+
+34
+00:01:08.030 --> 00:01:11.510
+You can now also use GCP
+for multi-region backups.
+
+35
+00:01:11.510 --> 00:01:12.540
+So how does this work?
+
+36
+00:01:12.540 --> 00:01:14.498
+Atlas selects the primary
+member of the cluster
+
+37
+00:01:14.498 --> 00:01:17.360
+at the time you enable
+snapshots for said cluster.
+
+38
+00:01:17.360 --> 00:01:19.400
+Atlas stores the snapshot
+in the same region
+
+39
+00:01:19.400 --> 00:01:22.160
+as the primary member, and
+Atlas retains the snapshots
+
+40
+00:01:22.160 --> 00:01:24.248
+based on your retention policy.
+
+41
+00:01:24.248 --> 00:01:25.790
+So Atlas continues
+to use that member
+
+42
+00:01:25.790 --> 00:01:29.030
+and its corresponding region for
+snapshots and snapshot storage,
+
+43
+00:01:29.030 --> 00:01:31.550
+even if that member
+is no longer primary.
+
+44
+00:01:31.550 --> 00:01:34.140
+We automatically create a
+new snapshot storage volume
+
+45
+00:01:34.140 --> 00:01:37.610
+if the existing snapshot storage
+volume runs out of disk space.
+
+46
+00:01:37.610 --> 00:01:39.980
+We then create a new
+volume in the same region
+
+47
+00:01:39.980 --> 00:01:41.890
+as the cluster's
+current primary.
+
+48
+00:01:41.890 --> 00:01:44.120
+Atlas then takes a
+full-copy snapshot
+
+49
+00:01:44.120 --> 00:01:46.640
+to maintain backup
+availability and continues
+
+50
+00:01:46.640 --> 00:01:48.950
+using that member and
+its corresponding region
+
+51
+00:01:48.950 --> 00:01:51.390
+for further
+incremental snapshots.
+
+52
+00:01:51.390 --> 00:01:53.300
+Let's jump into the UI
+and configure snapshot
+
+53
+00:01:53.300 --> 00:01:55.970
+storage for a Google
+Cloud-hosted cluster.
+
+54
+00:01:55.970 --> 00:01:58.280
+Each backup policy
+consists of a snapshot time
+
+55
+00:01:58.280 --> 00:02:00.260
+and one or more policy items.
+
+56
+00:02:00.260 --> 00:02:03.800
+The backup policy time
+specifies the time of day in UTC
+
+57
+00:02:03.800 --> 00:02:06.650
+that Atlas takes a snapshot
+for the backup policy.
+
+58
+00:02:06.650 --> 00:02:09.350
+Snapshots taken for
+the Hourly policy item
+
+59
+00:02:09.350 --> 00:02:11.180
+may occur multiple
+times each day
+
+60
+00:02:11.180 --> 00:02:13.550
+depending on the frequency
+interval specified.
+
+61
+00:02:13.550 --> 00:02:16.520
+Each backup policy item
+specifies a frequency unit
+
+62
+00:02:16.520 --> 00:02:18.840
+and an interval and
+a retention time.
+
+63
+00:02:18.840 --> 00:02:21.020
+For example, the
+default backup policy
+
+64
+00:02:21.020 --> 00:02:24.620
+specifies a snapshot
+time of 1800 UTC,
+
+65
+00:02:24.620 --> 00:02:26.960
+an Hourly snapshot with
+an interval of one hour
+
+66
+00:02:26.960 --> 00:02:29.660
+and a retention of two
+days, daily snapshots
+
+67
+00:02:29.660 --> 00:02:32.360
+with a retention of seven
+days, weekly snapshots
+
+68
+00:02:32.360 --> 00:02:35.690
+with an interval of Saturday
+and a retention of four days,
+
+69
+00:02:35.690 --> 00:02:37.520
+and monthly snapshots
+with an interval
+
+70
+00:02:37.520 --> 00:02:41.420
+of the last day of the month
+and a retention of 12 months.
+
+71
+00:02:41.420 --> 00:02:44.360
+So another improvement to our
+cloud provider snapshot feature
+
+72
+00:02:44.360 --> 00:02:47.660
+is the ability to encrypt your
+Cloud Provider Snapshots using
+
+73
+00:02:47.660 --> 00:02:48.920
+your own KMIP server.
+
+74
+00:02:48.920 --> 00:02:51.170
+This effectively means that
+you can bring your own key
+
+75
+00:02:51.170 --> 00:02:53.300
+to encrypt and
+decrypt your backups
+
+76
+00:02:53.300 --> 00:02:57.268
+through the configured KMS
+service for the Atlas project.
+
+77
+00:02:57.268 --> 00:02:59.310
+As we recently added this
+feature to Google Cloud
+
+78
+00:02:59.310 --> 00:03:02.450
+Platform, this is now supported
+across all three cloud
+
+79
+00:03:02.450 --> 00:03:03.990
+providers.
+
+80
+00:03:03.990 --> 00:03:05.030
+So let's recap.
+
+81
+00:03:05.030 --> 00:03:06.920
+Atlas now supports
+incremental backups
+
+82
+00:03:06.920 --> 00:03:09.380
+on Google Cloud
+Platform and AWS.
+
+83
+00:03:09.380 --> 00:03:12.200
+You can now perform cross-region
+backups on all three cloud
+
+84
+00:03:12.200 --> 00:03:15.710
+providers, and you can also
+integrate your own KMIP server
+
+85
+00:03:15.710 --> 00:03:18.890
+and use your own key to encrypt
+and decrypt your Cloud Provider
+
+86
+00:03:18.890 --> 00:03:20.740
+Snapshots.

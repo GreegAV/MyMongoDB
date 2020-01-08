@@ -1,0 +1,87 @@
+If we run a exact same query again, looking for all of my Barcelona friends and iterating a few times over the result set, as I can see, I getting a lot of this information.
+
+So if we look into the data again and we only look for the queries that we are running with, we might be again [?
+
+led ?] to believe that our total amount of time that the application needed to wait for a response was actually 0 milliseconds again.
+
+Now, a way to avoid any confusion-- and let's stop our profiling for a second.
+
+Let's put it back to 0.
+
+And let's say it's back into the 100 milliseconds default level.
+
+Once we are in this situation and if we want to fully understand how much time is our queries actually taking, we need to call our explain command.
+
+Once we run this, saying that we want to execute our query, we will see exactly the statistics needed to determine if our query is actually taking the appropriate amount of time.
+
+Now, in this case here, what we can see is that we're returning roughly 167,000 documents.
+
+And the total amount of documents is 1,001,010.
+
+And the actual execution time in milliseconds is quite high-- is around 356 milliseconds.
+
+If you all know, MongoDB will log this as a slow query.
+
+So we can see that there's been a progression in terms of the response time taken by this operation as time goes by and as we add more data to our system because frankly, this is not optimized at all.
+
+It's a collection scan.
+
+So we could do way better than this.
+
+We can also get this information from our mongo logs.
+
+If we run our Mongo logvis against our MongoDB log, say no-browser, and specifying this output as the file that we want to analyze, if we open our rtd.html from our local box, we will be able to see that that exact operation are captured in our mlogvis.
+
+As you can see here, this operation here alone, the one that is a command that does a find and the filter equals our city of Barcelona-- it's actually taking a huge amount of time.
+
+To complete, it took around 235 milliseconds-- so a quite significant amount of time to complete a single operation.
+
+Now, to solve this operation, we will need to connect back to our mongod.
+
+And once in our mongod in this particular collection, where we have my friends, I will need to create an index over that field, which is my city.
+
+And once I have this index created, if I run my query again with the explain, I would see a dramatic change in terms of the execution stats.
+
+The total amount of time taken for the execution time is now a third of the previous one.
+
+And I have a much more optimized query.
+
+Now, obviously, we should not sit tight only on this.
+
+We probably could do way better.
+
+Let's say, for example, that what I'm showing is not at all relevant to my system.
+
+What I only need is the name of my friends.
+
+And I don't even need their underscore ID field because I'm not going to treat it at all.
+
+I can filter that out.
+
+So if I execute again the query with my execution stats, I'll see that there's even more benefit there.
+
+I'll be sending back a smaller amount of information.
+
+The same number of documents has been returned.
+
+But the total payload of those documents will be much, much smaller.
+
+We could even go further and say that we only want an index on city and name.
+
+And if we run the query again specifying that we want to filter on the city and only show the name, I'll even go a few steps further in terms of the actual optimization [?
+
+my ?] query and reduce even further the amount of time taken to execute this query.
+
+So to recap what we learn in this lesson, make sure your working data set fits RAM.
+
+Make sure to optimize your queries by using indexes and filter responses and [INAUDIBLE] pagination of those responses.
+
+Smaller documents are better documents in general.
+
+So take that into consideration.
+
+Mongostat, Mongo logvis, and profiler are here to help.
+
+Make sure you use profiler only on development.
+
+And don't get tricked by the partial results that profiler might give you.

@@ -1,0 +1,65 @@
+Commonly, a one-to-one relationship is represented by a single table in a tabular database.
+
+In general, the same applies to MongoDB.
+
+For example a person's name, date of birth, and email address would be kept together in the same document.
+
+All these fields have a one-to-one relationship with each other.
+
+A user in the system has one and only one name, has one and only one date of birth, and is associated with one and only one email address.
+
+When we group information together, that is in two different entities, we refer to this action as embedding.
+
+This is in contrast to grouping fields together in a given entity.
+
+We refer to those fields as attributes of the entities.
+
+The group fields can appear side by side in the document.
+
+Or we can use the document model ability to add sub-documents to create logical groups of information.
+
+This capability also allows us to embed the document or entity inside another one.
+
+Alternatively to embedding the information, we can divide the fields into many documents, usually in separate collections and reference one document from another one.
+
+Using our product catalog use case, let's have a look at all these representations of our one-to-one relationship.
+
+The most common way to represent a one-to-one relationship between pieces of data is to put the fields with their values in the document as described earlier.
+
+Using the user's collection as an example, I would keep track of a given user, the address we use for billing, and the default shipping address if different.
+
+A user as only one street address, city, and zip code for billing and only one street address, city, and zip code used as the default shipping address.
+
+This address information may profit from a little bit more organization.
+
+Using the power of the document model, regroup each set of address information into a subgroup.
+
+Now, we still have a one-to-one relationship, however, we can't describe it as a user having one and only one billing address, and having one and only one shipping address.
+
+The document is now more clear and easier to understand.
+
+This is the recommended representation of a one-to-one relationship.
+
+Now let's say there is a lot of information about a given object in our product catalog like our stores.
+
+In this example, the list of staff employees is kept within the store document.
+
+If most of the time we create the stores, we don't care about the staff information, we could separate out this set of information, placing it in a second collection.
+
+Consequently this adds some complexity to our model.
+
+So we should only do it for schema optimization reasons.
+
+Once we have retrieved a given store, we would find additional information like the manager and staff by querying the store details collection using the link to the corresponding document, as we do for any relation expressed by a reference.
+
+In the case of a one-to-one relationship, it is easy to simply use the same value, here our store ID in both documents.
+
+We also want to prevent this one-to-one relationship from becoming a one-to-many relationship for subdocuments.
+
+In order to do so, we need to ensure that the values in our store ID field are unique for both collections.
+
+To recap this lesson, for one-to-one relationships, prefer embedding over referencing for simplicity.
+
+Use subdocuments to organize the fields.
+
+Use a reference for optimization purposes.

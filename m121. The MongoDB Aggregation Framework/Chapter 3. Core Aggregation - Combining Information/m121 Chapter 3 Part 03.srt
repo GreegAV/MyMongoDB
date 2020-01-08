@@ -1,0 +1,476 @@
+
+1
+00:00:00.000 --> 00:00:00.550
+
+
+2
+00:00:00.550 --> 00:00:03.580
+Now it's time we learned about
+lookup, a powerful stage that
+
+3
+00:00:03.580 --> 00:00:06.490
+lets you combine information
+from two collections.
+
+4
+00:00:06.490 --> 00:00:08.460
+For those with some
+knowledge of SQL,
+
+5
+00:00:08.460 --> 00:00:11.080
+lookup is effectively
+a left outer join.
+
+6
+00:00:11.080 --> 00:00:13.750
+If that didn't make
+any sense, don't worry.
+
+7
+00:00:13.750 --> 00:00:16.540
+Let's break it down.
+
+8
+00:00:16.540 --> 00:00:18.760
+In database terms,
+a left outer join
+
+9
+00:00:18.760 --> 00:00:21.610
+combines all documents
+or entries on the left
+
+10
+00:00:21.610 --> 00:00:24.610
+with matching documents
+or entries from the right.
+
+11
+00:00:24.610 --> 00:00:29.920
+So A left outer joined with
+B would look like this.
+
+12
+00:00:29.920 --> 00:00:32.530
+The lookup stage has this form.
+
+13
+00:00:32.530 --> 00:00:35.500
+The from field here is
+the collection from which
+
+14
+00:00:35.500 --> 00:00:37.360
+we want to look up documents.
+
+15
+00:00:37.360 --> 00:00:40.240
+Keep in mind, the collection
+you specify in the from field
+
+16
+00:00:40.240 --> 00:00:44.530
+cannot be sharded and must
+exist within the same database.
+
+17
+00:00:44.530 --> 00:00:48.850
+LocalField here is a field in
+the working collection where
+
+18
+00:00:48.850 --> 00:00:51.220
+we express the aggregation
+command that we
+
+19
+00:00:51.220 --> 00:00:53.530
+want to compare to.
+
+20
+00:00:53.530 --> 00:00:56.010
+ForeignField here,
+is the field we
+
+21
+00:00:56.010 --> 00:00:58.810
+want to compare from in the
+collection we specified in
+
+22
+00:00:58.810 --> 00:00:59.770
+from.
+
+23
+00:00:59.770 --> 00:01:03.290
+Lookup will form a strict
+equality comparison.
+
+24
+00:01:03.290 --> 00:01:07.060
+And the as field here,
+is the new field name
+
+25
+00:01:07.060 --> 00:01:09.340
+we specify that will show
+up in our documents that
+
+26
+00:01:09.340 --> 00:01:13.030
+contains any matches between
+localField and foreignField.
+
+27
+00:01:13.030 --> 00:01:15.910
+All matches will be put
+in an array in this field.
+
+28
+00:01:15.910 --> 00:01:17.980
+If there were no
+matches, the field
+
+29
+00:01:17.980 --> 00:01:20.260
+will contain an empty array.
+
+30
+00:01:20.260 --> 00:01:22.790
+Let's visualize
+this in an example.
+
+31
+00:01:22.790 --> 00:01:25.840
+Suppose we're aggregating
+over an airline's collection
+
+32
+00:01:25.840 --> 00:01:28.210
+and we want to fetch
+which alliance the airline
+
+33
+00:01:28.210 --> 00:01:30.290
+belongs to.
+
+34
+00:01:30.290 --> 00:01:34.720
+As the argument from would
+specify air alliances.
+
+35
+00:01:34.720 --> 00:01:37.750
+Next, we would specify
+name as the argument
+
+36
+00:01:37.750 --> 00:01:41.080
+to localField, the value
+we want to compare to.
+
+37
+00:01:41.080 --> 00:01:43.840
+The argument to a localField
+can resolve to either an array
+
+38
+00:01:43.840 --> 00:01:45.770
+or a single value.
+
+39
+00:01:45.770 --> 00:01:49.750
+Then we specify airlines as
+the argument to a foreignField
+
+40
+00:01:49.750 --> 00:01:52.660
+the value we want
+to compare from.
+
+41
+00:01:52.660 --> 00:01:54.610
+The argument to
+foreignField can also
+
+42
+00:01:54.610 --> 00:01:57.760
+resolve to either an
+array or a single value.
+
+43
+00:01:57.760 --> 00:02:00.460
+We can see that based
+on the argument so far,
+
+44
+00:02:00.460 --> 00:02:03.010
+Penguin Air won't
+match anything.
+
+45
+00:02:03.010 --> 00:02:06.190
+Delta Airlines
+will match SkyTeam.
+
+46
+00:02:06.190 --> 00:02:10.600
+And Lufthansa will
+match Star Alliance.
+
+47
+00:02:10.600 --> 00:02:12.910
+Those matches were brought
+into the current document
+
+48
+00:02:12.910 --> 00:02:15.300
+as alliance.
+
+49
+00:02:15.300 --> 00:02:16.960
+We could have given
+any string value
+
+50
+00:02:16.960 --> 00:02:19.840
+we wanted, but keep in mind,
+that if we specify a name that
+
+51
+00:02:19.840 --> 00:02:22.030
+already exists in
+the working document,
+
+52
+00:02:22.030 --> 00:02:24.160
+that field will be overwritten.
+
+53
+00:02:24.160 --> 00:02:27.205
+Notice here that because the
+document was named Penguin Air
+
+54
+00:02:27.205 --> 00:02:30.590
+and did not have any results,
+there is an empty array.
+
+55
+00:02:30.590 --> 00:02:32.440
+Oftentimes after
+a lookup, we want
+
+56
+00:02:32.440 --> 00:02:36.130
+to follow it with a match
+stage to filter documents out.
+
+57
+00:02:36.130 --> 00:02:39.760
+Another thing to know, lookup
+retrieves the entire document
+
+58
+00:02:39.760 --> 00:02:43.900
+that matched, not just the field
+we specified, the foreignField.
+
+59
+00:02:43.900 --> 00:02:47.230
+All right, let's look
+at lookup in actual use.
+
+60
+00:02:47.230 --> 00:02:50.035
+Let's combine information from
+the air airlines collection
+
+61
+00:02:50.035 --> 00:02:52.390
+with the air
+alliances collection,
+
+62
+00:02:52.390 --> 00:02:54.340
+putting all the
+airline information
+
+63
+00:02:54.340 --> 00:02:56.260
+within the alliance document.
+
+64
+00:02:56.260 --> 00:02:59.140
+First, let's look at the
+schema in our airlines
+
+65
+00:02:59.140 --> 00:03:00.920
+alliances collection.
+
+66
+00:03:00.920 --> 00:03:03.550
+OK, the data we
+need for localField
+
+67
+00:03:03.550 --> 00:03:05.470
+is in the airline's field.
+
+68
+00:03:05.470 --> 00:03:07.040
+Let's look at the
+airline's schema,
+
+69
+00:03:07.040 --> 00:03:10.510
+so we know what value to
+use as the foreignField.
+
+70
+00:03:10.510 --> 00:03:12.200
+All right, easy enough.
+
+71
+00:03:12.200 --> 00:03:14.560
+It looks like the information
+we need for foreignField
+
+72
+00:03:14.560 --> 00:03:16.260
+is in the name field.
+
+73
+00:03:16.260 --> 00:03:18.400
+That should be all the
+information we need.
+
+74
+00:03:18.400 --> 00:03:21.110
+Let's build the pipeline.
+
+75
+00:03:21.110 --> 00:03:24.940
+All right, we specify air
+airlines to the from field,
+
+76
+00:03:24.940 --> 00:03:29.290
+airlines as the localField
+name as the foreignField.
+
+77
+00:03:29.290 --> 00:03:31.570
+And here we chose to
+overwrite the airlines field
+
+78
+00:03:31.570 --> 00:03:33.850
+with the information
+we get back.
+
+79
+00:03:33.850 --> 00:03:34.830
+It makes sense.
+
+80
+00:03:34.830 --> 00:03:37.755
+We'll be replacing the
+names with entire documents.
+
+81
+00:03:37.755 --> 00:03:38.740
+Let's see the output.
+
+82
+00:03:38.740 --> 00:03:41.410
+
+
+83
+00:03:41.410 --> 00:03:42.470
+Pretty cool.
+
+84
+00:03:42.470 --> 00:03:45.940
+We can see that lookup did
+just what we expected it to do.
+
+85
+00:03:45.940 --> 00:03:48.370
+We could follow this with
+some projections or even
+
+86
+00:03:48.370 --> 00:03:51.150
+another lookup stage to
+perform some powerful reshaping
+
+87
+00:03:51.150 --> 00:03:52.630
+and analysis.
+
+88
+00:03:52.630 --> 00:03:54.610
+But for now, that's enough.
+
+89
+00:03:54.610 --> 00:03:57.370
+We've covered a lot of
+information in this lesson.
+
+90
+00:03:57.370 --> 00:03:59.350
+Lookup is a powerful
+stage that can
+
+91
+00:03:59.350 --> 00:04:01.360
+help help reduce
+network requests
+
+92
+00:04:01.360 --> 00:04:03.550
+and combine information
+from different collections
+
+93
+00:04:03.550 --> 00:04:07.390
+together for powerful
+and deep analysis.
+
+94
+00:04:07.390 --> 00:04:09.770
+Here are a few things
+to keep in mind.
+
+95
+00:04:09.770 --> 00:04:11.230
+The from field
+cannot be sharded.
+
+96
+00:04:11.230 --> 00:04:14.790
+The from collection must
+be in the same database.
+
+97
+00:04:14.790 --> 00:04:17.140
+The values in localField
+and foreignField
+
+98
+00:04:17.140 --> 00:04:18.834
+are matched on equality.
+
+99
+00:04:18.834 --> 00:04:21.579
+And as can be any
+name, but if it
+
+100
+00:04:21.579 --> 00:04:26.220
+exists in the working document,
+that field will be overwritten.

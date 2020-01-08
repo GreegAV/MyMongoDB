@@ -1,0 +1,734 @@
+1
+00:00:00,500 --> 00:00:03,220
+In this lesson, we are going
+to dissect the replication
+
+2
+00:00:03,220 --> 00:00:04,550
+configuration.
+
+3
+00:00:04,550 --> 00:00:06,090
+In particular, we
+will be looking
+
+4
+00:00:06,090 --> 00:00:09,220
+to which replica set
+configuration options we have
+
+5
+00:00:09,220 --> 00:00:12,610
+and how those options are
+reflected in the configuration
+
+6
+00:00:12,610 --> 00:00:14,040
+options document.
+
+7
+00:00:14,040 --> 00:00:17,400
+The replica set configuration
+document is a simple BSON
+
+8
+00:00:17,400 --> 00:00:22,120
+document that we manage using
+a JSON representation where
+
+9
+00:00:22,120 --> 00:00:26,350
+the configuration or our
+replica sets is defined
+
+10
+00:00:26,350 --> 00:00:29,020
+and is shared across
+all the nodes that
+
+11
+00:00:29,020 --> 00:00:31,030
+are configured in the sets.
+
+12
+00:00:31,030 --> 00:00:33,700
+We can manually set
+changes to this document
+
+13
+00:00:33,700 --> 00:00:35,260
+to configure a
+replica set according
+
+14
+00:00:35,260 --> 00:00:39,970
+with the expected topology and
+overall replication options.
+
+15
+00:00:39,970 --> 00:00:44,320
+Although we can do this by
+simply editing such documents
+
+16
+00:00:44,320 --> 00:00:47,710
+using the mongo.db shell, we can
+also use a set of shell helpers
+
+17
+00:00:47,710 --> 00:00:51,460
+like rs.add, initiate,
+remove, and so forth.
+
+18
+00:00:51,460 --> 00:00:54,580
+that will help us facilitate
+the configuration and management
+
+19
+00:00:54,580 --> 00:00:57,010
+of this same configuration.
+
+20
+00:00:57,010 --> 00:01:00,280
+There is a fair amount of
+different configuration options
+
+21
+00:01:00,280 --> 00:01:03,340
+at our disposal as you can see
+from the baseline configuration
+
+22
+00:01:03,340 --> 00:01:05,200
+options document.
+
+23
+00:01:05,200 --> 00:01:08,670
+This might sound a bit
+daunting, but in reality, it's
+
+24
+00:01:08,670 --> 00:01:11,680
+a pretty straightforward
+set of options.
+
+25
+00:01:11,680 --> 00:01:14,270
+And for this lesson,
+in particular,
+
+26
+00:01:14,270 --> 00:01:17,800
+we are going to be looking only
+to a set of these configuration
+
+27
+00:01:17,800 --> 00:01:19,090
+options--
+
+28
+00:01:19,090 --> 00:01:22,990
+the basic and fundamental
+ones and the ones
+
+29
+00:01:22,990 --> 00:01:25,600
+that we are going to be
+using throughout the course.
+
+30
+00:01:25,600 --> 00:01:29,120
+All the other options are
+out of scope for this course.
+
+31
+00:01:29,120 --> 00:01:32,150
+But let's start
+with the _id field.
+
+32
+00:01:32,150 --> 00:01:36,430
+This field is sets with the
+name of the replica set.
+
+33
+00:01:36,430 --> 00:01:39,190
+This is a string
+value that matches
+
+34
+00:01:39,190 --> 00:01:42,490
+the server defined replica set.
+
+35
+00:01:42,490 --> 00:01:47,890
+Whenever we start our mongoD
+and we provide a --replSet name
+
+36
+00:01:47,890 --> 00:01:52,870
+to our mongoD, meaning that this
+mongoD will belong to the set,
+
+37
+00:01:52,870 --> 00:01:55,750
+or by setting that same name
+in the configuration file--
+
+38
+00:01:55,750 --> 00:01:59,890
+for example, our
+etc/mongodb.conf file,
+
+39
+00:01:59,890 --> 00:02:05,732
+we are setting a specific value
+to be used as a replica set
+
+40
+00:02:05,732 --> 00:02:06,340
+name.
+
+41
+00:02:06,340 --> 00:02:10,930
+The same value must match the
+_id field of our replica set
+
+42
+00:02:10,930 --> 00:02:13,730
+configuration document.
+
+43
+00:02:13,730 --> 00:02:19,190
+In case we have different values
+from the configuration _id
+
+44
+00:02:19,190 --> 00:02:21,370
+and the defined
+replica set name,
+
+45
+00:02:21,370 --> 00:02:23,680
+we end up with an error message.
+
+46
+00:02:23,680 --> 00:02:26,170
+We get an incorrect
+replica set configuration,
+
+47
+00:02:26,170 --> 00:02:29,110
+stating that we are attempting
+to initiate the replica set
+
+48
+00:02:29,110 --> 00:02:31,210
+with a different name
+from which it
+
+49
+00:02:31,210 --> 00:02:36,280
+has been set as --replSet
+or in the config file.
+
+50
+00:02:36,280 --> 00:02:38,770
+This is a safeguard against
+incorrect configurations
+
+51
+00:02:38,770 --> 00:02:43,660
+or incorrect adding the server
+to the incorrect replica sets.
+
+52
+00:02:43,660 --> 00:02:45,810
+The next field is version.
+
+53
+00:02:45,810 --> 00:02:48,070
+Now, a version is just
+an integer that gets
+
+54
+00:02:48,070 --> 00:02:50,650
+incremented every time
+the current configuration
+
+55
+00:02:50,650 --> 00:02:53,170
+of our replica set changes.
+
+56
+00:02:53,170 --> 00:02:56,680
+If, for example, we add
+a node to our replica set
+
+57
+00:02:56,680 --> 00:03:00,340
+and if our version
+used to be number 1,
+
+58
+00:03:00,340 --> 00:03:02,170
+we increment the value.
+
+59
+00:03:02,170 --> 00:03:03,940
+Every time we
+changed a topology,
+
+60
+00:03:03,940 --> 00:03:07,000
+changed a replica set
+configuration at all
+
+61
+00:03:07,000 --> 00:03:09,580
+or do something like
+changing the number of votes
+
+62
+00:03:09,580 --> 00:03:13,090
+of a given host, that
+will automatically
+
+63
+00:03:13,090 --> 00:03:15,370
+increment the version number.
+
+64
+00:03:15,370 --> 00:03:18,880
+The next field in
+line is members.
+
+65
+00:03:18,880 --> 00:03:21,970
+And members is where the
+topology of our replica set
+
+66
+00:03:21,970 --> 00:03:23,800
+is defined.
+
+67
+00:03:23,800 --> 00:03:27,340
+Each element of
+the members array
+
+68
+00:03:27,340 --> 00:03:32,940
+is a sub-document that contains
+the replica set node members.
+
+69
+00:03:32,940 --> 00:03:37,390
+Each has a host comprised
+of the host name and port.
+
+70
+00:03:37,390 --> 00:03:42,170
+In this case, for example,
+we have m103:27017.
+
+71
+00:03:42,170 --> 00:03:44,620
+Then we have a set of
+flags that determine
+
+72
+00:03:44,620 --> 00:03:48,372
+the role of the nodes
+within the replica set.
+
+73
+00:03:48,372 --> 00:03:50,920
+arbiterOnly is self-explanatory.
+
+74
+00:03:50,920 --> 00:03:53,770
+This means that the node
+will not be holding any data,
+
+75
+00:03:53,770 --> 00:03:56,230
+and its contribution
+to the set is
+
+76
+00:03:56,230 --> 00:03:59,920
+to ensure quorum in elections.
+
+77
+00:03:59,920 --> 00:04:03,940
+hidden-- it's another flag that
+sets the node in hidden role.
+
+78
+00:04:03,940 --> 00:04:06,970
+An hidden node is not visible
+to the application, which
+
+79
+00:04:06,970 --> 00:04:10,300
+means that every time we
+emit something like an RS
+
+80
+00:04:10,300 --> 00:04:13,690
+is master command, this
+node will not be listed.
+
+81
+00:04:13,690 --> 00:04:15,550
+Int nodes are useful
+for situations
+
+82
+00:04:15,550 --> 00:04:19,600
+where we want a particular node
+to support specific operations.
+
+83
+00:04:19,600 --> 00:04:22,210
+They are not related with
+the operational nature
+
+84
+00:04:22,210 --> 00:04:23,700
+of your application.
+
+85
+00:04:23,700 --> 00:04:27,250
+For example, having a node that
+handles all the reporting or BI
+
+86
+00:04:27,250 --> 00:04:28,660
+reads.
+
+87
+00:04:28,660 --> 00:04:33,940
+Both of these flags are
+set to false by default.
+
+88
+00:04:33,940 --> 00:04:35,690
+Then we have
+priority, and priority
+
+89
+00:04:35,690 --> 00:04:38,620
+is an integer value that
+allows us to set a hierarchy
+
+90
+00:04:38,620 --> 00:04:40,670
+within the replica set.
+
+91
+00:04:40,670 --> 00:04:45,040
+We can set priorities
+between 0 and 1,000.
+
+92
+00:04:45,040 --> 00:04:47,170
+Members with higher
+priority tend
+
+93
+00:04:47,170 --> 00:04:49,780
+to be elected in
+primaries more often.
+
+94
+00:04:49,780 --> 00:04:51,970
+A change in the
+priority of a node
+
+95
+00:04:51,970 --> 00:04:54,130
+will trigger an election
+because it will be
+
+96
+00:04:54,130 --> 00:04:57,790
+perceived as a topology change.
+
+97
+00:04:57,790 --> 00:05:00,640
+Setting priority
+to 0 effectively
+
+98
+00:05:00,640 --> 00:05:05,760
+excludes that member from
+ever becoming a primary.
+
+99
+00:05:05,760 --> 00:05:09,970
+In case, we are setting a
+member to be arbiterOnly,
+
+100
+00:05:09,970 --> 00:05:14,680
+that implies that the
+priority needs to be set to 0.
+
+101
+00:05:14,680 --> 00:05:18,190
+The same would apply for hidden.
+
+102
+00:05:18,190 --> 00:05:21,810
+The priority here also
+needs to become 0.
+
+103
+00:05:21,810 --> 00:05:24,030
+If the note is
+hidden, it can never
+
+104
+00:05:24,030 --> 00:05:29,090
+become primary because it will
+not be seen by the application.
+
+105
+00:05:29,090 --> 00:05:33,120
+Failing to do that
+will result in an error
+
+106
+00:05:33,120 --> 00:05:37,500
+where a new replica set
+configuration is incompatible.
+
+107
+00:05:37,500 --> 00:05:41,280
+Priority must be 0 when
+hidden equals true.
+
+108
+00:05:41,280 --> 00:05:43,470
+And finally, we have slaveDelay.
+
+109
+00:05:43,470 --> 00:05:45,390
+slaveDelay is an
+integer value that
+
+110
+00:05:45,390 --> 00:05:49,270
+determines a replication
+delay interval in seconds.
+
+111
+00:05:49,270 --> 00:05:51,240
+The default is 0.
+
+112
+00:05:51,240 --> 00:05:54,630
+This option will
+enable delayed nodes.
+
+113
+00:05:54,630 --> 00:05:56,850
+These delayed members
+maintain a copy
+
+114
+00:05:56,850 --> 00:06:00,750
+of data reflecting a state
+in some point in the past,
+
+115
+00:06:00,750 --> 00:06:04,200
+applying that delay in seconds.
+
+116
+00:06:04,200 --> 00:06:07,500
+For example, if we have
+our slaveDelay option
+
+117
+00:06:07,500 --> 00:06:12,210
+to 3,600 seconds,
+which means 1 hour,
+
+118
+00:06:12,210 --> 00:06:15,900
+that will mean that such
+member will be replicating data
+
+119
+00:06:15,900 --> 00:06:21,470
+from the other nodes in the
+sets that occurred 1 hour ago.
+
+120
+00:06:21,470 --> 00:06:24,090
+By setting this
+slave the option,
+
+121
+00:06:24,090 --> 00:06:26,590
+it also implies that
+your node will be hidden,
+
+122
+00:06:26,590 --> 00:06:30,080
+and the priority
+will be set to 0.
+
+123
+00:06:30,080 --> 00:06:32,180
+Oh yes, and I almost forgot.
+
+124
+00:06:32,180 --> 00:06:35,810
+We also have the _id
+field within the members
+
+125
+00:06:35,810 --> 00:06:37,160
+sub-document.
+
+126
+00:06:37,160 --> 00:06:43,430
+This is just a unique identifier
+of each element in the array.
+
+127
+00:06:43,430 --> 00:06:45,680
+It's a simple
+integer field that is
+
+128
+00:06:45,680 --> 00:06:49,840
+set once we had a member
+to the replica set.
+
+129
+00:06:49,840 --> 00:06:53,450
+Once set, this value
+cannot be changed.
+
+130
+00:06:53,450 --> 00:06:56,480
+Now again, there is
+a lot more that we
+
+131
+00:06:56,480 --> 00:07:00,256
+can configure within the replica
+set configuration documents.
+
+132
+00:07:00,256 --> 00:07:02,340
+It feels like
+settings where we can
+
+133
+00:07:02,340 --> 00:07:06,360
+define several different
+replication protocol attributes
+
+134
+00:07:06,360 --> 00:07:11,340
+or things like the protocol
+version and configsvr that will
+
+135
+00:07:11,340 --> 00:07:13,870
+be seen later in this course.
+
+136
+00:07:13,870 --> 00:07:15,990
+But the actual uses
+of these options
+
+137
+00:07:15,990 --> 00:07:20,330
+for the basic administration
+course are out of scope.
+
+138
+00:07:20,330 --> 00:07:21,650
+Let's recap.
+
+139
+00:07:21,650 --> 00:07:23,070
+Replication
+configuration document
+
+140
+00:07:23,070 --> 00:07:26,430
+is used to configure
+our replica sets.
+
+141
+00:07:26,430 --> 00:07:29,850
+This is where the properties of
+our replica sets are defined,
+
+142
+00:07:29,850 --> 00:07:33,600
+and the document is shared
+across all members of the set.
+
+143
+00:07:33,600 --> 00:07:36,540
+The members field
+is where a bunch
+
+144
+00:07:36,540 --> 00:07:40,170
+of our basic configuration
+is going to be determined--
+
+145
+00:07:40,170 --> 00:07:43,020
+which nodes are part of the
+set, what roles do they have,
+
+146
+00:07:43,020 --> 00:07:45,770
+and what kind of topology
+we want to define
+
+147
+00:07:45,770 --> 00:07:48,470
+is set on this field.
+
+148
+00:07:48,470 --> 00:07:50,910
+There is a vast amount of
+other configuration options
+
+149
+00:07:50,910 --> 00:07:53,070
+that either deal with
+internal replication
+
+150
+00:07:53,070 --> 00:07:56,600
+mechanisms or overall
+configurations of the sets.
+
+151
+00:07:56,600 --> 00:07:58,950
+We are out of scope on
+those, but keep in mind
+
+152
+00:07:58,950 --> 00:08:01,680
+that there's a lot more in
+the replication configuration
+
+153
+00:08:01,680 --> 00:00:00,000
+document that you can set up.
+

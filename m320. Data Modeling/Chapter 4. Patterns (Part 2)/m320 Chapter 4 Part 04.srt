@@ -1,0 +1,921 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.950
+When we want to
+organize objects,
+
+3
+00:00:01.950 --> 00:00:04.080
+we can either group
+them by what they
+
+4
+00:00:04.080 --> 00:00:07.140
+have in common or by
+their differences.
+
+5
+00:00:07.140 --> 00:00:09.840
+This will result in either
+keeping the documents
+
+6
+00:00:09.840 --> 00:00:12.970
+in the same collection or
+in different collections.
+
+7
+00:00:12.970 --> 00:00:16.000
+For example, if we have
+a product from Canada,
+
+8
+00:00:16.000 --> 00:00:19.920
+a product from Mexico,
+a customer from Canada,
+
+9
+00:00:19.920 --> 00:00:22.740
+and a customer from
+Mexico, it is likely
+
+10
+00:00:22.740 --> 00:00:26.010
+that we will group the
+two customers together
+
+11
+00:00:26.010 --> 00:00:28.830
+and the two food items together.
+
+12
+00:00:28.830 --> 00:00:30.540
+We usually group
+objects based on
+
+13
+00:00:30.540 --> 00:00:33.720
+queries we want to
+perform on the system.
+
+14
+00:00:33.720 --> 00:00:36.480
+A major restriction with
+most other base systems
+
+15
+00:00:36.480 --> 00:00:38.580
+is that it is difficult
+to query objects
+
+16
+00:00:38.580 --> 00:00:41.040
+across different
+tables or a collection.
+
+17
+00:00:41.040 --> 00:00:43.690
+If there is one collection
+for the customers
+
+18
+00:00:43.690 --> 00:00:45.960
+and the one collection
+for the products
+
+19
+00:00:45.960 --> 00:00:48.690
+it becomes more difficult to
+find all things Canadians,
+
+20
+00:00:48.690 --> 00:00:50.082
+for example.
+
+21
+00:00:50.082 --> 00:00:51.540
+If the main query
+of this system is
+
+22
+00:00:51.540 --> 00:00:54.640
+that they're mining objects
+and people by country,
+
+23
+00:00:54.640 --> 00:00:56.550
+then we will
+probably put together
+
+24
+00:00:56.550 --> 00:00:58.480
+everything in one collection.
+
+25
+00:00:58.480 --> 00:01:00.960
+So we should group things
+together because we
+
+26
+00:01:00.960 --> 00:01:03.240
+want to query them together.
+
+27
+00:01:03.240 --> 00:01:05.280
+When grouping
+objects together that
+
+28
+00:01:05.280 --> 00:01:07.680
+may have substantial
+differences, for example,
+
+29
+00:01:07.680 --> 00:01:11.580
+using a vehicle collection to
+store cars, trucks, and boats,
+
+30
+00:01:11.580 --> 00:01:14.040
+and other types of
+vehicle would lead
+
+31
+00:01:14.040 --> 00:01:16.550
+us to query the vehicle
+for registration,
+
+32
+00:01:16.550 --> 00:01:18.700
+ownership, vehicle taxes.
+
+33
+00:01:18.700 --> 00:01:21.690
+A specific vehicle type
+may have specific aspects
+
+34
+00:01:21.690 --> 00:01:24.840
+that are not shared with
+the other types of vehicles.
+
+35
+00:01:24.840 --> 00:01:27.810
+A car typically has four
+wheels, which we can omit.
+
+36
+00:01:27.810 --> 00:01:31.980
+Other trucks have a variable
+number of wheels and axles.
+
+37
+00:01:31.980 --> 00:01:34.680
+While the boat usually has none.
+
+38
+00:01:34.680 --> 00:01:37.320
+These differences make a
+car, or truck, and a boat
+
+39
+00:01:37.320 --> 00:01:40.300
+polymorphic entities
+for a vehicle object.
+
+40
+00:01:40.300 --> 00:01:43.650
+The usual implementation that
+represents polymorphic objects
+
+41
+00:01:43.650 --> 00:01:46.350
+as a field that describes
+the name of this shape
+
+42
+00:01:46.350 --> 00:01:49.540
+for a given document
+or sub-document.
+
+43
+00:01:49.540 --> 00:01:51.570
+In our current
+example, a vehicle type
+
+44
+00:01:51.570 --> 00:01:54.590
+identifies the document type
+and lets the application and all
+
+45
+00:01:54.590 --> 00:01:56.760
+the expected field
+for a particular type
+
+46
+00:01:56.760 --> 00:01:58.780
+or shape of the document.
+
+47
+00:01:58.780 --> 00:02:00.780
+The document of
+type car will imply
+
+48
+00:02:00.780 --> 00:02:03.390
+that the vehicle has four
+wheels, while the truck should
+
+49
+00:02:03.390 --> 00:02:05.520
+have a field to identify
+the number of wheels
+
+50
+00:02:05.520 --> 00:02:08.460
+in the field to identify
+the number of axles.
+
+51
+00:02:08.460 --> 00:02:11.130
+Due to the nature of
+the document model,
+
+52
+00:02:11.130 --> 00:02:13.890
+there is usually
+polymorphous in our database.
+
+53
+00:02:13.890 --> 00:02:17.190
+We refer to the polymorphic
+pattern in our schema designs
+
+54
+00:02:17.190 --> 00:02:20.010
+when we can clearly name
+the different entities that
+
+55
+00:02:20.010 --> 00:02:22.830
+are represented in
+the same collection.
+
+56
+00:02:22.830 --> 00:02:25.860
+Another common situation when
+this pattern can be applied
+
+57
+00:02:25.860 --> 00:02:28.680
+is when dealing with a
+product catalog application.
+
+58
+00:02:28.680 --> 00:02:30.660
+Some products may have
+a color, like a shirt,
+
+59
+00:02:30.660 --> 00:02:33.540
+for example, while describing
+a book by this color
+
+60
+00:02:33.540 --> 00:02:35.250
+rarely makes sense.
+
+61
+00:02:35.250 --> 00:02:38.130
+In this situation, we're
+also using polymorphism.
+
+62
+00:02:38.130 --> 00:02:40.650
+However, in a more casual
+way, as there are tons
+
+63
+00:02:40.650 --> 00:02:42.300
+of different product types.
+
+64
+00:02:42.300 --> 00:02:44.430
+In this case, it's up
+to you to spell out
+
+65
+00:02:44.430 --> 00:02:46.530
+that they are using
+the polymorphic pattern
+
+66
+00:02:46.530 --> 00:02:48.270
+in your schema design.
+
+67
+00:02:48.270 --> 00:02:50.730
+So far, we discussed a
+polymorphic document type
+
+68
+00:02:50.730 --> 00:02:53.250
+in the context of a
+shape of a document.
+
+69
+00:02:53.250 --> 00:02:55.080
+However, we can also
+apply this model
+
+70
+00:02:55.080 --> 00:02:57.987
+to subentities, such
+as sub-documents.
+
+71
+00:02:57.987 --> 00:02:59.820
+For example, if we take
+a person, let's say,
+
+72
+00:02:59.820 --> 00:03:03.460
+Norberto, Norberto is Portuguese
+and lives in New York.
+
+73
+00:03:03.460 --> 00:03:05.520
+So he has an address in the USA.
+
+74
+00:03:05.520 --> 00:03:08.100
+It is a typical urban
+address in the US,
+
+75
+00:03:08.100 --> 00:03:12.070
+with a building number, street
+name, city name, and zip code.
+
+76
+00:03:12.070 --> 00:03:14.680
+Norberto has also an
+address in Portugal.
+
+77
+00:03:14.680 --> 00:03:17.430
+This structure is similar
+to the address in the USA.
+
+78
+00:03:17.430 --> 00:03:19.440
+However, a well-known
+building in Portugal
+
+79
+00:03:19.440 --> 00:03:21.180
+may not have a building number.
+
+80
+00:03:21.180 --> 00:03:23.120
+Portugal does not use zip code.
+
+81
+00:03:23.120 --> 00:03:25.590
+However, they have a
+critical post style, which
+
+82
+00:03:25.590 --> 00:03:27.780
+translate to a postal code.
+
+83
+00:03:27.780 --> 00:03:31.320
+The critical post
+style is 7 digits long.
+
+84
+00:03:31.320 --> 00:03:33.870
+So if we want to have a
+valid data on the postal code
+
+85
+00:03:33.870 --> 00:03:36.210
+or a zip code, they will
+have to be a little bit
+
+86
+00:03:36.210 --> 00:03:39.030
+different, as they have
+to handle 7 and 5 digits,
+
+87
+00:03:39.030 --> 00:03:40.530
+respectively.
+
+88
+00:03:40.530 --> 00:03:42.840
+Because our addresses
+are the documents
+
+89
+00:03:42.840 --> 00:03:46.170
+that we want to apply the
+polymorphic pattern to,
+
+90
+00:03:46.170 --> 00:03:49.950
+each of these documents need
+a field to specify its shape.
+
+91
+00:03:49.950 --> 00:03:53.410
+We could use an additional
+field, however, in this case,
+
+92
+00:03:53.410 --> 00:03:55.500
+the country name should do it.
+
+93
+00:03:55.500 --> 00:03:57.330
+Based on the country
+for a given address,
+
+94
+00:03:57.330 --> 00:04:01.030
+we can determine the shape
+of that sub-document.
+
+95
+00:04:01.030 --> 00:04:02.760
+The polymorphic
+pattern is commonly
+
+96
+00:04:02.760 --> 00:04:06.030
+used when implementing
+a single view solution.
+
+97
+00:04:06.030 --> 00:04:08.550
+A single view solution
+allow for the aggregation
+
+98
+00:04:08.550 --> 00:04:12.270
+of data from different sources
+into one central location.
+
+99
+00:04:12.270 --> 00:04:14.310
+It is common that
+the different sources
+
+100
+00:04:14.310 --> 00:04:16.740
+exist because systems tend
+to be designed to deal
+
+101
+00:04:16.740 --> 00:04:18.630
+with one single problem.
+
+102
+00:04:18.630 --> 00:04:22.440
+An integrated view is key to
+gaining meaningful insight
+
+103
+00:04:22.440 --> 00:04:24.870
+across all this
+data, but it's often
+
+104
+00:04:24.870 --> 00:04:28.230
+difficult to merge these
+data sets together.
+
+105
+00:04:28.230 --> 00:04:31.140
+A typical tabular or
+relational database approach
+
+106
+00:04:31.140 --> 00:04:34.530
+to solving this problem tends
+to be very complex, resource
+
+107
+00:04:34.530 --> 00:04:36.480
+intensive, and incomplete.
+
+108
+00:04:36.480 --> 00:04:39.240
+We've seen several organizations
+over the years failing
+
+109
+00:04:39.240 --> 00:04:42.300
+to create a relational schema
+that could accommodate data
+
+110
+00:04:42.300 --> 00:04:44.790
+from different sources,
+different relational database
+
+111
+00:04:44.790 --> 00:04:46.890
+schema, or different data sets.
+
+112
+00:04:46.890 --> 00:04:49.740
+The complexity of this problem
+becomes greatly reduced
+
+113
+00:04:49.740 --> 00:04:52.260
+when users decide to
+use MongoDB to create
+
+114
+00:04:52.260 --> 00:04:54.900
+this unified view of the data.
+
+115
+00:04:54.900 --> 00:04:56.340
+Imagine an insurance
+company that
+
+116
+00:04:56.340 --> 00:04:58.080
+has acquired many
+other insurance
+
+117
+00:04:58.080 --> 00:04:59.520
+companies over the years.
+
+118
+00:04:59.520 --> 00:05:02.140
+Each acquired organization
+represents their insurance
+
+119
+00:05:02.140 --> 00:05:05.680
+policies in a different way,
+using a different schema
+
+120
+00:05:05.680 --> 00:05:08.140
+in their tabular or
+relational database.
+
+121
+00:05:08.140 --> 00:05:10.730
+When a customer calls
+the insurance company,
+
+122
+00:05:10.730 --> 00:05:13.410
+they need to specify which
+system the specific insurance
+
+123
+00:05:13.410 --> 00:05:16.690
+policy is stored in and
+access the given system.
+
+124
+00:05:16.690 --> 00:05:18.460
+It is possible
+that some customers
+
+125
+00:05:18.460 --> 00:05:21.640
+had policy with several of
+these insurance companies, which
+
+126
+00:05:21.640 --> 00:05:23.650
+means that they would
+have multiple policies
+
+127
+00:05:23.650 --> 00:05:25.780
+across the different systems.
+
+128
+00:05:25.780 --> 00:05:29.650
+For example, some home
+policy may be in System A,
+
+129
+00:05:29.650 --> 00:05:33.640
+while his car policy may
+be in System B. Imagine
+
+130
+00:05:33.640 --> 00:05:35.710
+the mess it creates
+and the impact it has
+
+131
+00:05:35.710 --> 00:05:38.230
+on the customer, who
+is not able to receive
+
+132
+00:05:38.230 --> 00:05:40.240
+a single unified policy.
+
+133
+00:05:40.240 --> 00:05:44.470
+By creating a single view that
+merges all sources of data
+
+134
+00:05:44.470 --> 00:05:47.350
+into one MongoDB
+database, the organization
+
+135
+00:05:47.350 --> 00:05:49.960
+is able to see all the
+policies and information
+
+136
+00:05:49.960 --> 00:05:53.840
+about the given customer
+on their one single system.
+
+137
+00:05:53.840 --> 00:05:57.370
+In this example, we are bringing
+data from different sources
+
+138
+00:05:57.370 --> 00:05:59.290
+into one common collection.
+
+139
+00:05:59.290 --> 00:06:00.760
+First, we select
+the field that we
+
+140
+00:06:00.760 --> 00:06:03.430
+want to use to identify
+the customer ID.
+
+141
+00:06:03.430 --> 00:06:06.970
+Let's say we want to use
+the Social Security number.
+
+142
+00:06:06.970 --> 00:06:09.610
+Second, maybe some
+fields are easy to merge.
+
+143
+00:06:09.610 --> 00:06:12.550
+Let's say that the first and
+the last name of the person
+
+144
+00:06:12.550 --> 00:06:16.130
+can be easily identified
+in the different sources,
+
+145
+00:06:16.130 --> 00:06:18.790
+and they carry the same values.
+
+146
+00:06:18.790 --> 00:06:22.600
+That will result in keeping
+only this shape for this field.
+
+147
+00:06:22.600 --> 00:06:25.570
+Pick the field name you
+want, however, the values
+
+148
+00:06:25.570 --> 00:06:27.050
+are the same.
+
+149
+00:06:27.050 --> 00:06:31.210
+Finally, some fields may be more
+messy and difficult to merge.
+
+150
+00:06:31.210 --> 00:06:33.040
+For example, let's
+say that addresses
+
+151
+00:06:33.040 --> 00:06:36.670
+have proven to be difficult to
+clean and represent uniquely.
+
+152
+00:06:36.670 --> 00:06:39.100
+For that, we can keep a
+list of variants found
+
+153
+00:06:39.100 --> 00:06:41.050
+in the different databases.
+
+154
+00:06:41.050 --> 00:06:44.320
+We can confirm the right
+value with the customer later
+
+155
+00:06:44.320 --> 00:06:47.350
+or write a separate intelligent
+process a few months down
+
+156
+00:06:47.350 --> 00:06:50.900
+the road to unify these
+three sub-documents.
+
+157
+00:06:50.900 --> 00:06:53.560
+This approach help us be
+operational very quickly,
+
+158
+00:06:53.560 --> 00:06:56.260
+and then we can improve
+the information we extract
+
+159
+00:06:56.260 --> 00:06:58.720
+in an incremental fashion.
+
+160
+00:06:58.720 --> 00:07:01.240
+Before we wrap up this
+lesson, let's quickly
+
+161
+00:07:01.240 --> 00:07:04.030
+mention that this schema
+versioning pattern is
+
+162
+00:07:04.030 --> 00:07:05.860
+using the polymorphic pattern.
+
+163
+00:07:05.860 --> 00:07:07.600
+Its implementation
+can be described
+
+164
+00:07:07.600 --> 00:07:12.480
+as a version field that dictates
+the shape of the document.
+
+165
+00:07:12.480 --> 00:07:14.140
+And let's organize
+what we've been
+
+166
+00:07:14.140 --> 00:07:16.150
+describing and illustrating.
+
+167
+00:07:16.150 --> 00:07:18.610
+The problem that the
+polymorphic pattern addresses
+
+168
+00:07:18.610 --> 00:07:20.440
+is allowing us to
+keep documents that
+
+169
+00:07:20.440 --> 00:07:24.040
+have more common things
+in the same collection.
+
+170
+00:07:24.040 --> 00:07:25.570
+The solution is to
+have a field that
+
+171
+00:07:25.570 --> 00:07:29.020
+keep tracks of the shape of
+the document or sub-document.
+
+172
+00:07:29.020 --> 00:07:31.540
+Then have the application
+use different code paths
+
+173
+00:07:31.540 --> 00:07:34.360
+to handle the differences in
+the documents using that field
+
+174
+00:07:34.360 --> 00:07:35.290
+value.
+
+175
+00:07:35.290 --> 00:07:36.970
+If the differences
+are substantial,
+
+176
+00:07:36.970 --> 00:07:40.240
+we often have subclasses
+allowing the different concerns
+
+177
+00:07:40.240 --> 00:07:42.730
+in the base class to
+handle the similarities.
+
+178
+00:07:42.730 --> 00:07:46.190
+This is classic
+object-oriented programming.
+
+179
+00:07:46.190 --> 00:07:47.980
+The most common use
+cases for this pattern
+
+180
+00:07:47.980 --> 00:07:52.090
+are single view implementations,
+product catalogs, and content
+
+181
+00:07:52.090 --> 00:07:54.410
+management applications.
+
+182
+00:07:54.410 --> 00:07:57.170
+This is a pattern that is
+relatively easy to implement.
+
+183
+00:07:57.170 --> 00:07:59.710
+It reflects very well one
+of the main advantages
+
+184
+00:07:59.710 --> 00:08:03.140
+that the flexible
+document model offers us.
+
+185
+00:08:03.140 --> 00:08:07.750
+So this is the overview
+for polymorphic pattern.
+
+186
+00:08:07.750 --> 00:08:10.990
+In summary, the polymorphic
+pattern is a basic pattern.
+
+187
+00:08:10.990 --> 00:08:12.800
+A lot of other
+patterns are, in fact,
+
+188
+00:08:12.800 --> 00:08:15.250
+a specialization
+of this pattern.
+
+189
+00:08:15.250 --> 00:08:18.670
+We can also use the polymorphic
+pattern in a more generic way
+
+190
+00:08:18.670 --> 00:08:20.500
+to store different
+shapes of documents
+
+191
+00:08:20.500 --> 00:08:23.190
+within the same collection.

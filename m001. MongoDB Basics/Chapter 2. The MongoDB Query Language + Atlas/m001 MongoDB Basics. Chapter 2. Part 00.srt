@@ -1,0 +1,109 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:02,180
+Now it's time to
+dive in, and learn
+
+3
+00:00:02,180 --> 00:00:04,550
+the MongoDB query language.
+
+4
+00:00:04,550 --> 00:00:06,290
+Regardless of the
+app you're building,
+
+5
+00:00:06,290 --> 00:00:09,110
+this is going to be important
+as you work to get data
+
+6
+00:00:09,110 --> 00:00:12,851
+into and out of MongoDB.
+
+7
+00:00:12,851 --> 00:00:15,350
+We've already had a sample of
+the query language in our work
+
+8
+00:00:15,350 --> 00:00:17,570
+with Compass so far.
+
+9
+00:00:17,570 --> 00:00:20,150
+In this chapter,
+we'll do a deeper dive
+
+10
+00:00:20,150 --> 00:00:23,460
+so that you're fully prepared
+to work with MongoDB data.
+
+11
+00:00:23,460 --> 00:00:26,272
+We'll cover CRUD operations.
+
+12
+00:00:26,272 --> 00:00:27,980
+If you're not familiar
+with that acronym,
+
+13
+00:00:27,980 --> 00:00:34,600
+it simply stands for create,
+read, update, and delete.
+
+14
+00:00:34,600 --> 00:00:36,680
+It's these four
+types of operations
+
+15
+00:00:36,680 --> 00:00:40,610
+that we'll be discussing
+in this chapter.
+
+16
+00:00:40,610 --> 00:00:45,200
+In addition to MongoDB Compass,
+we'll be using the mongo shell.
+
+17
+00:00:45,200 --> 00:00:49,440
+Like compass, the mongo
+shell is a MongoDB client.
+
+18
+00:00:49,440 --> 00:00:53,840
+However, the mongo shell is
+text based, rather than visual.
+
+19
+00:00:53,840 --> 00:00:56,160
+It also provides a number
+of administrative functions
+
+20
+00:00:56,160 --> 00:00:58,700
+in addition to supporting
+the MongoDB query language.
+
+21
+00:00:58,700 --> 00:01:01,070
+We'll be using the shell
+throughout this chapter
+
+22
+00:01:01,070 --> 00:01:04,349
+because it provides full
+support for the query language.
+
+23
+00:01:04,349 --> 00:00:00,000
+Let's dive in.
+

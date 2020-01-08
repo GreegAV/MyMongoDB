@@ -1,0 +1,399 @@
+
+1
+00:00:00.000 --> 00:00:01.030
+
+
+2
+00:00:01.030 --> 00:00:03.070
+We've been drawing diagrams
+up until this point.
+
+3
+00:00:03.070 --> 00:00:04.810
+Let's see all of this in action.
+
+4
+00:00:04.810 --> 00:00:08.670
+I'll spin up a replica set
+with three members in my VM.
+
+5
+00:00:08.670 --> 00:00:12.700
+Next, I'll run a script I
+wrote to test write concern.
+
+6
+00:00:12.700 --> 00:00:15.710
+It performs a set of
+writes, 10 by default,
+
+7
+00:00:15.710 --> 00:00:18.430
+with a write concern I
+can specify using majority
+
+8
+00:00:18.430 --> 00:00:22.690
+by default. Let's run 100 tests
+with write concern majority,
+
+9
+00:00:22.690 --> 00:00:28.150
+and see what the average time to
+get our write acknowledged is.
+
+10
+00:00:28.150 --> 00:00:32.290
+That took an average
+time of 2.6 milliseconds.
+
+11
+00:00:32.290 --> 00:00:33.820
+Pretty fast, but
+that makes sense;
+
+12
+00:00:33.820 --> 00:00:35.600
+I'm just doing
+this on local host.
+
+13
+00:00:35.600 --> 00:00:37.600
+Now let's see what happens
+when I try to do this
+
+14
+00:00:37.600 --> 00:00:41.080
+with a write concern of four.
+
+15
+00:00:41.080 --> 00:00:42.160
+So that's good.
+
+16
+00:00:42.160 --> 00:00:44.020
+If I try to use a
+write concern of four,
+
+17
+00:00:44.020 --> 00:00:46.870
+then it will throw this
+write concern error --
+
+18
+00:00:46.870 --> 00:00:48.910
+Not enough data-bearing nodes.
+
+19
+00:00:48.910 --> 00:00:51.340
+So it knows that when I have
+a three member replica set,
+
+20
+00:00:51.340 --> 00:00:53.060
+but want a write
+concern of four,
+
+21
+00:00:53.060 --> 00:00:54.950
+that I'm asking
+for the impossible,
+
+22
+00:00:54.950 --> 00:00:57.040
+and it will just tell me no.
+
+23
+00:00:57.040 --> 00:00:59.720
+The problem is that it's not
+as obvious to your system
+
+24
+00:00:59.720 --> 00:01:01.810
+if one of your
+servers is just down.
+
+25
+00:01:01.810 --> 00:01:10.290
+
+
+26
+00:01:10.290 --> 00:01:12.926
+I'll disconnect, and
+run my script again,
+
+27
+00:01:12.926 --> 00:01:14.550
+this time with a
+write concern of three
+
+28
+00:01:14.550 --> 00:01:16.330
+and a wTimeOut of one second.
+
+29
+00:01:16.330 --> 00:01:20.080
+
+
+30
+00:01:20.080 --> 00:01:23.810
+And as I can see it timed out
+after that one second delay.
+
+31
+00:01:23.810 --> 00:01:26.110
+So, this wTimeOut will
+let my replica set
+
+32
+00:01:26.110 --> 00:01:28.030
+know that it should throw
+an error if it takes
+
+33
+00:01:28.030 --> 00:01:29.738
+more than a second to
+replicate the data,
+
+34
+00:01:29.738 --> 00:01:33.070
+in this case to the three
+members since W equals three.
+
+35
+00:01:33.070 --> 00:01:35.320
+Be aware that, if you don't
+have that timeout set,
+
+36
+00:01:35.320 --> 00:01:38.870
+my write concern won't
+even get that error.
+
+37
+00:01:38.870 --> 00:01:42.970
+And it just hangs, because by
+default, there is no wTimeOut.
+
+38
+00:01:42.970 --> 00:01:45.322
+The application won't move
+on without acknowledgment,
+
+39
+00:01:45.322 --> 00:01:47.530
+but it will wait for that
+acknowledgement for as long
+
+40
+00:01:47.530 --> 00:01:49.240
+as it takes.
+
+41
+00:01:49.240 --> 00:01:52.210
+I'm going to use
+control-C to kill this.
+
+42
+00:01:52.210 --> 00:01:54.490
+And just to be clear,
+the write occurred,
+
+43
+00:01:54.490 --> 00:01:57.400
+it's just not getting to all
+three servers as specified
+
+44
+00:01:57.400 --> 00:01:59.110
+in my write concern.
+
+45
+00:01:59.110 --> 00:02:01.360
+So, it's definitely
+important to use a wTimeOut,
+
+46
+00:02:01.360 --> 00:02:04.990
+but as we'll see, we don't
+want to set it too low either.
+
+47
+00:02:04.990 --> 00:02:07.630
+Let's use mlaunch to shut
+down my two remaining servers,
+
+48
+00:02:07.630 --> 00:02:10.180
+and then restart the whole set.
+
+49
+00:02:10.180 --> 00:02:11.860
+Now, let's see how
+long things take
+
+50
+00:02:11.860 --> 00:02:13.270
+for a write concern of three.
+
+51
+00:02:13.270 --> 00:02:18.200
+
+
+52
+00:02:18.200 --> 00:02:19.850
+And let's see what
+happens if I set
+
+53
+00:02:19.850 --> 00:02:23.630
+my wTimeOut to 1 millisecond.
+
+54
+00:02:23.630 --> 00:02:25.790
+Even on local host, it
+can take more than one
+
+55
+00:02:25.790 --> 00:02:29.600
+millisecond in order for
+a write to propagate.
+
+56
+00:02:29.600 --> 00:02:31.880
+Keep in mind, this
+script uses W majority
+
+57
+00:02:31.880 --> 00:02:34.280
+by default, so, for a
+three member replica set,
+
+58
+00:02:34.280 --> 00:02:37.220
+that's the same as W two.
+
+59
+00:02:37.220 --> 00:02:38.759
+For a wTimeOut of
+2 milliseconds,
+
+60
+00:02:38.759 --> 00:02:41.300
+it looks like some of them went
+through, and then one of them
+
+61
+00:02:41.300 --> 00:02:42.890
+failed on this machine.
+
+62
+00:02:42.890 --> 00:02:44.750
+Your results may differ.
+
+63
+00:02:44.750 --> 00:02:48.680
+What if I had a replica set
+with two nodes plus an arbiter?
+
+64
+00:02:48.680 --> 00:02:52.010
+Let's change our
+configuration and find out.
+
+65
+00:02:52.010 --> 00:02:52.940
+And let's connect.
+
+66
+00:02:52.940 --> 00:02:57.160
+
+
+67
+00:02:57.160 --> 00:03:01.360
+When I look at my rs.conf, I
+can see that my second member
+
+68
+00:03:01.360 --> 00:03:03.880
+has this arbiter only flag set.
+
+69
+00:03:03.880 --> 00:03:06.700
+That means it's an arbiter,
+it's not carrying data.
+
+70
+00:03:06.700 --> 00:03:08.170
+Now what if a member goes down?
+
+71
+00:03:08.170 --> 00:03:11.420
+
+
+72
+00:03:11.420 --> 00:03:13.600
+I've killed my secondary.
+
+73
+00:03:13.600 --> 00:03:17.710
+Let's run this with W
+majority by default.
+
+74
+00:03:17.710 --> 00:03:21.160
+I lost just one server of what
+I thought of as a three member
+
+75
+00:03:21.160 --> 00:03:24.370
+replica set, and what my write
+concern thinks of as a three
+
+76
+00:03:24.370 --> 00:03:25.750
+member replica set.
+
+77
+00:03:25.750 --> 00:03:31.570
+I still have a primary, but it
+can't handle W majority at all.
+
+78
+00:03:31.570 --> 00:03:33.550
+So what have we talked about?
+
+79
+00:03:33.550 --> 00:03:36.130
+We've discussed how arbiters
+and delayed secondaries
+
+80
+00:03:36.130 --> 00:03:39.460
+can cause problems with write
+concerns of greater than one.
+
+81
+00:03:39.460 --> 00:03:40.870
+We've talked about
+the importance
+
+82
+00:03:40.870 --> 00:03:42.820
+of being mindful
+of your majority,
+
+83
+00:03:42.820 --> 00:03:46.020
+and we've seen how this plays
+out in action with wTimeOut.
+
+84
+00:03:46.020 --> 00:03:48.520
+And that's a quick tour
+of unexpected problems
+
+85
+00:03:48.520 --> 00:03:51.010
+that can arise
+from write concern.

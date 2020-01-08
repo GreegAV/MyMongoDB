@@ -1,0 +1,782 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.960
+Ah, the many-to-many
+relationship.
+
+3
+00:00:02.960 --> 00:00:05.180
+Here's the most
+complicated relationship.
+
+4
+00:00:05.180 --> 00:00:06.230
+Or is it?
+
+5
+00:00:06.230 --> 00:00:08.330
+It can trick us, but
+don't worry too much.
+
+6
+00:00:08.330 --> 00:00:10.700
+We can also trick it.
+
+7
+00:00:10.700 --> 00:00:12.940
+The many-to-many
+relationship is identified
+
+8
+00:00:12.940 --> 00:00:15.880
+by documents on the first
+side being associated
+
+9
+00:00:15.880 --> 00:00:18.730
+with many documents
+on the second side,
+
+10
+00:00:18.730 --> 00:00:20.770
+and documents on the
+second side being
+
+11
+00:00:20.770 --> 00:00:24.520
+associated with many
+documents on the first side.
+
+12
+00:00:24.520 --> 00:00:27.170
+Looking at products
+sold in our stores,
+
+13
+00:00:27.170 --> 00:00:30.520
+we can see that the given
+store sells many items,
+
+14
+00:00:30.520 --> 00:00:34.360
+and each item is
+sold in many stores.
+
+15
+00:00:34.360 --> 00:00:36.820
+This relationship can
+trick you into thinking
+
+16
+00:00:36.820 --> 00:00:39.280
+it is a one-to-many
+relationship, if you only
+
+17
+00:00:39.280 --> 00:00:42.020
+consider one side
+of the relationship.
+
+18
+00:00:42.020 --> 00:00:44.320
+So ensure you ask the
+question of associativity
+
+19
+00:00:44.320 --> 00:00:47.120
+from both directions, and
+that you review your model
+
+20
+00:00:47.120 --> 00:00:49.810
+the few times, especially
+for these less apparent
+
+21
+00:00:49.810 --> 00:00:51.880
+relationships.
+
+22
+00:00:51.880 --> 00:00:54.280
+In a normalized
+relational model,
+
+23
+00:00:54.280 --> 00:00:58.540
+you can't actually link
+two tables as many-to-many.
+
+24
+00:00:58.540 --> 00:01:02.250
+However, some design tools
+can do the extra work for you.
+
+25
+00:01:02.250 --> 00:01:05.200
+Under the hood, an
+additional relationship table
+
+26
+00:01:05.200 --> 00:01:09.130
+needs to be created to define
+this relationship, sometimes
+
+27
+00:01:09.130 --> 00:01:11.890
+referred as a jump table.
+
+28
+00:01:11.890 --> 00:01:15.160
+It [? result ?] in breaking up
+the many-to-many relationship
+
+29
+00:01:15.160 --> 00:01:17.950
+into two one-to-many
+relationships
+
+30
+00:01:17.950 --> 00:01:21.400
+linked together by
+our extra third table.
+
+31
+00:01:21.400 --> 00:01:24.610
+For example, keeping track of
+the many-to-many relationship
+
+32
+00:01:24.610 --> 00:01:28.150
+between actors and movies
+requires this table
+
+33
+00:01:28.150 --> 00:01:31.710
+in between our
+actors and movies.
+
+34
+00:01:31.710 --> 00:01:34.670
+Misidentifying these
+types of relations
+
+35
+00:01:34.670 --> 00:01:38.570
+means creating new tables and
+incurring data migration costs.
+
+36
+00:01:38.570 --> 00:01:41.000
+This type of modification,
+it's just not fun
+
+37
+00:01:41.000 --> 00:01:43.160
+with traditional databases.
+
+38
+00:01:43.160 --> 00:01:45.980
+MongoDB's flexible
+schema easily allows
+
+39
+00:01:45.980 --> 00:01:48.620
+for this type of
+schema modification,
+
+40
+00:01:48.620 --> 00:01:51.740
+and is more forgiving, as
+scatter field can easily
+
+41
+00:01:51.740 --> 00:01:55.030
+be transformed into
+an array field.
+
+42
+00:01:55.030 --> 00:01:56.920
+Let's take another example--
+
+43
+00:01:56.920 --> 00:01:59.170
+people and phone numbers.
+
+44
+00:01:59.170 --> 00:02:01.420
+Someone may have a
+few phone numbers.
+
+45
+00:02:01.420 --> 00:02:05.350
+Some of these phone numbers are
+exclusive, and some are not.
+
+46
+00:02:05.350 --> 00:02:08.000
+A family's shares the
+home phone number.
+
+47
+00:02:08.000 --> 00:02:10.419
+So a person can have
+many phone numbers,
+
+48
+00:02:10.419 --> 00:02:13.420
+and the phone number may
+be owned by many people,
+
+49
+00:02:13.420 --> 00:02:16.300
+resulting in a
+many-to-many relationship.
+
+50
+00:02:16.300 --> 00:02:17.920
+Well, not so fast.
+
+51
+00:02:17.920 --> 00:02:21.530
+We said we could also
+trick this relationship.
+
+52
+00:02:21.530 --> 00:02:23.410
+We can treat the phone
+number for a home
+
+53
+00:02:23.410 --> 00:02:25.990
+as uniquely owned by
+each member of the family
+
+54
+00:02:25.990 --> 00:02:28.180
+by making copies of it.
+
+55
+00:02:28.180 --> 00:02:31.040
+Now, we have a one-to-many
+relationship instead,
+
+56
+00:02:31.040 --> 00:02:33.310
+which removes complexity.
+
+57
+00:02:33.310 --> 00:02:37.810
+[INAUDIBLE] of this duplication,
+if the family moves,
+
+58
+00:02:37.810 --> 00:02:40.410
+we must modify each family's
+members phone numbers
+
+59
+00:02:40.410 --> 00:02:41.470
+separately.
+
+60
+00:02:41.470 --> 00:02:44.020
+Performing the same update
+multiple times may not
+
+61
+00:02:44.020 --> 00:02:46.700
+sound like the right
+design, however,
+
+62
+00:02:46.700 --> 00:02:48.340
+considered the
+previous design, where
+
+63
+00:02:48.340 --> 00:02:52.180
+we store only one telephone
+number value in the database.
+
+64
+00:02:52.180 --> 00:02:54.910
+If someone moves-- like
+the child, for example--
+
+65
+00:02:54.910 --> 00:02:57.850
+and updates their phone
+number, the update
+
+66
+00:02:57.850 --> 00:03:00.820
+will apply to all the
+members of the family.
+
+67
+00:03:00.820 --> 00:03:02.350
+We don't get the
+option to choose
+
+68
+00:03:02.350 --> 00:03:05.620
+between doing multiple updates
+or one update that applies
+
+69
+00:03:05.620 --> 00:03:08.260
+to all [? records. ?]
+Duplication is better,
+
+70
+00:03:08.260 --> 00:03:11.650
+in some occasions, especially
+when you want to keep control
+
+71
+00:03:11.650 --> 00:03:16.388
+of [INAUDIBLE] data and when
+you want to avoid joining data.
+
+72
+00:03:16.388 --> 00:03:18.430
+What are the different
+ways in which we can model
+
+73
+00:03:18.430 --> 00:03:20.570
+this many-to-many relationship?
+
+74
+00:03:20.570 --> 00:03:22.450
+Similarly to the
+other relationships,
+
+75
+00:03:22.450 --> 00:03:25.300
+we can embed the data
+from the other collection,
+
+76
+00:03:25.300 --> 00:03:28.210
+or we can reference
+the other collection.
+
+77
+00:03:28.210 --> 00:03:30.640
+Embedding in one side [? or ?]
+[? the ?] [? other ?] is
+
+78
+00:03:30.640 --> 00:03:33.930
+a symmetric operation.
+
+79
+00:03:33.930 --> 00:03:37.020
+Usually we embed documents of
+the last queried collection
+
+80
+00:03:37.020 --> 00:03:41.070
+inside documents of the
+more queried collection.
+
+81
+00:03:41.070 --> 00:03:43.620
+Let's use the carts and items
+from our product catalog
+
+82
+00:03:43.620 --> 00:03:44.920
+example.
+
+83
+00:03:44.920 --> 00:03:46.500
+The main entity is
+the cart in which
+
+84
+00:03:46.500 --> 00:03:49.590
+we want to find the
+items, not the reverse.
+
+85
+00:03:49.590 --> 00:03:52.620
+We embed the items in the cart,
+because we always retrieve
+
+86
+00:03:52.620 --> 00:03:54.680
+this information together.
+
+87
+00:03:54.680 --> 00:03:56.770
+Having copies of items
+in the carts period
+
+88
+00:03:56.770 --> 00:03:58.530
+is usually fine,
+because they represent
+
+89
+00:03:58.530 --> 00:04:00.510
+the state of those
+items at the time
+
+90
+00:04:00.510 --> 00:04:02.700
+they were added to the cart.
+
+91
+00:04:02.700 --> 00:04:05.340
+The same applies to
+addresses and orders.
+
+92
+00:04:05.340 --> 00:04:07.800
+The address used for that
+order at the time of the order
+
+93
+00:04:07.800 --> 00:04:10.620
+creation should be duplicated.
+
+94
+00:04:10.620 --> 00:04:13.590
+Observe that we need to keep
+a collection for the items.
+
+95
+00:04:13.590 --> 00:04:16.102
+Even [INAUDIBLE] we embed
+the items in the carts,
+
+96
+00:04:16.102 --> 00:04:18.269
+these items require [? a ?]
+[? collection ?] to hold
+
+97
+00:04:18.269 --> 00:04:21.510
+their definition
+for several reasons.
+
+98
+00:04:21.510 --> 00:04:23.520
+There will be several
+other access patterns
+
+99
+00:04:23.520 --> 00:04:26.280
+in your application that utilize
+items without [? carrying ?]
+
+100
+00:04:26.280 --> 00:04:30.480
+or needing the information on
+orders they have been added to.
+
+101
+00:04:30.480 --> 00:04:34.050
+Item documents have different
+life cycle than cart documents.
+
+102
+00:04:34.050 --> 00:04:37.710
+An item may exist without being
+in any carts, like an actor may
+
+103
+00:04:37.710 --> 00:04:40.710
+be listed before
+being in a movie.
+
+104
+00:04:40.710 --> 00:04:43.080
+This requirement of
+keeping a source of input
+
+105
+00:04:43.080 --> 00:04:45.420
+applies only to this
+specific representation
+
+106
+00:04:45.420 --> 00:04:47.360
+in the many-to-many
+relationship.
+
+107
+00:04:47.360 --> 00:04:49.500
+In a one-to-many
+relationship, if a user
+
+108
+00:04:49.500 --> 00:04:51.670
+is deleted with
+their phone numbers,
+
+109
+00:04:51.670 --> 00:04:53.670
+we don't care about not
+having this phone number
+
+110
+00:04:53.670 --> 00:04:56.160
+in any other document,
+because the phone number only
+
+111
+00:04:56.160 --> 00:04:59.040
+belonged to this deleted user.
+
+112
+00:04:59.040 --> 00:05:02.735
+Instead of embedding, we
+can also use references.
+
+113
+00:05:02.735 --> 00:05:04.110
+Let's start with
+a representation
+
+114
+00:05:04.110 --> 00:05:06.030
+that keeps the references
+on the side that
+
+115
+00:05:06.030 --> 00:05:07.920
+is the most often queried.
+
+116
+00:05:07.920 --> 00:05:09.960
+When a document is
+retrieved, we will
+
+117
+00:05:09.960 --> 00:05:12.210
+get the list of all
+the associated object's
+
+118
+00:05:12.210 --> 00:05:13.890
+unique identifiers.
+
+119
+00:05:13.890 --> 00:05:16.830
+Those are expressed in
+[INAUDIBLE] [? field. ?] If we
+
+120
+00:05:16.830 --> 00:05:19.530
+need to add the
+information on these,
+
+121
+00:05:19.530 --> 00:05:24.448
+we can use a second query, like
+the [INAUDIBLE] [? IDs. ?] Or
+
+122
+00:05:24.448 --> 00:05:26.490
+we can use the [? dollar ?]
+[? lookup ?] operator
+
+123
+00:05:26.490 --> 00:05:30.360
+to effectively do a join
+between the object ID for stores
+
+124
+00:05:30.360 --> 00:05:34.020
+and the corresponding documents
+in the stores collection.
+
+125
+00:05:34.020 --> 00:05:38.340
+This is very similar to join
+operations in the SQL language.
+
+126
+00:05:38.340 --> 00:05:41.210
+The second representation of the
+many-to-many relationship that
+
+127
+00:05:41.210 --> 00:05:44.090
+uses references is the
+one where we keep--
+
+128
+00:05:44.090 --> 00:05:45.740
+as we may have
+guessed-- the reference
+
+129
+00:05:45.740 --> 00:05:47.690
+in another collection.
+
+130
+00:05:47.690 --> 00:05:50.630
+Because this representation
+[INAUDIBLE] [? arrays ?]
+
+131
+00:05:50.630 --> 00:05:53.780
+of references, they
+are very similar.
+
+132
+00:05:53.780 --> 00:05:56.250
+However, there are
+few differences.
+
+133
+00:05:56.250 --> 00:05:59.690
+Here, each store has a
+field called item sold
+
+134
+00:05:59.690 --> 00:06:01.190
+that carries a
+list of references
+
+135
+00:06:01.190 --> 00:06:04.220
+to the items sold
+in the given store.
+
+136
+00:06:04.220 --> 00:06:06.020
+When we retrieve
+an item, we still
+
+137
+00:06:06.020 --> 00:06:08.640
+don't know where it is sold.
+
+138
+00:06:08.640 --> 00:06:11.450
+We need a second query to
+get this information, which
+
+139
+00:06:11.450 --> 00:06:14.750
+was another case in the
+previous representation.
+
+140
+00:06:14.750 --> 00:06:16.490
+A query like the
+following will return
+
+141
+00:06:16.490 --> 00:06:19.910
+to stores in which the item with
+an ID of 10 or green MongoDB
+
+142
+00:06:19.910 --> 00:06:22.610
+T-shirt has sold.
+
+143
+00:06:22.610 --> 00:06:24.880
+So which of those two
+representation that [? use ?]
+
+144
+00:06:24.880 --> 00:06:27.330
+[? references ?] should we use?
+
+145
+00:06:27.330 --> 00:06:29.940
+The representation that fits
+[? our ?] queries and also
+
+146
+00:06:29.940 --> 00:06:33.540
+works well with the way we have
+the documents in our system.
+
+147
+00:06:33.540 --> 00:06:36.480
+When we add an item, which
+happens more often than adding
+
+148
+00:06:36.480 --> 00:06:39.810
+a store, is it better to add
+the list of store in which it
+
+149
+00:06:39.810 --> 00:06:42.480
+is sold or to
+individually update
+
+150
+00:06:42.480 --> 00:06:45.020
+all stores to add the item?
+
+151
+00:06:45.020 --> 00:06:46.830
+How we answer this
+question will help us
+
+152
+00:06:46.830 --> 00:06:49.200
+pick the right representation.
+
+153
+00:06:49.200 --> 00:06:52.270
+To recap this lesson, ask the
+right questions to ensure it
+
+154
+00:06:52.270 --> 00:06:56.590
+is a many-to-many relationship
+that should not be simplified.
+
+155
+00:06:56.590 --> 00:06:58.740
+A many-to-many
+relationship can be
+
+156
+00:06:58.740 --> 00:07:00.960
+replaced by two
+one-to-many relationship,
+
+157
+00:07:00.960 --> 00:07:04.360
+but does not have to
+with the document model.
+
+158
+00:07:04.360 --> 00:07:08.530
+Prefer embedding on
+the most queried side,
+
+159
+00:07:08.530 --> 00:07:10.930
+prefer embedding for
+information that is primarily
+
+160
+00:07:10.930 --> 00:07:14.740
+static over time and may
+profit from duplication,
+
+161
+00:07:14.740 --> 00:07:16.510
+prefer referencing
+over embedding
+
+162
+00:07:16.510 --> 00:07:19.620
+to avoid managing duplication.

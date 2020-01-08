@@ -1,0 +1,574 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.220
+As you may have noticed from
+the first example of using POJO
+
+3
+00:00:03.220 --> 00:00:05.730
+and a default
+Codec, using a Codec
+
+4
+00:00:05.730 --> 00:00:08.070
+allows us to write cleaner code.
+
+5
+00:00:08.070 --> 00:00:11.310
+Theoretically, we could
+use a default codec again.
+
+6
+00:00:11.310 --> 00:00:14.010
+But that would deprive
+us of the opportunity
+
+7
+00:00:14.010 --> 00:00:16.230
+to have a value
+assigned to the ID field
+
+8
+00:00:16.230 --> 00:00:17.670
+due to a type mismatch.
+
+9
+00:00:17.670 --> 00:00:22.050
+Because now, our ID field is
+a string and not an object ID.
+
+10
+00:00:22.050 --> 00:00:25.450
+As you know, ID is the
+document primary key,
+
+11
+00:00:25.450 --> 00:00:28.950
+which therefore uniquely
+identifies a MongoDB document.
+
+12
+00:00:28.950 --> 00:00:30.690
+So it sounds like
+something we want
+
+13
+00:00:30.690 --> 00:00:34.470
+to have in our actor with
+string ID object, as well.
+
+14
+00:00:34.470 --> 00:00:37.800
+As of today, the default
+Codec doesn't automatically
+
+15
+00:00:37.800 --> 00:00:42.520
+set the underscore ID value at
+insert time using POJO Codec.
+
+16
+00:00:42.520 --> 00:00:44.100
+So there is a little
+more work that
+
+17
+00:00:44.100 --> 00:00:47.910
+needs doing to have a
+complete transfer of data.
+
+18
+00:00:47.910 --> 00:00:50.130
+To accommodate for the
+missing underscore ID
+
+19
+00:00:50.130 --> 00:00:52.620
+value or any cross
+type conversions,
+
+20
+00:00:52.620 --> 00:00:56.250
+we will use a custom Codec
+that will help handle our POJO.
+
+21
+00:00:56.250 --> 00:00:59.280
+We've provided you with this
+Codec for our specific use
+
+22
+00:00:59.280 --> 00:00:59.920
+case.
+
+23
+00:00:59.920 --> 00:01:03.110
+Feel free to take a look
+and see how it works.
+
+24
+00:01:03.110 --> 00:01:05.239
+Now, with our custom
+Codec in place,
+
+25
+00:01:05.239 --> 00:01:08.300
+we can encode a bson
+object ID straight
+
+26
+00:01:08.300 --> 00:01:12.650
+into the object with string
+ID value, among other things.
+
+27
+00:01:12.650 --> 00:01:16.400
+We first establish the use
+of our new custom Codec.
+
+28
+00:01:16.400 --> 00:01:20.060
+Then we create a Codec registry
+with this custom Codec.
+
+29
+00:01:20.060 --> 00:01:23.840
+Finally, we can access
+the actors collection
+
+30
+00:01:23.840 --> 00:01:27.320
+with the use of our custom Codec
+that is specifically tailored
+
+31
+00:01:27.320 --> 00:01:29.360
+for the actor documents.
+
+32
+00:01:29.360 --> 00:01:34.190
+We can then retrieve our actor
+from the collection as an actor
+
+33
+00:01:34.190 --> 00:01:37.130
+with string ID object.
+
+34
+00:01:37.130 --> 00:01:40.470
+Let's test if this works.
+
+35
+00:01:40.470 --> 00:01:41.550
+Fabulous.
+
+36
+00:01:41.550 --> 00:01:44.100
+The question now
+is, why use POJO
+
+37
+00:01:44.100 --> 00:01:47.490
+over manually mapping field
+values into the object
+
+38
+00:01:47.490 --> 00:01:48.510
+attributes?
+
+39
+00:01:48.510 --> 00:01:51.270
+Well, the first reason
+for me is that it is
+
+40
+00:01:51.270 --> 00:01:53.130
+a more elegant implementation.
+
+41
+00:01:53.130 --> 00:01:55.770
+The second is writing.
+
+42
+00:01:55.770 --> 00:01:58.050
+When you use POJO
+with a custom Codec,
+
+43
+00:01:58.050 --> 00:02:00.090
+not only do you get
+to read directly
+
+44
+00:02:00.090 --> 00:02:03.030
+from bson into your
+object in a cleaner way,
+
+45
+00:02:03.030 --> 00:02:05.970
+but you also get to write
+straight from an object
+
+46
+00:02:05.970 --> 00:02:07.860
+into a bson collection.
+
+47
+00:02:07.860 --> 00:02:09.960
+While you can do
+this with POJO code,
+
+48
+00:02:09.960 --> 00:02:12.690
+you will have to sacrifice
+any type of mismatching
+
+49
+00:02:12.690 --> 00:02:16.170
+between your class objects
+and the supported bson types,
+
+50
+00:02:16.170 --> 00:02:18.310
+like in our ID field case.
+
+51
+00:02:18.310 --> 00:02:20.550
+So let's look at the
+custom Codec example
+
+52
+00:02:20.550 --> 00:02:22.800
+to demonstrate the write.
+
+53
+00:02:22.800 --> 00:02:26.530
+Just like before, we create
+a new actor Codec object,
+
+54
+00:02:26.530 --> 00:02:28.320
+which is our custom Codec.
+
+55
+00:02:28.320 --> 00:02:32.730
+We now create a Codec registry
+using that custom Codec,
+
+56
+00:02:32.730 --> 00:02:36.210
+and we can then access our
+collection using our custom
+
+57
+00:02:36.210 --> 00:02:38.070
+Codec registry.
+
+58
+00:02:38.070 --> 00:02:40.210
+Create a new actor
+with string ID
+
+59
+00:02:40.210 --> 00:02:43.600
+and write it directly
+to that collection.
+
+60
+00:02:43.600 --> 00:02:49.210
+Check that the idea value is
+not known and see if it works.
+
+61
+00:02:49.210 --> 00:02:50.650
+And it does.
+
+62
+00:02:50.650 --> 00:02:53.230
+Finally, the last method
+that we wanted to show you
+
+63
+00:02:53.230 --> 00:02:56.740
+is the one that allows us to
+use a default Codec registry
+
+64
+00:02:56.740 --> 00:02:59.920
+while customizing the
+fields that we know
+
+65
+00:02:59.920 --> 00:03:01.330
+need special treatment.
+
+66
+00:03:01.330 --> 00:03:03.340
+For example, if you
+have a field that
+
+67
+00:03:03.340 --> 00:03:06.430
+would need type conversion,
+like our ID field,
+
+68
+00:03:06.430 --> 00:03:09.910
+or has various different
+data types in it.
+
+69
+00:03:09.910 --> 00:03:12.100
+This needs to be addressed
+when the documents are
+
+70
+00:03:12.100 --> 00:03:14.110
+read into our JAVA application.
+
+71
+00:03:14.110 --> 00:03:17.530
+So here's another
+approach to handling it.
+
+72
+00:03:17.530 --> 00:03:20.860
+In this case, we will use
+the default Codec registry
+
+73
+00:03:20.860 --> 00:03:23.980
+while applying a custom approach
+to the field in question,
+
+74
+00:03:23.980 --> 00:03:26.330
+which, in our case,
+is the ID field.
+
+75
+00:03:26.330 --> 00:03:28.450
+We create a custom
+Codec for that field
+
+76
+00:03:28.450 --> 00:03:32.630
+specifically instead of creating
+it for the whole object.
+
+77
+00:03:32.630 --> 00:03:34.360
+So first, we select
+a class that will
+
+78
+00:03:34.360 --> 00:03:36.790
+be used as our POJO,
+which, in our case,
+
+79
+00:03:36.790 --> 00:03:39.200
+is the actor with
+string ID class.
+
+80
+00:03:39.200 --> 00:03:42.400
+We then get the property that
+needs type conversion, which,
+
+81
+00:03:42.400 --> 00:03:45.610
+in our case, is the
+ID property, and then
+
+82
+00:03:45.610 --> 00:03:48.970
+apply type conversion to
+the property of interest.
+
+83
+00:03:48.970 --> 00:03:51.880
+String object ID Codec
+describes specifically
+
+84
+00:03:51.880 --> 00:03:55.840
+how to encode and decode
+the object ID into a string,
+
+85
+00:03:55.840 --> 00:03:57.250
+and vise versa.
+
+86
+00:03:57.250 --> 00:03:59.710
+We use the default
+Codec registry
+
+87
+00:03:59.710 --> 00:04:03.220
+with the changes implemented
+above to registering a class
+
+88
+00:04:03.220 --> 00:04:06.730
+model builder with the
+POJO Codec provider.
+
+89
+00:04:06.730 --> 00:04:07.810
+And we're done.
+
+90
+00:04:07.810 --> 00:04:11.830
+Let's test if this worked.
+
+91
+00:04:11.830 --> 00:04:13.420
+Looks like it did.
+
+92
+00:04:13.420 --> 00:04:17.410
+Let us now run all the test
+cases we talked about today
+
+93
+00:04:17.410 --> 00:04:19.750
+and see if we can
+summarize what we learned.
+
+94
+00:04:19.750 --> 00:04:22.970
+
+
+95
+00:04:22.970 --> 00:04:23.510
+Excellent.
+
+96
+00:04:23.510 --> 00:04:24.770
+Everything checks out.
+
+97
+00:04:24.770 --> 00:04:27.500
+Let's recap the advantages
+and disadvantages
+
+98
+00:04:27.500 --> 00:04:30.720
+of the methods discussed
+in today's lesson.
+
+99
+00:04:30.720 --> 00:04:33.800
+First, the POJO implementation
+is much cleaner.
+
+100
+00:04:33.800 --> 00:04:36.110
+It outsources
+translation between BSON
+
+101
+00:04:36.110 --> 00:04:38.600
+and object to a
+custom Codec, which
+
+102
+00:04:38.600 --> 00:04:42.050
+makes it easier to manage
+and maintain the code.
+
+103
+00:04:42.050 --> 00:04:44.000
+In either approach,
+the field names
+
+104
+00:04:44.000 --> 00:04:46.670
+don't have to match the
+object attribute name.
+
+105
+00:04:46.670 --> 00:04:48.710
+In case of the
+custom codec, this
+
+106
+00:04:48.710 --> 00:04:51.860
+is easy to accommodate in
+the code by the BSON property
+
+107
+00:04:51.860 --> 00:04:53.840
+annotation only
+for the fields that
+
+108
+00:04:53.840 --> 00:04:57.230
+don't correspond to the
+attribute name one-to-one.
+
+109
+00:04:57.230 --> 00:04:59.810
+To map the document
+to an object manually,
+
+110
+00:04:59.810 --> 00:05:04.100
+you have to make use of getters
+and setters, while using a POJO
+
+111
+00:05:04.100 --> 00:05:07.010
+allows for automatic
+introspection.
+
+112
+00:05:07.010 --> 00:05:09.560
+Also, handling of
+generics and sub-documents
+
+113
+00:05:09.560 --> 00:05:11.650
+is cleaner and easier
+to maintain with POJO,
+
+114
+00:05:11.650 --> 00:05:15.740
+utilizing the custom Codec
+or the field customization
+
+115
+00:05:15.740 --> 00:05:18.080
+approach instead of
+writing separate methods
+
+116
+00:05:18.080 --> 00:05:21.770
+to traverse sub-documents
+with getters and setters.
+
+117
+00:05:21.770 --> 00:05:25.430
+Finally, when writing a
+document object to the database,
+
+118
+00:05:25.430 --> 00:05:28.310
+the document ID is
+automatically generated
+
+119
+00:05:28.310 --> 00:05:30.170
+and can be accessed
+in the document
+
+120
+00:05:30.170 --> 00:05:34.330
+object for the subsequent
+use of the mapping method.

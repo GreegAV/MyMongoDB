@@ -1,0 +1,47 @@
+OK, sometimes you'll be going along, your database is looking great, and then all of a sudden things get slow.
+
+Queries are taking forever and you're not sure why.
+
+In this lesson we'll look into some of the common reasons why this might have happened.
+
+We're going to look into long running queries and some possible explanations, index builds, and write contention.
+
+So the first thing you're going to want to look at is, to check to see if you're doing a lot of collection scans.
+
+Maybe your application has just deployed a new query that doesn't use an index.
+
+Or maybe that new DBA just dropped an index.
+
+How do you check this hypothesis?
+
+You have a few places to look.
+
+So the server logs should show any long running queries.
+
+Db.currentOp will show whatever is going on right now, including long running queries.
+
+And, of course, you can always turn on the profiler.
+
+But if the issue is performance, that may not be a great idea because it's going to slow down your system even further.
+
+Now once you know it's a collection scan, you can simply build a new index.
+
+But it's also possible that you've got a new query that uses an index, but it's not using it well.
+
+For example, maybe your database is doing regex queries that are not anchored at the beginning of a string field, so it has to do a full index scan with every query.
+
+This can actually be fixed, if you anchor it to the beginning of the string, so that it only has to search a subset of the index.
+
+It's also possible that you're looking at inefficient index usage.
+
+This is where you're using an index, but maybe not using it very well.
+
+This can be harder to find because if logs capture these queries, they still show index usage.
+
+In this case, you may need to go through and explain the queries, to see how efficiently you're returning them.
+
+So that summarizes how to find and respond to long running queries.
+
+Again, if you see a sudden performance drop, it's probably because your application is fielding a new query or because someone dropped an index.
+
+If you want more details, you can find them in M-201, the MongoDB performance course.

@@ -1,0 +1,379 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:04,320
+Let's connect to the Atlas
+Cluster for this class, the one
+
+3
+00:00:04,320 --> 00:00:06,400
+that we've all been
+using together.
+
+4
+00:00:06,400 --> 00:00:08,220
+I'll show you how
+to do that here,
+
+5
+00:00:08,220 --> 00:00:11,670
+but please see the lecture notes
+for the exact connection string
+
+6
+00:00:11,670 --> 00:00:14,880
+and other parameters
+you should pass to Mongo
+
+7
+00:00:14,880 --> 00:00:18,490
+in order to connect
+to our Atlas Cluster.
+
+8
+00:00:18,490 --> 00:00:22,570
+We might need to change this
+information from time to time
+
+9
+00:00:22,570 --> 00:00:24,040
+as we make updates.
+
+10
+00:00:24,040 --> 00:00:25,480
+The lecture notes
+will be updated
+
+11
+00:00:25,480 --> 00:00:28,270
+as well so that you have
+the necessary details
+
+12
+00:00:28,270 --> 00:00:32,110
+to connect to this cluster
+from the Mongo Shell.
+
+13
+00:00:32,110 --> 00:00:34,420
+I'll paste those
+details here, and then
+
+14
+00:00:34,420 --> 00:00:36,887
+let's talk about this
+command a little bit.
+
+15
+00:00:36,887 --> 00:00:38,720
+I want to point out a
+couple of things here.
+
+16
+00:00:38,720 --> 00:00:42,368
+The first is that because
+we're connecting to a cluster,
+
+17
+00:00:42,368 --> 00:00:44,410
+we wanted to give the
+Mongo Shell the name of all
+
+18
+00:00:44,410 --> 00:00:46,090
+the servers in this cluster.
+
+19
+00:00:46,090 --> 00:00:52,050
+Those are listed
+here through here.
+
+20
+00:00:52,050 --> 00:00:54,960
+MongoDB is designed to provide
+high availability access
+
+21
+00:00:54,960 --> 00:00:56,053
+to your data.
+
+22
+00:00:56,053 --> 00:00:57,720
+It does this by
+enabling you to maintain
+
+23
+00:00:57,720 --> 00:01:02,140
+redundant copies of your data in
+a cluster called a replica set.
+
+24
+00:01:02,140 --> 00:01:04,739
+We configured our Atlas Cluster
+to be a three-server replica
+
+25
+00:01:04,739 --> 00:01:07,560
+set in order to help ensure
+you will always have access
+
+26
+00:01:07,560 --> 00:01:09,500
+to the data.
+
+27
+00:01:09,500 --> 00:01:11,690
+There are thousands of
+students taking this class.
+
+28
+00:01:11,690 --> 00:01:14,240
+In the event that the
+primary server goes
+
+29
+00:01:14,240 --> 00:01:17,720
+down due to a software
+or hardware failure,
+
+30
+00:01:17,720 --> 00:01:20,630
+one of the other
+servers will step in
+
+31
+00:01:20,630 --> 00:01:23,120
+to continue serving
+data to clients.
+
+32
+00:01:23,120 --> 00:01:25,760
+If you'd like to know more
+about how replica sets work,
+
+33
+00:01:25,760 --> 00:01:28,830
+please see the
+MongoDB documentation.
+
+34
+00:01:28,830 --> 00:01:33,110
+One other thing I'd like to
+point out about this command
+
+35
+00:01:33,110 --> 00:01:35,360
+is that at the very
+end here, we can
+
+36
+00:01:35,360 --> 00:01:39,080
+see the word test immediately
+following this slash.
+
+37
+00:01:39,080 --> 00:01:42,540
+That indicates that we're going
+to connect to this cluster
+
+38
+00:01:42,540 --> 00:01:46,435
+and we're going to connect
+it to a database called test.
+
+39
+00:01:46,435 --> 00:01:47,810
+Now if we would
+prefer to connect
+
+40
+00:01:47,810 --> 00:01:50,120
+to a different database,
+we can change this
+
+41
+00:01:50,120 --> 00:01:54,500
+to one of the databases we
+know is available in our Atlas
+
+42
+00:01:54,500 --> 00:01:56,300
+Cluster.
+
+43
+00:01:56,300 --> 00:02:00,460
+Let's do the 100-year
+weather database.
+
+44
+00:02:00,460 --> 00:02:03,280
+And if you'll
+remember, that database
+
+45
+00:02:03,280 --> 00:02:04,960
+has a collection
+in it called data
+
+46
+00:02:04,960 --> 00:02:07,270
+where all of the weather
+readings are found.
+
+47
+00:02:07,270 --> 00:02:10,118
+Finally, the last thing I'd like
+to point out about this command
+
+48
+00:02:10,118 --> 00:02:12,160
+is the fact that we're
+making a secure connection
+
+49
+00:02:12,160 --> 00:02:13,810
+to this cluster.
+
+50
+00:02:13,810 --> 00:02:15,760
+As we did when
+connecting with Compass,
+
+51
+00:02:15,760 --> 00:02:19,420
+we're using an encrypted
+connection via SSL
+
+52
+00:02:19,420 --> 00:02:21,730
+and supplying the same
+username and password
+
+53
+00:02:21,730 --> 00:02:24,070
+we did to connect with Compass.
+
+54
+00:02:24,070 --> 00:02:26,620
+So let's go ahead and
+connect to our Atlas Cluster
+
+55
+00:02:26,620 --> 00:02:30,130
+with the Mongo Shell.
+
+56
+00:02:30,130 --> 00:02:31,750
+We'll see a prompt
+that indicates
+
+57
+00:02:31,750 --> 00:02:35,270
+that we're connected to the
+primary for this cluster.
+
+58
+00:02:35,270 --> 00:02:38,630
+The shell will always connect
+to the primary for a cluster
+
+59
+00:02:38,630 --> 00:02:43,190
+as specified here, because it's
+the primary to which most reads
+
+60
+00:02:43,190 --> 00:02:46,790
+are typically directed and to
+which all writes for a MongoDB
+
+61
+00:02:46,790 --> 00:02:48,950
+cluster must be directed.
+
+62
+00:02:48,950 --> 00:02:51,620
+Only primaries in a
+cluster can accept
+
+63
+00:02:51,620 --> 00:02:53,450
+writes and for
+any cluster, there
+
+64
+00:02:53,450 --> 00:02:56,690
+is one and only one primary.
+
+65
+00:02:56,690 --> 00:03:01,520
+Now remember, we connected to
+the 100-year weather database.
+
+66
+00:03:01,520 --> 00:03:04,170
+If we type show
+collections, sure enough,
+
+67
+00:03:04,170 --> 00:03:07,340
+we see the data collection,
+because we have connected
+
+68
+00:03:07,340 --> 00:03:09,510
+to this particular database.
+
+69
+00:03:09,510 --> 00:03:14,120
+If instead we'd prefer to
+access the video collection,
+
+70
+00:03:14,120 --> 00:03:19,070
+we can use the use
+command and use video.
+
+71
+00:03:19,070 --> 00:03:21,530
+And then, if we show
+collections here,
+
+72
+00:03:21,530 --> 00:03:24,310
+we'll see our movies collection.
+
+73
+00:03:24,310 --> 00:03:28,300
+Now I'm going to show you
+just one more command,
+
+74
+00:03:28,300 --> 00:03:32,420
+and that is just so we
+can see the documents that
+
+75
+00:03:32,420 --> 00:03:34,480
+are in this movies collection.
+
+76
+00:03:34,480 --> 00:03:34,980
+OK?
+
+77
+00:03:34,980 --> 00:03:38,320
+And here, these should
+look familiar to you
+
+78
+00:03:38,320 --> 00:03:40,090
+given that we've
+already looked at a lot
+
+79
+00:03:40,090 --> 00:00:00,000
+of this data in Compass.
+

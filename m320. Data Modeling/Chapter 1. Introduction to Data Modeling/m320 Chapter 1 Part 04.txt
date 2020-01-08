@@ -1,0 +1,117 @@
+In this lesson, we will discuss why constraints drive the need to model.
+
+Did you ever plan on how you will get your oxygen for a day of your life?
+
+For most of us, we don't have to.
+
+There is plenty of oxygen.
+
+And it's available as quickly as needed by our lungs.
+
+However, if you were an astronaut like my friend David, here, your life will depend on the careful planning of the supply, the estimation of its usage, and securing the oxygen from any danger or accident.
+
+My point being that if the resource is abundant and can be transferred without delay, there is not much planning or modeling to do about the resource.
+
+Unfortunately, with computers, we deal with limited resources, which are crippled by restrictions of size, speed, and cost.
+
+For that reason, you need to model to make the best of the resources available and work around the restrictions that you have.
+
+Let's start with the hardware.
+
+RAM is the fastest location where you can put data, besides the processor caches.
+
+Unfortunately, it becomes very expensive if you need a humongous amount of it.
+
+For that reason, you are likely to offload some of the data to disk, which are cheaper and have larger capacities.
+
+Solid State Drives, or SSDs, would be the preferred type of disk.
+
+However, the cost of high-capacity SSDs may be more than you're ready to spend.
+
+For this situation, you may consider traditional hard disk drives.
+
+Those three types of hardware that handle data-- RAM, SSDs, and HDDs-- have a strong correlation between their price and their speed.
+
+The next type of restriction is related to your data.
+
+The data you want to keep or have might just be impractical.
+
+Keeping petabytes of data that go back to the beginning of time may just not work for your budget.
+
+Often you will see projects that discriminate between recent data that is often used by [?
+
+the ?] system versus data mostly used by analytic queries.
+
+A way to deal with this situation is to allocate faster resources, like SSDs for the frequently accessed data, and HDDs for the data that has fewer latency requirements.
+
+Other aspects to consider are data retention policies and data sovereignty regulations that may impact the way you define your data model in order to be compliant.
+
+And obviously, security has to be on your mind when modeling.
+
+Giving access to some pieces of data and not others will influence how you group that data in your documents and collections.
+
+To cover these concerns, MongoDB offers a set of access controls and security checks that we'll briefly discuss in this course but are better covered in our MongoDB security courses.
+
+Your application would like to return the data as quickly as possible.
+
+However, there are physical limits on the network's speed.
+
+We can make bigger and faster drives.
+
+But it may take us a while to improve on the speed of light.
+
+Modeling for applications that are globally distributed and accessed by clients in different locations may require a bit more thinking about how we can make data accessible without compromising service quality.
+
+And the last group I want to highlight is the limits of the database server.
+
+In the case of MongoDB, a document can't be larger than 16 meg.
+
+And with the current WiredTiger engine, reading information from a document requires the full document to be loaded in RAM.
+
+Both of those constraints may drive your design to split frequently accessed data from the rest of the data less frequently accessed.
+
+As for writes, if you need to write too many documents, well, you will use a transaction with the traditional tabular databases, which are frequently referred as relational databases.
+
+However, you can simplify your application and avoid using transactions by storing all the information that needs to be updated in a single document, as a write to a document is ACID compliant.
+
+In other words, transactions are a must-have in tabular databases.
+
+However, in a document database like MongoDB, you can do well without them.
+
+But just to be clear, MongoDB does support transactions.
+
+We mentioned frequently accessed data a few times already.
+
+Let's clarify this expression.
+
+As you know or may have guessed, if you can keep the old database in RAM, it will give you very good performance.
+
+However, it is often not practical or may just be a waste of money.
+
+What you want to aim for is keeping the data that is frequently accessed and needs to be returned quickly in RAM.
+
+We refer to this data as the working set.
+
+A definition for the working set would be the total body of data that the application uses in the course of normal operations.
+
+In this picture, the chunk of data in red are the ones we want to keep in memory, while we still have some RAM left to swap information that is used less often in and out from the disk.
+
+In summary, the frequently accessed documents and indexes is their working set, which is a set of pages read from this that contain the documents and indexes that the system handles pretty often.
+
+Before we go, let's just spell out some guidelines.
+
+Keep the frequently used documents and indexes in memory.
+
+They are what we just described as a working set.
+
+Prefer solid state drives to hard disk drives.
+
+However, if you have a ton of historical data, data you don't use very often, hard disk drives are cheaper and may just work as well for this type of data.
+
+Let's recap what we have learned in this lesson.
+
+The nature of your data set and hardware define the need to model your data.
+
+It is important to identify those exact constraints and their impact to create a better model.
+
+As your software and the technological landscape change, your model should be re-evaluated and updated accordingly.

@@ -1,0 +1,59 @@
+I'm going to connect to my Vagrant box, my m312 vagrant environment, and I'm going to launch a replica set that I'm going to call timeouts with three nodes and where their data sets will going to be specified on this folder that I just created as well, called timeouts and starting on port 27000.
+
+Once my replica set is initiated, I'll connect to one of the nodes and express the following command.
+
+Here, I'm going to insert this document, Hello World, with a write concern expecting three nodes to acknowledge this write within one millisecond.
+
+So anything that takes more than one millisecond, I will come back with an error saying hey, I could not confirm that three nodes of your replica set were able to acknowledge the write within one millisecond in total.
+
+So if I do so, and since I'm very bullish about this expected timeout, I actually get back a write concern failed error saying well you know what we tried but we were not able to get the confirmation within one millisecond that all three nodes actually got that write operation.
+
+Now this happens because we just launched our replica set.
+
+Everything is in the same box but once we launch and write something to that newly boot up MongoD, it will need to do a couple of things like writing into an index or creating index files into the collection files.
+
+So those probably are going to take more than one millisecond alone.
+
+Therefore, I can not guarantee that that write was acknowledged by three nodes within one millisecond.
+
+That would be pretty awesome, wouldn't it?
+
+If I try the exact same instruction, new document with the same set of parameters, but after all the files have been initialized and all, I will actually be able to insert it.
+
+Once everything is initialized and I have everything up and running, actually, the nodes are able to communicate back that they acknowledged the writes below one millisecond, which is pretty awesome.
+
+The important thing here is that we need to make sure we understand what's going on under the covers.
+
+As I can see here, I attempted three inserts and got all of them, is that although I was not able to confirm that all three nodes were able to acknowledge below one millisecond, the write is still acknowledged in the primary.
+
+We will always notify you back to the application saying what you expected was not able to be met.
+
+But, that doesn't mean that the write will be rolled back or will not succeed on the primary nodes or even the secondary nodes, it just means it doesn't succeed within the time I'm expecting the system to comply with.
+
+So, if by anytime your developers start seeing messages like this, make sure they realize what is going on and be assuring them that the data is safely stored in the primaries at least, just that their expectations are not able to be met.
+
+And let's not get confused by some other aspect of this write concern which is not related with the w timeout itself.
+
+Let's go ahead and connect to one of the secondary nodes that is listening on port 27001 and let's shut down this server.
+
+And let me connect back to my test database where I was inserting my data.
+
+In this case, the message will be the same but even if we increase the w timeout, just let's say 100 milliseconds, we will still get write concern failed within the replication timeout.
+
+This is only due to the fact that if one of our nodes is completely down, it is impossible, regardless of the number of w timeout value that we set, to comply back because until it gets up and running probably, it will be more time than 100 milliseconds.
+
+A slight variation will be to request a number of nodes that pure and simply isn't there.
+
+In this case, we can not satisfy concern will be sent back because there's not enough data bearing nodes to actually comply with our request.
+
+Our data will still be stored in the primary and all living secondaries but regardless of the w timeout.
+
+We are expecting more nodes than what our current configuration of the replica set has in terms of data bearing nodes.
+
+So this will not be satisfied not because of the w timeout, but because we are requesting something that's purely simply not possible.
+
+These are the kind of errors that your developers might see in a production environment.
+
+Make sure they understand clearly what those messages refer of and how they can deal with those from the application side.
+
+Now that we've seen what w timeout is, let's look into another nice timeout error that can be controlled and set by the application.

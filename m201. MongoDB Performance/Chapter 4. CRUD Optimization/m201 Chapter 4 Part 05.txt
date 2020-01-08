@@ -1,0 +1,59 @@
+The same kind of ordering will be applied to the index structure.
+
+So internally how we built our big tree is that we will be going to be grouping the documents, or the document keys, based on the data type representation.
+
+That way, if we are traversing the tree looking for a specific data type we can go directly to that first branch of the tree and get the results in a much streamlined fashion.
+
+So we'll start by grouping and creating a tree for numerical value types, including any floating point values, numerical decimal, or even integer 64.
+
+And then we'll create the structure for all of our strings and symbols, grouping them into the different data types that they are represented by.
+
+Although this is the correct way of dealing with this scenario, it might not be exactly what the application actually expects.
+
+In a situation where these two documents, which are represented by a string value as their base field, they are not exactly following their numeric representation.
+
+We are just ordering them according with their data type and using a string comparison between them, which is totally correct.
+
+But probably not the expected numeric ordering sorting.
+
+We can solve this situation by creating an index or even applying a collation on a query that applies the numeric ordering of that string representation.
+
+If we run the query-- exactly the same query-- but instead of just sorting the value, if we apply a collation with numeric ordering in place, and still sorting by the same value, we will get the expected string numerical ordering representation while we are doing our sort.
+
+We are still going to be doing the ordering by groups.
+
+First numerical data types, integer 64, numerical decimal, number decimal, and then strings.
+
+But within strings, we will order them according with their numeric representation.
+
+There is also the obvious implications to your application logic.
+
+If you populate documents where a given field has seven different data types, the application will need to be prepared to handle those scenarios.
+
+While these scenarios might be extremely inconvenient in terms of data migrations or even while using a dynamic language, it will create some client side logic that will need to be prepared to deal with different data types, which in turn will result in a much more complex code base, or expected to be complex.
+
+And more important than that, a more complex test base.
+
+The number of variations of tests that you need to create will be in the order of the different data types that you might have in your collection for the same field.
+
+Again, while these might be very, very useful, we advise to use them with care.
+
+As a recap, there are several different data type implications that you should be aware of and you need to deal with those once you are using a flexible scheme.
+
+You should be aware, and your application should be aware, that it needs to avoid data consistency issues.
+
+If one client writes one data type, the other clients should also write exactly the same data type.
+
+Otherwise it might be confusing for different clients to deal with different data types.
+
+We will be ensuring that the correctness on queries and sorting in terms of data types by default.
+
+But if you want to add that extra edge of being able to capture the numerical representation of a string print, for example, you'll need to apply collations in place.
+
+There are implications for your code base.
+
+The more streamlined your fields are in terms of more normalized with using always the same data type, the more simple your code base of your application will be.
+
+And you can enforce certain rules, like document validation that can be defined at the collection level to give you that extra control of which kind of documents are being inserted into your collection.
+
+And these are the different data type implications that we needed to cover.

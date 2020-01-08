@@ -1,0 +1,27 @@
+We can now discuss why MongoDB uses role based access control.
+
+The best way to describe why MongoDB uses role based access control is to say that it gives us a high level of responsibility isolation for operational tasks.
+
+And what I mean by this is that across our organization there are going to be a myriad of different people who are going to need access to our database.
+
+But each of these individuals have very different needs.
+
+We might have a DBA.
+
+They're going to need the ability to create users.
+
+We might have a developer.
+
+They're obviously going to need to be able to insert data into our database.
+
+But they're probably not going to need to be able to create users.
+
+We might have a data scientist.
+
+They're going to need to be able to read a bunch of data out of MongoDB.
+
+But they're not likely going to need to be able to create users or insert data into our database.
+
+What we're basically saying here is that within our organization there are a bunch of different roles.
+
+And we can tightly define and tailor our roles in MongoDB to match the needs of our users.

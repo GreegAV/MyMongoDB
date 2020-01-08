@@ -1,0 +1,495 @@
+
+1
+00:00:00.000 --> 00:00:00.270
+
+
+2
+00:00:00.270 --> 00:00:00.990
+Great.
+
+3
+00:00:00.990 --> 00:00:02.880
+What if we want to
+make more complex rules
+
+4
+00:00:02.880 --> 00:00:05.160
+for some of our edge cases?
+
+5
+00:00:05.160 --> 00:00:09.335
+What if a represents a score,
+and if a person doesn't
+
+6
+00:00:09.335 --> 00:00:10.710
+have a score yet,
+what if we want
+
+7
+00:00:10.710 --> 00:00:13.860
+to start them with
+20 instead of zero,
+
+8
+00:00:13.860 --> 00:00:15.420
+like what happens by default?
+
+9
+00:00:15.420 --> 00:00:17.670
+So if they get one point,
+but they didn't have a score
+
+10
+00:00:17.670 --> 00:00:20.550
+before, they should now get 21.
+
+11
+00:00:20.550 --> 00:00:23.640
+We can now use the conditional
+expression in aggregation that
+
+12
+00:00:23.640 --> 00:00:28.300
+says, if a was missing,
+type of a missing,
+
+13
+00:00:28.300 --> 00:00:33.630
+then we give 21, otherwise, we
+just add the value of a and 21.
+
+14
+00:00:33.630 --> 00:00:37.380
+Notice that that will also
+cause that same 21 to show up
+
+15
+00:00:37.380 --> 00:00:41.010
+in an upsert case because an
+upsert is a document where
+
+16
+00:00:41.010 --> 00:00:43.650
+the existing value
+of a was missing,
+
+17
+00:00:43.650 --> 00:00:47.070
+and what if we wanted to
+add another rule that says,
+
+18
+00:00:47.070 --> 00:00:49.110
+you can't get a score
+higher than 100.
+
+19
+00:00:49.110 --> 00:00:52.380
+We want to cap everybody at 100.
+
+20
+00:00:52.380 --> 00:00:56.400
+Well, all we have to do is
+wrap this conditional inside
+
+21
+00:00:56.400 --> 00:00:58.230
+of a minimum
+expression, and says,
+
+22
+00:00:58.230 --> 00:01:02.800
+you get the lower of 100
+or your calculated score,
+
+23
+00:01:02.800 --> 00:01:06.280
+so when we add 100
+and one we get 101.
+
+24
+00:01:06.280 --> 00:01:09.840
+100 is less than that, so
+your score's still 100.
+
+25
+00:01:09.840 --> 00:01:13.230
+Now, when you get something
+other than a number,
+
+26
+00:01:13.230 --> 00:01:15.750
+you might want to
+check for it, right?
+
+27
+00:01:15.750 --> 00:01:20.200
+The aggregation expressions let
+you access the type of a field,
+
+28
+00:01:20.200 --> 00:01:25.320
+or you can even converted using
+type conversion expressions,
+
+29
+00:01:25.320 --> 00:01:28.650
+or you can just let the
+default behavior of some take
+
+30
+00:01:28.650 --> 00:01:32.070
+care of it, but then you might
+want to save the current value
+
+31
+00:01:32.070 --> 00:01:33.610
+in another field.
+
+32
+00:01:33.610 --> 00:01:38.910
+So you could just set previous
+a to current value of a and this
+
+33
+00:01:38.910 --> 00:01:40.980
+is what you will get then.
+
+34
+00:01:40.980 --> 00:01:42.340
+Pretty powerful.
+
+35
+00:01:42.340 --> 00:01:44.180
+Let's look at another example.
+
+36
+00:01:44.180 --> 00:01:46.260
+Here, I have a very
+simple collection,
+
+37
+00:01:46.260 --> 00:01:47.940
+where across all
+the documents, they
+
+38
+00:01:47.940 --> 00:01:51.450
+have fields like a, b, and
+c, but not every document
+
+39
+00:01:51.450 --> 00:01:54.490
+has every one of those fields.
+
+40
+00:01:54.490 --> 00:01:59.510
+I could do a monthly update that
+says, if a or b are missing,
+
+41
+00:01:59.510 --> 00:02:01.350
+they're numeric so
+set them to zero.
+
+42
+00:02:01.350 --> 00:02:05.370
+If c is missing, set
+it to the string unset,
+
+43
+00:02:05.370 --> 00:02:07.450
+and it would look
+something like this.
+
+44
+00:02:07.450 --> 00:02:10.320
+We apply to all
+documents multi true,
+
+45
+00:02:10.320 --> 00:02:13.440
+and we're going to
+replace the document
+
+46
+00:02:13.440 --> 00:02:17.220
+with a merge of two objects.
+
+47
+00:02:17.220 --> 00:02:21.030
+Root is second, because
+remember merge objects,
+
+48
+00:02:21.030 --> 00:02:25.320
+the latest value always
+wins, and the first document
+
+49
+00:02:25.320 --> 00:02:28.080
+that's being merged is the
+one with default values.
+
+50
+00:02:28.080 --> 00:02:30.900
+a zero, b zero, c onset.
+
+51
+00:02:30.900 --> 00:02:33.390
+So if root has any
+of these fields set,
+
+52
+00:02:33.390 --> 00:02:35.520
+they will override
+the default values,
+
+53
+00:02:35.520 --> 00:02:38.380
+otherwise, we are left
+with default values,
+
+54
+00:02:38.380 --> 00:02:40.680
+and you can see that's
+exactly what happens.
+
+55
+00:02:40.680 --> 00:02:45.030
+a is zero, b is zero
+here, c is unset there.
+
+56
+00:02:45.030 --> 00:02:47.080
+That's pretty cool.
+
+57
+00:02:47.080 --> 00:02:49.560
+Let's look at the
+most complex example.
+
+58
+00:02:49.560 --> 00:02:51.840
+Here, we have some
+kind of, I don't know,
+
+59
+00:02:51.840 --> 00:02:55.620
+maybe internet of things
+document, where for each,
+
+60
+00:02:55.620 --> 00:02:59.160
+let's say device id,
+and date combination.
+
+61
+00:02:59.160 --> 00:03:02.550
+We have an array of
+hours that specifies hour
+
+62
+00:03:02.550 --> 00:03:06.630
+and the value for
+some particular thing
+
+63
+00:03:06.630 --> 00:03:09.540
+that we happen to be
+collecting, and now,
+
+64
+00:03:09.540 --> 00:03:16.380
+if I receive for id X, day
+Y, hour Z, some value, VAL.
+
+65
+00:03:16.380 --> 00:03:20.070
+How would I construct an update
+that if the document doesn't
+
+66
+00:03:20.070 --> 00:03:22.890
+exist, it would
+create it, meaning
+
+67
+00:03:22.890 --> 00:03:26.640
+I'd need to specify
+upsert, but if it exists,
+
+68
+00:03:26.640 --> 00:03:32.170
+it would check the hour's array,
+and if this hour didn't exist,
+
+69
+00:03:32.170 --> 00:03:36.270
+it would add it to the array,
+so like an upsert for an array.
+
+70
+00:03:36.270 --> 00:03:39.390
+But if it did exist,
+it would add the value
+
+71
+00:03:39.390 --> 00:03:42.750
+to the already existing value.
+
+72
+00:03:42.750 --> 00:03:43.870
+Sounds pretty complex.
+
+73
+00:03:43.870 --> 00:03:45.930
+So we probably need more space.
+
+74
+00:03:45.930 --> 00:03:49.970
+It's going to be an update
+where the condition is dx--
+
+75
+00:03:49.970 --> 00:03:55.710
+oh, sorry, that should
+be id X and day Y. Now,
+
+76
+00:03:55.710 --> 00:03:57.810
+we have some kind of
+a pipeline, and we're
+
+77
+00:03:57.810 --> 00:04:00.180
+going to specify upsert true.
+
+78
+00:04:00.180 --> 00:04:02.850
+Now this pipeline,
+as you imagine,
+
+79
+00:04:02.850 --> 00:04:05.940
+needs to check whether
+or not the hour we
+
+80
+00:04:05.940 --> 00:04:09.910
+have is already in this array.
+
+81
+00:04:09.910 --> 00:04:10.800
+So here it is.
+
+82
+00:04:10.800 --> 00:04:17.290
+If Z, our hour, is
+in the h.hour array,
+
+83
+00:04:17.290 --> 00:04:19.589
+now I wrap this in
+if no so that we
+
+84
+00:04:19.589 --> 00:04:25.930
+use an empty array if the
+document does not exist at all.
+
+85
+00:04:25.930 --> 00:04:29.730
+So if it's in the array, then
+we're going to map or iterate
+
+86
+00:04:29.730 --> 00:04:35.700
+over the array h, and if
+hour is not our value,
+
+87
+00:04:35.700 --> 00:04:37.500
+then just pass it through.
+
+88
+00:04:37.500 --> 00:04:40.770
+If it is the value, then
+we're going to compute.
+
+89
+00:04:40.770 --> 00:04:43.260
+Our Z value is going
+to be a sum of what's
+
+90
+00:04:43.260 --> 00:04:46.260
+already there, plus VAL.
+
+91
+00:04:46.260 --> 00:04:48.750
+Now, that's if Z already
+was in the array.
+
+92
+00:04:48.750 --> 00:04:52.440
+If it wasn't, then we want
+to concatenate the existing
+
+93
+00:04:52.440 --> 00:04:57.630
+array with our Z value, VAL.
+
+94
+00:04:57.630 --> 00:05:00.480
+Upsert true means the
+record will be inserted
+
+95
+00:05:00.480 --> 00:05:02.370
+if it doesn't already exist.
+
+96
+00:05:02.370 --> 00:05:04.830
+It sounds pretty
+simple and it is.
+
+97
+00:05:04.830 --> 00:05:06.060
+So let's recap.
+
+98
+00:05:06.060 --> 00:05:08.820
+Updates can be specified
+either the old way
+
+99
+00:05:08.820 --> 00:05:12.120
+or with an aggregation
+pipeline that
+
+100
+00:05:12.120 --> 00:05:15.480
+lets you transform
+the existing document,
+
+101
+00:05:15.480 --> 00:05:17.790
+as all the fields from
+the existing document
+
+102
+00:05:17.790 --> 00:05:20.880
+can be accessed to
+compute new values.
+
+103
+00:05:20.880 --> 00:05:23.610
+Now, because it's doing
+more complex computation,
+
+104
+00:05:23.610 --> 00:05:28.130
+it will be slightly slower,
+but it is a lot more powerful.

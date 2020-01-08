@@ -1,0 +1,731 @@
+1
+00:00:00,000 --> 00:00:00,050
+
+
+2
+00:00:00,050 --> 00:00:00,550
+All right.
+
+3
+00:00:00,550 --> 00:00:03,220
+So in this lesson, we're
+going to discuss the mongod.
+
+4
+00:00:03,220 --> 00:00:06,460
+You'll learn what the mongod
+is how works at a high level
+
+5
+00:00:06,460 --> 00:00:10,210
+and what a daemon is, the
+availability of mongod,
+
+6
+00:00:10,210 --> 00:00:13,060
+and the options you can
+use to configure it.
+
+7
+00:00:13,060 --> 00:00:16,116
+Mongod is the main daemon
+process for MongoDB.
+
+8
+00:00:16,116 --> 00:00:18,490
+It's the core unit of the
+database, handling connections,
+
+9
+00:00:18,490 --> 00:00:20,660
+requests, and the most
+important part of it,
+
+10
+00:00:20,660 --> 00:00:21,880
+persisting your data--
+
+11
+00:00:21,880 --> 00:00:24,190
+or writing your data at a disk.
+
+12
+00:00:24,190 --> 00:00:25,400
+So what's a daemon?
+
+13
+00:00:25,400 --> 00:00:28,240
+A daemon is a program a
+process that's meant to be run
+
+14
+00:00:28,240 --> 00:00:30,670
+and not interacted with
+in a direct manner.
+
+15
+00:00:30,670 --> 00:00:33,190
+By convention, daemons
+have a d appended
+
+16
+00:00:33,190 --> 00:00:36,700
+to the end of their name,
+hence the name mongod.
+
+17
+00:00:36,700 --> 00:00:39,670
+When we run. mongod, we don't
+interact with it directly.
+
+18
+00:00:39,670 --> 00:00:42,970
+Instead, our application
+utilizes a driver
+
+19
+00:00:42,970 --> 00:00:44,860
+to communicate with the mongod.
+
+20
+00:00:44,860 --> 00:00:47,235
+The user interaction is
+at the application level.
+
+21
+00:00:47,235 --> 00:00:49,360
+And the driver handles all
+the nitty gritty details
+
+22
+00:00:49,360 --> 00:00:51,550
+of communication
+with the mongod.
+
+23
+00:00:51,550 --> 00:00:55,250
+MongoDB is available on
+numerous 64-bit architectures,
+
+24
+00:00:55,250 --> 00:00:59,020
+including popular ones, such
+as Ubuntu, Windows, and others.
+
+25
+00:00:59,020 --> 00:01:00,670
+For development
+and demo purposes,
+
+26
+00:01:00,670 --> 00:01:03,200
+you can also install
+it on a Mac OS.
+
+27
+00:01:03,200 --> 00:01:03,700
+All right.
+
+28
+00:01:03,700 --> 00:01:05,241
+So now we have an
+idea of what mongod
+
+29
+00:01:05,241 --> 00:01:07,430
+is, let's discuss its usage.
+
+30
+00:01:07,430 --> 00:01:11,350
+Mongod is most easily started
+by running the command mongod.
+
+31
+00:01:11,350 --> 00:01:13,690
+We see a bunch of output
+here, but the most important
+
+32
+00:01:13,690 --> 00:01:16,190
+information is at the very
+top and the very bottom.
+
+33
+00:01:16,190 --> 00:01:16,690
+All right.
+
+34
+00:01:16,690 --> 00:01:18,148
+Now, so we can see
+here, mongod has
+
+35
+00:01:18,148 --> 00:01:22,090
+told us the process ID of
+this mongod process, 5838,
+
+36
+00:01:22,090 --> 00:01:26,710
+the port that it's running
+on, 27017, the dbpath.
+
+37
+00:01:26,710 --> 00:01:28,960
+And these are both
+defaults, that's
+
+38
+00:01:28,960 --> 00:01:31,130
+because we didn't
+specify anything else.
+
+39
+00:01:31,130 --> 00:01:34,790
+It also gives us the hostname
+of the vagrant box, m103.
+
+40
+00:01:34,790 --> 00:01:36,270
+And we can see, at
+the bottom here,
+
+41
+00:01:36,270 --> 00:01:40,402
+that it's listening for
+connections on port 27017.
+
+42
+00:01:40,402 --> 00:01:42,860
+Notice that our terminal
+is no longer interacted.
+
+43
+00:01:42,860 --> 00:01:45,350
+For example, if we
+type, nothing happens.
+
+44
+00:01:45,350 --> 00:01:47,722
+The terminal just
+feeds us a new line.
+
+45
+00:01:47,722 --> 00:01:50,180
+We have to open up a different
+window and terminal in order
+
+46
+00:01:50,180 --> 00:01:52,460
+to connect to mongo here.
+
+47
+00:01:52,460 --> 00:01:55,280
+So we're just going to open up
+a second terminal window here
+
+48
+00:01:55,280 --> 00:01:57,540
+and type the mongo command
+to connect to mongo.
+
+49
+00:01:57,540 --> 00:02:01,482
+This will connect on the
+default port, which is 27017.
+
+50
+00:02:01,482 --> 00:02:03,022
+And we're connected.
+
+51
+00:02:03,022 --> 00:02:04,480
+Now, let's run the
+command show dbs
+
+52
+00:02:04,480 --> 00:02:06,650
+from the shell to get
+a list of databases.
+
+53
+00:02:06,650 --> 00:02:08,770
+We see admin and local.
+
+54
+00:02:08,770 --> 00:02:10,430
+And there were do.
+
+55
+00:02:10,430 --> 00:02:13,220
+Keep in mind that if you've been
+using MongoDB locally already,
+
+56
+00:02:13,220 --> 00:02:16,720
+you might see more
+databases than this.
+
+57
+00:02:16,720 --> 00:02:19,240
+So looking back at the
+terminal output from mongod,
+
+58
+00:02:19,240 --> 00:02:21,070
+we can see exactly
+when we connected.
+
+59
+00:02:21,070 --> 00:02:23,890
+The lines with the information
+"connection accepted"
+
+60
+00:02:23,890 --> 00:02:26,240
+can tell us exactly when
+a connection happened
+
+61
+00:02:26,240 --> 00:02:27,310
+and where it came from.
+
+62
+00:02:27,310 --> 00:02:30,340
+In this case it was just us
+connecting through the mongo
+
+63
+00:02:30,340 --> 00:02:31,750
+shell.
+
+64
+00:02:31,750 --> 00:02:33,450
+OK, we're done with
+this mongod for now,
+
+65
+00:02:33,450 --> 00:02:35,033
+so we're going to
+shut down the server
+
+66
+00:02:35,033 --> 00:02:36,160
+and exit the mongo shell.
+
+67
+00:02:36,160 --> 00:02:38,620
+To do so, we'll switch back
+to the terminal with the mongo
+
+68
+00:02:38,620 --> 00:02:41,050
+shell, use the admin
+database, and then run
+
+69
+00:02:41,050 --> 00:02:42,470
+the shutdown command.
+
+70
+00:02:42,470 --> 00:02:45,722
+Finally, we'll exit the mongo
+shell with the exit command.
+
+71
+00:02:45,722 --> 00:02:48,570
+So I'm just going to use
+the admin database here,
+
+72
+00:02:48,570 --> 00:02:52,610
+and then I'm going to run the
+command db.shutdownServer.
+
+73
+00:02:52,610 --> 00:02:55,340
+This is going to close
+the mongod process.
+
+74
+00:02:55,340 --> 00:02:57,710
+And if we look at
+the mongod output,
+
+75
+00:02:57,710 --> 00:02:59,750
+we can see that it's shutdown.
+
+76
+00:02:59,750 --> 00:03:04,340
+To exit the mongo shell,
+we simply had to type exit.
+
+77
+00:03:04,340 --> 00:03:07,620
+We can see the output from
+mongod, that as it shut down,
+
+78
+00:03:07,620 --> 00:03:10,010
+it removed any socket
+files, and, in general,
+
+79
+00:03:10,010 --> 00:03:11,510
+just cleaned up
+after itself, just
+
+80
+00:03:11,510 --> 00:03:13,010
+to be a good process
+on our computer
+
+81
+00:03:13,010 --> 00:03:15,360
+and not take up too much
+space while it's not running.
+
+82
+00:03:15,360 --> 00:03:15,860
+All right.
+
+83
+00:03:15,860 --> 00:03:18,980
+So now let's talk about how
+to configure the mongod.
+
+84
+00:03:18,980 --> 00:03:20,869
+The mongod takes
+a myriad of flags,
+
+85
+00:03:20,869 --> 00:03:23,160
+and we can see all of them
+by typing the command mongod
+
+86
+00:03:23,160 --> 00:03:25,340
+--help.
+
+87
+00:03:25,340 --> 00:03:26,880
+That's a lot of flex.
+
+88
+00:03:26,880 --> 00:03:29,160
+For right now, the ones
+we're going to cover
+
+89
+00:03:29,160 --> 00:03:32,900
+are port, dbpath,
+logpath, and fork.
+
+90
+00:03:32,900 --> 00:03:34,930
+--port is the argument
+used to tell mongod
+
+91
+00:03:34,930 --> 00:03:36,830
+which port to listen on.
+
+92
+00:03:36,830 --> 00:03:39,580
+If this isn't specified, mongod
+will listen on port 27017
+
+93
+00:03:39,580 --> 00:03:41,770
+by default.
+
+94
+00:03:41,770 --> 00:03:44,320
+The --dbpath is
+where mongod creates
+
+95
+00:03:44,320 --> 00:03:46,750
+the files that will store
+information for our databases
+
+96
+00:03:46,750 --> 00:03:48,070
+and collections.
+
+97
+00:03:48,070 --> 00:03:51,700
+--Logpath is one that we
+didn't specify just now,
+
+98
+00:03:51,700 --> 00:03:54,640
+but it's where mongod will
+log informational messages.
+
+99
+00:03:54,640 --> 00:03:56,890
+We saw this early
+when we ran mongod.
+
+100
+00:03:56,890 --> 00:03:59,590
+But in that case, it printed
+it right to standard out,
+
+101
+00:03:59,590 --> 00:04:01,090
+or to the terminal.
+
+102
+00:04:01,090 --> 00:04:02,860
+Instead, we could
+specify a destination
+
+103
+00:04:02,860 --> 00:04:05,890
+with a logpath and mongod will
+output the information in that
+
+104
+00:04:05,890 --> 00:04:06,957
+file instead.
+
+105
+00:04:06,957 --> 00:04:09,040
+--Fork is an argument used
+to tell mongod to start
+
+106
+00:04:09,040 --> 00:04:10,557
+as a background process.
+
+107
+00:04:10,557 --> 00:04:12,140
+We can use this so
+that mongod doesn't
+
+108
+00:04:12,140 --> 00:04:14,630
+block the current terminal
+window as it just did.
+
+109
+00:04:14,630 --> 00:04:15,130
+All right.
+
+110
+00:04:15,130 --> 00:04:17,290
+So let's give some of
+these options a try.
+
+111
+00:04:17,290 --> 00:04:19,510
+I'd like to start
+MongoDB on port 30,000
+
+112
+00:04:19,510 --> 00:04:22,720
+with a dbpath to a local
+directory called first_mongod
+
+113
+00:04:22,720 --> 00:04:25,780
+and forth the process so
+it doesn't block my shell.
+
+114
+00:04:25,780 --> 00:04:28,900
+So first, in order to
+specify a different db path,
+
+115
+00:04:28,900 --> 00:04:31,040
+we have to create the
+directory beforehand.
+
+116
+00:04:31,040 --> 00:04:32,482
+Mongod won't do that for us.
+
+117
+00:04:32,482 --> 00:04:34,690
+So in this command, we're
+just creating the directory
+
+118
+00:04:34,690 --> 00:04:36,530
+first_mongod.
+
+119
+00:04:36,530 --> 00:04:40,650
+So now, if we run this, it's
+going to give us an error.
+
+120
+00:04:40,650 --> 00:04:43,080
+I forgot to mention that if
+we specify the fork flag,
+
+121
+00:04:43,080 --> 00:04:45,520
+you must also specify a logpath.
+
+122
+00:04:45,520 --> 00:04:48,290
+So let's set the logpath
+to a file called mongod.log
+
+123
+00:04:48,290 --> 00:04:50,381
+in the first mongod directory.
+
+124
+00:04:50,381 --> 00:04:50,880
+All right.
+
+125
+00:04:50,880 --> 00:04:54,860
+So now that we've specified
+our logpath, this should work.
+
+126
+00:04:54,860 --> 00:04:56,020
+And it does.
+
+127
+00:04:56,020 --> 00:04:59,050
+It forked the process, it gives
+us the name of the process ID--
+
+128
+00:04:59,050 --> 00:05:01,570
+6114, and tells
+us that the child
+
+129
+00:05:01,570 --> 00:05:04,450
+process starts succesfully.
+
+130
+00:05:04,450 --> 00:05:06,361
+So because we
+forked this process,
+
+131
+00:05:06,361 --> 00:05:07,860
+we actually have
+access to the shell
+
+132
+00:05:07,860 --> 00:05:10,080
+even after starting mongod.
+
+133
+00:05:10,080 --> 00:05:13,810
+So we can connect to
+mongo in the same shell.
+
+134
+00:05:13,810 --> 00:05:15,270
+However, this isn't
+going to work,
+
+135
+00:05:15,270 --> 00:05:17,690
+because it's trying to
+connect on port 27017,
+
+136
+00:05:17,690 --> 00:05:21,000
+but we've started our
+process on port 30,000.
+
+137
+00:05:21,000 --> 00:05:23,840
+If we specify that
+to the mongo command.
+
+138
+00:05:23,840 --> 00:05:27,130
+It should connect us
+to the right port.
+
+139
+00:05:27,130 --> 00:05:28,526
+And it does.
+
+140
+00:05:28,526 --> 00:05:30,400
+We can just run a quick
+show dbs to make sure
+
+141
+00:05:30,400 --> 00:05:32,120
+that our databases are expected.
+
+142
+00:05:32,120 --> 00:05:34,360
+And again, we have
+the admin database
+
+143
+00:05:34,360 --> 00:05:36,077
+and the local database.
+
+144
+00:05:36,077 --> 00:05:37,660
+So now I'm going to
+shut this one down
+
+145
+00:05:37,660 --> 00:05:39,920
+just like we did last time.
+
+146
+00:05:39,920 --> 00:05:42,800
+So we shut down our server
+from the admin database,
+
+147
+00:05:42,800 --> 00:05:44,510
+and then we exit out
+of the mongo shell.
+
+148
+00:05:44,510 --> 00:05:45,010
+All right.
+
+149
+00:05:45,010 --> 00:05:45,940
+So just as recap.
+
+150
+00:05:45,940 --> 00:05:48,880
+In this lesson we learned
+that mongod is the main daemon
+
+151
+00:05:48,880 --> 00:05:51,010
+process for MongoDB.
+
+152
+00:05:51,010 --> 00:05:54,460
+We interact with mongod
+through a driver, not directly.
+
+153
+00:05:54,460 --> 00:05:57,105
+Mongod is available on
+many 64-bit systems.
+
+154
+00:05:57,105 --> 00:05:59,230
+And we learned about some
+of the basic command-line
+
+155
+00:05:59,230 --> 00:00:00,000
+configuration options.
+

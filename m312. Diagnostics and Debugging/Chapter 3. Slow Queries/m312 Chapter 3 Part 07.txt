@@ -1,0 +1,125 @@
+I've written an example script so that you can try this.
+
+What this script does is it spawns a bunch of parallel processes, 20 by default, and they all try to write the same document.
+
+Let's create a replica set.
+
+And I'm going to show a few things to.
+
+So I'm going to open up a few tabs to do things in parallel.
+
+First, I'm going to start here with the mongo shell.
+
+I want to capture some information about what I'm going to do.
+
+So let's take a snapshot of the current server status.
+
+Next, let's set up mongostat in another tab.
+
+I'll connect to just the server on port 30,000.
+
+And I just want a few fields to make it look pretty.
+
+Right now, I've got a few connections just from the replica set, the mongo shell, and now mongostat.
+
+And now we're in a third tab, where we're going to run our script.
+
+Let's go to mongostat.
+
+First, you'll notice that it says there are 20 inserts.
+
+It did get 20 insert commands.
+
+But most of them failed with the duplicate key error.
+
+Next, you can see that we've got a bunch of updates going on.
+
+And you can see that I'm dirtying a lot of my cache quickly all just to update that one single document.
+
+You can also see that I've added more than one connection per process.
+
+There are 20 processes.
+
+And we created 40 connections, even though each is just one mongo client.
+
+Each mongo client actually maintains a connection pool to the server, though that's outside of the scope of this course to discuss that in detail.
+
+I've added a link to the [INAUDIBLE] mongo FAQ in case you're interested in reading a bit more.
+
+You can also see that we're doing a ton of updates, basically as fast as our system can handle them.
+
+And once it's finished, no more writes.
+
+And our connections are back down.
+
+Going to the mongo shell, there's our document.
+
+And if I scroll up, we had 200,000 updates, 10,000 per process.
+
+Also, while we saw that we were getting a relatively high throughput if we looked at mongostat, we still have some seriously long-running operations, which we'll see in the logs.
+
+I can also check the current server status to see how many operations I've done.
+
+There are my 200,000 updates.
+
+There are my 20 attempted inserts.
+
+And there is my one insert that succeeded.
+
+Let's check out those logs.
+
+Here is my log path-- copy that.
+
+Let's jump to the bottom.
+
+So most recently, I can see my 20 processes closing their connections.
+
+But if I scroll up, here I can see a bunch of pairs of write and command entries.
+
+Note that each pair is for the same connection-- in this case, connection 71.
+
+They're both saying the same thing.
+
+I've got queries that took too long.
+
+You can see we've had 41 write conflicts, and it yielded 41 times.
+
+That's the source of the problem.
+
+Typically in circumstances where you see a lot of write conflicts, you probably would want to revise your schema.
+
+If all those processes were working on different documents, things would improve dramatically.
+
+With that then, let's go back to our shell and run our script.
+
+I've set this docPerProcess flag to avoid contention.
+
+And when we go to mongostat, here we have our inserts-- looks like it miscounted a little.
+
+We've got our connections.
+
+We've got our updates happening.
+
+Let's wait for this to finish.
+
+Once again, we'll look at our logs.
+
+Here, if we start at the top, we've got our initial log entries.
+
+Following that, we can see a bunch of our connections spinning up.
+
+Then we see a bunch of our connections closing, and that's it.
+
+We don't see any of those long-running queries we saw before.
+
+We've eliminated the write conflicts by simulating a change in our schema from one with a lot of write conflicts to one without.
+
+What have we seen?
+
+We've looked into how you can have sudden drops in throughput.
+
+We've looked at long-running queries, index builds, and server write contention, all of which does happen in production.
+
+We've seen how to investigate the causes-- typically, using the server logs, but also with currentOp, the profiler.
+
+And we've talked a bit about how to fix these issues when they're identified.

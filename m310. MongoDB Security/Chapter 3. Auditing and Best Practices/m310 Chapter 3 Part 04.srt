@@ -1,0 +1,263 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.620
+Now let's go ahead and
+use our last example
+
+3
+00:00:02.620 --> 00:00:05.490
+and actually go ahead
+and try out this filter.
+
+4
+00:00:05.490 --> 00:00:08.230
+In this video, we're going
+to go ahead and build off
+
+5
+00:00:08.230 --> 00:00:10.420
+of the example we
+saw in the last video
+
+6
+00:00:10.420 --> 00:00:13.060
+and actually try and
+test out this filter.
+
+7
+00:00:13.060 --> 00:00:16.120
+If you remember from last time,
+we created an audit filter
+
+8
+00:00:16.120 --> 00:00:19.930
+where we monitored creating
+or dropping collections.
+
+9
+00:00:19.930 --> 00:00:23.320
+Let's go ahead and start the
+MongoDB for this audit filter.
+
+10
+00:00:23.320 --> 00:00:26.267
+I still have my configuration
+file from a previous video,
+
+11
+00:00:26.267 --> 00:00:28.600
+so let's go ahead and just
+add the audit filter directly
+
+12
+00:00:28.600 --> 00:00:30.320
+into this file.
+
+13
+00:00:30.320 --> 00:00:31.780
+So here is our
+configuration file.
+
+14
+00:00:31.780 --> 00:00:34.870
+We just need to add a line
+that looks like this where
+
+15
+00:00:34.870 --> 00:00:38.290
+we specify a filter, and then
+we define the audit filter
+
+16
+00:00:38.290 --> 00:00:40.124
+that we've made.
+
+17
+00:00:40.124 --> 00:00:42.040
+And now, like before,
+we can go ahead and just
+
+18
+00:00:42.040 --> 00:00:46.090
+run with --config, our
+configuration file, and --fork.
+
+19
+00:00:46.090 --> 00:00:48.820
+Now, I do want to point out, if
+we didn't use a configuration
+
+20
+00:00:48.820 --> 00:00:52.600
+file, we could use the
+--auditFilter option,
+
+21
+00:00:52.600 --> 00:00:56.700
+like so, and then just pass
+a string to this option.
+
+22
+00:00:56.700 --> 00:00:58.450
+But since we've
+already specified that,
+
+23
+00:00:58.450 --> 00:01:01.220
+we can just hit enter.
+
+24
+00:01:01.220 --> 00:01:04.390
+Now we'll go ahead
+and tail our log.
+
+25
+00:01:04.390 --> 00:01:06.640
+And you can see that, so
+far, there's nothing in here.
+
+26
+00:01:06.640 --> 00:01:09.880
+And now, in our last example,
+we tried to authenticate,
+
+27
+00:01:09.880 --> 00:01:11.352
+and that showed
+in the audit log.
+
+28
+00:01:11.352 --> 00:01:13.060
+So let's first
+authenticate and make sure
+
+29
+00:01:13.060 --> 00:01:14.143
+that that doesn't show up.
+
+30
+00:01:14.143 --> 00:01:16.842
+And when I hit Enter, we see
+that the authentication failed.
+
+31
+00:01:16.842 --> 00:01:18.800
+And when I go back to
+log, we shouldn't see it.
+
+32
+00:01:18.800 --> 00:01:20.530
+And, awesome, we don't see it.
+
+33
+00:01:20.530 --> 00:01:23.395
+However, if I try to
+create a collection now,
+
+34
+00:01:23.395 --> 00:01:27.500
+and I run db.createCollection
+with a test collection,
+
+35
+00:01:27.500 --> 00:01:28.940
+it says, OK.
+
+36
+00:01:28.940 --> 00:01:30.690
+And, right here, we
+can see our audit log.
+
+37
+00:01:30.690 --> 00:01:32.800
+We have an atype of
+createCollection.
+
+38
+00:01:32.800 --> 00:01:35.320
+We have our time stamp,
+our local, our remote.
+
+39
+00:01:35.320 --> 00:01:36.820
+And then, of course,
+we actually see
+
+40
+00:01:36.820 --> 00:01:38.069
+the params that are passed in.
+
+41
+00:01:38.069 --> 00:01:40.000
+So the namespace,
+or the collection
+
+42
+00:01:40.000 --> 00:01:42.370
+that we're trying to create,
+was on the test.t database,
+
+43
+00:01:42.370 --> 00:01:44.145
+and it was a collection
+called "testcoll."
+
+44
+00:01:44.145 --> 00:01:45.520
+Of course, we
+don't actually have
+
+45
+00:01:45.520 --> 00:01:47.930
+to run the
+createCollection command.
+
+46
+00:01:47.930 --> 00:01:49.840
+MongoDB has a flexible schema.
+
+47
+00:01:49.840 --> 00:01:52.625
+So you'll create a
+collection on the fly.
+
+48
+00:01:52.625 --> 00:01:54.500
+You can see here, I can
+show the collections.
+
+49
+00:01:54.500 --> 00:01:56.050
+You see our test collection.
+
+50
+00:01:56.050 --> 00:01:59.650
+And I can also just run
+db.insert on a collection that
+
+51
+00:01:59.650 --> 00:02:01.030
+doesn't exist yet.
+
+52
+00:02:01.030 --> 00:02:05.420
+And MongoDB will dynamically run
+createCollection on our behalf.
+
+53
+00:02:05.420 --> 00:02:07.300
+And so we should
+see that in the log.
+
+54
+00:02:07.300 --> 00:02:08.009
+And we do.
+
+55
+00:02:08.009 --> 00:02:10.110
+There's our other
+createCollection.

@@ -1,0 +1,35 @@
+Previously we mentioned there is a step which concerns a transformation of the username and credentials passed to MongoDB so they can be validated against the authentication mechanism.
+
+But also we validate against the authorization mechanism-- in this case LDAP.
+
+So what will happen is that MongoDB will transform authentication users into their corresponding distinguished names if necessary.
+
+This will be done by using ordered lists of regular expressions and substitution pairs.
+
+Now these lists are configured by providing a string representation of a JSON array that will contain such pairs.
+
+Now there's a bit more of process associated with this.
+
+Let's have a look on exactly how this process is accomplished.
+
+Now let's consider the following set of scenarios represented by a decision tree.
+
+We will have initial set of pairs, each containing its expression and substitution.
+
+Now we pick one of these pairs and analyze the expression against the credentials passed on to MongoDB and validated by the authentication mechanism.
+
+Now if the expression matches, we will track all groups and insert it into a substitution.
+
+If the situation has attributes, the transformation is complete.
+
+If it doesn't have any attributes, we will check if our substitution is represented by an LDAP query.
+
+If so, we'll execute the substitution query against the LDAP server and parse the results.
+
+If we get exactly one match, our transformation is done.
+
+If we get none, the expression will fail, and we'll pick the next one from the set.
+
+If we get more than one, the system will automatically fail, and the transformation will fail-- meaning that the expression's set are not valid for our transformations step.
+
+That If all regular expressions substitution pairs have been compared and none has been successfully matched or applied a valid transformation, then our transformation will also fail.

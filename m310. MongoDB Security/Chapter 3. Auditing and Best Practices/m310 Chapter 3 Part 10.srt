@@ -1,0 +1,700 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:05.260
+So let's go ahead and set
+up our MongoD instance.
+
+3
+00:00:05.260 --> 00:00:09.110
+But let's start by setting
+it up in the-- let's say--
+
+4
+00:00:09.110 --> 00:00:12.200
+normal mode without
+any log redaction.
+
+5
+00:00:12.200 --> 00:00:15.880
+And then we're going to be
+activating the redaction
+
+6
+00:00:15.880 --> 00:00:18.294
+to see the differences
+in the logs.
+
+7
+00:00:18.294 --> 00:00:19.710
+The first thing
+that we need to do
+
+8
+00:00:19.710 --> 00:00:22.730
+is pretty much go
+to our data folder.
+
+9
+00:00:22.730 --> 00:00:24.560
+And there's a
+redaction folder there.
+
+10
+00:00:24.560 --> 00:00:26.970
+So as you can see here,
+it's completely empty.
+
+11
+00:00:26.970 --> 00:00:28.950
+So I'm going to use
+this as my DB path
+
+12
+00:00:28.950 --> 00:00:30.740
+on this particular shell.
+
+13
+00:00:30.740 --> 00:00:32.630
+Now I'm going to
+specify the DB path,
+
+14
+00:00:32.630 --> 00:00:36.940
+and just point there
+to this folder MongoD.
+
+15
+00:00:36.940 --> 00:00:38.180
+There's no other flag.
+
+16
+00:00:38.180 --> 00:00:43.290
+There's no other thing then
+just putting it up on 27017,
+
+17
+00:00:43.290 --> 00:00:45.920
+and this DB path right here.
+
+18
+00:00:45.920 --> 00:00:47.990
+So as you can see from
+the logs everything
+
+19
+00:00:47.990 --> 00:00:49.500
+is boot up correctly.
+
+20
+00:00:49.500 --> 00:00:51.770
+So I'm going to keep
+this window here.
+
+21
+00:00:51.770 --> 00:00:53.550
+And I'm just going to
+jump to another one
+
+22
+00:00:53.550 --> 00:00:55.660
+that I have here already set up.
+
+23
+00:00:55.660 --> 00:00:58.200
+So I can establish
+here my connections.
+
+24
+00:00:58.200 --> 00:01:00.230
+Then the next thing
+that I'm going to do
+
+25
+00:01:00.230 --> 00:01:02.420
+is basically connect
+to my instance.
+
+26
+00:01:02.420 --> 00:01:03.390
+Here we are.
+
+27
+00:01:03.390 --> 00:01:06.850
+Connected on my
+local instance, I
+
+28
+00:01:06.850 --> 00:01:09.800
+can now set up a
+couple different things
+
+29
+00:01:09.800 --> 00:01:12.210
+to get a more
+comprehensive look.
+
+30
+00:01:12.210 --> 00:01:15.410
+First thing I'm going
+to do is to show you
+
+31
+00:01:15.410 --> 00:01:18.766
+how to set up a
+profiling level that
+
+32
+00:01:18.766 --> 00:01:20.640
+allows us to capture
+every single [INAUDIBLE]
+
+33
+00:01:20.640 --> 00:01:22.830
+instruction into our logs.
+
+34
+00:01:22.830 --> 00:01:26.340
+And to do that, I just need
+to set my profiling level.
+
+35
+00:01:26.340 --> 00:01:27.280
+Keep it at 0.
+
+36
+00:01:27.280 --> 00:01:28.720
+This is a default set up.
+
+37
+00:01:28.720 --> 00:01:33.580
+But setting up the slow
+ms value to minus 1.
+
+38
+00:01:33.580 --> 00:01:35.930
+This is a simple
+trick to just collect
+
+39
+00:01:35.930 --> 00:01:39.940
+every single instruction
+they had my MongoD
+
+40
+00:01:39.940 --> 00:01:42.290
+instance is going to process.
+
+41
+00:01:42.290 --> 00:01:45.412
+It will be captured on its log.
+
+42
+00:01:45.412 --> 00:01:46.120
+And so I do this.
+
+43
+00:01:46.120 --> 00:01:47.760
+I can see how it was before.
+
+44
+00:01:47.760 --> 00:01:50.960
+Our slow ms was set
+to 100 milliseconds,
+
+45
+00:01:50.960 --> 00:01:52.240
+as you should all know.
+
+46
+00:01:52.240 --> 00:01:55.000
+And it's all good.
+
+47
+00:01:55.000 --> 00:01:56.610
+It's all OK equals 1.
+
+48
+00:01:56.610 --> 00:01:59.810
+Now that I have that, I'm
+going to use a redact database.
+
+49
+00:01:59.810 --> 00:02:04.100
+So once I move there, I'm
+going to create a collection.
+
+50
+00:02:04.100 --> 00:02:07.880
+Right now there's no
+collections whatsoever.
+
+51
+00:02:07.880 --> 00:02:10.139
+So I'm just going to
+create a new collection
+
+52
+00:02:10.139 --> 00:02:13.400
+that I'm going to call
+sensitive, for sensitive data.
+
+53
+00:02:13.400 --> 00:02:16.610
+And I'm going to
+insert a document which
+
+54
+00:02:16.610 --> 00:02:20.300
+I'm going to say that going
+to have a field called secret.
+
+55
+00:02:20.300 --> 00:02:23.300
+And I'm going to say
+that this should not
+
+56
+00:02:23.300 --> 00:02:25.800
+be found in the logs.
+
+57
+00:02:25.800 --> 00:02:28.310
+It's a single string,
+all very clear
+
+58
+00:02:28.310 --> 00:02:33.960
+that I do not want to find
+this message in my logs.
+
+59
+00:02:33.960 --> 00:02:37.890
+So once I do this and once
+I insert, if I move back
+
+60
+00:02:37.890 --> 00:02:42.010
+to my output of my
+logs, we can see clearly
+
+61
+00:02:42.010 --> 00:02:47.100
+here in clear text the message
+that I've just inserted.
+
+62
+00:02:47.100 --> 00:02:49.270
+In this case, as
+you can see, I'm
+
+63
+00:02:49.270 --> 00:02:51.890
+writing to the sensitive
+namespace, or collection
+
+64
+00:02:51.890 --> 00:02:54.070
+this case, and I'm
+writing this document.
+
+65
+00:02:54.070 --> 00:02:56.210
+It has the message secret.
+
+66
+00:02:56.210 --> 00:02:59.934
+This should not be found in the
+logs which unfortunately, this
+
+67
+00:02:59.934 --> 00:03:00.850
+is the case right now.
+
+68
+00:03:00.850 --> 00:03:03.860
+Because we haven't
+enabled redaction yet.
+
+69
+00:03:03.860 --> 00:03:07.650
+Now to enable redaction, we
+have three different options.
+
+70
+00:03:07.650 --> 00:03:11.660
+The first option is to pass
+to the MongoD at boot up time.
+
+71
+00:03:11.660 --> 00:03:14.320
+The client log data flag.
+
+72
+00:03:14.320 --> 00:03:18.640
+With this set up, we will
+immediately initiate MongoD
+
+73
+00:03:18.640 --> 00:03:23.480
+with the capability of
+redacting the client's
+
+74
+00:03:23.480 --> 00:03:25.620
+data into the logs.
+
+75
+00:03:25.620 --> 00:03:30.410
+So any logged operation,
+any of slow ms operation
+
+76
+00:03:30.410 --> 00:03:34.630
+that MongoD has to process,
+it will be logged in the logs,
+
+77
+00:03:34.630 --> 00:03:36.140
+but redacted.
+
+78
+00:03:36.140 --> 00:03:38.340
+The other option
+would be to set it up
+
+79
+00:03:38.340 --> 00:03:41.810
+on the MongoDB config files.
+
+80
+00:03:41.810 --> 00:03:43.860
+Like for example, if I
+have this sample here,
+
+81
+00:03:43.860 --> 00:03:47.670
+called MongoD underscore
+redaction dot com,
+
+82
+00:03:47.670 --> 00:03:52.660
+can see that I'm setting up
+the db path, a log system where
+
+83
+00:03:52.660 --> 00:03:54.610
+I'm going to throw
+the log into the file.
+
+84
+00:03:54.610 --> 00:03:56.710
+And importantly, under
+Security, there's
+
+85
+00:03:56.710 --> 00:04:00.526
+a new flag called redact
+client log equals true.
+
+86
+00:04:00.526 --> 00:04:02.850
+Now the other option,
+the third option,
+
+87
+00:04:02.850 --> 00:04:05.070
+would be to just
+connect to MongoDB.
+
+88
+00:04:05.070 --> 00:04:08.680
+And again, you know that we
+are not using any redaction
+
+89
+00:04:08.680 --> 00:04:10.130
+at the moment.
+
+90
+00:04:10.130 --> 00:04:11.770
+Now what I need
+to do is basically
+
+91
+00:04:11.770 --> 00:04:13.320
+run the admin command.
+
+92
+00:04:13.320 --> 00:04:15.630
+Setting up a perimeter,
+which in this case
+
+93
+00:04:15.630 --> 00:04:19.470
+it will be redact client
+log data to true or 1,
+
+94
+00:04:19.470 --> 00:04:20.519
+in this case.
+
+95
+00:04:20.519 --> 00:04:25.910
+And once I do this, now I've
+enabled this MongoD to redact
+
+96
+00:04:25.910 --> 00:04:30.480
+all operations that are
+going to be taking more
+
+97
+00:04:30.480 --> 00:04:35.800
+time than slow ms. To do that,
+let's go to our redact database
+
+98
+00:04:35.800 --> 00:04:38.570
+and just run sensitive
+collection again
+
+99
+00:04:38.570 --> 00:04:42.350
+with a new insert statement
+saying that our secret now
+
+100
+00:04:42.350 --> 00:04:47.270
+is going to be really, do
+not show this in the logs.
+
+101
+00:04:47.270 --> 00:04:50.820
+And hopefully we will not see
+such a message in our logs.
+
+102
+00:04:50.820 --> 00:04:53.600
+So once we insert it, we
+go back to our message.
+
+103
+00:04:53.600 --> 00:04:56.810
+And here we see a lot of hashes.
+
+104
+00:04:56.810 --> 00:04:59.980
+All of these operations
+were in fact commands
+
+105
+00:04:59.980 --> 00:05:03.980
+that MongoDB completely
+redacted so they would not
+
+106
+00:05:03.980 --> 00:05:06.950
+show its content on the logs.
+
+107
+00:05:06.950 --> 00:05:08.450
+From all the three
+different options
+
+108
+00:05:08.450 --> 00:05:10.660
+that we have to set up
+this file correctly,
+
+109
+00:05:10.660 --> 00:05:12.850
+we should take in
+consideration a few things.
+
+110
+00:05:12.850 --> 00:05:15.950
+If we do it in the run time,
+we can definitely do that.
+
+111
+00:05:15.950 --> 00:05:19.320
+But once the server reboots,
+we need to make sure
+
+112
+00:05:19.320 --> 00:05:20.830
+that we set it up again.
+
+113
+00:05:20.830 --> 00:05:23.040
+So that is a risk that
+we forget about it.
+
+114
+00:05:23.040 --> 00:05:24.520
+So pay attention to that.
+
+115
+00:05:24.520 --> 00:05:28.610
+If we set it up on the
+config file, or even
+
+116
+00:05:28.610 --> 00:05:33.230
+on the MongoD runtime-- so
+when we specify a service
+
+117
+00:05:33.230 --> 00:05:35.350
+or something like that,
+the best way to do
+
+118
+00:05:35.350 --> 00:05:38.050
+it is to use the
+config file obviously.
+
+119
+00:05:38.050 --> 00:05:41.640
+But this will guarantee us
+that from the initial point
+
+120
+00:05:41.640 --> 00:05:44.920
+in our execution of
+this MongoD instances,
+
+121
+00:05:44.920 --> 00:05:47.140
+we will have log
+redaction enabled.
+
+122
+00:05:47.140 --> 00:05:49.310
+And in case that
+our server reboots,
+
+123
+00:05:49.310 --> 00:05:51.700
+you always pick up the
+configuration options
+
+124
+00:05:51.700 --> 00:05:52.830
+from its file.
+
+125
+00:05:52.830 --> 00:05:55.170
+So we will be safe
+that all the log
+
+126
+00:05:55.170 --> 00:05:56.990
+information will be redacted.
+
+127
+00:05:56.990 --> 00:06:01.270
+Now also take note that the
+flag can be set on MongoS,
+
+128
+00:06:01.270 --> 00:06:04.330
+or should be set on
+MongoS and MongoD.
+
+129
+00:06:04.330 --> 00:06:06.550
+In the shard
+environment you need
+
+130
+00:06:06.550 --> 00:06:10.800
+to go to all individual MongoS's
+and all individual MongoD's
+
+131
+00:06:10.800 --> 00:06:15.640
+to make sure you do not forget
+to redact the log messages
+
+132
+00:06:15.640 --> 00:06:17.490
+on all of these machines.
+
+133
+00:06:17.490 --> 00:06:20.820
+So for Hyperloop purposes,
+you might add new nodes
+
+134
+00:06:20.820 --> 00:06:22.090
+to a replica set.
+
+135
+00:06:22.090 --> 00:06:24.080
+If you are redacting
+everything, you
+
+136
+00:06:24.080 --> 00:06:28.050
+intend everything to be
+redacted on both your primary
+
+137
+00:06:28.050 --> 00:06:31.160
+and secondaries, you need to
+make sure that all of them
+
+138
+00:06:31.160 --> 00:06:33.080
+have this flag active.
+
+139
+00:06:33.080 --> 00:06:36.380
+Otherwise, might
+get a leak there
+
+140
+00:06:36.380 --> 00:06:39.110
+from one of the
+MongoD's which have not
+
+141
+00:06:39.110 --> 00:06:41.870
+enabled the redaction flag.
+
+142
+00:06:41.870 --> 00:06:44.120
+Another interesting thing
+is that we've seen an insert
+
+143
+00:06:44.120 --> 00:06:47.000
+command, but for find
+commands or update
+
+144
+00:06:47.000 --> 00:06:51.490
+commands we will not see the
+actual data of our queries.
+
+145
+00:06:51.490 --> 00:06:56.190
+We only be seeing the query
+shape of the queries that
+
+146
+00:06:56.190 --> 00:06:58.840
+will be logged in our logs.
+
+147
+00:06:58.840 --> 00:07:03.449
+And this is how you set up your
+log redaction on MongoD 3.4.
+
+148
+00:07:03.449 --> 00:07:03.949

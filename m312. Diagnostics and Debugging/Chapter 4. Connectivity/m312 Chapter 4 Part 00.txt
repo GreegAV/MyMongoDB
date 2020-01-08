@@ -1,0 +1,49 @@
+So your application is chugging along, and then some connectivity issues arise.
+
+What do you see in your application that tells you that your problem is an issue with connectivity?
+
+So most likely what you're going to see are timeouts and connection errors.
+
+Some might be detected on the client side, others on the server side.
+
+And it's also possible that you'll see long hangs that potentially don't result in timeouts depending on how your application is set up.
+
+Your application should be smart about these issues.
+
+It should be able to turn a long hang into an error that it catches, and it should log a message somewhere describing the type of issue.
+
+Finally, it should also generate a notification for you, the DBA.
+
+But let's be realistic.
+
+We live in an imperfect world, developers work under constraints, and things aren't always set up to be the way we'd like them to be.
+
+So we may need to do some digging to find out the root cause.
+
+What might it be?
+
+Well, it could be any of the following-- incorrect URIs, interference from firewalls, or just things out of your control.
+
+Why might you have an incorrect URI?
+
+Well, maybe some of your servers have valid URIs for one another, which don't resolve from the point of view of the application.
+
+The servers can all see each other and everything works until your primary goes down, and your application loses contact with the entire replica set.
+
+Alternatively, maybe your servers have non-static IP addresses, so restarts cause you to lose servers unless you intervene.
+
+Besides issues with URIs, you might also have a problem with a firewall.
+
+Usually, the most basic firewall issues are caught early, 'cause they often prevent your system from getting set up until they're fixed.
+
+But sometimes you might have a situation where your IP whitelist only permits the application to see some of the database servers and not others.
+
+Again, the issue arises when the wrong server goes down.
+
+Or maybe it's something out of your control.
+
+Maybe a DDoS is hammering your servers, or your ISP isn't doing its job and packets just aren't getting through.
+
+We'll take a closer look at these issues and similar ones in this chapter.
+
+Let's get started.

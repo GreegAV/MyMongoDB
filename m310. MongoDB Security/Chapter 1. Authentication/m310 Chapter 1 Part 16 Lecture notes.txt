@@ -1,0 +1,7 @@
+Important
+
+Important to note that MongoDB 3.4 Enterprise adds native LDAP API support, and no longer depends on SASL libraries for LDAP connections. Windows MongoDB deployments can now use LDAP for user authentication or authorization.
+
+Note
+
+All demonstrations have used mongod as reference but these command line options and configuration details also apply to mongos and subsquent shard nodes.

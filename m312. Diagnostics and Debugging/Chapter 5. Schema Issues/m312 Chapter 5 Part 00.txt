@@ -1,0 +1,25 @@
+Let's talk about schema design.
+
+Obviously this isn't a schema design course, but you do want to be able to identify some of the most obvious signs of a bad schema and what they might mean.
+
+The thing to keep in mind is that the structure of your data affects performance.
+
+This can't be emphasized enough.
+
+If you're at least aware of this fact you can be mindful when creating an application.
+
+Now, in your application evidence of schema design problems can show themselves in a few ways.
+
+First, you might have a situation where every time a user lands on a page or clicks a button or otherwise does just one thing the application fires off a whole bunch of queries.
+
+A separate problem can arise if the application is packing lots of rarely used data into it's frequently accessed documents.
+
+MongoDB needs to hold at minimum an entire document in RAM in order to read from it, and it often needs to pull multiple documents into the cache at the same time.
+
+If your application is packing rarely use data into a document that needs to be touched frequently, that means it's more likely to evict other important data from the cache when that document gets read.
+
+Multiply this across a collection and the net result is that the server could be paging a lot more data than necessary in order to service the application.
+
+In this chapter we'll investigate some examples of these issues, find their root causes, and discuss how to fix them.
+
+Let's get started.

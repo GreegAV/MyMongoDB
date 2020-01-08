@@ -1,0 +1,270 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.430
+In this lesson, we're going
+to discuss regular expression
+
+3
+00:00:03.430 --> 00:00:06.149
+performance in MongoDB.
+
+4
+00:00:06.149 --> 00:00:08.440
+Specifically, we're going to
+discuss how we can utilize
+
+5
+00:00:08.440 --> 00:00:11.920
+indexes on regex conditions.
+
+6
+00:00:11.920 --> 00:00:14.050
+In the lesson on
+text indexes, we
+
+7
+00:00:14.050 --> 00:00:16.810
+learned that we can create
+indexes on string fields
+
+8
+00:00:16.810 --> 00:00:22.019
+to support queries using the
+$text and $search operators.
+
+9
+00:00:22.019 --> 00:00:24.310
+But sometimes we don't want
+to add the overhead of text
+
+10
+00:00:24.310 --> 00:00:26.430
+indexes to our deployment.
+
+11
+00:00:26.430 --> 00:00:29.590
+In these cases, we can fall
+back on using vanilla indexes
+
+12
+00:00:29.590 --> 00:00:33.160
+and using regular expressions.
+
+13
+00:00:33.160 --> 00:00:35.410
+Unfortunately,
+regex's don't always
+
+14
+00:00:35.410 --> 00:00:37.090
+have the best performance.
+
+15
+00:00:37.090 --> 00:00:40.340
+In this example, if there
+isn't an index on username,
+
+16
+00:00:40.340 --> 00:00:43.230
+then we need to do
+a collection scan.
+
+17
+00:00:43.230 --> 00:00:46.620
+We'd have to touch every single
+document in our collection
+
+18
+00:00:46.620 --> 00:00:49.770
+and apply that regular
+expression against each
+
+19
+00:00:49.770 --> 00:00:51.630
+of these documents.
+
+20
+00:00:51.630 --> 00:00:53.940
+Like with traditionally
+quality conditions,
+
+21
+00:00:53.940 --> 00:00:56.070
+we can improve the
+performance of this query
+
+22
+00:00:56.070 --> 00:00:59.760
+by creating an index
+on the queried field.
+
+23
+00:00:59.760 --> 00:01:02.340
+Now we only need to apply
+our regular expression
+
+24
+00:01:02.340 --> 00:01:06.780
+against every index key instead
+of against the whole document.
+
+25
+00:01:06.780 --> 00:01:09.270
+While this will increase the
+performance of the query,
+
+26
+00:01:09.270 --> 00:01:13.300
+we still need to look at
+every index key of our index.
+
+27
+00:01:13.300 --> 00:01:16.000
+This somewhat defeats
+the purpose of indexes.
+
+28
+00:01:16.000 --> 00:01:19.140
+Indexes are stored as b-trees
+because of their ability
+
+29
+00:01:19.140 --> 00:01:22.350
+to reduce the search
+space to an ordered subset
+
+30
+00:01:22.350 --> 00:01:24.750
+of the entire index.
+
+31
+00:01:24.750 --> 00:01:27.090
+We can take advantage of
+this feature of indexes
+
+32
+00:01:27.090 --> 00:01:30.360
+by adding a carrot at the
+beginning of our regex
+
+33
+00:01:30.360 --> 00:01:31.890
+condition.
+
+34
+00:01:31.890 --> 00:01:35.010
+The carrot means that we
+only want to return documents
+
+35
+00:01:35.010 --> 00:01:37.530
+where the following
+characters start
+
+36
+00:01:37.530 --> 00:01:39.720
+at the beginning of the string.
+
+37
+00:01:39.720 --> 00:01:42.830
+In this case, I want to find
+documents where the user
+
+38
+00:01:42.830 --> 00:01:46.050
+name begins with Kirby.
+
+39
+00:01:46.050 --> 00:01:48.510
+By doing this, we're
+effectively ignoring
+
+40
+00:01:48.510 --> 00:01:52.320
+all the branches of the b-tree
+that don't begin with Kirby.
+
+41
+00:01:52.320 --> 00:01:54.360
+And so we're able to
+dramatically reduce
+
+42
+00:01:54.360 --> 00:01:55.980
+the number of index
+keys that need
+
+43
+00:01:55.980 --> 00:01:59.400
+to be examined and therefore
+increase our overall query
+
+44
+00:01:59.400 --> 00:02:02.080
+performance.
+
+45
+00:02:02.080 --> 00:02:03.700
+This might be
+obvious, but I want
+
+46
+00:02:03.700 --> 00:02:05.800
+to point out that this
+optimization will only
+
+47
+00:02:05.800 --> 00:02:09.490
+work if you're matching at
+the beginning of a string.
+
+48
+00:02:09.490 --> 00:02:12.490
+For example, with
+this wildcard regex,
+
+49
+00:02:12.490 --> 00:02:14.710
+we need to check
+every single index
+
+50
+00:02:14.710 --> 00:02:17.620
+key because we can't limit
+ourselves to just where it
+
+51
+00:02:17.620 --> 00:02:18.910
+starts with Kirby.
+
+52
+00:02:18.910 --> 00:02:25.520
+There could be an index key
+that is a-i-r-b-y, or k-i-r-b-y,
+
+53
+00:02:25.520 --> 00:02:29.020
+or r-r-i-b-y, or s-i-r-b-y.
+
+54
+00:02:29.020 --> 00:02:32.110
+We have to look at
+all these index keys.
+
+55
+00:02:32.110 --> 00:02:34.090
+Let's recap what we've learned.
+
+56
+00:02:34.090 --> 00:02:36.600
+We've talked about
+how to utilize indexes
+
+57
+00:02:36.600 --> 00:02:40.310
+using regular expression
+conditions in MongoDB.

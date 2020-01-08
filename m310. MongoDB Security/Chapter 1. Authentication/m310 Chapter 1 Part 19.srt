@@ -1,0 +1,346 @@
+
+1
+00:00:00.000 --> 00:00:00.840
+
+
+2
+00:00:00.840 --> 00:00:02.730
+We can also use
+X.509 certificates
+
+3
+00:00:02.730 --> 00:00:06.570
+to authenticate the members of a
+replica set or sharded cluster.
+
+4
+00:00:06.570 --> 00:00:09.120
+Like with client base
+X.509 authentication,
+
+5
+00:00:09.120 --> 00:00:11.590
+it's required that we use a
+version of MongoDB compiled
+
+6
+00:00:11.590 --> 00:00:14.836
+with support for TLS/SSL.
+
+7
+00:00:14.836 --> 00:00:16.460
+For the purposes of
+this demonstration,
+
+8
+00:00:16.460 --> 00:00:19.560
+I've already created my
+own X.509 certificates
+
+9
+00:00:19.560 --> 00:00:21.220
+for the servers.
+
+10
+00:00:21.220 --> 00:00:23.420
+As you can see here, I have
+my certificate authority
+
+11
+00:00:23.420 --> 00:00:27.120
+public key, a key
+file for my client,
+
+12
+00:00:27.120 --> 00:00:30.000
+and then certificates for each
+of the members of my replica
+
+13
+00:00:30.000 --> 00:00:30.669
+set.
+
+14
+00:00:30.669 --> 00:00:32.210
+Let's go ahead and
+start up a replica
+
+15
+00:00:32.210 --> 00:00:35.712
+set with X.509 internal
+authentication enabled.
+
+16
+00:00:35.712 --> 00:00:37.420
+The first thing we're
+going to need to do
+
+17
+00:00:37.420 --> 00:00:39.870
+is create the folders
+for our servers.
+
+18
+00:00:39.870 --> 00:00:44.240
+Like before, I'm using mkdir,
+passing in the tack p option
+
+19
+00:00:44.240 --> 00:00:47.990
+with replica set 1, 2, and
+3, each with a subfolder
+
+20
+00:00:47.990 --> 00:00:49.610
+called db.
+
+21
+00:00:49.610 --> 00:00:52.320
+We can now go ahead and start
+up the first member of a replica
+
+22
+00:00:52.320 --> 00:00:53.310
+set.
+
+23
+00:00:53.310 --> 00:00:56.280
+Here is the command to start
+the first member of our replica
+
+24
+00:00:56.280 --> 00:00:57.210
+set.
+
+25
+00:00:57.210 --> 00:01:00.030
+You can see that I'm saying
+mongod, specifying the replica
+
+26
+00:01:00.030 --> 00:01:02.770
+set called myReplSet.
+
+27
+00:01:02.770 --> 00:01:07.990
+Of course, dbpath, logpath,
+and the default port of 27017,
+
+28
+00:01:07.990 --> 00:01:09.420
+fork.
+
+29
+00:01:09.420 --> 00:01:11.620
+I'm going to require
+ssl since we're
+
+30
+00:01:11.620 --> 00:01:13.760
+using X.509 authentication.
+
+31
+00:01:13.760 --> 00:01:15.830
+I'm going to specify
+X.509 authentication
+
+32
+00:01:15.830 --> 00:01:17.790
+as the authorization mode.
+
+33
+00:01:17.790 --> 00:01:21.440
+And then I'm going to pass
+in the first certificate
+
+34
+00:01:21.440 --> 00:01:23.440
+for this member.
+
+35
+00:01:23.440 --> 00:01:25.100
+And then our ca file.
+
+36
+00:01:25.100 --> 00:01:27.010
+Our first member
+is up and running.
+
+37
+00:01:27.010 --> 00:01:29.320
+We can now go ahead and
+start the second member.
+
+38
+00:01:29.320 --> 00:01:31.050
+Here's the command
+for the second member.
+
+39
+00:01:31.050 --> 00:01:32.674
+It's the same as the
+last, except we've
+
+40
+00:01:32.674 --> 00:01:36.290
+changed the dbpath,
+logpath, port,
+
+41
+00:01:36.290 --> 00:01:38.620
+and of course member file.
+
+42
+00:01:38.620 --> 00:01:40.120
+Our second member
+is up and running.
+
+43
+00:01:40.120 --> 00:01:42.580
+And now we can finally
+start the third member.
+
+44
+00:01:42.580 --> 00:01:44.740
+Here's the third
+member's command.
+
+45
+00:01:44.740 --> 00:01:50.040
+Same as before, except
+changing dbpath, logpath, port,
+
+46
+00:01:50.040 --> 00:01:50.980
+and keyfile.
+
+47
+00:01:50.980 --> 00:01:54.130
+All three members are
+now successfully started.
+
+48
+00:01:54.130 --> 00:01:57.830
+As you would expect, you can
+now connect to these members
+
+49
+00:01:57.830 --> 00:02:00.560
+and initialise and add
+each of the members
+
+50
+00:02:00.560 --> 00:02:02.780
+like we did in the
+previous lesson.
+
+51
+00:02:02.780 --> 00:02:05.620
+So as you can see, the commands
+to start each of our members
+
+52
+00:02:05.620 --> 00:02:06.950
+are getting kind of long.
+
+53
+00:02:06.950 --> 00:02:08.660
+It's a little bit hard to read.
+
+54
+00:02:08.660 --> 00:02:11.660
+Now is a great time to take
+advantage of configuration
+
+55
+00:02:11.660 --> 00:02:15.196
+files to configure each of the
+members of our replica set.
+
+56
+00:02:15.196 --> 00:02:17.570
+I'm going to go ahead and show
+you what one configuration
+
+57
+00:02:17.570 --> 00:02:19.300
+file would kind of look like.
+
+58
+00:02:19.300 --> 00:02:21.300
+The configuration file
+looks pretty much exactly
+
+59
+00:02:21.300 --> 00:02:22.990
+as you expect.
+
+60
+00:02:22.990 --> 00:02:25.390
+We have a top level
+security field
+
+61
+00:02:25.390 --> 00:02:28.030
+where we specify the
+authorization mode.
+
+62
+00:02:28.030 --> 00:02:29.530
+We then have another
+top level field
+
+63
+00:02:29.530 --> 00:02:31.850
+called net, which
+has a subfield called
+
+64
+00:02:31.850 --> 00:02:35.850
+ssl, which has three
+subfields called mode, CAFile,
+
+65
+00:02:35.850 --> 00:02:36.910
+and clusterfile.
+
+66
+00:02:36.910 --> 00:02:38.010
+Just like before.
+
+67
+00:02:38.010 --> 00:02:40.760
+We can now save this file
+and start up our MongoDB
+
+68
+00:02:40.760 --> 00:02:43.990
+using the --config option,
+passing in our configuration
+
+69
+00:02:43.990 --> 00:02:45.090
+file.
+
+70
+00:02:45.090 --> 00:02:47.110
+And you could use these
+configuration files
+
+71
+00:02:47.110 --> 00:02:48.200
+again and again and again.
+
+72
+00:02:48.200 --> 00:02:49.770
+And it will save
+you a lot of time.
+
+73
+00:02:49.770 --> 00:02:51.520
+And it'll actually
+prevent you from making
+
+74
+00:02:51.520 --> 00:02:53.250
+a lot of simple mistakes.

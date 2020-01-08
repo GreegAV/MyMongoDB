@@ -1,0 +1,110 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,220
+Now let's take a
+look at dollar size.
+
+3
+00:00:03,220 --> 00:00:05,770
+We use dollar size to
+match documents based
+
+4
+00:00:05,770 --> 00:00:08,510
+on the length of an array.
+
+5
+00:00:08,510 --> 00:00:11,090
+The countries field in the
+movie details collection
+
+6
+00:00:11,090 --> 00:00:15,190
+stipulates the country in
+which the movie was filmed.
+
+7
+00:00:15,190 --> 00:00:16,650
+In cases where the
+movie was filmed
+
+8
+00:00:16,650 --> 00:00:19,390
+in more than one country,
+you'll see multiple countries
+
+9
+00:00:19,390 --> 00:00:21,760
+listed in the countries array.
+
+10
+00:00:21,760 --> 00:00:23,730
+This query will
+identify movies that
+
+11
+00:00:23,730 --> 00:00:28,940
+were filmed in just one country,
+because for the country's array
+
+12
+00:00:28,940 --> 00:00:34,670
+field we're specifying a filter
+such that we see in our search
+
+13
+00:00:34,670 --> 00:00:39,430
+results that have a size or
+length of one for the countries
+
+14
+00:00:39,430 --> 00:00:40,620
+array.
+
+15
+00:00:40,620 --> 00:00:43,620
+And if we scroll
+through our results,
+
+16
+00:00:43,620 --> 00:00:45,490
+we can see that in
+fact just one country
+
+17
+00:00:45,490 --> 00:00:50,510
+is listed for each one
+of these documents.
+
+18
+00:00:50,510 --> 00:00:52,580
+Contrasting these with
+a number of other films
+
+19
+00:00:52,580 --> 00:00:56,200
+we've seen, if instead of
+displaying the results we take
+
+20
+00:00:56,200 --> 00:01:00,430
+account, we can see that 1,915
+documents in our movie details
+
+21
+00:01:00,430 --> 00:01:03,420
+collection have just
+one country listed,
+
+22
+00:01:03,420 --> 00:01:08,500
+compared to the 2,295 documents
+in the collection as a whole.
+
+23
+00:01:08,500 --> 00:00:00,000
+And that is dollar size.
+

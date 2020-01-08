@@ -1,0 +1,81 @@
+Welcome back.
+
+In 4.2, we've introduced clientside field level encryption.
+
+What this means as the name suggests is that you can now encrypt data in MongoDB at field level.
+
+First, let's discuss why we want to do that.
+
+A lot of MongoDB we use cases require the storage of sensitive data such as medical records or payment details.
+
+This data is encrypted at client layer prior to being inserted into MongoDB and is never decrypted in MongoDB.
+
+Additionally, field level encryption allows you to make data permanently unavailable by revoking the keys which can decrypt the data.
+
+Whatever the key, the data is unintelligible, hence complying with any regulations which require the data to be permanently deleted.
+
+Clientside encryption guarantees that sensitive data can only be encrypted and decrypted with both access to MongoDB and a separate key management provider.
+
+Once enabled, data can be seamlessly encrypted and decrypted with minimal application code changes.
+
+This enables an encryption key to be revoked at any stage, which permanently makes the data inaccessible.
+
+Let's have a look at how we implemented this feature in MongoDB 4.2.
+
+The driver interacts with multiple components to implement clientside field level encryption.
+
+So it interacts with the MongoDB closer to get remote JSON schemas, the MongoDB key vaults to get encrypted data keys and create new data keys, and AWS KMS server to encrypt and decrypt fetch data keys and encrypt new data keys.
+
+And then there's the mongocryptd to ask which values in BSON commands must be encrypted.
+
+So we talked about the MongoDB key vault.
+
+The key vault is a special MongoDB collection containing key documents.
+
+You can either choose to co-locate this on your MongoDB cluster or on a separate cluster depending on your use case.
+
+The key material in the key vault is encrypted with a separate KMS service.
+
+Therefore, encryption and decryption requires access to both the MongoDB cluster and the KMS servers.
+
+There's a key stored in the key vault per document in the collection.
+
+Each of these keys can be individually revoked to prevent access to that data.
+
+So we also mentioned the mongocryptd.
+
+The mongocryptd is a local process which is needed for collection auto encryption.
+
+It speaks to the MongoDB wire protocol, and the driver uses mongocryptd by connecting with a Mongo client.
+
+By default, the driver will attempt to automatically spawn a mongocryptd process.
+
+The mongocryptd process is shipped as part of the MongoDB 4.2 enterprise binary and is available for all Atlas and Enterprise customers.
+
+There are two options available when using field level encryption.
+
+You can choose to provide a schema to the mongocryptd process in your application code.
+
+This allows mongocryptd to automatically encrypt fields based on a specific schema.
+
+You can also choose to manually encrypt individual fields using your application code.
+
+It's important to note that if you have a client which does not use the encrypted connection options, it will still be able to read from the collection.
+
+You can see in this example we have a driver which isn't configured to use an encrypted connection.
+
+It's still able to read everything apart from this field which has been encrypted using field level encryption.
+
+So let's recap.
+
+Field level encryption allows you to encrypt data at field level.
+
+Keys are stored in a MongoDB collection called the key vault.
+
+This can either be co-located on the same cluster as your data, or it can be on a separate cluster.
+
+These keys are encrypted with a master key which is stored in an external KMS server, and your client must be configured to use an encrypted collection through a process called the mongocryptd, which is shipped as part of the MongoDB enterprise binary.
+
+If your client is not configured to use encryption, it will not be able to read unencrypted values from the collection in MongoDB.
+
+Any unencrypted fields can be read.

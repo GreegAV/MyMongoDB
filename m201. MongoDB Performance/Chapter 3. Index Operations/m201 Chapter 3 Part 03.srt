@@ -1,0 +1,370 @@
+
+1
+00:00:00.000 --> 00:00:00.740
+
+
+2
+00:00:00.740 --> 00:00:02.820
+Now that we understand
+the basics of Explain,
+
+3
+00:00:02.820 --> 00:00:06.060
+let's take a quick look a
+slightly more complex example,
+
+4
+00:00:06.060 --> 00:00:09.090
+running Explain on
+a sharded cluster.
+
+5
+00:00:09.090 --> 00:00:11.160
+Here I'm using
+mlaunch from mtools
+
+6
+00:00:11.160 --> 00:00:12.830
+to set up my sharded cluster.
+
+7
+00:00:12.830 --> 00:00:15.450
+Now that my cluster's up and
+running, let's enable sharding.
+
+8
+00:00:15.450 --> 00:00:19.950
+First, I'm going to enable
+sharding on the m201 database
+
+9
+00:00:19.950 --> 00:00:23.340
+and then I'm going to go ahead
+and shard the people collection
+
+10
+00:00:23.340 --> 00:00:26.160
+on the _id index.
+
+11
+00:00:26.160 --> 00:00:27.960
+Now, this is a
+brand new database.
+
+12
+00:00:27.960 --> 00:00:30.510
+So let's go ahead and
+import some documents.
+
+13
+00:00:30.510 --> 00:00:33.710
+And here's our good old
+mongoimport command.
+
+14
+00:00:33.710 --> 00:00:35.760
+And from here, we can go
+ahead and check that we
+
+15
+00:00:35.760 --> 00:00:38.160
+have data on multiple shards.
+
+16
+00:00:38.160 --> 00:00:40.880
+And as you can see I have
+most of my data on shard one,
+
+17
+00:00:40.880 --> 00:00:42.750
+and a little bit of
+my data on shard two.
+
+18
+00:00:42.750 --> 00:00:45.520
+And that's fine for
+this demonstration.
+
+19
+00:00:45.520 --> 00:00:48.030
+Now, when this query
+is ran on the mongos,
+
+20
+00:00:48.030 --> 00:00:50.970
+not much is happening
+on that mongos itself.
+
+21
+00:00:50.970 --> 00:00:53.790
+The mongos is going to send
+the query to each shard
+
+22
+00:00:53.790 --> 00:00:55.980
+and then each shard is
+going to evaluate the query,
+
+23
+00:00:55.980 --> 00:00:58.650
+select a plan, and then
+all that information
+
+24
+00:00:58.650 --> 00:01:02.120
+will be aggregated
+back on the mongos.
+
+25
+00:01:02.120 --> 00:01:04.940
+So most of the time, we would
+expect that the same plan
+
+26
+00:01:04.940 --> 00:01:07.250
+be chosen for each shard.
+
+27
+00:01:07.250 --> 00:01:10.340
+But it may happen that a shard
+chose a different plan simply
+
+28
+00:01:10.340 --> 00:01:14.170
+because it had less or
+more data to process.
+
+29
+00:01:14.170 --> 00:01:16.704
+And this output is very similar
+to what we've been seeing.
+
+30
+00:01:16.704 --> 00:01:18.120
+If we go up to the
+winningPlan, we
+
+31
+00:01:18.120 --> 00:01:22.070
+will see that the last stage
+is to this shard merge.
+
+32
+00:01:22.070 --> 00:01:24.080
+And so when we drill
+in here, we can
+
+33
+00:01:24.080 --> 00:01:28.640
+see that we have
+this shards array,
+
+34
+00:01:28.640 --> 00:01:31.130
+and we first have shard 1.
+
+35
+00:01:31.130 --> 00:01:33.460
+And shard 1 has a
+winning plan which
+
+36
+00:01:33.460 --> 00:01:36.710
+was to do a collection scan.
+
+37
+00:01:36.710 --> 00:01:41.330
+And then there's also shard
+2, whose winning plan was also
+
+38
+00:01:41.330 --> 00:01:42.881
+to do a collection scan.
+
+39
+00:01:42.881 --> 00:01:44.630
+So all those documents
+were passed back up
+
+40
+00:01:44.630 --> 00:01:47.145
+to the mongos, where they
+were merged together.
+
+41
+00:01:47.145 --> 00:01:48.520
+Now that we've
+done the hard work
+
+42
+00:01:48.520 --> 00:01:50.300
+at looking at the
+full Explain output,
+
+43
+00:01:50.300 --> 00:01:53.180
+let's see how we can browse this
+information in an easier way.
+
+44
+00:01:53.180 --> 00:01:56.430
+And for that, we're
+going to use Compass.
+
+45
+00:01:56.430 --> 00:01:58.350
+And so here's Compass
+and I'm already
+
+46
+00:01:58.350 --> 00:01:59.970
+on the people collection.
+
+47
+00:01:59.970 --> 00:02:03.490
+And I can go ahead and
+click this Explain Plan tab.
+
+48
+00:02:03.490 --> 00:02:05.100
+And from here, I
+can go ahead and run
+
+49
+00:02:05.100 --> 00:02:06.593
+the query we've been running.
+
+50
+00:02:06.593 --> 00:02:08.009
+And this is really
+cool because we
+
+51
+00:02:08.009 --> 00:02:12.270
+get this awesome visual output
+where we can see our index scan
+
+52
+00:02:12.270 --> 00:02:14.830
+followed by our fetch stage.
+
+53
+00:02:14.830 --> 00:02:17.160
+And we can also see all
+the important information
+
+54
+00:02:17.160 --> 00:02:18.822
+that we've been looking at.
+
+55
+00:02:18.822 --> 00:02:21.030
+And now if we want to drill
+into any information that
+
+56
+00:02:21.030 --> 00:02:23.950
+isn't highlighted up here, we
+can just click this Raw JSON
+
+57
+00:02:23.950 --> 00:02:27.390
+tab, and we're going to see
+this JSON object that we've been
+
+58
+00:02:27.390 --> 00:02:28.850
+looking at this whole time.
+
+59
+00:02:28.850 --> 00:02:31.800
+And we have the ability to
+hide the different fields
+
+60
+00:02:31.800 --> 00:02:35.670
+we don't care about, and open
+up fields that we do care about.
+
+61
+00:02:35.670 --> 00:02:37.790
+It's pretty slick.
+
+62
+00:02:37.790 --> 00:02:39.980
+In summary, we've seen
+that the Explain command
+
+63
+00:02:39.980 --> 00:02:43.820
+is extremely powerful in helping
+us troubleshoot slow queries.
+
+64
+00:02:43.820 --> 00:02:45.410
+Its output is quite rich.
+
+65
+00:02:45.410 --> 00:02:48.200
+However, there's a few
+pieces of common information
+
+66
+00:02:48.200 --> 00:02:49.790
+that we'll be looking at.
+
+67
+00:02:49.790 --> 00:02:53.120
+Things like execution time,
+the number of keys read,
+
+68
+00:02:53.120 --> 00:02:55.580
+documents read, and
+documents returned,
+
+69
+00:02:55.580 --> 00:02:57.650
+and obviously, the
+plans that were selected
+
+70
+00:02:57.650 --> 00:02:59.600
+and the ones that were rejected.
+
+71
+00:02:59.600 --> 00:03:01.412
+Let's recap what we've learned.
+
+72
+00:03:01.412 --> 00:03:03.370
+We've extensively looked
+at all the information
+
+73
+00:03:03.370 --> 00:03:05.500
+that's Explain provides us.
+
+74
+00:03:05.500 --> 00:03:08.000
+We've talked about how it works,
+and the different arguments
+
+75
+00:03:08.000 --> 00:03:09.830
+that we can pass in.
+
+76
+00:03:09.830 --> 00:03:12.716
+We've seen what Explain outputs
+look like on a sharded cluster.
+
+77
+00:03:12.716 --> 00:03:14.930
+And we've also seen
+the awesome view
+
+78
+00:03:14.930 --> 00:03:18.370
+that MongoDB Compass
+gives us into Explain.

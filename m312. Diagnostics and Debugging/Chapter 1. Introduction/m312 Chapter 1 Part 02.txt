@@ -1,0 +1,41 @@
+In this course, we'll focus on problems.
+
+This means that after having done a clear review of all the tools and strategies to follow so we can correctly diagnose and debug an issue with the MongoDB deployment, we should get our heads together and think how these tools will be applied to diagnose common issues with the deployment, configuration, provisioning, sizing, and application logic.
+
+Hopefully, with that in mind, you can quickly relate to your own applications and be aware of how to deal and diagnose correctly with unintended situations.
+
+There are a few things that we can perceive from the applications and server hosts of MongoDB.
+
+Let's say the symptoms that our subjects may be demonstrating.
+
+These generally will drive us to blame the database.
+
+That's OK.
+
+Everyone does that.
+
+But more importantly than who to blame is how to correctly diagnose a situation and perform corrective measures.
+
+And there are a great deal of symptoms that we should be looking for.
+
+We can have very slow queries.
+
+We will look into the tools that will help us identify such offenders and how to correct those.
+
+Applications getting slower writing data as time goes by-- we will look into patterns and check the tool that will allow us to identify and monitor a potential solution.
+
+Aggregation pipelines aborting for lack of resources-- something to keep in mind.
+
+Server incurring a high disk IO-- how to detect it, how to get to the bottom of the problem.
+
+Incorrect file system configuration-- these can be very hard to find in development environments, but we will soon get into trouble if we don't attend them in production.
+
+Incorrect MongoDB configuration-- these can span from unintended behavior from incorrect configurations of cache sizes, timeouts, flushing intervals, and write concerns.
+
+Application driver integration-- how the application makes use of our driver, which commands it senses, and how these can derive in unintended situations.
+
+Connectivity issues-- when we inadvertently incorrectly configure our system, that will impact the connectivity of our deployment.
+
+And then cluster configuration-- by incorrectly provisioning or using replica sets and shared clusters we might get ourselves into situations that are important to understand and fix.
+
+These are some of the aspects that we are going to approach within different chapters of this course and introduce the tools and strategies to detect, diagnose, monitor, and fix these unwanted scenarios.

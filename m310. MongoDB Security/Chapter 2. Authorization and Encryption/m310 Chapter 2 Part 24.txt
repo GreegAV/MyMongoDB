@@ -1,0 +1,83 @@
+Now that we've covered transfer encryption, we can talk about encryption at rest, also known as data at rest.
+
+Encryption at rest concerns encrypting the data that we store on disk.
+
+Like I've said before, there are two broad approaches to encrypting data at rest with MongoDB.
+
+There's storage level encryption and application level encryption.
+
+Let's first talk about application level encryption, because it's not an actual feature of MongoDB.
+
+By application level encryption, I'm referring to encryption on a per field or per document basis within the application layer.
+
+To encrypt a document or field within our data we can write a custom encryption and decryption routine for our application, or of course we can use a commercial solution for encryption within our application.
+
+A great example of application level encryption is the storage of extremely sensitive information like health records.
+
+A developer can add logic to the application, where before any information is inserted into a collection it first passes through an encryption algorithm converting the plain text-- like here I have a health record that says you know Kirby has appendicitis.
+
+We can, before we ever pass that to the driver to insert it into MongoDB, inside of out application we can go ahead and encrypt that information using some kind of encryption algorithm.
+
+And then, we can then pass that to the driver and then insert that information in MongoDB.
+
+So MongoDB never saw that information in plain text, it always saw the encrypted ciphertext.
+
+And then of course, we then would write decryption routines so that when we pull out the encrypted text we would then convert the encrypted text into a decrypted text within our application layer.
+
+As of MongoDB Enterprise 3.2, we've introduced a native encryption option for the WiredTiger storage engine.
+
+This feature allows MongoDB to encrypt data files such that only parties with the decryption key can decode and read the data.
+
+Again, I like to emphasize that this feature is only available for Enterprise versions of MongoDB 3.2, and only exist for the WiredTiger storage engine.
+
+But basically, what you can see here is that our data lives in RAM as unencrypted text.
+
+And then whenever MongoDB decides to write that information to disk it will then encrypt the information in RAM and then store that encrypted information in disk.
+
+Storage engine encryption with MongoDB is a four step process.
+
+All the steps are abstracted away from you as a database administrator, but are important to understand to deliver a secure implementation.
+
+First, a master key is generated.
+
+This key will be used to encrypt each individual database key.
+
+The second step, like I mentioned in the last step, is to generate a key for each database.
+
+After a key has been generated for a particular database, that key can be used to encrypt that actual database.
+
+After all databases have been encrypted with their respective keys, each key is then encrypted with the master key that we got from step 1.
+
+It's important to note that each database key is actually stored within MongoDB, which is why the master key exists outside of MongoDB.
+
+Only the master key is external to the server and requires external management.
+
+To manage the master key, MongoDB's encrypted storage engine supports two key management options.
+
+The first and recommend option is an integration with a third party key management appliance via the Key Management Interoperability Protocol, commonly referred to as KMIP.
+
+Your other option is to use local key management via a key file.
+
+We do not recommend local key file management.
+
+enabling the encrypted storage engine is relatively straightforward in practice.
+
+For the sake of simplicity, we're going to start with the not recommended option of using local key management via a key file.
+
+We'll first need to generate a master key and place it in a key file.
+
+Here I'm using open SSL passing in Rand base64 giving it a length of 32 and then redirecting that output to a file called MongoDB-keyfile.
+
+This will generate a random assortment of base 64 characters to act as our key file.
+
+Now that that key file has been created, let's go ahead and put the correct permissions on the file so that MongoDB can read from it.
+
+Here I'm saying chmod 600 and our file, and we now have good permissions for MongoDB to read our key file.
+
+And from here it's as easy as starting mongod with our storage engine encryption enabled.
+
+After creating our key file and putting the correct permissions on it, starting a mongod instance with storage engine encryption enabled is as easy as passing the dash dash encryption option and a dash dash encryption key file option with a MongoDB key file argument.
+
+And it really is that simple.
+
+Now our server is waiting for connections on port 27 0 17.

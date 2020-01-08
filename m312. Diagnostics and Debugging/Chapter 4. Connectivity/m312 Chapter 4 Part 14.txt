@@ -1,0 +1,147 @@
+OK.
+
+Let's talk about some issues that can arise in the context of sharding.
+
+The most obvious thing to keep in mind is that after MongoDB 3.4, you can have up to one migration per pair of shards, one sourcing the chunk and one receiving it.
+
+Here, we can see exactly that happening.
+
+And, if you have six shards, you could have as many as three chunks in flight.
+
+If three of your servers have too many chunks and the other three have too few, one problem that can arise is if you end up getting jumbo chunks.
+
+If a chunk grows large enough without being split, it becomes a jumbo chunk.
+
+The sharded cluster won't try to move it as the chunk could be in flight for too long.
+
+MongoDB will also stop trying to split the chunk.
+
+Jumbo chunks often come from having a shard key with insufficient cardinality, meaning that there is no shard key value it can split on.
+
+By default, in a sharded cluster, the chunks should be split at 64 megabytes.
+
+Let's do an example.
+
+We're setting up a sharded cluster with three shards.
+
+Each shard is a replica set with three members.
+
+Great.
+
+Let's connect and shard a collection.
+
+We'll enable sharding and shard on last name comma first name for the example collection.
+
+Great!
+
+Let's look at sh.status.
+
+So all of my data, such as it is, is in a single chunk but that chunk is empty.
+
+Let's insert a bunch of documents all with the same shard key and create a jumbo chunk.
+
+I'm going to make the documents one megabyte each by creating a string that's one megabyte in length.
+
+OK.
+
+So all of my data is now in a single chunk and it can't be split because it all has the same shard key values.
+
+Let's look at sh.status.
+
+There it is, one chunk.
+
+Obviously, this is a bad shard key if I can do this, but let's deal with some of the fallout.
+
+We'll try adding some more data, this time on a different value.
+
+We'll use the name Norberto Leite.
+
+OK.
+
+So now I have 200 documents of about a megabyte each and if I look at sh.status, I can see that I've still only got one chunk on one shard.
+
+All of my reads and writes are going to hit this one shard and none of them will hit either of the other shards, so I've got an imbalance.
+
+Let's see what's going on in our server logs.
+
+OK.
+
+I can see the sharded cluster is starting out, request split points.
+
+If I scroll down a bit, request it, possible low cardinality key detected in m312.example, key is last name Cross, first name Will.
+
+OK.
+
+So the server already knows I have a bad shard key.
+
+Now I've got a couple of choices here, I can try to manually split the chunks, say with sh.splitAt or I can increase the chunk size.
+
+First, I'm going to split it manually.
+
+Great.
+
+Let's look at sh.status.
+
+OK.
+
+So now I have two chunks, each of them are 100 megabytes and I'm still not balancing them.
+
+They're both just staying on my one shard.
+
+To fix this issue, I'm going to try to move a chunk manually.
+
+And MongoDB is telling me no, the chunk is too big.
+
+OK.
+
+Let's try to increase the chunk size.
+
+We can do this by modifying the chunk size directly.
+
+Usually, when we do things like this, we would use a helper function but as of this recording, we need to actually modify the configdb.
+
+Something that isn't to be done lightly but it is necessary in this case.
+
+I'm going to set the value at 150 megabytes.
+
+Good.
+
+Once again, let's look at sh.status.
+
+My chunks still haven't migrated.
+
+Let's do one more split to wake it up and get it going.
+
+And we'll look at sh.status.
+
+OK.
+
+And if I do that again, great, three chunks and they're distributed.
+
+Now just to be clear, one of those chunks contains no data and I was able to migrate my jumbo chunks by changing my chunk size.
+
+This isn't going to help if I have a bad shard key like I do here because I'll just continue adding documents to the shard key values, but that's something you can do in cases where you get stuck.
+
+Now, let's create a bunch of chunks and let the cluster distribute them.
+
+Sh.status Whole lot of chunks and it's distributing them.
+
+And after a few moments, I have a nicely balanced cluster with 10, 9, and 9 chunks respectively on each of those shards.
+
+But of course, my data isn't evenly distributed.
+
+There's a great helper function in the shell to assist us with looking at our data distribution.
+
+It's called db.collection.getshard distribution.
+
+Let's check it out.
+
+OK, so what am I looking at?
+
+Shard02 seems to have 200 megabytes, shard03 none, total 200 megabytes, 200 chunks, there you go.
+
+Shard02 contains 100% of the data in the cluster.
+
+I can use this information to figure out if I need to split chunks on my own, figure it out if I've got a problem with my shard key, etc.
+
+And that's how to look for and fix some basic issues in a sharded cluster.

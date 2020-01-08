@@ -1,0 +1,534 @@
+
+1
+00:00:00.000 --> 00:00:00.270
+
+
+2
+00:00:00.270 --> 00:00:02.228
+So in this lesson, we're
+going to briefly cover
+
+3
+00:00:02.228 --> 00:00:04.302
+the Aggregation
+framework in MongoDB.
+
+4
+00:00:04.302 --> 00:00:06.510
+We're going to use the
+Aggregation builder in Compass
+
+5
+00:00:06.510 --> 00:00:09.319
+to export this pipeline to
+the language of our choice.
+
+6
+00:00:09.319 --> 00:00:11.610
+So the first thing to know
+about Aggregation in MongoDB
+
+7
+00:00:11.610 --> 00:00:14.670
+is that it's a pipeline
+composed of one or more stages.
+
+8
+00:00:14.670 --> 00:00:17.040
+And within each stage,
+we define expressions
+
+9
+00:00:17.040 --> 00:00:21.350
+that evaluate and transform the
+data at that particular stage.
+
+10
+00:00:21.350 --> 00:00:23.990
+To use an analogy, documents
+flow through the pipeline,
+
+11
+00:00:23.990 --> 00:00:27.020
+sort of like the widgets do
+on a factory conveyor belt.
+
+12
+00:00:27.020 --> 00:00:29.120
+Each stage is like
+an assembly station.
+
+13
+00:00:29.120 --> 00:00:31.601
+Documents enter, some
+work is performed,
+
+14
+00:00:31.601 --> 00:00:33.350
+and then some output
+is produced that gets
+
+15
+00:00:33.350 --> 00:00:36.444
+piped in as the input
+to the following stage.
+
+16
+00:00:36.444 --> 00:00:38.610
+So in this example, we have
+a stage that filters out
+
+17
+00:00:38.610 --> 00:00:39.970
+the colors we don't want.
+
+18
+00:00:39.970 --> 00:00:42.360
+Then we have a stage to
+transform the shapes.
+
+19
+00:00:42.360 --> 00:00:44.640
+And then we have a stage
+that collects all input
+
+20
+00:00:44.640 --> 00:00:47.350
+and gives us a
+ratio of the colors.
+
+21
+00:00:47.350 --> 00:00:51.040
+So each one of those stages in
+the pipeline used expressions.
+
+22
+00:00:51.040 --> 00:00:53.390
+And at their core,
+expressions are functions.
+
+23
+00:00:53.390 --> 00:00:54.160
+So here we're going
+to take a look
+
+24
+00:00:54.160 --> 00:00:56.320
+at the add function in
+three different programming
+
+25
+00:00:56.320 --> 00:00:59.850
+languages, as well as the
+Aggregation framework.
+
+26
+00:00:59.850 --> 00:01:01.370
+So here it is in Python--
+
+27
+00:01:01.370 --> 00:01:03.860
+simple function, has
+two inputs, and returns
+
+28
+00:01:03.860 --> 00:01:05.850
+the sum of those two inputs.
+
+29
+00:01:05.850 --> 00:01:08.510
+So here in Java, we have a
+little more strict typing.
+
+30
+00:01:08.510 --> 00:01:11.000
+So we've just specified that
+the type of each of our input
+
+31
+00:01:11.000 --> 00:01:14.000
+has to extend this number
+interface, which is to say
+
+32
+00:01:14.000 --> 00:01:16.400
+that we can add the two inputs.
+
+33
+00:01:16.400 --> 00:01:18.862
+But it's more or less
+the same function.
+
+34
+00:01:18.862 --> 00:01:20.070
+And here it is in JavaScript.
+
+35
+00:01:20.070 --> 00:01:21.750
+It's about as short
+as it is in Python,
+
+36
+00:01:21.750 --> 00:01:24.090
+but the syntax looks a
+little bit like Java.
+
+37
+00:01:24.090 --> 00:01:26.940
+So now, here is the add
+function in aggregation.
+
+38
+00:01:26.940 --> 00:01:29.910
+Essentially it's
+this add expression,
+
+39
+00:01:29.910 --> 00:01:33.930
+to which we pass an array of the
+values that we want to sum up.
+
+40
+00:01:33.930 --> 00:01:37.020
+So all expressions and stages
+in the Aggregation framework
+
+41
+00:01:37.020 --> 00:01:38.850
+will have this dollar
+sign before them.
+
+42
+00:01:38.850 --> 00:01:41.058
+And the dollar sign is just
+how we refer to variables
+
+43
+00:01:41.058 --> 00:01:42.390
+within the expression.
+
+44
+00:01:42.390 --> 00:01:45.060
+We have a course that dives much
+more deeply into Aggregation,
+
+45
+00:01:45.060 --> 00:01:48.450
+covering syntax and semantics
+at almost every stage.
+
+46
+00:01:48.450 --> 00:01:50.880
+You can find more by looking
+at the lesson handout.
+
+47
+00:01:50.880 --> 00:01:54.442
+Also included is a link to the
+Aggregation quick reference.
+
+48
+00:01:54.442 --> 00:01:56.150
+So now, let's jump
+into Compass and start
+
+49
+00:01:56.150 --> 00:01:57.679
+building some Aggregations.
+
+50
+00:01:57.679 --> 00:01:59.720
+So here I've just opened
+up Compass and connected
+
+51
+00:01:59.720 --> 00:02:00.859
+to my Atlas cluster.
+
+52
+00:02:00.859 --> 00:02:02.900
+Currently I'm connected
+to the movie's collection
+
+53
+00:02:02.900 --> 00:02:04.240
+on the MFlix database.
+
+54
+00:02:04.240 --> 00:02:05.750
+And I'm using the
+Aggregations tab
+
+55
+00:02:05.750 --> 00:02:08.419
+so we can write a pipeline
+against the movies collection.
+
+56
+00:02:08.419 --> 00:02:10.190
+The first stage
+we're going to add
+
+57
+00:02:10.190 --> 00:02:13.640
+is a match stage to
+only pick up movies that
+
+58
+00:02:13.640 --> 00:02:15.662
+were directed by Sam Raimi.
+
+59
+00:02:15.662 --> 00:02:17.120
+The way that we're
+going to do that
+
+60
+00:02:17.120 --> 00:02:19.730
+is by specifying the field
+and the value that we want.
+
+61
+00:02:19.730 --> 00:02:22.509
+
+
+62
+00:02:22.509 --> 00:02:24.050
+And we can see this
+is only returning
+
+63
+00:02:24.050 --> 00:02:27.449
+movies to us that have Sam
+Raimi as a director in them.
+
+64
+00:02:27.449 --> 00:02:29.990
+So the way the match stage works
+is actually very interesting
+
+65
+00:02:29.990 --> 00:02:31.140
+and somewhat subtle.
+
+66
+00:02:31.140 --> 00:02:34.070
+So here the director's
+field actually has
+
+67
+00:02:34.070 --> 00:02:36.020
+an array as its value.
+
+68
+00:02:36.020 --> 00:02:37.880
+And that array has
+all the directors
+
+69
+00:02:37.880 --> 00:02:39.530
+for that specific movie.
+
+70
+00:02:39.530 --> 00:02:41.035
+But we only need
+to specify the one
+
+71
+00:02:41.035 --> 00:02:43.160
+that we want to match
+against, and it will actually
+
+72
+00:02:43.160 --> 00:02:45.391
+parse the array out for us.
+
+73
+00:02:45.391 --> 00:02:47.390
+So now let's add another
+stage to this pipeline.
+
+74
+00:02:47.390 --> 00:02:49.490
+We're going to try to
+figure out the average IMDb
+
+75
+00:02:49.490 --> 00:02:52.600
+rating for all the movies
+that Sam Raimi has directed.
+
+76
+00:02:52.600 --> 00:02:54.790
+Just going to add
+a new stage here.
+
+77
+00:02:54.790 --> 00:02:56.540
+So here's a project
+stage in our pipeline.
+
+78
+00:02:56.540 --> 00:02:58.130
+This is going to
+essentially choose
+
+79
+00:02:58.130 --> 00:03:01.130
+which fields we want
+to display and suppress
+
+80
+00:03:01.130 --> 00:03:04.206
+from the previous
+stage in the pipeline.
+
+81
+00:03:04.206 --> 00:03:06.580
+I don't really care about the
+underscore ID in this case.
+
+82
+00:03:06.580 --> 00:03:09.340
+So I'm gonna say I don't
+want it with a zero.
+
+83
+00:03:09.340 --> 00:03:11.450
+I do want the
+title of the movie.
+
+84
+00:03:11.450 --> 00:03:17.690
+And I need the IMDb rating
+in order to find the average.
+
+85
+00:03:17.690 --> 00:03:21.790
+Now because rating is contained
+within an IMDb object,
+
+86
+00:03:21.790 --> 00:03:24.640
+we have to use dot notation in
+order to project that field.
+
+87
+00:03:24.640 --> 00:03:26.890
+And when we use dot notation,
+we have to just surround
+
+88
+00:03:26.890 --> 00:03:27.896
+this in quotes.
+
+89
+00:03:27.896 --> 00:03:30.480
+And it looks like this did
+what we wanted it to do.
+
+90
+00:03:30.480 --> 00:03:34.370
+We only got back the title and
+the IMDb rating for each movie.
+
+91
+00:03:34.370 --> 00:03:36.270
+So now that we have
+all the IMDb ratings,
+
+92
+00:03:36.270 --> 00:03:38.610
+we can find the average.
+
+93
+00:03:38.610 --> 00:03:41.414
+And to do so, we're going
+to use a group stage.
+
+94
+00:03:41.414 --> 00:03:43.080
+So the group stage
+can be used for a lot
+
+95
+00:03:43.080 --> 00:03:45.538
+of different purposes, but the
+way we're using it right now
+
+96
+00:03:45.538 --> 00:03:48.669
+is to find the average of all of
+the movies Sam Raimi directed.
+
+97
+00:03:48.669 --> 00:03:51.210
+We've already matched all the
+movies that Sam Raimi directed,
+
+98
+00:03:51.210 --> 00:03:53.090
+so we don't need to
+transform the input.
+
+99
+00:03:53.090 --> 00:03:55.590
+But we really do want to find
+the average of all the movies.
+
+100
+00:03:55.590 --> 00:03:58.940
+So I've specified a 0 as
+my underscore ID here.
+
+101
+00:03:58.940 --> 00:04:01.020
+And as the output
+of this stage, which
+
+102
+00:04:01.020 --> 00:04:02.910
+is the last stage
+in our pipeline,
+
+103
+00:04:02.910 --> 00:04:05.700
+we see the grouping
+criteria, which was none,
+
+104
+00:04:05.700 --> 00:04:08.640
+and the average rating
+value, which was 6.86.
+
+105
+00:04:08.640 --> 00:04:10.350
+Way to go, Sam Raimi.
+
+106
+00:04:10.350 --> 00:04:11.700
+So just to recap--
+
+107
+00:04:11.700 --> 00:04:13.890
+Aggregations in
+MongoDB are pipelines
+
+108
+00:04:13.890 --> 00:04:15.750
+that are composed of
+one or more stages.
+
+109
+00:04:15.750 --> 00:04:17.579
+And each stage uses
+functions that we
+
+110
+00:04:17.579 --> 00:04:20.700
+write in the Aggregation syntax
+to transform and evaluate
+
+111
+00:04:20.700 --> 00:04:22.340
+the data.

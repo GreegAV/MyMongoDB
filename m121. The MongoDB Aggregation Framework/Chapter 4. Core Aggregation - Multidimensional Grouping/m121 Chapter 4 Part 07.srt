@@ -1,0 +1,133 @@
+
+1
+00:00:00.000 --> 00:00:00.540
+
+
+2
+00:00:00.540 --> 00:00:04.019
+$sortByCount takes one
+argument, an expression
+
+3
+00:00:04.019 --> 00:00:06.270
+to group documents on.
+
+4
+00:00:06.270 --> 00:00:09.870
+It works just like a group
+stage, followed immediately
+
+5
+00:00:09.870 --> 00:00:13.860
+by a sort and
+descending direction.
+
+6
+00:00:13.860 --> 00:00:18.350
+Here, we're using a group stage,
+grouping on the $imdb.rating,
+
+7
+00:00:18.350 --> 00:00:20.100
+getting a count,
+and then sorting
+
+8
+00:00:20.100 --> 00:00:22.298
+on that count in
+descending direction.
+
+9
+00:00:22.298 --> 00:00:26.210
+
+
+10
+00:00:26.210 --> 00:00:29.060
+Here we're using the
+$sortByCount stage,
+
+11
+00:00:29.060 --> 00:00:32.900
+simply specifying what value we
+would like to sort by count on.
+
+12
+00:00:32.900 --> 00:00:36.670
+
+
+13
+00:00:36.670 --> 00:00:38.095
+The exact same results.
+
+14
+00:00:38.095 --> 00:00:40.060
+
+
+15
+00:00:40.060 --> 00:00:41.860
+We've covered a
+lot of information.
+
+16
+00:00:41.860 --> 00:00:44.250
+But let's recap a
+few important things.
+
+17
+00:00:44.250 --> 00:00:47.720
+In $bucket, we must always
+specify at least two values
+
+18
+00:00:47.720 --> 00:00:49.100
+to boundaries.
+
+19
+00:00:49.100 --> 00:00:52.540
+Boundaries must be all
+of the same general type,
+
+20
+00:00:52.540 --> 00:00:56.950
+either numeric, or string,
+or Boolean, you get the idea.
+
+21
+00:00:56.950 --> 00:01:00.010
+And count is inserted by
+default with no output,
+
+22
+00:01:00.010 --> 00:01:03.550
+but removed when
+output is specified.
+
+23
+00:01:03.550 --> 00:01:07.060
+In $bucketAuto, cardinality
+of the group by expression
+
+24
+00:01:07.060 --> 00:01:10.750
+may impact even distribution
+and number of buckets.
+
+25
+00:01:10.750 --> 00:01:13.540
+Specifying a granularity
+requires the expression
+
+26
+00:01:13.540 --> 00:01:17.180
+to groupBy to resolve
+to a numeric value.
+
+27
+00:01:17.180 --> 00:01:21.070
+And lastly, $sortByCount is
+equivalent to a group stage
+
+28
+00:01:21.070 --> 00:01:25.170
+to count occurrence, and then
+sorting in descending order.

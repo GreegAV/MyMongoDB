@@ -1,0 +1,364 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:02,510
+In this lesson, we'll
+look at aggregate value
+
+3
+00:00:02,510 --> 00:00:05,960
+types MongoDB supports,
+and also discuss support
+
+4
+00:00:05,960 --> 00:00:08,410
+for geospatial data.
+
+5
+00:00:08,410 --> 00:00:11,550
+In Compass, let's look
+at the 100 year weather
+
+6
+00:00:11,550 --> 00:00:15,570
+data set, by navigating
+to the 100 Year Weather
+
+7
+00:00:15,570 --> 00:00:19,350
+dot data name space
+in our Atlas cluster.
+
+8
+00:00:19,350 --> 00:00:21,280
+We can do that as follows.
+
+9
+00:00:21,280 --> 00:00:24,430
+First we click on the database,
+and then the collection.
+
+10
+00:00:24,430 --> 00:00:27,790
+Let's look at the schema
+view for this collection.
+
+11
+00:00:27,790 --> 00:00:29,970
+Now, this dataset
+provides weather readings
+
+12
+00:00:29,970 --> 00:00:32,610
+for locations
+throughout the world.
+
+13
+00:00:32,610 --> 00:00:35,640
+For this dataset, it's
+important to understand
+
+14
+00:00:35,640 --> 00:00:40,650
+that all readings are recorded
+with both a value and quality
+
+15
+00:00:40,650 --> 00:00:42,780
+assessment, to provide
+a sense for how
+
+16
+00:00:42,780 --> 00:00:46,110
+reliable the measurement was
+determined to be when taken.
+
+17
+00:00:46,110 --> 00:00:49,290
+As an example, let's scroll down
+and look at the air temperature
+
+18
+00:00:49,290 --> 00:00:50,370
+field.
+
+19
+00:00:50,370 --> 00:00:54,610
+Note that the type specified
+for this field in the Compass UI
+
+20
+00:00:54,610 --> 00:00:56,340
+is document.
+
+21
+00:00:56,340 --> 00:00:58,080
+To the right of
+the field name, you
+
+22
+00:00:58,080 --> 00:01:00,120
+should see a description
+that says document
+
+23
+00:01:00,120 --> 00:01:02,010
+with two nested fields.
+
+24
+00:01:02,010 --> 00:01:04,709
+In addition to scalar
+values, such as strings,
+
+25
+00:01:04,709 --> 00:01:10,020
+integers, and doubles, MongoDB
+supports nesting a document
+
+26
+00:01:10,020 --> 00:01:12,780
+as the value of a field
+within another document.
+
+27
+00:01:12,780 --> 00:01:14,880
+Air temperature is an example.
+
+28
+00:01:14,880 --> 00:01:19,980
+When expanded, we can see the
+nested fields for quality,
+
+29
+00:01:19,980 --> 00:01:22,120
+and the air temperature value.
+
+30
+00:01:22,120 --> 00:01:24,120
+So here I've expanded
+air temperature
+
+31
+00:01:24,120 --> 00:01:25,604
+by clicking this caret.
+
+32
+00:01:25,604 --> 00:01:27,270
+The value of air
+temperature is actually
+
+33
+00:01:27,270 --> 00:01:30,330
+a nested document with two
+fields, quality and value.
+
+34
+00:01:30,330 --> 00:01:34,680
+Quality is a string,
+and value is a number.
+
+35
+00:01:34,680 --> 00:01:36,870
+For many applications,
+it's important to be able
+
+36
+00:01:36,870 --> 00:01:40,200
+to model data, not just as a
+flat set of keys and values,
+
+37
+00:01:40,200 --> 00:01:42,210
+but as hierarchical
+data structures
+
+38
+00:01:42,210 --> 00:01:43,860
+that reflect the way
+a developer needs
+
+39
+00:01:43,860 --> 00:01:46,170
+to work with the data
+in their application.
+
+40
+00:01:46,170 --> 00:01:48,150
+If it's appropriate
+to your application,
+
+41
+00:01:48,150 --> 00:01:51,990
+you can nest documents
+two or more levels deep.
+
+42
+00:01:51,990 --> 00:01:55,080
+As an example, let's take a
+look at the atmospheric pressure
+
+43
+00:01:55,080 --> 00:01:56,970
+observation field.
+
+44
+00:01:56,970 --> 00:01:58,830
+Atmospheric pressure
+tells us the weight
+
+45
+00:01:58,830 --> 00:02:01,200
+of the air at a given location.
+
+46
+00:02:01,200 --> 00:02:03,480
+As an aside,
+atmospheric pressure
+
+47
+00:02:03,480 --> 00:02:05,910
+affects how weather systems
+move across the surface
+
+48
+00:02:05,910 --> 00:02:06,840
+of the Earth.
+
+49
+00:02:06,840 --> 00:02:08,729
+It's one factor
+meteorologists use
+
+50
+00:02:08,729 --> 00:02:12,140
+to predict the
+next day's weather.
+
+51
+00:02:12,140 --> 00:02:16,100
+If we expand the atmospheric
+pressure observation field,
+
+52
+00:02:16,100 --> 00:02:17,930
+we can see that this
+field has a value that
+
+53
+00:02:17,930 --> 00:02:20,780
+is a document with two fields.
+
+54
+00:02:20,780 --> 00:02:24,710
+Each of those fields are
+themselves nested documents,
+
+55
+00:02:24,710 --> 00:02:29,090
+as we can see here by the
+type Compass provides to us.
+
+56
+00:02:29,090 --> 00:02:32,540
+If we expand each of them,
+we see a reading and quality
+
+57
+00:02:32,540 --> 00:02:35,150
+measure for the
+height above sea level
+
+58
+00:02:35,150 --> 00:02:38,030
+at which the measure was taken,
+designated as the altimeter
+
+59
+00:02:38,030 --> 00:02:41,420
+setting, and the actual
+atmospheric pressure reading
+
+60
+00:02:41,420 --> 00:02:43,010
+and quality measure.
+
+61
+00:02:43,010 --> 00:02:45,540
+With these documents
+expanded in this way,
+
+62
+00:02:45,540 --> 00:02:48,470
+we can see that atmospheric
+pressure is modeled using
+
+63
+00:02:48,470 --> 00:02:51,102
+two levels of nested documents.
+
+64
+00:02:51,102 --> 00:02:54,060
+MongoDB's query language
+provides full support
+
+65
+00:02:54,060 --> 00:02:57,120
+for filtering documents
+based on the values of fields
+
+66
+00:02:57,120 --> 00:02:59,480
+in nested documents.
+
+67
+00:02:59,480 --> 00:03:02,430
+MongoDB is designed to provide
+a great deal of flexibility
+
+68
+00:03:02,430 --> 00:03:04,320
+in modeling your
+data, so that you
+
+69
+00:03:04,320 --> 00:03:06,030
+can design a schema
+that is performant
+
+70
+00:03:06,030 --> 00:03:08,940
+for your application's
+data access patterns.
+
+71
+00:03:08,940 --> 00:03:11,850
+Your data model should support
+efficient handling of the reads
+
+72
+00:03:11,850 --> 00:03:14,010
+and writes your
+application requires.
+
+73
+00:03:14,010 --> 00:03:16,230
+Now, we address these
+aspects of data modeling
+
+74
+00:03:16,230 --> 00:03:20,460
+and the MongoDB query language
+in detail in other lessons.
+
+75
+00:03:20,460 --> 00:03:22,980
+At this point, I'm simply
+laying the groundwork
+
+76
+00:03:22,980 --> 00:00:00,000
+for the flexibility you have
+in designing data models.
+

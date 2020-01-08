@@ -1,0 +1,644 @@
+
+1
+00:00:00.000 --> 00:00:03.430
+
+
+2
+00:00:03.430 --> 00:00:06.270
+OK, so I can see that this
+logins collection appears
+
+3
+00:00:06.270 --> 00:00:06.930
+twice.
+
+4
+00:00:06.930 --> 00:00:09.360
+Once when I query it,
+once when I insert on it.
+
+5
+00:00:09.360 --> 00:00:10.930
+So that's fine.
+
+6
+00:00:10.930 --> 00:00:13.050
+It's everything else
+that's the problem.
+
+7
+00:00:13.050 --> 00:00:15.000
+I'm counting eight
+collections that we're
+
+8
+00:00:15.000 --> 00:00:18.060
+hitting just to get the
+information for a standard user
+
+9
+00:00:18.060 --> 00:00:18.660
+login.
+
+10
+00:00:18.660 --> 00:00:21.240
+That's totally unacceptable.
+
+11
+00:00:21.240 --> 00:00:22.980
+One of the patterns
+of schema design
+
+12
+00:00:22.980 --> 00:00:24.720
+is that data that
+is queried together
+
+13
+00:00:24.720 --> 00:00:28.210
+should be in the same
+document whenever possible.
+
+14
+00:00:28.210 --> 00:00:31.260
+It's obvious already that
+that's not the case here.
+
+15
+00:00:31.260 --> 00:00:33.690
+Looking at these, I can see
+that I'm looking first at one
+
+16
+00:00:33.690 --> 00:00:36.610
+and then another collection for
+the information that I need.
+
+17
+00:00:36.610 --> 00:00:39.960
+Let's look at our schema
+for user phone numbers.
+
+18
+00:00:39.960 --> 00:00:40.760
+Yikes.
+
+19
+00:00:40.760 --> 00:00:42.780
+OK, I'm seeing
+nothing but what was
+
+20
+00:00:42.780 --> 00:00:45.890
+obviously once a joined table
+in a relational database.
+
+21
+00:00:45.890 --> 00:00:48.900
+I've got a user ID
+and a phone number ID
+
+22
+00:00:48.900 --> 00:00:52.170
+and then this label field
+seems to have some metadata
+
+23
+00:00:52.170 --> 00:00:53.610
+about the phone number.
+
+24
+00:00:53.610 --> 00:00:57.790
+OK, let's look at phone numbers.
+
+25
+00:00:57.790 --> 00:00:58.290
+OK.
+
+26
+00:00:58.290 --> 00:01:01.050
+So my phone number document
+has just a phone number
+
+27
+00:01:01.050 --> 00:01:02.642
+and an extension.
+
+28
+00:01:02.642 --> 00:01:03.600
+Now here's the problem.
+
+29
+00:01:03.600 --> 00:01:05.800
+I'm not just hating
+on relational schemas.
+
+30
+00:01:05.800 --> 00:01:08.250
+They're great for
+relational databases.
+
+31
+00:01:08.250 --> 00:01:10.260
+My problem is that
+someone tried to take
+
+32
+00:01:10.260 --> 00:01:13.470
+that, that relational schema
+and move it into MongoDB.
+
+33
+00:01:13.470 --> 00:01:16.110
+And here's where
+the problem arises.
+
+34
+00:01:16.110 --> 00:01:18.030
+Instead of just
+querying the data once,
+
+35
+00:01:18.030 --> 00:01:22.140
+they're querying users
+to get a user ID then
+
+36
+00:01:22.140 --> 00:01:25.170
+querying user phone numbers
+to get the phone number IDs
+
+37
+00:01:25.170 --> 00:01:26.730
+and then querying
+the phone numbers
+
+38
+00:01:26.730 --> 00:01:28.530
+collection to get
+the phone number that
+
+39
+00:01:28.530 --> 00:01:31.620
+really should have been in
+the user document itself.
+
+40
+00:01:31.620 --> 00:01:33.210
+This is so not
+worth the overhead
+
+41
+00:01:33.210 --> 00:01:34.462
+of the additional queries.
+
+42
+00:01:34.462 --> 00:01:36.420
+This phone number should
+be in my user document
+
+43
+00:01:36.420 --> 00:01:38.970
+not in a phone numbers document
+much less a phone numbers
+
+44
+00:01:38.970 --> 00:01:41.130
+document with a user
+phone numbers document
+
+45
+00:01:41.130 --> 00:01:43.890
+we have to query just to join
+these two in the application.
+
+46
+00:01:43.890 --> 00:01:48.300
+OK let's back up and look
+at our user document.
+
+47
+00:01:48.300 --> 00:01:52.560
+OK, I've got a full name,
+username, password, birthday,
+
+48
+00:01:52.560 --> 00:01:56.280
+but my log in itself shows
+well, let's move over.
+
+49
+00:01:56.280 --> 00:02:01.650
+Address, phone number,
+shopping cart, last log in.
+
+50
+00:02:01.650 --> 00:02:04.500
+Yeah, that all should be
+packed into the user document.
+
+51
+00:02:04.500 --> 00:02:06.690
+By now I've got a
+great deal of evidence
+
+52
+00:02:06.690 --> 00:02:09.960
+that over normalization
+is the anti-pattern that
+
+53
+00:02:09.960 --> 00:02:12.582
+caused most of these problems.
+
+54
+00:02:12.582 --> 00:02:14.040
+By the way I also
+want to point out
+
+55
+00:02:14.040 --> 00:02:15.480
+that when I look through
+these collections,
+
+56
+00:02:15.480 --> 00:02:17.280
+I don't see a raise
+in any of them.
+
+57
+00:02:17.280 --> 00:02:19.170
+And it looks like
+user phone numbers
+
+58
+00:02:19.170 --> 00:02:22.729
+is being queried just to avoid
+an array of phone numbers.
+
+59
+00:02:22.729 --> 00:02:24.270
+Again, this is the
+sort of thing that
+
+60
+00:02:24.270 --> 00:02:27.450
+happens in a relational
+database, which makes sense.
+
+61
+00:02:27.450 --> 00:02:29.160
+Because in a
+relational world, you
+
+62
+00:02:29.160 --> 00:02:31.500
+don't just get to pack an
+arbitrary number of items
+
+63
+00:02:31.500 --> 00:02:32.670
+into a record.
+
+64
+00:02:32.670 --> 00:02:33.960
+You don't have arrays.
+
+65
+00:02:33.960 --> 00:02:36.900
+But you can in MongoDB,
+and you should.
+
+66
+00:02:36.900 --> 00:02:40.020
+Let's see our list
+of collections.
+
+67
+00:02:40.020 --> 00:02:43.590
+OK, so I just built the
+system dot profile collection
+
+68
+00:02:43.590 --> 00:02:46.380
+but everything else is
+used by this schema.
+
+69
+00:02:46.380 --> 00:02:48.210
+How do we fix this?
+
+70
+00:02:48.210 --> 00:02:50.469
+Ultimately, this is a
+schema that the developers
+
+71
+00:02:50.469 --> 00:02:51.510
+are going to have to fix.
+
+72
+00:02:51.510 --> 00:02:54.120
+And it's probably going to be
+an uncomfortable conversation
+
+73
+00:02:54.120 --> 00:02:56.430
+telling them that
+that's the situation.
+
+74
+00:02:56.430 --> 00:02:59.250
+If all this data is going to
+be needed every time the user
+
+75
+00:02:59.250 --> 00:03:00.750
+lands on a page,
+it should all get
+
+76
+00:03:00.750 --> 00:03:02.520
+thrown into the user document.
+
+77
+00:03:02.520 --> 00:03:05.230
+And those other collections
+should be eliminated.
+
+78
+00:03:05.230 --> 00:03:07.480
+This is going to be true for
+phone numbers, addresses,
+
+79
+00:03:07.480 --> 00:03:08.760
+and the shopping cart.
+
+80
+00:03:08.760 --> 00:03:09.800
+OK.
+
+81
+00:03:09.800 --> 00:03:12.420
+But you might ask, well, what
+if two people share an address?
+
+82
+00:03:12.420 --> 00:03:14.880
+Doesn't that mean that you have
+to store the address twice?
+
+83
+00:03:14.880 --> 00:03:16.200
+And the answer to that is, yes.
+
+84
+00:03:16.200 --> 00:03:17.991
+You do have to store
+it twice, three times,
+
+85
+00:03:17.991 --> 00:03:20.280
+maybe even 10 times if
+friends are shipping
+
+86
+00:03:20.280 --> 00:03:21.780
+other friends they're gifts.
+
+87
+00:03:21.780 --> 00:03:24.780
+It's worth an occasional copy
+of an address or phone number
+
+88
+00:03:24.780 --> 00:03:26.220
+because you're going to need it.
+
+89
+00:03:26.220 --> 00:03:28.740
+And you don't want to
+perform unnecessary joins
+
+90
+00:03:28.740 --> 00:03:29.970
+in your application.
+
+91
+00:03:29.970 --> 00:03:32.720
+That extra space that
+you have to take up
+
+92
+00:03:32.720 --> 00:03:34.980
+is going to mean that you
+get a lot of extra speed
+
+93
+00:03:34.980 --> 00:03:36.600
+in your database.
+
+94
+00:03:36.600 --> 00:03:38.940
+By the way, I wouldn't
+advocate for eliminating
+
+95
+00:03:38.940 --> 00:03:40.740
+all of these other collections.
+
+96
+00:03:40.740 --> 00:03:43.950
+For example, I'd recommend
+putting just the last log
+
+97
+00:03:43.950 --> 00:03:47.970
+in into the application and
+also into the logins collection.
+
+98
+00:03:47.970 --> 00:03:51.570
+But probably not eliminating
+the logins collection entirely.
+
+99
+00:03:51.570 --> 00:03:53.790
+Same for the purchase history.
+
+100
+00:03:53.790 --> 00:03:54.630
+Why?
+
+101
+00:03:54.630 --> 00:03:56.790
+Because while any
+given person is only
+
+102
+00:03:56.790 --> 00:03:58.890
+going to have so many
+addresses or phone numbers,
+
+103
+00:03:58.890 --> 00:04:00.690
+their number of
+logins and purchases
+
+104
+00:04:00.690 --> 00:04:03.307
+will just continue
+to grow over time.
+
+105
+00:04:03.307 --> 00:04:05.640
+Eventually, you're going to
+end up with documents packed
+
+106
+00:04:05.640 --> 00:04:06.990
+with things you don't want.
+
+107
+00:04:06.990 --> 00:04:10.080
+What I'd recommend is just
+storing that last log in time
+
+108
+00:04:10.080 --> 00:04:12.300
+plus the shopping cart
+and the user document
+
+109
+00:04:12.300 --> 00:04:14.490
+since that's all we need
+for the landing page.
+
+110
+00:04:14.490 --> 00:04:16.709
+You can use a find
+an update query
+
+111
+00:04:16.709 --> 00:04:19.769
+to reset the last log to the
+present, performing a read
+
+112
+00:04:19.769 --> 00:04:22.550
+and write in a single query,
+and then separately insert
+
+113
+00:04:22.550 --> 00:04:24.090
+its document into logins.
+
+114
+00:04:24.090 --> 00:04:26.340
+Which is a cheap operation.
+
+115
+00:04:26.340 --> 00:04:28.350
+If the user wants to see
+their purchase history,
+
+116
+00:04:28.350 --> 00:04:31.290
+put that on a separate web
+page that they can click on.
+
+117
+00:04:31.290 --> 00:04:34.290
+And perform the purchase
+history query at that point.
+
+118
+00:04:34.290 --> 00:04:37.470
+They shouldn't need to see their
+full log in history every time
+
+119
+00:04:37.470 --> 00:04:38.550
+they log in.
+
+120
+00:04:38.550 --> 00:04:42.910
+But maybe I want to store
+that for analytics purposes.
+
+121
+00:04:42.910 --> 00:04:45.120
+So we'll keep it away
+from the user document
+
+122
+00:04:45.120 --> 00:04:46.830
+because that should
+just hold the data we
+
+123
+00:04:46.830 --> 00:04:48.510
+need when they log in.
+
+124
+00:04:48.510 --> 00:04:49.110
+OK.
+
+125
+00:04:49.110 --> 00:04:50.280
+What did we learn?
+
+126
+00:04:50.280 --> 00:04:53.460
+First, avoid round
+trips to the database.
+
+127
+00:04:53.460 --> 00:04:57.720
+User events should only generate
+a small number of queries.
+
+128
+00:04:57.720 --> 00:05:00.720
+Second, use arrays where
+needed and of course
+
+129
+00:05:00.720 --> 00:05:02.420
+where they won't
+grow indefinitely.
+
+130
+00:05:02.420 --> 00:05:05.540
+Third, a little
+de-normalization is OK
+
+131
+00:05:05.540 --> 00:05:07.910
+as long as it's in the
+interests of speed.
+
+132
+00:05:07.910 --> 00:05:11.414
+And forth, please don't just
+migrate relational schemas.
+
+133
+00:05:11.414 --> 00:05:12.830
+There are a lot
+of things that are
+
+134
+00:05:12.830 --> 00:05:14.510
+patterns for
+relational schemas that
+
+135
+00:05:14.510 --> 00:05:16.670
+are anti patterns for MongoDB.
+
+136
+00:05:16.670 --> 00:05:19.750
+And that's how we
+investigate a schema.

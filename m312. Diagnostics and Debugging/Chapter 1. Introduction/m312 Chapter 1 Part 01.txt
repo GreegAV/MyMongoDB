@@ -1,0 +1,25 @@
+Let's talk a bit about how this course is going to work.
+
+In a lot of courses, we would present the material in a way that's very ordered.
+
+Each topic is touched upon once, and related topics are touched upon together.
+
+In this course, we're going to try something different.
+
+We'll introduce a lot of new tools early on, but we won't go very deep.
+
+We'll give you a sense of how to use them, and then we'll move on.
+
+In later chapters, we'll introduce scenarios where something is going wrong.
+
+We'll describe what you're seeing, and when it's appropriate, we'll pull out a tool and show you how to use it to perform a diagnostic test.
+
+That is when you'll really see what you want to do with that tool in that particular situation.
+
+Maybe the tool will show you something useful, or maybe it will eliminate a hypothesis for what could have caused the issue.
+
+During this course, we may touch on an individual tool several times and use it in several different ways.
+
+The net result is that the course is going to be structured around issues and diagnostic questions rather than MongoDB features.
+
+And that's how we'll structure things for the course.

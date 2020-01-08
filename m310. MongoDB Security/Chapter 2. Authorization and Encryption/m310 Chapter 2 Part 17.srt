@@ -1,0 +1,99 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.000
+- So our intern
+has gone too far,
+
+3
+00:00:02.000 --> 00:00:04.840
+and started to change
+data that was logged long
+
+4
+00:00:04.840 --> 00:00:05.950
+before his time.
+
+5
+00:00:05.950 --> 00:00:08.109
+To solve this, we need
+to go back and revoke
+
+6
+00:00:08.109 --> 00:00:11.220
+the privilege that allows
+the update on the internlog
+
+7
+00:00:11.220 --> 00:00:12.560
+collection.
+
+8
+00:00:12.560 --> 00:00:15.220
+- To do this, we just need
+to authenticate and run
+
+9
+00:00:15.220 --> 00:00:18.620
+the db.revokePrivelegesFromRole
+command.
+
+10
+00:00:18.620 --> 00:00:20.020
+Here's the command that we use.
+
+11
+00:00:20.020 --> 00:00:23.910
+On the intern role, we want
+to revoke this right here,
+
+12
+00:00:23.910 --> 00:00:26.710
+the ability to update
+on the internlog
+
+13
+00:00:26.710 --> 00:00:28.705
+collection on any database.
+
+14
+00:00:28.705 --> 00:00:30.460
+- It Looks like it
+ran successfully.
+
+15
+00:00:30.460 --> 00:00:32.084
+Let's go ahead and
+check out our roll.
+
+16
+00:00:32.084 --> 00:00:33.500
+And here again,
+we're going to use
+
+17
+00:00:33.500 --> 00:00:38.170
+db.getRole to show all the
+privileges on the intern role.
+
+18
+00:00:38.170 --> 00:00:41.800
+- And now if we scroll up,
+we can see on the internlog
+
+19
+00:00:41.800 --> 00:00:44.100
+collection, the user
+is still able to insert
+
+20
+00:00:44.100 --> 00:00:46.690
+but is no longer allowed to
+update on the internet log
+
+21
+00:00:46.690 --> 00:00:49.500
+collection on any database.

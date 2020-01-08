@@ -1,0 +1,53 @@
+OK, so far we've looked at document valued fields, and array valued fields.
+
+One last thing I'd like to show, with respect to these types of aggregate data structures, is an example of mixing the two.
+
+To do that, let's look at this document.
+
+And I want to point out that this document contains a field called sky cover layer.
+
+This is one of those supplementary pieces of data that can appear in our documents in this collection.
+
+Sky cover layer is an array valued field.
+
+But in contrast to our previous example, if we expand sky cover layer, we see that this array contains, as its elements, nested documents.
+
+So for this particular document, sky cover layer has a value that is an array containing three elements, where each element is a document.
+
+And each of those documents contains a value and quality measure.
+
+Something you should be aware of in working with Compass, and in general with MongoDB, is that we tend to use the terms object and document interchangeably.
+
+The reason for this terminology is something that we dive into in other lessons.
+
+As another example of mixing documents and arrays, let's take a look at the position field for this document.
+
+Now here, we have a nested document that has two fields, and one of those fields is an array.
+
+So in the example before, we saw an array field that had nested documents as its elements.
+
+In this case, we have a nested object that has an array as the value of one of its fields.
+
+For this document, type has a string value.
+
+And as we've said, coordinates is an array containing two elements.
+
+MongoDB supports a range of scalar value types, including string, null, integer, double, and decimal, as well as document values, and array values.
+
+You may use any supported value type for any field value or array element in a MongoDB document.
+
+One last thing before we conclude this lesson.
+
+As you've probably guessed, the position field in this example stores a point in a geospatial coordinate system.
+
+While geospatial is not a value type per se, using document structures-- such as the one we're looking at here-- MongoDB provides far reaching support for geospatial data, enabling you to store a variety of shapes, calculate the distance between points, filter for documents that are within a specified radius of another point, and perform a number of other operations.
+
+Compass provides some nice conveniences for working with geospatial data.
+
+We can see an example with this collection, if we visit the Schema tab and scroll down to the position field.
+
+Jumping back to the Schema tab, if we scroll down to position, we can see that Compass plots the positions of readings on a map of the Earth.
+
+We have full pan, zoom functionality here.
+
+In other lessons, we look at using this UI to filter collections for documents expressing locations within a specified distance of a reference point.

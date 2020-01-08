@@ -1,0 +1,105 @@
+As you may have noticed from the first example of using POJO and a default Codec, using a Codec allows us to write cleaner code.
+
+Theoretically, we could use a default codec again.
+
+But that would deprive us of the opportunity to have a value assigned to the ID field due to a type mismatch.
+
+Because now, our ID field is a string and not an object ID.
+
+As you know, ID is the document primary key, which therefore uniquely identifies a MongoDB document.
+
+So it sounds like something we want to have in our actor with string ID object, as well.
+
+As of today, the default Codec doesn't automatically set the underscore ID value at insert time using POJO Codec.
+
+So there is a little more work that needs doing to have a complete transfer of data.
+
+To accommodate for the missing underscore ID value or any cross type conversions, we will use a custom Codec that will help handle our POJO.
+
+We've provided you with this Codec for our specific use case.
+
+Feel free to take a look and see how it works.
+
+Now, with our custom Codec in place, we can encode a bson object ID straight into the object with string ID value, among other things.
+
+We first establish the use of our new custom Codec.
+
+Then we create a Codec registry with this custom Codec.
+
+Finally, we can access the actors collection with the use of our custom Codec that is specifically tailored for the actor documents.
+
+We can then retrieve our actor from the collection as an actor with string ID object.
+
+Let's test if this works.
+
+Fabulous.
+
+The question now is, why use POJO over manually mapping field values into the object attributes?
+
+Well, the first reason for me is that it is a more elegant implementation.
+
+The second is writing.
+
+When you use POJO with a custom Codec, not only do you get to read directly from bson into your object in a cleaner way, but you also get to write straight from an object into a bson collection.
+
+While you can do this with POJO code, you will have to sacrifice any type of mismatching between your class objects and the supported bson types, like in our ID field case.
+
+So let's look at the custom Codec example to demonstrate the write.
+
+Just like before, we create a new actor Codec object, which is our custom Codec.
+
+We now create a Codec registry using that custom Codec, and we can then access our collection using our custom Codec registry.
+
+Create a new actor with string ID and write it directly to that collection.
+
+Check that the idea value is not known and see if it works.
+
+And it does.
+
+Finally, the last method that we wanted to show you is the one that allows us to use a default Codec registry while customizing the fields that we know need special treatment.
+
+For example, if you have a field that would need type conversion, like our ID field, or has various different data types in it.
+
+This needs to be addressed when the documents are read into our JAVA application.
+
+So here's another approach to handling it.
+
+In this case, we will use the default Codec registry while applying a custom approach to the field in question, which, in our case, is the ID field.
+
+We create a custom Codec for that field specifically instead of creating it for the whole object.
+
+So first, we select a class that will be used as our POJO, which, in our case, is the actor with string ID class.
+
+We then get the property that needs type conversion, which, in our case, is the ID property, and then apply type conversion to the property of interest.
+
+String object ID Codec describes specifically how to encode and decode the object ID into a string, and vise versa.
+
+We use the default Codec registry with the changes implemented above to registering a class model builder with the POJO Codec provider.
+
+And we're done.
+
+Let's test if this worked.
+
+Looks like it did.
+
+Let us now run all the test cases we talked about today and see if we can summarize what we learned.
+
+Excellent.
+
+Everything checks out.
+
+Let's recap the advantages and disadvantages of the methods discussed in today's lesson.
+
+First, the POJO implementation is much cleaner.
+
+It outsources translation between BSON and object to a custom Codec, which makes it easier to manage and maintain the code.
+
+In either approach, the field names don't have to match the object attribute name.
+
+In case of the custom codec, this is easy to accommodate in the code by the BSON property annotation only for the fields that don't correspond to the attribute name one-to-one.
+
+To map the document to an object manually, you have to make use of getters and setters, while using a POJO allows for automatic introspection.
+
+Also, handling of generics and sub-documents is cleaner and easier to maintain with POJO, utilizing the custom Codec or the field customization approach instead of writing separate methods to traverse sub-documents with getters and setters.
+
+Finally, when writing a document object to the database, the document ID is automatically generated and can be accessed in the document object for the subsequent use of the mapping method.

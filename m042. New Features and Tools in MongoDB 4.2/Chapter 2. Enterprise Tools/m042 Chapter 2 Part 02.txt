@@ -1,0 +1,91 @@
+With MongoDB 4.2, we're releasing our very own sync-and-source connectors for Apache Kafka.
+
+Although slightly outside of the scope of this lesson, let's talk about what Kafka is and why we'd want to connect MongoDB to it.
+
+At a very high level, Kafka is a high-performance distributed messaging system.
+
+It was first developed by LinkedIn to handle their internal logs.
+
+A simple way to think of Kafka is as a router for messages.
+
+So you can configure Kafka to route messages to and from different source and consumer systems, both of which can be a MongoDB closer.
+
+Kafka organizes data into messages and topics.
+
+Messages can be a line of a log file or a document in a MongoDB collection.
+
+A topic is just a category or message.
+
+So use cases for this would be a user adding an item to a shopping cart or a tweet being sent to a specific hashtag.
+
+We could have a topic per hashtag.
+
+Or another example would be a financial application which could pull NYC stock trades from one topic and company financial announcements from another in order to look for trading opportunities.
+
+So any system that publishes messages to Kafka is called a "source," and anything that receives input is called a "sync." A source connector ingests entire databases and streams table updates to Kafka topics.
+
+It can also collect metrics from all of your application servers into Kafka topics, making the data available for stream processing low latency.
+
+A sync connector delivers data from Kafka topics into secondary applications or data storers such as MongoDB.
+
+And the Kafka servers which process the messages are called "brokers." We can have multiple brokers in a Kafka closer.
+
+So now that we have an idea of what Kafka is and how MongoDB fits into the Kafka architecture, let's have a look at this in action.
+
+We've pre-configured a Kafka instance and MongoDB as a Kafka source in the VM provided to you in this course, so feel free to follow along.
+
+First let's look into Kafka UI and see what we have.
+
+If you look into the UI, you see that we have a Mongo dot test dot sync topic.
+
+And if we look at the Data tab here, you should see something familiar to you in the messages.
+
+We've got MongoDB documents embedded.
+
+And not just documents, but change stream events which are streaming from our MongoDB instance.
+
+That is because we've configured our MongoDB to send change stream events to Kafka.
+
+And that means that if we add or we update data in the sync collection in a test DB, it will show up as change messages in the Mongo dot test dot sync topic.
+
+So let's test that out by opening up to shell, inserting a document into the test dot sync collection on the MongoDB.
+
+You can see here that we are inserting a document into the test DB in the sync collection.
+
+So our document's inserted.
+
+Let's jump back to the UI and see if we can see it in our Kafka stream.
+
+As you can see, our document has shown up as a message in our Kafka stream.
+
+With the MongoDB Kafka Connector, we can also use MongoDB as a sync.
+
+And what this basically means is that we can insert documents into MongoDB from a topic or multiple topics in Kafka.
+
+Remember, a topic is simply a logical partition of messages.
+
+The Kafka messages are converted into BSON documents, which are in turn inserted in the corresponding MongoDB target collection.
+
+According to the chosen Roi model strategy in the connector config, you can use either a replaceOne model or an UpdateOne model.
+
+Either model will perform an upsert if the data does not exist in the collection.
+
+One thing to remember is the data coming into Kafka may not necessarily be in JSON format.
+
+We can get around this by enforcing schema using Apache Avro.
+
+Avro is a message serialization system from Apache that allows you to enforce strict schema on data coming from Kafka.
+
+You can see an example of an Avro schema here we're defining with the fields, their names and data types, which will be enforced on the Kafka side before being inserted into MongoDB.
+
+MongoDB also offers rich schema validation using JSON schema so that you can ensure that documents inserted from Kafka follow your schema design.
+
+While this isn't a schema design lesson, it's important to remember that MongoDB is schema-free, not schema-less.
+
+Schema has a big impact on performance in MongoDB and definitely should be considered.
+
+So let's recap.
+
+MongoDB now provides source and sync connectors for Apache Kafka.
+
+You can enforce schema on both the Kafka and MongoDB side, using Avro on the Kafka side, and JSON schema validation on the MongoDB side.

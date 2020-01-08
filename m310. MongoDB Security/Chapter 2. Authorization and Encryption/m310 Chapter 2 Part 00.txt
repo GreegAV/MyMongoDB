@@ -1,0 +1,51 @@
+In this video, we're going to talk about the authorization model that is used with MongoDB.
+
+MongoDB actually follows a very straightforward and common authorization model, and that model is role based access control.
+
+Role based access control, as the name implies, is a model where for any given user we're going to go ahead and assign a role to that user.
+
+And that role is going to be assigned over a given name space.
+
+And in the context of MongoDB, a namespace is just a database.
+
+So for example, here we have a user named Kirby, and Kirby has the readWrite roll, which has been granted to him for the products database.
+
+And this makes a lot of sense given the command that we've been using to create users.
+
+As you can see here, this is really just a one to one relationship.
+
+We have a user named Kirby, a roll called the readWrite role, and the readWrite role is for the products database.
+
+Now that we have a general idea of what role based access control is, let's go ahead and break down what a role is.
+
+The formal definition of a role with regards to role based access control is the following.
+
+Roles are groups of privileges, actions over resources, that are granted to users over a given namespace, commonly referred to as a database.
+
+So we know what users are and we obviously know what databases are, but what are privileges, actions, and resources?
+
+Well, let's go ahead and take a closer look at these three things and how they relate together to define roles.
+
+Let's first talk about actions.
+
+All operations and commands that a user can perform in MongoDB are called actions.
+
+And actions are performed on the resources.
+
+Resources are any objects that hold state in our database.
+
+So for example, a collection, a database, or a database cluster.
+
+And when a user performs an action on a given resource that constitutes a privilege.
+
+And if we then go ahead and group a bunch of these privileges together, we can go ahead and rename that group of privileges just a role.
+
+This sentence should make a lot more sense now.
+
+I'm going to go ahead and say it again.
+
+Roles are groups or privileges, actions over resources, that are granted to users over a given database.
+
+We've now looked at all of the different parts that make up this definition of a role.
+
+And so you should have a much better understanding of what roles are in the context of MongoDB.

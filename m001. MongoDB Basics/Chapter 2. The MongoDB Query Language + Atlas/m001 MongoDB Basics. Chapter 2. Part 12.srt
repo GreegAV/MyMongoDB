@@ -1,0 +1,154 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:02,610
+The find method
+returns a cursor.
+
+3
+00:00:02,610 --> 00:00:05,600
+A cursor is essentially a
+pointer to the current location
+
+4
+00:00:05,600 --> 00:00:06,990
+in a result set.
+
+5
+00:00:06,990 --> 00:00:10,240
+For queries that return more
+than just a few documents,
+
+6
+00:00:10,240 --> 00:00:14,250
+MongoDB will return the results
+in batches to our client.
+
+7
+00:00:14,250 --> 00:00:17,340
+And remember that the
+mongo shell is a client.
+
+8
+00:00:17,340 --> 00:00:21,480
+We use the cursor in our client
+to iterate through the results.
+
+9
+00:00:21,480 --> 00:00:23,340
+In the shell, the
+cursor is automatically
+
+10
+00:00:23,340 --> 00:00:27,060
+iterated up to 20 times to
+print an initial set of search
+
+11
+00:00:27,060 --> 00:00:31,600
+results, as we see here
+in response to this query.
+
+12
+00:00:31,600 --> 00:00:35,760
+So when this query was issued,
+the server returned a cursor
+
+13
+00:00:35,760 --> 00:00:38,130
+to the shell, and the shell
+requested the next item
+
+14
+00:00:38,130 --> 00:00:41,290
+in the result set from
+the cursor 20 times.
+
+15
+00:00:41,290 --> 00:00:43,850
+So what we'll see above here,
+if we were to scroll up,
+
+16
+00:00:43,850 --> 00:00:46,780
+are the first 20
+results from this query.
+
+17
+00:00:46,780 --> 00:00:49,080
+Now, as we iterate
+through a cursor
+
+18
+00:00:49,080 --> 00:00:52,030
+and reached the end of a
+batch of query results,
+
+19
+00:00:52,030 --> 00:00:55,170
+if there are more results,
+iterating the cursor
+
+20
+00:00:55,170 --> 00:00:58,320
+will trigger a getMore
+operation to retrieve
+
+21
+00:00:58,320 --> 00:01:00,510
+the next batch of results.
+
+22
+00:01:00,510 --> 00:01:03,210
+In this way, we can iterate
+through an entire set
+
+23
+00:01:03,210 --> 00:01:04,480
+of search results.
+
+24
+00:01:04,480 --> 00:01:07,020
+Now, in this particular
+case, the shell
+
+25
+00:01:07,020 --> 00:01:09,870
+provides a convenience, and
+that is that after it displays
+
+26
+00:01:09,870 --> 00:01:12,450
+the first 20 results
+we have an opportunity
+
+27
+00:01:12,450 --> 00:01:15,660
+to look at more of
+them by typing it,
+
+28
+00:01:15,660 --> 00:01:17,130
+which is short for iterate.
+
+29
+00:01:17,130 --> 00:01:21,600
+And that will give us the next
+20 results in our result set.
+
+30
+00:01:21,600 --> 00:01:25,120
+And we can continue to do this
+until we exhaust the cursor.
+
+31
+00:01:25,120 --> 00:01:28,440
+So in this way, we can
+iterate through an entire set
+
+32
+00:01:28,440 --> 00:00:00,000
+of search results.
+

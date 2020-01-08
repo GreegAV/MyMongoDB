@@ -1,0 +1,67 @@
+In this lesson, we are going to talk about some important considerations regarding Performance in a Distributed System.
+
+A distributed system in MongoDB includes both replica sets-- or Replica Clusters-- for a high availability solution, and Shard Clusters.
+
+Shard Clusters are our mechanism to allow horizontal scalability of our data.
+
+When working with a distributed system, we need to acknowledge a few things.
+
+When more than one machine talks to each other, latency will be involved.
+
+So we need to consider latency.
+
+Data is generally spread across different notes.
+
+It's either copies of the data or different sets of data in different charts.
+
+There will be read implications, so things will be performing in a different pace, and obviously, also, write implications.
+
+Now, regarding your replica sets, let me reinforce a message around this.
+
+Please do use them in production environments.
+
+High availability is key to guarantee that your service is not affected by any potential, and probable, system failure.
+
+Having a replica set in place is super, super important.
+
+Apart from the main purpose of providing high availability, in case of failure of a node, we will still have availability of a service provided by the remaining nodes, but replica sets can also provide a few other functions, like offloading ventral consistency data to secondaries, privileging your primary for operational workload, or having specific workload with target indexes configuration on secondary nodes.
+
+More on this topic to be covered in upcoming lessons.
+
+The other side of distributed systems in MongoDB, with a purpose of horizontal scalability, is our Shard Cluster.
+
+In our Shard Cluster, we will have our Mongo assets, responsible for routing our client application requests to designated nodes.
+
+We're going to have config servers.
+
+These nodes are responsible for holding the mapping of our Shard Cluster, where data sits at each point in time, but also the general configuration of our Shard Cluster in its own.
+
+And finally, we have our Shard Nodes.
+
+Shard Nodes are responsible for holding the application data.
+
+Databases, collections, indexes-- these will reside in these members, and it will be here that all major workload will be performed.
+
+Shard Nodes are in themselves replica sets.
+
+This is important since if a Shard Note will be configured as a replica set, therefore with no high visibility for that node, we could eventually lose access in case of failure for a significant portion of our application data, and that's not cool.
+
+A Shard Cluster does require a few steps to be properly configured, but these are out of scope for this particular lesson.
+
+But we will be looking to what you need to know before you can figure your Shard Cluster.
+
+Sharding is our horizontal scalability solution, which is great scaling strategy for very large data sets.
+
+You'll eventually reach the limits of your vertical scaling either in terms of cost per performance gains.
+
+But before you jump into charting bandwagon, you need to consider if you're already reached those limits.
+
+If buying another box would not give you that gain in terms of performance and cost that you are expecting.
+
+Another important thing is that you need to understand how your data grows, and how your data is accessed.
+
+Since Sharding works by defining a key base ranges, knowing how your data grows, and knowing how your data is being constantly accessed allows you to get into a good shard key.
+
+And that's a very, very important exercise that you need to do.
+
+Before doing any sharding at all, is defining what will be a good shad key for your data sets.

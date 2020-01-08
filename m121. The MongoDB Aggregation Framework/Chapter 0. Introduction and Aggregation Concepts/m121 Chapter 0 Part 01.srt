@@ -1,0 +1,281 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.190
+Before we dive into
+the course, let's
+
+3
+00:00:02.190 --> 00:00:04.065
+discuss some
+prerequisites and walk
+
+4
+00:00:04.065 --> 00:00:05.940
+through connecting to
+the infrastructure that
+
+5
+00:00:05.940 --> 00:00:08.160
+is going to support the class.
+
+6
+00:00:08.160 --> 00:00:10.320
+The course prerequisites
+are minimal.
+
+7
+00:00:10.320 --> 00:00:14.010
+All that is required is a
+modern 64-bit operating system
+
+8
+00:00:14.010 --> 00:00:17.560
+and an internet connection
+and your participation.
+
+9
+00:00:17.560 --> 00:00:20.400
+One note-- you'll also need
+to be able to make a TCP
+
+10
+00:00:20.400 --> 00:00:23.580
+connection on port 27017.
+
+11
+00:00:23.580 --> 00:00:25.330
+This is easy to test.
+
+12
+00:00:25.330 --> 00:00:30.545
+Visit portquiz.net:27017.
+
+13
+00:00:30.545 --> 00:00:33.300
+You should see a page that
+looks a lot like this.
+
+14
+00:00:33.300 --> 00:00:35.610
+And make sure that you see
+something like this here
+
+15
+00:00:35.610 --> 00:00:39.690
+that says you've reached
+this page on port 27017.
+
+16
+00:00:39.690 --> 00:00:41.730
+If you don't see
+this page, please
+
+17
+00:00:41.730 --> 00:00:43.470
+contact your network
+administrator
+
+18
+00:00:43.470 --> 00:00:45.240
+about opening up this port.
+
+19
+00:00:45.240 --> 00:00:47.550
+Additionally, make sure
+you post in the forums
+
+20
+00:00:47.550 --> 00:00:51.510
+so that we can help you
+until this issue is resolved.
+
+21
+00:00:51.510 --> 00:00:54.540
+As you've seen myself and other
+instructors use new aggregation
+
+22
+00:00:54.540 --> 00:00:56.160
+operators throughout
+the course, you
+
+23
+00:00:56.160 --> 00:01:00.120
+are highly encouraged to pause
+the video and follow along.
+
+24
+00:01:00.120 --> 00:01:02.460
+All collections will
+perform operations on
+
+25
+00:01:02.460 --> 00:01:06.220
+will be available to you
+in the Class Atlas cluster.
+
+26
+00:01:06.220 --> 00:01:07.620
+So what's Atlas?
+
+27
+00:01:07.620 --> 00:01:10.740
+Atlas is MongoDB's
+cloud-hosting service.
+
+28
+00:01:10.740 --> 00:01:14.400
+We'll let MongoDB worry about
+optimizing storage, security,
+
+29
+00:01:14.400 --> 00:01:16.620
+and backing up our
+data for this course.
+
+30
+00:01:16.620 --> 00:01:19.980
+Signing up for Atlas
+is easy and free.
+
+31
+00:01:19.980 --> 00:01:25.680
+Visit mongodb.com/cloud/atlas
+and click the Get Started Free
+
+32
+00:01:25.680 --> 00:01:26.490
+button.
+
+33
+00:01:26.490 --> 00:01:28.080
+After clicking the
+button, go ahead
+
+34
+00:01:28.080 --> 00:01:30.960
+and fill out your information
+and click Get Started Free
+
+35
+00:01:30.960 --> 00:01:32.470
+again.
+
+36
+00:01:32.470 --> 00:01:33.960
+And for now, that's it.
+
+37
+00:01:33.960 --> 00:01:37.380
+We'll be revisiting Atlas
+later on in the course.
+
+38
+00:01:37.380 --> 00:01:40.245
+Next, let's ensure we
+have MongoDB installed.
+
+39
+00:01:40.245 --> 00:01:44.290
+Visit mongodb.com and
+click the Download button.
+
+40
+00:01:44.290 --> 00:01:46.980
+Navigate over to
+Enterprise and select
+
+41
+00:01:46.980 --> 00:01:50.400
+the download that's appropriate
+for your operating system.
+
+42
+00:01:50.400 --> 00:01:52.530
+Enterprise is free
+to test and evaluate,
+
+43
+00:01:52.530 --> 00:01:55.710
+so we'll be using it
+throughout the course.
+
+44
+00:01:55.710 --> 00:01:58.020
+While that's
+downloading, let's click
+
+45
+00:01:58.020 --> 00:02:00.480
+Resources and Documentation.
+
+46
+00:02:00.480 --> 00:02:05.130
+Click on Tutorials and
+click MongoDB Enterprise.
+
+47
+00:02:05.130 --> 00:02:07.860
+Scroll down and
+find the tutorial
+
+48
+00:02:07.860 --> 00:02:10.229
+for installing
+MongoDB Enterprise
+
+49
+00:02:10.229 --> 00:02:12.820
+on your specific
+operating system.
+
+50
+00:02:12.820 --> 00:02:16.020
+Lastly, we need to test our
+connection to the class Atlas
+
+51
+00:02:16.020 --> 00:02:17.640
+cluster.
+
+52
+00:02:17.640 --> 00:02:20.610
+Open a terminal and
+paste the information
+
+53
+00:02:20.610 --> 00:02:23.100
+you find below this video.
+
+54
+00:02:23.100 --> 00:02:26.010
+Go ahead and type
+show dbs to see
+
+55
+00:02:26.010 --> 00:02:29.900
+all of the available databases
+available on the cluster.
+
+56
+00:02:29.900 --> 00:02:32.490
+Typing show collections
+will show collections
+
+57
+00:02:32.490 --> 00:02:35.020
+within the
+aggregations database.
+
+58
+00:02:35.020 --> 00:02:36.930
+And that's it for the
+course prerequisites
+
+59
+00:02:36.930 --> 00:02:39.410
+in connecting to Atlas.

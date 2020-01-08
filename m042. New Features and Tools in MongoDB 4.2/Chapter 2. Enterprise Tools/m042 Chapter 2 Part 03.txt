@@ -1,0 +1,151 @@
+In this lesson, we're going to look at the new geospatial chart types available in MongoDB Charts.
+
+So these charts are a great way for you to gain quick and visual insights into your data stored inside MongoDB.
+
+MongoDB documents have a rich set of data types, such as dates, subdocuments, arrays, Decimal128, and others to provide data precision and data affinity with what that information represents and how the application works with that same data.
+
+One of those rich data types is the ability to store geolocation data, and there are several different types of analysis that one can do using geospatial fields.
+
+Charts is built to natively support and work with the MongoDB document model, and it connects directly to your MongoDB cluster.
+
+This means that we do not need to go through ETL operations to convert or format data, or use different connectors to integrate with other BI tools.
+
+Let's jump into the Charts UI and have a look at the three different type of geospatial charts we've added in this latest release of Charts.
+
+So from the Atlas UI, let's jump into Charts and create a geospatial chart.
+
+So we have our m042 dashboard.
+
+Let's open that up and add a chart.
+
+And as we're going to be looking at our geospatial charts, we're going to create a geospatial chart from the dropdown and select Heatmap.
+
+So we need to select our data source from the top, and we're going to use our sample_airbnb data set.
+
+And we're interested in the address field.
+
+So let's drag our location onto the coordinates plane.
+
+And for intensity, we're going to use the price.
+
+And we're going to select the mean price.
+
+That's a lot of information, so let's say we wanted to filter down by a suburb in New York.
+
+Let's have a look at how we can do that.
+
+So we add a filter, go back up to our address, subdocument, and select suburb.
+
+Let's drag suburb onto the Filter field.
+
+And you can see, we have quite a few suburbs all over the world.
+
+So we'll deselect all the suburbs and let's have a look at Brooklyn.
+
+Great.
+
+Here you can see we've got a heatmap of all the most expensive Airbnb listings in Brooklyn in New York.
+
+It's pretty impressive, right?
+
+Let's have a look at the other chart types and see what we can do.
+
+So as we said, our heatmap shows the most expensive areas to rent an Airbnb in Brooklyn.
+
+That's really nice, but what if we want to get more detail on what type of rentals we have in this data and their price?
+
+For that, we can use a scatter chart.
+
+So let's add a new chart.
+
+Again, we're going to select Geospatial.
+
+And this time, we're going to use a Scatter chart.
+
+We need to select our data set, which is our Airbnb.listingsAndReviews.
+
+and again, we're interested in the address field.
+
+So we're going to drag the location onto Coordinates.
+
+And we want our color to indicate the number of bedrooms in a listing.
+
+So let's drag the number of bedrooms onto Color.
+
+And we want the size to indicate the price, so let's drag the price field onto the Size.
+
+OK, so we've got a wide range of documents here, and you might notice that we have a little message of the top that says, The maximum query response is 1,000.
+
+So let's go again and filter by address.
+
+So we'll drag suburb onto Filter.
+
+And again, we can see we've got suburbs all over the world.
+
+So if we deselect them and select Brooklyn, so now we've got a map which shows all the listings in Brooklyn, and their price is indicated by the size of the circle on the scatter plot.
+
+You may notice that we only have properties here listed with zero bedrooms.
+
+So that's not quite right.
+
+So let's turn the BINNING off.
+
+And there you can see that we have a list from 0 to 4 for bedrooms, and the size of all these circles indicates the price.
+
+And when we hover over each individual listing, charts will pop up and give us more detail on that actual listing or that actual geopoint in our data.
+
+That's pretty cool.
+
+So this is really useful information.
+
+We can very clearly see the amount of rooms and properties available on the map.
+
+There are a lot of properties on Airbnb globally.
+
+What if we wanted to see where all of those properties were and how many properties were in each country?
+
+Let's use the sample data set in Atlas again.
+
+And this time, we're going to see how many properties are in each region of the world.
+
+To do this, we're going to use the choropleth map, which is basically a fancy way of saying that we're going to color countries.
+
+So let's go back out to our dashboard.
+
+So this time, we're going to create a choropleth.
+
+So again, select Geospatial, Choropleth.
+
+We're going to select our Airbnb data source and all the fields will load in the left.
+
+So we're going to use the address.county country field and drag that onto Location.
+
+And we're going to use the _id value for Color.
+
+We're going to use a count of that value.
+
+We're sure the _id is unique in every collection, so we can reliably use this as a count for all the properties listed around the world.
+
+There are obviously a lot of listings on Airbnb globally, but from this map, we only have a subset of those listings.
+
+We can see that if we hover over each country, we will be given a map of the amount of Airbnb listings in that country.
+
+That's really cool.
+
+But this is just a sample of what you can do with the new geospatial maps in Charts.
+
+You can see that these visualizations can be very powerful for insights into your data.
+
+And best of all, it's very easy and quick to generate these charts.
+
+This is just an example of the information you can easily visualize from your data in MongoDB using charts.
+
+There's a lot more functionality for you to explore.
+
+The great news is that you can experiment with Charts for free on your free tier Atlas cluster.
+
+So let's recap.
+
+Charts now allows you to create three new chart types-- heat map, scatter, and choropleth.
+
+And best of all, you can explore this in Atlas using your free tier cluster and the sample data sets provided.

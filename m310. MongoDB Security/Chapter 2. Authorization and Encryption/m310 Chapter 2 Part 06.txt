@@ -1,0 +1,101 @@
+In this video we're going to talk about what privileges look like in MongoDB.
+
+We've already talked about the set of actions that a user can perform.
+
+And we've also talked about the resources that those actions can operate on.
+
+We're finally in a place where we can look at what privileges look like in MongoDB.
+
+Privileges are defined by using a privileged document.
+
+In this document, we define a resource and the actions that are able to operate on that resource.
+
+The easiest way to understand how privileged documents can be used is to see how they are used to define a built-in role.
+
+Right now I'm in the Mongo shell.
+
+And I'm connected to a MongoD.
+
+From here we can go ahead and look at how built-in roles are defined by privileged documents.
+
+Let's take a look at the simplest of all roles-- the read role.
+
+Here I'm getting ready to run the db.getRole command.
+
+And I'm passing in read as a string, because I want to look at the built-in role read.
+
+As you can see, I can now see how this role is defined.
+
+I see the name of the role, the database that uniquely associates itself to this role, and the array of all the inherited roles.
+
+But I would expect to also see all of the privileges that make up this role.
+
+Well, since a role is often made up by a lot of privileges, by default, getRole won't show you all of the privileges that make up a role.
+
+If we want to do that, we run this command.
+
+db.getRole.
+
+But now we're passing in a document saying showPrivileges true.
+
+I'll go ahead and scroll up a bit so we can see the command we ran and see the output.
+
+Here's the command we ran.
+
+And here is the output that we saw before.
+
+And now we have a new additional field called privileges, which has an array on it.
+
+To make things easier to read, let's assign this object to a variable so we can look at each privilege one by one.
+
+Now I can simply do readRole.privileges to see all the privileges.
+
+And I can see how many there are.
+
+So now I know there are four privileges.
+
+So now I can choose array notation to look at each individual one.
+
+Let's take a look at the first privileged document that makes up the read role.
+
+As you can see, anyone with the read role is allowed to run collection of stats, dbHash, find, et cetera on any collection within the test database.
+
+Cool.
+
+This makes sense.
+
+But I wonder what the other privileged documents are for.
+
+Let's check them out.
+
+Here is the second document.
+
+Here is the third document.
+
+And here's the fourth and final document.
+
+As you can see, all these other privileged documents look exactly the same, except for the collection that they're talking about.
+
+Each of them talking about a different system collection.
+
+This is because these internal system collections need to be explicitly defined in a privileged document in order for a user to access them.
+
+In the case of the read role, all these collections make sense.
+
+Let's look at them a little bit more closely.
+
+Here we're talking about system.indexes.
+
+It probably makes sense for us to be able to look at all of the indexes on a database.
+
+Here we have system.js.
+
+This holds special JavaScript code for use in server side JavaScript.
+
+This also makes sense for our users to be able to read from.
+
+And finally, we have system.namespaces.
+
+And this also makes sense, because it makes sense to allow our users to be able to list all the collections within a database.
+
+I hope this example illustrates how actions, resources, and privileges work together to define roles in MongoDB.

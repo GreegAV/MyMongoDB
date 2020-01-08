@@ -1,0 +1,665 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.740
+Our queries taking
+longer as data set grows.
+
+3
+00:00:04.740 --> 00:00:06.750
+And obviously, this is
+the read response time
+
+4
+00:00:06.750 --> 00:00:08.039
+that gets affected.
+
+5
+00:00:08.039 --> 00:00:12.570
+And we need to understand
+why if our data set grows--
+
+6
+00:00:12.570 --> 00:00:15.470
+why does our
+queries take longer?
+
+7
+00:00:15.470 --> 00:00:19.670
+Now, just to be clear,
+all queries are like that.
+
+8
+00:00:19.670 --> 00:00:23.439
+But we should not have a
+response time that is linear.
+
+9
+00:00:23.439 --> 00:00:25.730
+When this occurs, we're going
+to have a situation where
+
+10
+00:00:25.730 --> 00:00:29.660
+we have big O notation of
+N, which basically means
+
+11
+00:00:29.660 --> 00:00:34.760
+that as your data size grows,
+so does grow the response
+
+12
+00:00:34.760 --> 00:00:37.490
+time in terms of
+milliseconds of any query
+
+13
+00:00:37.490 --> 00:00:39.260
+that you do to the database.
+
+14
+00:00:39.260 --> 00:00:42.200
+And now that's
+pretty bad because it
+
+15
+00:00:42.200 --> 00:00:45.230
+will mean that as more
+successful you are in terms
+
+16
+00:00:45.230 --> 00:00:49.340
+of the data you are
+including into your database,
+
+17
+00:00:49.340 --> 00:00:52.490
+the longer it will take for
+you to query on that data.
+
+18
+00:00:52.490 --> 00:00:55.790
+And that just means that there's
+no benefit in actually growing
+
+19
+00:00:55.790 --> 00:00:56.750
+the data size.
+
+20
+00:00:56.750 --> 00:01:00.010
+And as we all know, that's
+not particularly right.
+
+21
+00:01:00.010 --> 00:01:02.950
+What we are mostly looking
+for is something like big O
+
+22
+00:01:02.950 --> 00:01:07.345
+notation of logarithm
+of N, log of N.
+
+23
+00:01:07.345 --> 00:01:10.310
+And this is a much
+more saner situation,
+
+24
+00:01:10.310 --> 00:01:15.770
+where as your data size
+grows, your response time
+
+25
+00:01:15.770 --> 00:01:18.340
+doesn't grow that much.
+
+26
+00:01:18.340 --> 00:01:21.200
+It keeps it in a very
+consistent, stable way in terms
+
+27
+00:01:21.200 --> 00:01:23.180
+of what you can expect.
+
+28
+00:01:23.180 --> 00:01:25.760
+No matter how much
+data you get, you're
+
+29
+00:01:25.760 --> 00:01:28.160
+always going to get
+a good response time.
+
+30
+00:01:28.160 --> 00:01:33.820
+This only happens if you have
+in place the proper indexes
+
+31
+00:01:33.820 --> 00:01:35.470
+to respond to your queries.
+
+32
+00:01:35.470 --> 00:01:37.300
+And this situation
+over here, where
+
+33
+00:01:37.300 --> 00:01:40.120
+you have big O
+notation of N, you
+
+34
+00:01:40.120 --> 00:01:43.060
+will get this when you
+do not have indexes
+
+35
+00:01:43.060 --> 00:01:45.745
+that support your queries.
+
+36
+00:01:45.745 --> 00:01:47.780
+Let's see this in action.
+
+37
+00:01:47.780 --> 00:01:51.670
+I'm going to simulate the
+constant growth of data
+
+38
+00:01:51.670 --> 00:01:54.220
+by importing a
+slightly larger set
+
+39
+00:01:54.220 --> 00:01:57.680
+and running the same
+query after each import.
+
+40
+00:01:57.680 --> 00:01:59.680
+Now, the first data set
+that I'm going to import
+
+41
+00:01:59.680 --> 00:02:02.835
+is into our MondoDB
+database m312,
+
+42
+00:02:02.835 --> 00:02:04.210
+and the one that
+we've been using
+
+43
+00:02:04.210 --> 00:02:07.930
+for this course, a collection
+called norberto_friends.
+
+44
+00:02:07.930 --> 00:02:09.160
+I have a lot of friends.
+
+45
+00:02:09.160 --> 00:02:11.890
+But let's start with
+my 10 first friends.
+
+46
+00:02:11.890 --> 00:02:14.110
+Once my 10 friends
+are imported, I
+
+47
+00:02:14.110 --> 00:02:17.590
+can go and have a
+look to those friends.
+
+48
+00:02:17.590 --> 00:02:22.330
+In this friends data set,
+if I use my m312 database
+
+49
+00:02:22.330 --> 00:02:25.630
+and if I show my
+collections here,
+
+50
+00:02:25.630 --> 00:02:28.090
+I'll see my
+norberto_friends there.
+
+51
+00:02:28.090 --> 00:02:32.880
+I can query that to see what
+kind of friends do I have--
+
+52
+00:02:32.880 --> 00:02:35.160
+all good friends,
+I can assure you.
+
+53
+00:02:35.160 --> 00:02:37.556
+But this is the
+information I can get--
+
+54
+00:02:37.556 --> 00:02:42.490
+an ID, a name, a
+created at, a city--
+
+55
+00:02:42.490 --> 00:02:44.190
+my lovely city of Porto--
+
+56
+00:02:44.190 --> 00:02:47.660
+an ID which is incremental,
+an email, age, phone number,
+
+57
+00:02:47.660 --> 00:02:49.030
+and so on.
+
+58
+00:02:49.030 --> 00:02:53.170
+For me to show you that
+sometimes we [INAUDIBLE] some
+
+59
+00:02:53.170 --> 00:02:57.850
+parts of our development phase,
+let's say that I want to find
+
+60
+00:02:57.850 --> 00:03:00.250
+all my friends that I made--
+
+61
+00:03:00.250 --> 00:03:03.310
+let's say a city like Barcelona.
+
+62
+00:03:03.310 --> 00:03:06.670
+If you never visit Barcelona,
+you are missing out.
+
+63
+00:03:06.670 --> 00:03:10.380
+So if I run this query,
+easily I can get immediately
+
+64
+00:03:10.380 --> 00:03:13.990
+all the results corresponding
+to all my friends
+
+65
+00:03:13.990 --> 00:03:16.030
+which live in Barcelona.
+
+66
+00:03:16.030 --> 00:03:20.710
+If we want to understand
+while in development phase
+
+67
+00:03:20.710 --> 00:03:23.170
+how well does this
+query perform,
+
+68
+00:03:23.170 --> 00:03:27.280
+we can enable the profiler and
+test execution of this query.
+
+69
+00:03:27.280 --> 00:03:29.590
+Here I'm going to set
+the profiler to 2, which
+
+70
+00:03:29.590 --> 00:03:33.430
+means it captures every single
+operation in the system,
+
+71
+00:03:33.430 --> 00:03:37.000
+and setting the threshold
+of my slow operations
+
+72
+00:03:37.000 --> 00:03:38.800
+milliseconds value to 0.
+
+73
+00:03:38.800 --> 00:03:42.310
+Anything that is higher
+than 0 will be captured
+
+74
+00:03:42.310 --> 00:03:44.570
+in the profiler collection.
+
+75
+00:03:44.570 --> 00:03:47.140
+So let's do just that.
+
+76
+00:03:47.140 --> 00:03:50.480
+Once we have that done,
+let's run again our query,
+
+77
+00:03:50.480 --> 00:03:52.750
+exactly the same query.
+
+78
+00:03:52.750 --> 00:03:57.421
+And let's look into our profiler
+and look for that query.
+
+79
+00:03:57.421 --> 00:03:59.920
+Now, some of the queries, since
+we are capturing everything,
+
+80
+00:03:59.920 --> 00:04:01.974
+will be collected here.
+
+81
+00:04:01.974 --> 00:04:04.390
+But the important thing that
+we are collecting is this one
+
+82
+00:04:04.390 --> 00:04:07.210
+here, where we are
+querying on this namespace,
+
+83
+00:04:07.210 --> 00:04:09.220
+m312.norberto_friends.
+
+84
+00:04:09.220 --> 00:04:11.050
+This is the filter--
+
+85
+00:04:11.050 --> 00:04:12.850
+and tells me how
+many keys examine,
+
+86
+00:04:12.850 --> 00:04:16.269
+how many docsExamined, and
+some other information,
+
+87
+00:04:16.269 --> 00:04:19.570
+like the amount of time it
+took, which in this case
+
+88
+00:04:19.570 --> 00:04:21.620
+is 0 milliseconds.
+
+89
+00:04:21.620 --> 00:04:24.810
+Now, doing a naive
+interpretation of this data,
+
+90
+00:04:24.810 --> 00:04:26.920
+we might be bound to
+say that this data is
+
+91
+00:04:26.920 --> 00:04:27.940
+looking pretty good.
+
+92
+00:04:27.940 --> 00:04:30.205
+It's not going
+through a lot of data.
+
+93
+00:04:30.205 --> 00:04:35.110
+It actually returns in
+less than 0 milliseconds.
+
+94
+00:04:35.110 --> 00:04:37.990
+So we can't go faster
+than that, right?
+
+95
+00:04:37.990 --> 00:04:41.290
+Well, let's see how this
+story develops when we
+
+96
+00:04:41.290 --> 00:04:43.670
+add more data to the data set.
+
+97
+00:04:43.670 --> 00:04:45.340
+Let's get out of the shell.
+
+98
+00:04:45.340 --> 00:04:48.990
+And let's import now
+instead of 10 friends--
+
+99
+00:04:48.990 --> 00:04:52.590
+since I'm very popular, I have
+lots and lots of friends--
+
+100
+00:04:52.590 --> 00:04:56.290
+let's import my 1,000
+friends data set.
+
+101
+00:04:56.290 --> 00:04:57.460
+So import that.
+
+102
+00:04:57.460 --> 00:04:59.370
+This is pretty quick.
+
+103
+00:04:59.370 --> 00:05:01.360
+MondoDB is pretty
+awesome on this.
+
+104
+00:05:01.360 --> 00:05:03.100
+So let's go and connect again.
+
+105
+00:05:03.100 --> 00:05:08.420
+Now let's go and jump
+directly to our m312 database.
+
+106
+00:05:08.420 --> 00:05:12.610
+Once we are in, we can
+run the same query again.
+
+107
+00:05:12.610 --> 00:05:14.650
+If we run the same
+query, will we--
+
+108
+00:05:14.650 --> 00:05:17.270
+having grown our data set--
+
+109
+00:05:17.270 --> 00:05:19.300
+so the number of
+results that we get.
+
+110
+00:05:19.300 --> 00:05:23.470
+But also, that will be reflected
+on the total time taken
+
+111
+00:05:23.470 --> 00:05:28.820
+by the application to actual
+return the result set.
+
+112
+00:05:28.820 --> 00:05:30.590
+So let's do that.
+
+113
+00:05:30.590 --> 00:05:32.110
+As we can see, we
+get more results.
+
+114
+00:05:32.110 --> 00:05:33.470
+That's fine.
+
+115
+00:05:33.470 --> 00:05:37.660
+But if we go to our
+system profile again,
+
+116
+00:05:37.660 --> 00:05:40.150
+we can see that some
+things have changed.
+
+117
+00:05:40.150 --> 00:05:43.750
+Now, this query, the
+same query as before
+
+118
+00:05:43.750 --> 00:05:45.820
+with a different
+cursor ID, obviously,
+
+119
+00:05:45.820 --> 00:05:48.150
+has examined 629 documents.
+
+120
+00:05:48.150 --> 00:05:50.440
+This is because we
+didn't fully iterate it
+
+121
+00:05:50.440 --> 00:05:52.450
+for the full amount
+of documents.
+
+122
+00:05:52.450 --> 00:05:58.570
+But it did reply in a very small
+amount of time, 0 milliseconds.
+
+123
+00:05:58.570 --> 00:06:02.590
+So again, if we are
+looking into this data
+
+124
+00:06:02.590 --> 00:06:06.550
+crudely without analyzing the
+planSummary or execution stats,
+
+125
+00:06:06.550 --> 00:06:10.330
+we might be led into error to
+think that this is pretty good.
+
+126
+00:06:10.330 --> 00:06:13.180
+This is pretty, pretty awesome.
+
+127
+00:06:13.180 --> 00:06:15.670
+We taking 0 seconds to reply.
+
+128
+00:06:15.670 --> 00:06:17.140
+This is fantastic.
+
+129
+00:06:17.140 --> 00:06:20.620
+Well, not so fast, young
+grasshopper, because there's
+
+130
+00:06:20.620 --> 00:06:22.120
+more to this story.
+
+131
+00:06:22.120 --> 00:06:26.290
+To show you exactly that,
+let's import a little bit more
+
+132
+00:06:26.290 --> 00:06:26.980
+of data--
+
+133
+00:06:26.980 --> 00:06:31.480
+instead of 1,000, a
+million of my friends.
+
+134
+00:06:31.480 --> 00:06:35.050
+I can guarantee you I am
+a very popular person.
+
+135
+00:06:35.050 --> 00:06:39.230
+So once all this data
+is back into our mongod,
+
+136
+00:06:39.230 --> 00:06:42.520
+and obviously, a million
+is quite larger amount
+
+137
+00:06:42.520 --> 00:06:45.140
+of information than 1,000--
+
+138
+00:06:45.140 --> 00:06:47.990
+once this is done,
+we will be looking
+
+139
+00:06:47.990 --> 00:06:50.960
+into running the
+exact same query again
+
+140
+00:06:50.960 --> 00:06:55.800
+and see how does this translate
+in terms of the response time--
+
+141
+00:06:55.800 --> 00:06:57.700
+can go back.

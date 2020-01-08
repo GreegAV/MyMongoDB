@@ -1,0 +1,31 @@
+In this lesson, we're going to discuss how we can force indexes using the hint method.
+
+And specifically, we're going to discuss how we can force a query to use a particular index, therefore overriding MongoDB's default index selection by using the hint method.
+
+Throughout this course, we spent a lot of time discussing how to design the optimal index for a given query.
+
+Unfortunately, for one reason or another, the query optimizer might not always choose the index that we'd like to be chosen for a given query.
+
+In this case, maybe this query uses the name age index instead of the name zip code index, like we would like it to.
+
+Fortunately for us though, MongoDB provides an easy way to override the query optimizer's selection.
+
+And this of course, is done with hint.
+
+In this example, I'm appending the hint method to my query, so that we're forcing the usage of name ascending zip code ascending.
+
+And here, I am using the indexes shape to tell hint what index we want to use.
+
+Other than using the shape, we can also just pass the actual name of the index to hint, to let it know what index we want to use.
+
+And that's pretty much how hint works.
+
+I do want to point out that you should use hint with caution.
+
+MongoDB's query optimizer generally does a pretty good job of selecting the correct index for a given query.
+
+The times when it does fail to select the best index for a given query is generally when there are a lot of indexes on your collection.
+
+And in those cases, it's probably better to look at index utilization and determine if you have superfluous indexes that can be removed rather than using the hint method.
+
+So to quickly recap what we learned in this lesson, we discussed how we can use the hint method to override MongoDB's default index selection for our queries.

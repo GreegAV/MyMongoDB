@@ -1,0 +1,568 @@
+
+1
+00:00:00.000 --> 00:00:00.170
+
+
+2
+00:00:00.170 --> 00:00:00.800
+Hi, there.
+
+3
+00:00:00.800 --> 00:00:03.570
+In MongoDB Atlas, you can
+now easily embed charts
+
+4
+00:00:03.570 --> 00:00:04.930
+in your website or web app.
+
+5
+00:00:04.930 --> 00:00:06.690
+MongoDB Charts has
+been designed to make
+
+6
+00:00:06.690 --> 00:00:09.270
+it very easy to create
+compelling visualizations
+
+7
+00:00:09.270 --> 00:00:11.310
+of data stored in MongoDB.
+
+8
+00:00:11.310 --> 00:00:14.040
+Up to now, you could only
+share your visualizations
+
+9
+00:00:14.040 --> 00:00:17.250
+with users who had access
+to your Atlas project.
+
+10
+00:00:17.250 --> 00:00:20.190
+MongoDB now provides a
+quick and easy way for you
+
+11
+00:00:20.190 --> 00:00:23.613
+to embed visualizations of
+data in your web application.
+
+12
+00:00:23.613 --> 00:00:25.030
+So that's enough
+talking about it.
+
+13
+00:00:25.030 --> 00:00:26.822
+Let's get our hands
+dirty and embed a chart
+
+14
+00:00:26.822 --> 00:00:28.800
+in our very own website.
+
+15
+00:00:28.800 --> 00:00:31.290
+So we've loaded sample
+data into our cluster
+
+16
+00:00:31.290 --> 00:00:34.740
+using the Load Sample Data
+feature in MongoDB Atlas.
+
+17
+00:00:34.740 --> 00:00:38.987
+We are going to jump into
+Charts and create a chart.
+
+18
+00:00:38.987 --> 00:00:41.070
+So that we can use the
+data that's in our cluster,
+
+19
+00:00:41.070 --> 00:00:43.660
+we need to create
+a new data source.
+
+20
+00:00:43.660 --> 00:00:46.860
+So let's select our cluster
+here, which is Cluster0.
+
+21
+00:00:46.860 --> 00:00:48.525
+We'll connect charts
+to the cluster
+
+22
+00:00:48.525 --> 00:00:51.240
+and just wait a minute
+for it to connect.
+
+23
+00:00:51.240 --> 00:00:53.760
+So now the chart is
+connected to our cluster,
+
+24
+00:00:53.760 --> 00:00:55.587
+we're going to
+select the collection
+
+25
+00:00:55.587 --> 00:00:56.670
+that we want to work with.
+
+26
+00:00:56.670 --> 00:00:59.340
+And that is our
+ListingsAndReviews collection
+
+27
+00:00:59.340 --> 00:01:02.810
+inside the airbnb data set.
+
+28
+00:01:02.810 --> 00:01:04.468
+So next we need to
+set permissions.
+
+29
+00:01:04.468 --> 00:01:06.260
+There are three different
+permission levels
+
+30
+00:01:06.260 --> 00:01:07.490
+that we can set here.
+
+31
+00:01:07.490 --> 00:01:09.710
+Viewers can access data
+from the data source
+
+32
+00:01:09.710 --> 00:01:12.830
+by viewing existing charts
+and creating new charts
+
+33
+00:01:12.830 --> 00:01:14.480
+with that data source.
+
+34
+00:01:14.480 --> 00:01:16.940
+Managers can point to
+another data source
+
+35
+00:01:16.940 --> 00:01:19.160
+by changing the connection
+string or alias.
+
+36
+00:01:19.160 --> 00:01:21.980
+And, finally, owners-- in
+addition to manager privileges,
+
+37
+00:01:21.980 --> 00:01:24.602
+owners can manage permissions
+on the data source
+
+38
+00:01:24.602 --> 00:01:26.060
+and delete the data
+source as well.
+
+39
+00:01:26.060 --> 00:01:29.310
+
+
+40
+00:01:29.310 --> 00:01:29.810
+Great.
+
+41
+00:01:29.810 --> 00:01:31.670
+So now we've got our
+data source created.
+
+42
+00:01:31.670 --> 00:01:34.113
+And our cluster is
+linked to charts.
+
+43
+00:01:34.113 --> 00:01:35.780
+So now we can make a
+dashboard and start
+
+44
+00:01:35.780 --> 00:01:40.190
+making some nice visualizations
+to embed in our website.
+
+45
+00:01:40.190 --> 00:01:44.140
+Now that our dashboard has been
+created, let's add a chart.
+
+46
+00:01:44.140 --> 00:01:47.050
+So we've selected Geospatial
+from the drop-down menu.
+
+47
+00:01:47.050 --> 00:01:49.580
+And we're going to
+create a heat map.
+
+48
+00:01:49.580 --> 00:01:53.560
+So let's grab the location
+field from the address document
+
+49
+00:01:53.560 --> 00:01:55.450
+and put that onto
+the coordinates.
+
+50
+00:01:55.450 --> 00:01:57.580
+And then we're going
+to grab the price field
+
+51
+00:01:57.580 --> 00:02:00.370
+and put that onto our
+intensity option in the map.
+
+52
+00:02:00.370 --> 00:02:02.990
+
+
+53
+00:02:02.990 --> 00:02:03.490
+Great.
+
+54
+00:02:03.490 --> 00:02:05.910
+So you can see here that we've
+got some pretty interesting
+
+55
+00:02:05.910 --> 00:02:07.080
+detail on the map.
+
+56
+00:02:07.080 --> 00:02:08.357
+We can zoom in and out.
+
+57
+00:02:08.357 --> 00:02:10.440
+And we can see where the
+most expensive properties
+
+58
+00:02:10.440 --> 00:02:11.790
+in our data set are.
+
+59
+00:02:11.790 --> 00:02:14.520
+But let's try and embed
+this now in our website.
+
+60
+00:02:14.520 --> 00:02:17.722
+
+
+61
+00:02:17.722 --> 00:02:19.680
+So, first, we're going
+to click on the ellipses
+
+62
+00:02:19.680 --> 00:02:22.118
+and click Embed Chart.
+
+63
+00:02:22.118 --> 00:02:23.660
+There are two options
+available to us
+
+64
+00:02:23.660 --> 00:02:26.120
+to grant access when
+embedding a chart.
+
+65
+00:02:26.120 --> 00:02:28.700
+We can either use an embedding
+key, which is a shared secret
+
+66
+00:02:28.700 --> 00:02:32.550
+to grant access to the chart,
+or we can use no authentication.
+
+67
+00:02:32.550 --> 00:02:34.490
+This means that our chart
+is visible to anyone
+
+68
+00:02:34.490 --> 00:02:36.620
+in the outside world
+who has the URL.
+
+69
+00:02:36.620 --> 00:02:38.670
+For the purposes
+of this tutorial,
+
+70
+00:02:38.670 --> 00:02:41.240
+we're going to use an unverified
+payload, which allows anyone
+
+71
+00:02:41.240 --> 00:02:42.260
+to see the chart.
+
+72
+00:02:42.260 --> 00:02:44.300
+It's worth noting, however,
+that Charts provides
+
+73
+00:02:44.300 --> 00:02:45.830
+the functionality
+for you to ensure
+
+74
+00:02:45.830 --> 00:02:49.280
+your data remains secure by
+passing a shared secret key.
+
+75
+00:02:49.280 --> 00:02:51.800
+
+
+76
+00:02:51.800 --> 00:02:54.230
+It's also worth noting
+that the verified signature
+
+77
+00:02:54.230 --> 00:02:56.630
+functionality requires
+additional coding.
+
+78
+00:02:56.630 --> 00:02:59.660
+Copying and pasting the HTML
+snippet will not suffice.
+
+79
+00:02:59.660 --> 00:03:01.552
+If you want to use
+authenticated embedding,
+
+80
+00:03:01.552 --> 00:03:03.260
+you can read more
+about that in our docs,
+
+81
+00:03:03.260 --> 00:03:05.670
+which will be linked the
+notes for this lesson.
+
+82
+00:03:05.670 --> 00:03:09.105
+Now let's grab the iframe code
+and paste it into our HTML file
+
+83
+00:03:09.105 --> 00:03:11.230
+so we can see how it looks
+embedded in our website.
+
+84
+00:03:11.230 --> 00:03:15.450
+
+
+85
+00:03:15.450 --> 00:03:18.510
+I'm going to paste the iframe
+in between these two div tags,
+
+86
+00:03:18.510 --> 00:03:19.440
+save the file.
+
+87
+00:03:19.440 --> 00:03:21.070
+And let's have a
+look at our website.
+
+88
+00:03:21.070 --> 00:03:21.570
+Great.
+
+89
+00:03:21.570 --> 00:03:22.945
+Our chart's embedded
+in our site.
+
+90
+00:03:22.945 --> 00:03:23.900
+It looks pretty cool.
+
+91
+00:03:23.900 --> 00:03:26.040
+But what if our data
+changes over time?
+
+92
+00:03:26.040 --> 00:03:27.388
+We have you covered.
+
+93
+00:03:27.388 --> 00:03:29.430
+The beauty of Charts is
+that it's linked directly
+
+94
+00:03:29.430 --> 00:03:30.930
+to your Atlas cluster.
+
+95
+00:03:30.930 --> 00:03:33.720
+So we can set how often we
+want the chart to refresh
+
+96
+00:03:33.720 --> 00:03:36.120
+from the chart's UI so
+that, when people land
+
+97
+00:03:36.120 --> 00:03:38.580
+on our website, they'll
+see a visualization that's
+
+98
+00:03:38.580 --> 00:03:41.500
+representative of the current
+state of the source data.
+
+99
+00:03:41.500 --> 00:03:45.840
+MongoDB Charts provides options
+to both manually refresh data
+
+100
+00:03:45.840 --> 00:03:48.480
+and configure the dashboard
+to automatically refresh
+
+101
+00:03:48.480 --> 00:03:50.070
+within a specified interval.
+
+102
+00:03:50.070 --> 00:03:51.990
+These options allow
+you to control
+
+103
+00:03:51.990 --> 00:03:54.945
+how current the data displayed
+on your dashboard is.
+
+104
+00:03:54.945 --> 00:03:58.240
+And, as analytical queries can
+be long-running and expensive,
+
+105
+00:03:58.240 --> 00:04:00.960
+we also allow you to specify
+a read preference for Charts
+
+106
+00:04:00.960 --> 00:04:03.050
+to use when creating
+your cluster,
+
+107
+00:04:03.050 --> 00:04:05.550
+so that the primary server
+won't become impacted
+
+108
+00:04:05.550 --> 00:04:07.050
+by long-running queries.
+
+109
+00:04:07.050 --> 00:04:09.240
+The default read
+preference is secondary,
+
+110
+00:04:09.240 --> 00:04:12.360
+which you can also specify an
+analytical node for workload
+
+111
+00:04:12.360 --> 00:04:13.740
+isolation.
+
+112
+00:04:13.740 --> 00:04:14.790
+So let's recap.
+
+113
+00:04:14.790 --> 00:04:18.149
+Charts allows you to create
+real-time visualizations
+
+114
+00:04:18.149 --> 00:04:20.380
+of data in your Atlas cluster.
+
+115
+00:04:20.380 --> 00:04:23.730
+You can use authentication to
+control who sees your chart.
+
+116
+00:04:23.730 --> 00:04:26.070
+And you can also
+specify a read concern
+
+117
+00:04:26.070 --> 00:04:28.320
+to allow charts about
+read from secondaries
+
+118
+00:04:28.320 --> 00:04:31.140
+or an analytical node
+to isolate workload away
+
+119
+00:04:31.140 --> 00:04:32.310
+from your primary.
+
+120
+00:04:32.310 --> 00:04:37.530
+You can also now embed charts
+in your website or web app.

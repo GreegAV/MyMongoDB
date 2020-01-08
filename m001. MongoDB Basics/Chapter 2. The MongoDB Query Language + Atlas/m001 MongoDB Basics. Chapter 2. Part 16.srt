@@ -1,0 +1,232 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:02,310
+We've been working
+with updateOne.
+
+3
+00:00:02,310 --> 00:00:05,705
+All of the same principles
+apply to updateMany.
+
+4
+00:00:05,705 --> 00:00:09,900
+UpdateMany is our second update
+operator in the MongoDB query
+
+5
+00:00:09,900 --> 00:00:10,890
+language.
+
+6
+00:00:10,890 --> 00:00:13,290
+The difference between
+updateOne and updateMany
+
+7
+00:00:13,290 --> 00:00:17,040
+is that updateMany will
+make the same modification
+
+8
+00:00:17,040 --> 00:00:20,160
+to all documents that
+match the filter.
+
+9
+00:00:20,160 --> 00:00:22,510
+Let's take a look at an example.
+
+10
+00:00:22,510 --> 00:00:24,420
+I'd like to work
+through a data cleaning
+
+11
+00:00:24,420 --> 00:00:26,490
+example for updateMany.
+
+12
+00:00:26,490 --> 00:00:29,370
+I happen to know that
+in our movie details
+
+13
+00:00:29,370 --> 00:00:33,180
+data set there are some
+fields in some documents that
+
+14
+00:00:33,180 --> 00:00:34,770
+are set to null.
+
+15
+00:00:34,770 --> 00:00:37,050
+What I'd like to do is
+just eliminate null fields
+
+16
+00:00:37,050 --> 00:00:38,850
+from documents in
+this collection.
+
+17
+00:00:38,850 --> 00:00:40,710
+We can see a few
+of these documents
+
+18
+00:00:40,710 --> 00:00:42,690
+with this simple filter.
+
+19
+00:00:42,690 --> 00:00:44,700
+Here, we're just
+pulling in all documents
+
+20
+00:00:44,700 --> 00:00:48,600
+that have null for the rated
+field and null for the poster
+
+21
+00:00:48,600 --> 00:00:49,380
+field.
+
+22
+00:00:49,380 --> 00:00:52,320
+Note that there's 1,202
+documents matching
+
+23
+00:00:52,320 --> 00:00:53,610
+these criteria.
+
+24
+00:00:53,610 --> 00:00:57,060
+If we just look for those
+with rated equal to null,
+
+25
+00:00:57,060 --> 00:00:58,690
+we get quite a few more.
+
+26
+00:00:58,690 --> 00:01:02,100
+UpdateMany enables us
+to modify many documents
+
+27
+00:01:02,100 --> 00:01:05,700
+at once, all of which
+match the same criteria.
+
+28
+00:01:05,700 --> 00:01:07,800
+What I'd like to
+do then is update
+
+29
+00:01:07,800 --> 00:01:10,680
+this collection
+eliminating the rated field
+
+30
+00:01:10,680 --> 00:01:12,480
+where its value is null.
+
+31
+00:01:12,480 --> 00:01:16,110
+We'll do that using
+this call to updateMany.
+
+32
+00:01:16,110 --> 00:01:19,050
+Here, we're using
+the unset operator,
+
+33
+00:01:19,050 --> 00:01:23,340
+and the unset operator will
+remove all fields listed here.
+
+34
+00:01:23,340 --> 00:01:25,650
+In this case, we've only
+listed one field to remove
+
+35
+00:01:25,650 --> 00:01:27,540
+and that is rated.
+
+36
+00:01:27,540 --> 00:01:30,810
+Now, it doesn't really
+matter what value we use here
+
+37
+00:01:30,810 --> 00:01:35,040
+as the value for the rated
+key in the document we're
+
+38
+00:01:35,040 --> 00:01:36,960
+passing to our unset operator.
+
+39
+00:01:36,960 --> 00:01:39,240
+I just tend to use
+an empty string.
+
+40
+00:01:39,240 --> 00:01:41,560
+From the results of
+running this command,
+
+41
+00:01:41,560 --> 00:01:45,450
+we can see that we
+modified 1,599 documents.
+
+42
+00:01:45,450 --> 00:01:47,550
+And if you'll remember,
+that is the number
+
+43
+00:01:47,550 --> 00:01:51,030
+of documents for which
+rated was set to null.
+
+44
+00:01:51,030 --> 00:01:53,660
+This wraps up our
+discussion of updateMany.
+
+45
+00:01:53,660 --> 00:01:56,910
+The principles of filtering
+and the use of update operators
+
+46
+00:01:56,910 --> 00:02:00,270
+are the same for updateMany
+as they are for updateOne.
+
+47
+00:02:00,270 --> 00:02:03,180
+Again, I encourage you to
+experiment, but be careful.
+
+48
+00:02:03,180 --> 00:02:06,720
+UpdateMany will modify all
+documents matching the filter.
+
+49
+00:02:06,720 --> 00:00:00,000
+Good luck.
+

@@ -1,0 +1,241 @@
+Compass doesn't yet fully support the entire MongoDB query language.
+
+So in order to do some of the lessons in this course, we're going to need to use the mongo shell.
+
+The mongo shell is a text-based client that fully supports all MongoDB CRUD operations.
+
+In this lesson, I'm going to walk you through installing the mongo shell on a Windows machine.
+
+Here we have a Windows 10 environment.
+
+I'll also show you some of the subtle differences you'll encounter when installing on Windows 7.
+
+There aren't many and you should be fine on Windows 10 or on older versions of Windows, provided they are 64-bit versions of Windows.
+
+Now to install the mongo shell, we're actually going to install MongoDB itself.
+
+We're going to install the enterprise server.
+
+The shell comes packaged with the server as part of the download from the MongoDB Download Center.
+
+So please navigate to the Download Center.
+
+And then instead of Community Server, let's click the Enterprise Server tab, and I will select Windows.
+
+Now this is very important.
+
+Even if you already have MongoDB installed, please go through these steps.
+
+Earlier versions of MongoDB in the shell did not provide support for SSL, and we're going to need SSL support in order to connect to our Atlas cluster.
+
+So select Windows 64 and then Download.
+
+Now if you haven't previously accessed the Download Center, you'll be asked to complete a download form.
+
+Please just enter your details there and then move through to downloading the Windows MSI.
+
+Now we're presented with two options here, either archive or MSI.
+
+Please select MSI.
+
+And again, it's Enterprise Server, Windows 64, and then MSI.
+
+And we'll just wait for that to download.
+
+And once it does, we can install.
+
+And once the MSI downloads, we can click it, and then use the installation wizard to install MongoDB.
+
+Select Complete and then Install.
+
+Allow the app to make changes to our device, and then we finish.
+
+Now it's important that you understand where MongoDB was installed on your computer.
+
+So if you click Windows Explorer and then scroll down to Local Disk, on your machine the download location should be something like the following.
+
+C:, Program Files, MongoDB, Server, 3.4.
+
+And then if we click the 3.4 directory, we'll see that there's some license information, but most importantly is this bin directory.
+
+The bin directory contains all of the executables that are distributed with MongoDB server.
+
+The one we're interested in is mongo.
+
+Now note that it's very similar in name to mongo d, which is the executable for the MongoDB server.
+
+For this course, we will be using the mongo shell, which is run from the mongo executable.
+
+OK, before we can run mongo, we're going to need to open a command shell.
+
+Now regardless of whether you're working on a Windows 10 machine or an older version of Windows, you have a text box you can type in.
+
+And if you type cmd, you'll note that the command prompt is suggested for us.
+
+If we hit Enter, then what pops up is a command line interface from which we will execute the mongo shell.
+
+Again, the mongo shell is a text-based environment.
+
+I can do something very similar on Windows 7 by clicking the start button and then in the search box typing cmd and hitting Enter.
+
+And again, I get a command shell that pops up.
+
+Switching back to Windows 10, everything I do here you can also do on earlier versions of Windows, such as Windows 7.
+
+The command shell is largely the same in most versions of the Windows operating system.
+
+At least it's the same for our purposes in the ways that we will be using it.
+
+So if you take a look at what's been printed in the shell, you'll see it says C: backslash Users backslash shannon.
+
+This is simply a folder in the file system for my Windows machine, and I can find that folder if I look in C:, Users, shannon.
+
+So C:, Users, shannon is exactly this folder.
+
+C:, Users, shannon.
+
+Now if I want to run the mongo shell on many versions of Windows, I need to do one additional step, and that is I need to set up my path.
+
+If you've never done this before, don't be worried about it.
+
+It's a pretty straightforward process.
+
+But it is down in the weeds a little bit.
+
+So we'll take it one step at a time.
+
+So to do this, I can type system environment, and just to be complete, variables.
+
+And long before that, Windows will have suggested this operation, Edit the system environment variables.
+
+If I click on that, what I'll see is a window that pops up for System Properties, and the Advanced tab is already selected.
+
+If I click Environment Variables, then you'll see that I have user environment variables for shannon, and system environment variables.
+
+The one we're interested in is this one, Path.
+
+And if we select Path and click Edit, we'll see a list of folders.
+
+These folders contain executable files or programs that can be run on this Windows machine.
+
+Now on Windows 10, it's probably not strictly necessary that we update the environment variables.
+
+But on many versions of Windows, it is necessary.
+
+So I'm going to show you how to do it here.
+
+Now as we said previously, MongoDB is installed in C:, Program Files, MongoDB, Server, 3.4, and all of the executables are in the bin directory.
+
+So again, that's C:, Program Files, MongoDB, Server, 3.4, bin.
+
+The way that that folder structure is represented in our path is by separating each component of the path with a backslash.
+
+So for our path, that looks like this.
+
+C: backslash Program Files backslash MongoDB backslash Server backslash 3.4 backslash bin.
+
+Finally, what I'd like to do before we finish editing this environment variable is move this to the top.
+
+In order to understand why I wanted to do that, let's talk a little bit about how the path is used.
+
+When I'm in the shell and I type a command, like mongo-- again, remember, mongo is the name of the mongo shell executable-- Windows will look for programs with that name in each one of the folders listed here.
+
+And it does so in order.
+
+So it will first check this path to see if there are any executables located there.
+
+In this case, it will find one called mongo and execute it.
+
+The reason why I wanted to place the MongoDB installation directory first is just in case you have an older version of MongoDB installed because if you have an older version of MongoDB installed, chances are it's in your path and you might accidentally end up running that version of the mongo shell instead.
+
+Again, earlier versions of the mongo shell did not include support for SSL, and we need that here.
+
+So we really need to be running the latest version of the mongo shell, which you can download from the MongoDB Download Center as part of the MongoDB Enterprise Package.
+
+So we can click OK here.
+
+And now you'll note that our path has been updated to include that individual path that we just added, and it's added at the front.
+
+And note that it's separated from the next item in the path by a semicolon here.
+
+This is one of those difference points from Windows 7.
+
+And by that I mean in editing a path in Windows 10 you have this nice list of items in your path.
+
+In Windows 7, it's a little bit more arcane, for lack of a better word, because in order to change the environment variable, we actually need to edit a string that includes all of the components of a path in one line.
+
+So here I can do exactly the same thing, system, environment, and before I'm even finished typing Windows is suggesting the right thing to me.
+
+I click on it.
+
+Again, it's System Properties, Advanced tab selected, I click on Environment Variables.
+
+And then if I scroll down here, I can open my Path and Edit.
+
+And see here, this is what I mean.
+
+We just have one line of text.
+
+These are all of the same elements of the path that we saw in Windows 10.
+
+But rather than being on separate lines, they're all in one line.
+
+In order to update a path using this older UI, I can copy in my C: Program Files MongoDB Server 3.4 bin path, and then type a semicolon so that it is separated from the next item in my path.
+
+With that, I can click OK, OK, OK.
+
+And then I've updated my path on Windows 7.
+
+Returning to Windows 10, I want to do the same thing.
+
+Click OK.
+
+And then what I want to do is restart the Command prompt because on many versions of Windows, it's only after I restart the Command prompt that those changes I made to the path environment variable will be reflected.
+
+So I'm going to close that.
+
+And I'll just start it the same way, typing command and then hitting Enter.
+
+And now I'll be able to execute the mongo shell.
+
+So to verify that we've installed it correctly and that we've set up our path correctly, what I'm going to do is type mongo dash dash no db.
+
+Now dash dash no db simply means that we're just starting up the mongo shell without attempting to connect to any MongoDB database.
+
+We're doing this simply as a means of verifying that we've installed the mongo shell correctly and that we've setup our path correctly.
+
+And if you see a message, such as this, MongoDB shell version 3.4.6-- or later, depending on when you're actually doing this install.
+
+As we roll out the next version of MongoDB your version number may change.
+
+But you should see a message very similar to this.
+
+You have successfully installed the mongo shell and launched it correctly.
+
+To quit the mongo shell you can simply type, quit.
+
+You can run the function Quit.
+
+And that's it for installing the mongo shell and getting setup to do a number of different CRUD operations in the mongo shell.
+
+For the sake of completeness, I'll do the same thing in Windows 7.
+
+So I close the Command prompt, launch it again, and run mongo dash dash no db.
+
+And here we can see that we have a slightly different startup message.
+
+This is pointing you to documentation and to Google Groups where you can ask questions.
+
+For this class, please make sure you direct your questions to the MongoDB discussion forum.
+
+If you post in Google Groups, we will just direct you to the discussion forum anyway.
+
+Before we close out, I want to say one last thing.
+
+If for any reason you have trouble installing MongoDB, please visit the MongoDB documentation for installing MongoDB Enterprise on Windows.
+
+This is a simple Google query away, and there is extensive documentation for how to install MongoDB on Windows.
+
+You can, of course, also ask for help in the discussion forum.
+
+But before posting, please make sure you do a search in the forum to see whether your question has already been asked and answered.

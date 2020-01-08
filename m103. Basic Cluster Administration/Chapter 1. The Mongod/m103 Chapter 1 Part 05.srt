@@ -1,0 +1,473 @@
+1
+00:00:00,170 --> 00:00:01,250
+All right so in
+this lesson, we're
+
+2
+00:00:01,250 --> 00:00:03,030
+going to discuss the
+database profiler,
+
+3
+00:00:03,030 --> 00:00:05,321
+and how it can be used in
+conjunction with the database
+
+4
+00:00:05,321 --> 00:00:06,390
+locks.
+
+5
+00:00:06,390 --> 00:00:08,469
+Servers generate a really
+large number of events.
+
+6
+00:00:08,469 --> 00:00:11,250
+And a log file is great for
+capturing this data, or subsets
+
+7
+00:00:11,250 --> 00:00:12,330
+of this data.
+
+8
+00:00:12,330 --> 00:00:15,210
+But the purpose of these logs
+is to report on the health
+
+9
+00:00:15,210 --> 00:00:17,690
+of the database, as a whole.
+
+10
+00:00:17,690 --> 00:00:19,892
+The logs do store some
+data on our commands,
+
+11
+00:00:19,892 --> 00:00:21,350
+but there's not
+enough data in here
+
+12
+00:00:21,350 --> 00:00:23,410
+to start optimizing our queries.
+
+13
+00:00:23,410 --> 00:00:25,240
+The lines won't
+contain any execution
+
+14
+00:00:25,240 --> 00:00:27,830
+stats, the direction of
+an index used by a query,
+
+15
+00:00:27,830 --> 00:00:29,757
+rejected plans, or anything.
+
+16
+00:00:29,757 --> 00:00:32,090
+And even if we could place
+that information in the logs,
+
+17
+00:00:32,090 --> 00:00:33,414
+we really shouldn't.
+
+18
+00:00:33,414 --> 00:00:35,330
+The log files are meant
+to give administrators
+
+19
+00:00:35,330 --> 00:00:38,060
+operational information
+about an instance or process,
+
+20
+00:00:38,060 --> 00:00:40,010
+so they can flag any
+errors, warnings,
+
+21
+00:00:40,010 --> 00:00:42,506
+or interesting
+informational messages.
+
+22
+00:00:42,506 --> 00:00:43,880
+For debugging slow
+operations, we
+
+23
+00:00:43,880 --> 00:00:46,610
+need to be a bit more precise
+in the information we capture.
+
+24
+00:00:46,610 --> 00:00:49,480
+So for that, we rely on
+the database profiler.
+
+25
+00:00:49,480 --> 00:00:51,810
+We enable profilers
+at the database level.
+
+26
+00:00:51,810 --> 00:00:53,360
+So the operations
+on each database
+
+27
+00:00:53,360 --> 00:00:54,950
+are profiled separately.
+
+28
+00:00:54,950 --> 00:00:56,570
+When it's enabled,
+the profile will
+
+29
+00:00:56,570 --> 00:00:59,060
+restore data for all
+operations on a given database,
+
+30
+00:00:59,060 --> 00:01:01,954
+and a new collection
+called system dot profile.
+
+31
+00:01:01,954 --> 00:01:03,620
+This collection will
+hold profiling data
+
+32
+00:01:03,620 --> 00:01:06,410
+on CRUD operations, as
+well as administrative and
+
+33
+00:01:06,410 --> 00:01:08,610
+configuration options.
+
+34
+00:01:08,610 --> 00:01:10,730
+It has three settings.
+
+35
+00:01:10,730 --> 00:01:13,190
+The default value is
+zero, which just means
+
+36
+00:01:13,190 --> 00:01:15,530
+that the profiler's turned off.
+
+37
+00:01:15,530 --> 00:01:18,290
+One means the profiler
+is on, but it's only
+
+38
+00:01:18,290 --> 00:01:20,960
+going to profile operations
+that are considered slow.
+
+39
+00:01:20,960 --> 00:01:22,610
+By default, MongoDB
+will consider
+
+40
+00:01:22,610 --> 00:01:24,920
+any operation that takes
+longer than 100 milliseconds
+
+41
+00:01:24,920 --> 00:01:25,774
+to be slow.
+
+42
+00:01:25,774 --> 00:01:27,440
+But we can also define
+what a slow query
+
+43
+00:01:27,440 --> 00:01:30,520
+is by setting the slow MS
+value, as we'll see in a minute.
+
+44
+00:01:30,520 --> 00:01:32,510
+Two means that
+the profiler's on,
+
+45
+00:01:32,510 --> 00:01:34,800
+and will profile all
+operations on a database,
+
+46
+00:01:34,800 --> 00:01:36,404
+regardless of how
+long they take.
+
+47
+00:01:36,404 --> 00:01:37,820
+This is a bit
+dangerous because it
+
+48
+00:01:37,820 --> 00:01:40,111
+can result in a lot of rights
+to the system dot profile
+
+49
+00:01:40,111 --> 00:01:43,004
+collection, and generate a
+lot of load on the system.
+
+50
+00:01:43,004 --> 00:01:45,170
+This doesn't mean small
+operations can't be blocking
+
+51
+00:01:45,170 --> 00:01:47,330
+other ones, but getting
+data on those operations
+
+52
+00:01:47,330 --> 00:01:49,212
+requires more granularity.
+
+53
+00:01:49,212 --> 00:01:52,180
+All right, so now let's
+take a look at the profiler.
+
+54
+00:01:52,180 --> 00:01:55,040
+This database doesn't
+actually exist yet,
+
+55
+00:01:55,040 --> 00:01:57,830
+so the profiler by
+default is set to level 0.
+
+56
+00:01:57,830 --> 00:02:01,550
+And we can verify that by
+running db.getprofilinglevel.
+
+57
+00:02:01,550 --> 00:02:04,130
+And as you can see,
+it gives us a zero.
+
+58
+00:02:04,130 --> 00:02:08,788
+We can change that to a one
+with db.setprofilinglevel.
+
+59
+00:02:08,788 --> 00:02:12,350
+So this statement turned on the
+profiler, profiling level 1.
+
+60
+00:02:12,350 --> 00:02:14,510
+If we run this
+command, we can see
+
+61
+00:02:14,510 --> 00:02:17,210
+that MongoDB created a
+new collection called
+
+62
+00:02:17,210 --> 00:02:18,530
+system dot profile.
+
+63
+00:02:18,530 --> 00:02:20,090
+But there's nothing
+in it right now.
+
+64
+00:02:20,090 --> 00:02:22,250
+And because we haven't
+specified a slow MS,
+
+65
+00:02:22,250 --> 00:02:23,630
+the profiler will
+only store data
+
+66
+00:02:23,630 --> 00:02:27,454
+on queries that take longer
+than 100 milliseconds.
+
+67
+00:02:27,454 --> 00:02:30,120
+All right so here, just to get a
+sense of how the profiler works
+
+68
+00:02:30,120 --> 00:02:31,744
+and what the profiling
+data looks like,
+
+69
+00:02:31,744 --> 00:02:33,360
+I'm just going to
+set slow MS to zero,
+
+70
+00:02:33,360 --> 00:02:36,889
+so that everything gets
+profiled in this database.
+
+71
+00:02:36,889 --> 00:02:38,930
+So I'm just going to insert
+a small document here
+
+72
+00:02:38,930 --> 00:02:42,466
+into this new collection,
+called new collection.
+
+73
+00:02:42,466 --> 00:02:44,090
+So now I'm just going
+to look at what's
+
+74
+00:02:44,090 --> 00:02:45,980
+in the system dot
+profile collection right
+
+75
+00:02:45,980 --> 00:02:47,617
+now, after we'd run
+that query, and I'm
+
+76
+00:02:47,617 --> 00:02:49,700
+going to make the output
+a little prettier so it's
+
+77
+00:02:49,700 --> 00:02:50,525
+more readable.
+
+78
+00:02:50,525 --> 00:02:52,400
+All right, so we can
+see our rights statement
+
+79
+00:02:52,400 --> 00:02:54,350
+is recorded in the profiler.
+
+80
+00:02:54,350 --> 00:02:57,530
+It gives us the number
+of documents inserted,
+
+81
+00:02:57,530 --> 00:03:00,450
+and inserted, and the
+number of index keys
+
+82
+00:03:00,450 --> 00:03:03,320
+inserted by the
+operation, keys inserted,
+
+83
+00:03:03,320 --> 00:03:07,010
+as well as how long the
+operation took in milliseconds.
+
+84
+00:03:07,010 --> 00:03:09,320
+So we can also profile
+read operations.
+
+85
+00:03:09,320 --> 00:03:11,970
+Here, we have a really
+simple query predicate,
+
+86
+00:03:11,970 --> 00:03:15,647
+where we're only looking for
+documents where A is one.
+
+87
+00:03:15,647 --> 00:03:17,730
+And we can see the profiler
+recorded a little more
+
+88
+00:03:17,730 --> 00:03:19,740
+information about this query.
+
+89
+00:03:19,740 --> 00:03:21,450
+It tells us that we
+exhausted the cursor
+
+90
+00:03:21,450 --> 00:03:23,910
+that we were using to
+retrieve this data,
+
+91
+00:03:23,910 --> 00:03:26,779
+and it also has some
+execution stats,
+
+92
+00:03:26,779 --> 00:03:28,820
+like the status that we
+went through to get here.
+
+93
+00:03:28,820 --> 00:03:30,734
+In this case, it was
+just a collection scan.
+
+94
+00:03:30,734 --> 00:03:32,150
+All right, so just
+to recap, we've
+
+95
+00:03:32,150 --> 00:03:36,020
+covered the difference between
+log data and profile data,
+
+96
+00:03:36,020 --> 00:03:39,169
+how to configure the
+profiler on your database,
+
+97
+00:03:39,169 --> 00:03:41,210
+and how to interpret the
+output from the profiler
+
+98
+00:03:41,210 --> 00:00:00,000
+depending on the operation.
+

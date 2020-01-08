@@ -1,0 +1,301 @@
+1
+00:00:00,000 --> 00:00:00,730
+
+
+2
+00:00:00,730 --> 00:00:03,360
+In this lesson, we're going
+to talk about how the mongos
+
+3
+00:00:03,360 --> 00:00:05,460
+router does the job
+of routing queries
+
+4
+00:00:05,460 --> 00:00:08,380
+across your sharded cluster.
+
+5
+00:00:08,380 --> 00:00:10,650
+So the mongos is the
+principal interface point
+
+6
+00:00:10,650 --> 00:00:12,570
+for your client applications.
+
+7
+00:00:12,570 --> 00:00:16,079
+All queries must be
+redirected to the mongos.
+
+8
+00:00:16,079 --> 00:00:18,960
+So here we have a find
+operation against the products
+
+9
+00:00:18,960 --> 00:00:21,300
+collection, looking
+for this document
+
+10
+00:00:21,300 --> 00:00:25,230
+where the name is how to mongos.
+
+11
+00:00:25,230 --> 00:00:26,790
+The first thing
+that the mongos does
+
+12
+00:00:26,790 --> 00:00:30,510
+is determine the list of shards
+that must receive the query.
+
+13
+00:00:30,510 --> 00:00:32,189
+Depending on the
+query predicate,
+
+14
+00:00:32,189 --> 00:00:35,310
+the mongos as either targets
+every shard in the cluster
+
+15
+00:00:35,310 --> 00:00:38,430
+or a subset of shards
+in the cluster.
+
+16
+00:00:38,430 --> 00:00:41,110
+If the query predicate
+includes the shard key,
+
+17
+00:00:41,110 --> 00:00:43,050
+then the mongos can
+specifically target
+
+18
+00:00:43,050 --> 00:00:45,660
+only those shards that
+contain the shard key value
+
+19
+00:00:45,660 --> 00:00:49,050
+or values specified in
+the query predicate.
+
+20
+00:00:49,050 --> 00:00:52,440
+These targeted queries
+are very efficient.
+
+21
+00:00:52,440 --> 00:00:54,900
+If the query predicate does
+not include the shard key,
+
+22
+00:00:54,900 --> 00:00:58,260
+or has generally very wide
+in scope, such as a range
+
+23
+00:00:58,260 --> 00:01:01,860
+to query that spans multiple
+or all shards, than the mongos
+
+24
+00:01:01,860 --> 00:01:04,540
+has to target every
+shard in the cluster.
+
+25
+00:01:04,540 --> 00:01:06,840
+These scatter gather
+operations can be slow,
+
+26
+00:01:06,840 --> 00:01:08,970
+depending on factors such
+as the number of shards
+
+27
+00:01:08,970 --> 00:01:10,272
+and your cluster.
+
+28
+00:01:10,272 --> 00:01:12,480
+We're going to go into more
+detail on targeted versus
+
+29
+00:01:12,480 --> 00:01:15,540
+scatter gather queries, as well
+as how the mongos knows who
+
+30
+00:01:15,540 --> 00:01:18,330
+to target, in the next lesson.
+
+31
+00:01:18,330 --> 00:01:21,120
+Whether we're doing targeted
+or scatter gather queries,
+
+32
+00:01:21,120 --> 00:01:23,310
+the mongos opens a
+cursor against each
+
+33
+00:01:23,310 --> 00:01:25,230
+of the targeted shards.
+
+34
+00:01:25,230 --> 00:01:27,960
+Each cursor executes
+the query predicate,
+
+35
+00:01:27,960 --> 00:01:32,770
+and returns any data returned
+by the query for that shard.
+
+36
+00:01:32,770 --> 00:01:36,660
+The mongos now has the results
+from each targeted shard.
+
+37
+00:01:36,660 --> 00:01:39,180
+The mongos merges all
+of the results together
+
+38
+00:01:39,180 --> 00:01:41,040
+to form the total
+set of documents
+
+39
+00:01:41,040 --> 00:01:43,740
+that fulfills this
+query, and then returns
+
+40
+00:01:43,740 --> 00:01:46,830
+that set of documents to
+the client application.
+
+41
+00:01:46,830 --> 00:01:50,160
+The mongos also has specific
+behavior when it comes
+
+42
+00:01:50,160 --> 00:01:53,710
+to cursor operators, such
+as sore, , limit and skip.
+
+43
+00:01:53,710 --> 00:01:55,980
+For queries where
+you specify a sort,
+
+44
+00:01:55,980 --> 00:01:59,410
+the mongos pushes the sort down
+to each shard in the cluster
+
+45
+00:01:59,410 --> 00:02:02,940
+and then performs a merge
+sort of the results.
+
+46
+00:02:02,940 --> 00:02:06,000
+With limit, the mongos
+pushes the limit down
+
+47
+00:02:06,000 --> 00:02:08,970
+to each shard in the cluster,
+and then reapplies that limit
+
+48
+00:02:08,970 --> 00:02:12,080
+after merging the
+returned results.
+
+49
+00:02:12,080 --> 00:02:15,030
+With skip, the mongos
+performs the skipping
+
+50
+00:02:15,030 --> 00:02:18,420
+on the merged set of results,
+and doesn't push anything down
+
+51
+00:02:18,420 --> 00:02:19,590
+to the shard level.
+
+52
+00:02:19,590 --> 00:02:21,090
+If you're using
+aggregation, there's
+
+53
+00:02:21,090 --> 00:02:24,361
+more specific behavior depending
+on the pipeline you've created.
+
+54
+00:02:24,361 --> 00:02:26,110
+Now, that is out of
+scope for this lesson.
+
+55
+00:02:26,110 --> 00:02:27,901
+So, please take a look
+at the documentation
+
+56
+00:02:27,901 --> 00:02:30,300
+linked below for a more
+complete discussion
+
+57
+00:02:30,300 --> 00:02:34,770
+of how mongos handles
+routing aggregation queries.
+
+58
+00:02:34,770 --> 00:02:39,210
+To recap, the mongos handles all
+queries in a sharded cluster.
+
+59
+00:02:39,210 --> 00:02:41,610
+For any given query, it
+builds a list of shards
+
+60
+00:02:41,610 --> 00:02:44,970
+to target the query to,
+and merger's the results.
+
+61
+00:02:44,970 --> 00:02:47,830
+It can also handle query
+modifiers such as sort,
+
+62
+00:02:47,830 --> 00:00:00,000
+limit, and skip.
+

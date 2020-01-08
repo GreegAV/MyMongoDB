@@ -1,0 +1,149 @@
+OK, so I can see that this logins collection appears twice.
+
+Once when I query it, once when I insert on it.
+
+So that's fine.
+
+It's everything else that's the problem.
+
+I'm counting eight collections that we're hitting just to get the information for a standard user login.
+
+That's totally unacceptable.
+
+One of the patterns of schema design is that data that is queried together should be in the same document whenever possible.
+
+It's obvious already that that's not the case here.
+
+Looking at these, I can see that I'm looking first at one and then another collection for the information that I need.
+
+Let's look at our schema for user phone numbers.
+
+Yikes.
+
+OK, I'm seeing nothing but what was obviously once a joined table in a relational database.
+
+I've got a user ID and a phone number ID and then this label field seems to have some metadata about the phone number.
+
+OK, let's look at phone numbers.
+
+OK.
+
+So my phone number document has just a phone number and an extension.
+
+Now here's the problem.
+
+I'm not just hating on relational schemas.
+
+They're great for relational databases.
+
+My problem is that someone tried to take that, that relational schema and move it into MongoDB.
+
+And here's where the problem arises.
+
+Instead of just querying the data once, they're querying users to get a user ID then querying user phone numbers to get the phone number IDs and then querying the phone numbers collection to get the phone number that really should have been in the user document itself.
+
+This is so not worth the overhead of the additional queries.
+
+This phone number should be in my user document not in a phone numbers document much less a phone numbers document with a user phone numbers document we have to query just to join these two in the application.
+
+OK let's back up and look at our user document.
+
+OK, I've got a full name, username, password, birthday, but my log in itself shows well, let's move over.
+
+Address, phone number, shopping cart, last log in.
+
+Yeah, that all should be packed into the user document.
+
+By now I've got a great deal of evidence that over normalization is the anti-pattern that caused most of these problems.
+
+By the way I also want to point out that when I look through these collections, I don't see a raise in any of them.
+
+And it looks like user phone numbers is being queried just to avoid an array of phone numbers.
+
+Again, this is the sort of thing that happens in a relational database, which makes sense.
+
+Because in a relational world, you don't just get to pack an arbitrary number of items into a record.
+
+You don't have arrays.
+
+But you can in MongoDB, and you should.
+
+Let's see our list of collections.
+
+OK, so I just built the system dot profile collection but everything else is used by this schema.
+
+How do we fix this?
+
+Ultimately, this is a schema that the developers are going to have to fix.
+
+And it's probably going to be an uncomfortable conversation telling them that that's the situation.
+
+If all this data is going to be needed every time the user lands on a page, it should all get thrown into the user document.
+
+And those other collections should be eliminated.
+
+This is going to be true for phone numbers, addresses, and the shopping cart.
+
+OK.
+
+But you might ask, well, what if two people share an address?
+
+Doesn't that mean that you have to store the address twice?
+
+And the answer to that is, yes.
+
+You do have to store it twice, three times, maybe even 10 times if friends are shipping other friends they're gifts.
+
+It's worth an occasional copy of an address or phone number because you're going to need it.
+
+And you don't want to perform unnecessary joins in your application.
+
+That extra space that you have to take up is going to mean that you get a lot of extra speed in your database.
+
+By the way, I wouldn't advocate for eliminating all of these other collections.
+
+For example, I'd recommend putting just the last log in into the application and also into the logins collection.
+
+But probably not eliminating the logins collection entirely.
+
+Same for the purchase history.
+
+Why?
+
+Because while any given person is only going to have so many addresses or phone numbers, their number of logins and purchases will just continue to grow over time.
+
+Eventually, you're going to end up with documents packed with things you don't want.
+
+What I'd recommend is just storing that last log in time plus the shopping cart and the user document since that's all we need for the landing page.
+
+You can use a find an update query to reset the last log to the present, performing a read and write in a single query, and then separately insert its document into logins.
+
+Which is a cheap operation.
+
+If the user wants to see their purchase history, put that on a separate web page that they can click on.
+
+And perform the purchase history query at that point.
+
+They shouldn't need to see their full log in history every time they log in.
+
+But maybe I want to store that for analytics purposes.
+
+So we'll keep it away from the user document because that should just hold the data we need when they log in.
+
+OK.
+
+What did we learn?
+
+First, avoid round trips to the database.
+
+User events should only generate a small number of queries.
+
+Second, use arrays where needed and of course where they won't grow indefinitely.
+
+Third, a little de-normalization is OK as long as it's in the interests of speed.
+
+And forth, please don't just migrate relational schemas.
+
+There are a lot of things that are patterns for relational schemas that are anti patterns for MongoDB.
+
+And that's how we investigate a schema.

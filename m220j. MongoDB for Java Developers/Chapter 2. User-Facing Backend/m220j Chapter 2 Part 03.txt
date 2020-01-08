@@ -1,0 +1,71 @@
+Now, not all aggregation stages are made equal.
+
+There are ones that are more complex than others in terms either of their type of operation and the parameters they may take to execute.
+
+For example, $lookup stage takes a fair amount more parameters and options to execute than a simple $addFields stage.
+
+By comparing these two, you can see how they differ in terms of complexity and, obviously, what the expected output is about.
+
+To exemplify this scenario, let's go ahead and do the following.
+
+Create facets of the movie documents that were produced in Portugal, the facets on the cast members of those same movies, a facet on the genres count, a list of the genres and its count, a facet on your bucket matching the movies, year bucket, all of which were produced, again, in Portugal exactly using the same filters.
+
+What we were trying to achieve in Java would be something similar to this aggregation.
+
+Where we match for each facet, we are going to create a MongoDB client facet object that will express that same facet.
+
+Now, a facet constructor takes a facet name and a variable argument, a variable length arguments, v args for short, of a sub-pipeline that build up to the expected facet values.
+
+For the cast members, we need to unwind the cast arrays and use a group stage to create the set of cast members.
+
+So, here, what we are doing is unwinding the cast and then heading to sets as an accumulator on every single cast member that we find.
+
+So, actually, even the group ID here will be empty.
+
+So we're not filtering in specific one.
+
+We just want to [?
+
+iterate ?] all of them and create a single set of all the cast members.
+
+That will be our cast member facet definition.
+
+It takes on the unwind cast and the group cast set.
+
+All the following facets will be having the same kind of logics associated.
+
+There will be sub-pipelines that we need to build.
+
+So in this case, the facet genresCountFacet will unwind first the genres and then sort by count giving us the sorted order and the count of each one of the genres.
+
+For the yearBucketFacet we just need to create a single stage the BucketAuto, which will give us the group by the year in 10 buckets.
+
+It will auto generate that distribution for us, which is very handy.
+
+The Aggregates.facets method also takes a variable set of facet objects that composes the sub-pipelines of each facet element.
+
+So in this case here, the facet stage will be just basically a setting up of all the different facets which we previously defined.
+
+Then, finally, we can just create a matchStage, the first filter for all these facets to be created.
+
+Add that matchStage to the pipeline.
+
+Then add the facetStage.
+
+Then iterate and count on the results.
+
+In this particular case, we only have one single document that gives the full facet.
+
+We can look into the result here for more detail on how this is going to be built.
+
+You can scroll through the list of results here to see what the end result of that pipeline will be looking like.
+
+Well, let's take a moment to recap.
+
+Aggregation pipelines are composed of lists of Bson stage documents objects.
+
+We can use the driver Aggregates builder class to compose at different stages.
+
+We can use accumulators, sorts, filters, builders to compose the different stage's expressions and operations that those stages will perform.
+
+For complex aggregation stages, we can imply several different supply plans and stage arguments as well.

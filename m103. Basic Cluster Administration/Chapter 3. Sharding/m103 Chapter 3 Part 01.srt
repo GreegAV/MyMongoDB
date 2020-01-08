@@ -1,0 +1,626 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.510
+OK, so MongoDB can scale.
+
+3
+00:00:02.510 --> 00:00:03.260
+Awesome.
+
+4
+00:00:03.260 --> 00:00:04.220
+Let's do it then.
+
+5
+00:00:04.220 --> 00:00:07.010
+Let's go ahead and build
+the scalable cluster right
+
+6
+00:00:07.010 --> 00:00:08.750
+off the bat.
+
+7
+00:00:08.750 --> 00:00:09.860
+OK.
+
+8
+00:00:09.860 --> 00:00:11.900
+Not so fast young Padawan.
+
+9
+00:00:11.900 --> 00:00:16.079
+Let's look into when you should
+definitely consider to shard.
+
+10
+00:00:16.079 --> 00:00:18.380
+First let's understand
+what indicators we
+
+11
+00:00:18.380 --> 00:00:21.740
+should check for to see if
+we really got to the moment
+
+12
+00:00:21.740 --> 00:00:22.970
+for sharding.
+
+13
+00:00:22.970 --> 00:00:26.150
+One of the first things
+to do is to check out
+
+14
+00:00:26.150 --> 00:00:30.770
+if it is still economically
+viable to vertical scale.
+
+15
+00:00:30.770 --> 00:00:33.560
+When we need to address
+a throughput performance
+
+16
+00:00:33.560 --> 00:00:35.780
+or volume bottleneck,
+which are generally
+
+17
+00:00:35.780 --> 00:00:39.330
+the technical drivers for adding
+more resources to your system,
+
+18
+00:00:39.330 --> 00:00:43.400
+the first step would be to
+check if we can still add
+
+19
+00:00:43.400 --> 00:00:46.060
+more resources and scale up.
+
+20
+00:00:46.060 --> 00:00:49.130
+Great, but we need to
+validate that adding
+
+21
+00:00:49.130 --> 00:00:52.250
+more of those vertical
+resources, such as adding more
+
+22
+00:00:52.250 --> 00:00:56.120
+CPU, network, memory, or disk
+to your existing servers,
+
+23
+00:00:56.120 --> 00:00:59.330
+is economically
+viable and possible.
+
+24
+00:00:59.330 --> 00:01:01.820
+So in case we have a
+small set of servers,
+
+25
+00:01:01.820 --> 00:01:05.630
+checking that, increasing that
+server's unit resources, in any
+
+26
+00:01:05.630 --> 00:01:07.580
+of the identified
+resource bottlenecks,
+
+27
+00:01:07.580 --> 00:01:09.560
+gives you an
+increased performance
+
+28
+00:01:09.560 --> 00:01:14.720
+with very little downtime
+in an economical scale way.
+
+29
+00:01:14.720 --> 00:01:17.930
+Adding 10 times more RAM to
+solve a memory allocation
+
+30
+00:01:17.930 --> 00:01:21.930
+bottleneck does not cost you 100
+times more, if that's the case,
+
+31
+00:01:21.930 --> 00:01:22.790
+great.
+
+32
+00:01:22.790 --> 00:01:26.570
+That should be your reasoning
+for continuing to scale up.
+
+33
+00:01:26.570 --> 00:01:30.800
+You are still able to do so
+in economical viable manner,
+
+34
+00:01:30.800 --> 00:01:32.630
+but you will eventually
+reach a point
+
+35
+00:01:32.630 --> 00:01:35.780
+where vertical scaling is no
+longer economically viable
+
+36
+00:01:35.780 --> 00:01:39.980
+or it's very difficult to
+say impossible to accomplish.
+
+37
+00:01:39.980 --> 00:01:42.890
+Let's say that your current
+architecture relies on servers
+
+38
+00:01:42.890 --> 00:01:46.340
+that cost $100 per hour.
+
+39
+00:01:46.340 --> 00:01:47.940
+You have three
+member rep cassettes,
+
+40
+00:01:47.940 --> 00:01:51.260
+so you're sitting on
+top of $300 per hour.
+
+41
+00:01:51.260 --> 00:01:55.460
+The next available type of
+server costs $1,000 per hour,
+
+42
+00:01:55.460 --> 00:01:59.810
+but where your overall impact
+in performance is only of 2x,
+
+43
+00:01:59.810 --> 00:02:03.470
+that is probably not going
+to be a very wise decision.
+
+44
+00:02:03.470 --> 00:02:07.610
+10 times the cost per server for
+only two times the performance
+
+45
+00:02:07.610 --> 00:02:09.470
+overall.
+
+46
+00:02:09.470 --> 00:02:11.660
+You will probably
+be way better off
+
+47
+00:02:11.660 --> 00:02:15.620
+with a horizontal scale
+where you increase in cost
+
+48
+00:02:15.620 --> 00:02:17.420
+will be, let's say, three times.
+
+49
+00:02:17.420 --> 00:02:19.730
+Three more servers for
+another rep cassette,
+
+50
+00:02:19.730 --> 00:02:22.550
+plus three more for your
+configuration servers,
+
+51
+00:02:22.550 --> 00:02:25.760
+with a potential increase
+of performance of 2x.
+
+52
+00:02:25.760 --> 00:02:29.270
+$900 per hour is more
+acceptable than $3,000
+
+53
+00:02:29.270 --> 00:02:31.970
+for the same
+performance improvement.
+
+54
+00:02:31.970 --> 00:02:34.640
+The economics here will
+play a considerable weight
+
+55
+00:02:34.640 --> 00:02:36.510
+in your decision.
+
+56
+00:02:36.510 --> 00:02:38.570
+Another aspect to
+consider is the impact
+
+57
+00:02:38.570 --> 00:02:40.397
+on your operational tasks.
+
+58
+00:02:40.397 --> 00:02:42.230
+Let's say that you are
+currently considering
+
+59
+00:02:42.230 --> 00:02:43.970
+increasing the
+size of your disks
+
+60
+00:02:43.970 --> 00:02:46.070
+to allow moving from
+one terabyte disk
+
+61
+00:02:46.070 --> 00:02:49.250
+space to 20 terabyte disks.
+
+62
+00:02:49.250 --> 00:02:52.260
+The purpose of that
+is to scale vertically
+
+63
+00:02:52.260 --> 00:02:56.440
+your storage capabilities,
+which is totally fine.
+
+64
+00:02:56.440 --> 00:03:00.200
+But if we are expecting to
+run these at 75% capacity,
+
+65
+00:03:00.200 --> 00:03:03.300
+this will mean loading up
+to 15 terabytes of data.
+
+66
+00:03:03.300 --> 00:03:06.590
+Which means 15 times
+more data to backup.
+
+67
+00:03:06.590 --> 00:03:08.870
+Like a quite significant
+amount of other aspects,
+
+68
+00:03:08.870 --> 00:03:11.750
+this will probably mean that
+you will take 15 times more
+
+69
+00:03:11.750 --> 00:03:15.800
+time to back up those servers,
+probably an even bigger penalty
+
+70
+00:03:15.800 --> 00:03:18.230
+while restoring
+such large servers,
+
+71
+00:03:18.230 --> 00:03:21.260
+as well as doing initial
+syncs between replica sets.
+
+72
+00:03:21.260 --> 00:03:24.350
+And we have to account now
+for impact on the network
+
+73
+00:03:24.350 --> 00:03:27.830
+when backing up those
+15 terabytes of data.
+
+74
+00:03:27.830 --> 00:03:30.710
+In such a scenario,
+having horizontal scale
+
+75
+00:03:30.710 --> 00:03:35.330
+and distributing that amount of
+data across different shards,
+
+76
+00:03:35.330 --> 00:03:37.790
+will allow getting
+horizontal performance gains
+
+77
+00:03:37.790 --> 00:03:40.310
+like parallelization
+of the backup, restore,
+
+78
+00:03:40.310 --> 00:03:42.470
+and initial sync processes.
+
+79
+00:03:42.470 --> 00:03:46.190
+Remember, that even though these
+may be infrequent operations,
+
+80
+00:03:46.190 --> 00:03:49.280
+they can become serious
+scalability issues to handle
+
+81
+00:03:49.280 --> 00:03:51.770
+from the operational side.
+
+82
+00:03:51.770 --> 00:03:53.540
+This same scenario
+will also impact
+
+83
+00:03:53.540 --> 00:03:55.300
+your operational workload.
+
+84
+00:03:55.300 --> 00:03:57.310
+15 times bigger
+dataset per MongoDB
+
+85
+00:03:57.310 --> 00:04:02.030
+will most likely translate to at
+least 15 times bigger indexes.
+
+86
+00:04:02.030 --> 00:04:05.060
+As we know, indexes are
+essential for the performance
+
+87
+00:04:05.060 --> 00:04:06.950
+of our queries in a database.
+
+88
+00:04:06.950 --> 00:04:11.000
+If they take 15 times more space
+per processing unit or server,
+
+89
+00:04:11.000 --> 00:04:13.190
+they will require more
+RAM so that indexes
+
+90
+00:04:13.190 --> 00:04:14.720
+can be kept in memory.
+
+91
+00:04:14.720 --> 00:04:18.079
+A very important part
+of your working dataset.
+
+92
+00:04:18.079 --> 00:04:21.200
+Increasing the size of
+your disks most likely
+
+93
+00:04:21.200 --> 00:04:24.290
+will imply eventual increasing
+the size of your RAM, which
+
+94
+00:04:24.290 --> 00:04:28.340
+Brings added costs or other
+bottlenecks to your system.
+
+95
+00:04:28.340 --> 00:04:30.650
+In such a scenario sharding,
+the parallelization
+
+96
+00:04:30.650 --> 00:04:33.200
+of your workload
+across shards, might
+
+97
+00:04:33.200 --> 00:04:36.990
+be way more beneficial for
+your application and budget
+
+98
+00:04:36.990 --> 00:04:41.000
+than the waterfall of
+potential expensive upgrades.
+
+99
+00:04:41.000 --> 00:04:42.530
+A general rule of
+thumb indicates
+
+100
+00:04:42.530 --> 00:04:44.360
+that individual
+servers should contain
+
+101
+00:04:44.360 --> 00:04:46.520
+two to 5 terabytes of data.
+
+102
+00:04:46.520 --> 00:04:51.590
+More than that just becomes too
+time consuming to operate with.
+
+103
+00:04:51.590 --> 00:04:54.620
+Finally, there are
+workloads that intrinsically
+
+104
+00:04:54.620 --> 00:04:58.010
+play nicer in distributed
+deployments that
+
+105
+00:04:58.010 --> 00:05:01.220
+sharing offers, like single
+threaded operations that
+
+106
+00:05:01.220 --> 00:05:04.340
+can be parallelized and
+geographically distributed
+
+107
+00:05:04.340 --> 00:05:04.940
+data.
+
+108
+00:05:04.940 --> 00:05:09.050
+Data that needs to be stored
+in specific regional locations
+
+109
+00:05:09.050 --> 00:05:11.540
+or will benefit from
+being co-located
+
+110
+00:05:11.540 --> 00:05:14.030
+with the clients that
+consume such data.
+
+111
+00:05:14.030 --> 00:05:16.580
+As an example of a
+single thread operations
+
+112
+00:05:16.580 --> 00:05:19.760
+will be aggregation
+framework commands.
+
+113
+00:05:19.760 --> 00:05:22.460
+If your application
+relies heavily
+
+114
+00:05:22.460 --> 00:05:24.760
+on aggregation
+framework commands
+
+115
+00:05:24.760 --> 00:05:27.830
+and if the response
+time of those commands
+
+116
+00:05:27.830 --> 00:05:30.350
+becomes slower over
+time, you should
+
+117
+00:05:30.350 --> 00:05:33.110
+consider sharding your cluster.
+
+118
+00:05:33.110 --> 00:05:36.410
+That said, not all stages
+of the aggregation pipeline
+
+119
+00:05:36.410 --> 00:05:37.910
+are parallelizable.
+
+120
+00:05:37.910 --> 00:05:40.880
+So a deeper understanding
+of your pipeline
+
+121
+00:05:40.880 --> 00:05:43.430
+is required before
+making that decision.
+
+122
+00:05:43.430 --> 00:05:47.160
+You can learn all about it in
+our M121 MongoDB Aggregation
+
+123
+00:05:47.160 --> 00:05:47.870
+Course.
+
+124
+00:05:47.870 --> 00:05:49.910
+So stay tuned for that.
+
+125
+00:05:49.910 --> 00:05:53.870
+Finally, geodistributed
+data is significantly simple
+
+126
+00:05:53.870 --> 00:05:56.630
+to manage using zone sharding.
+
+127
+00:05:56.630 --> 00:05:58.940
+Zone sharding allows us
+to easily distribute data
+
+128
+00:05:58.940 --> 00:06:01.220
+that needs to be co-located.
+
+129
+00:06:01.220 --> 00:06:03.830
+Zone sharding is out of
+scope for this course,
+
+130
+00:06:03.830 --> 00:06:06.170
+but bear in mind that
+this is an efficient way
+
+131
+00:06:06.170 --> 00:06:09.830
+to manage geographically
+distributed data sets.

@@ -1,0 +1,49 @@
+Projections reduce network overhead and processing requirements by limiting the fields that are returned in results documents.
+
+By default, MongoDB returns all fields in all matching documents for queries.
+
+You can define a projection as the second argument to the find method.
+
+If I want to limit my result documents so that they just contain a title, I can do that using the following syntax, or almost.
+
+So using this syntax, I can create a projection where results from this query will return just the title and, actually, the title and the underscore ID.
+
+And we'll talk about that in just a sec.
+
+So again, use the filter as usual.
+
+But in this case, because we'd like to just have the title, we're also adding a projection as the second argument that we passed to find.
+
+Now, I get the title and the underscore ID.
+
+I get the underscore ID field because underscore ID is returned by default for all projections, unless I explicitly exclude it from the projection.
+
+The projection syntax allows me to explicitly include fields in documents returned.
+
+I can also explicitly exclude fields.
+
+I explicitly include fields using a one, and exclude using a zero.
+
+If I don't want to see the underscore ID field, then, to my projection, I need to add underscore ID zero.
+
+Let's run this.
+
+And now we can see that we do, in fact, just have titles.
+
+Now if we have the reverse situation, where we actually want to explicitly exclude a couple of fields, we can do that as follows.
+
+So let's say that rather than include title, I'm going to exclude viewer rating, viewer votes, and run time.
+
+And let's pretty that up.
+
+Now my results contain all fields except for the ones I explicitly excluded here.
+
+Note that there is no viewer rating, no viewer votes, and no run time in these documents.
+
+And just for the sake of comparison, if I drop the projection, then we see the viewer rating, viewer votes, and run time coming back in for those documents that have a run time, such as this one.
+
+So, if you need to limit the fields returned by your queries, projection is the tool to use.
+
+You zeros to explicitly exclude fields that you don't need to see in your result set.
+
+And use one to explicitly include fields and exclude all others.

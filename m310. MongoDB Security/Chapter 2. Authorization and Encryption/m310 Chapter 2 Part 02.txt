@@ -1,0 +1,133 @@
+Now that we know what roles are, let's talk about some of the built in roles that come prepackaged with MongoDB.
+
+MongoDB comes with a set of general purpose built in roles.
+
+Roles that we know from experience are generally required by different individuals and therefore different responsibilities within an organization.
+
+These roles can be divided into the following categories.
+
+First we have database user roles.
+
+There are only two roles in here, but these are two of the most commonly used roles.
+
+First we have the read role, which grants the following privileges.
+
+And these privileges make sense based on the name of the role.
+
+We would expect that if we were granted the read role that we'd be able to run find, dbHash, listIndexes, listCollections, et cetera.
+
+Next we have the readWrite role.
+
+This role grants us all the privileges of the read role, in addition to the following privileges.
+
+Now this demonstrates a powerful feature of the role based access control authorization system that MongoDB brings.
+
+Role inheritance.
+
+We have the ability to inherit the privileges of other roles for a given role.
+
+We'll talk more about this later, but I wanted to bring it to your attention while we discuss all these different built-in roles.
+
+After database user roles we can next talk about database admin roles.
+
+The first role I'm going to talk about is the dbAdmin role, a role that grants us these following privileges.
+
+And again, this makes sense.
+
+Imagine if we had a database administrator, they'd need to be able to create collections for developers, create indexes for developers, maybe go through old parts of the database by dropping some old collections, or dropping that old test database that the developers were using.
+
+All of these privileges make sense for a database administrator.
+
+The userAdmin role is exactly what it sounds like, is the ability to administrate users within our database.
+
+Things like changing a user's password, creating a new user, creating a new role, granting a role to a user, dropping a role, viewing a user, et cetera.
+
+Anything that involves user management or user administration is going to be the userAdmin role.
+
+And finally, we have the dbOwner role, which inherits the privileges of readWrite, dbAdmin, and the userAdmin roles.
+
+After the database administration roles, we can now talk about the all database roles.
+
+Now, these roles are going to sound familiar, and that's because they're the same roles that we just talked about, but with privileges on different resources.
+
+In this case, any database.
+
+So for example, the readAnyDatabase role inherits the privileges of the read role, but for any database.
+
+Similarly, the read write, user admin, and db admin roles all have the same privileges as their first part of their name, except these roles now get privileges for any database.
+
+After the all database category we can move on to the cluster admin category.
+
+Now here, we expect to find roles that allow us to perform actions across an entire cluster.
+
+And by cluster I mean a replica set or a sharded cluster.
+
+And that's exactly what we find.
+
+First we have the clusterManager role, which gives us the following privileges.
+
+A Cluster Manager, it would make sense for them to be able to add shards, cleanup orphans, list shards, remove shards, set up replica sets, or resync a member.
+
+Next, we have the clusterMonitor role, which gives us the following privileges.
+
+Here we're going to see a lot of stat reading privileges like connection pool stats, getting server parameters, getting host info, getting server status, et cetera.
+
+Now, the hostManager role is very similar to the clusterManager role, except you'll see that we now have privileges like the ability to do things specifically on a host like running the CPU profiler, or ordering a forced sync, or killing an operation on a member, or resyncing a member, or shutting down a member.
+
+It's somewhat similar to the clusterManager role but with regards to an individual host or an individual member within our cluster.
+
+And finally, we have the clusterAdmin role, which inherits the privileges of all three of the other roles.
+
+After clusterAdmin roles, we can talk about the backup and restore roles.
+
+This group is pretty straightforward.
+
+First, we have the backup role, which as you would expect allows us to do everything that we need in order to back up our database.
+
+And similarly, we have the restore role, which allows us to do everything we need to restore our database from a backup.
+
+Moving on, we can talk about two special categories.
+
+First, we're going to talk about the superuser category.
+
+Now these first three roles, you've already seen these before.
+
+But we're bringing them up again because we consider these roles to be superuser rules.
+
+And that's because these roles allow a user to assign themselves any role that they want.
+
+So for example, when the dbOwner role is assigned to the admin database, a user can then assign themselves any role they want on any database.
+
+Similarly, the userAdmin role allows us to do this.
+
+Actually, the dbOwner role can do this because it inherits the userAdmin role.
+
+And then similarly, the userAdminAnyDatabase role would include the userAdmin role on the admin database, which would then allow us to assign ourselves a role on any database.
+
+And finally, we can talk about root role.
+
+And now, you've seen me use this role before in other videos.
+
+And while I might use it a lot for convenience, please be very careful when assigning this role to an individual.
+
+And that's because the root role inherits all of these privileges, the readWriteAnyDatabase, dbAdminAnyDatabase, userAdminAnyDatabase, the clusterAdmin role, and the restore role.
+
+All of these roles and all the privileges associated with all these roles are all inherited by this one role, the root role.
+
+So needless to say, the root role can pretty much do anything it wants.
+
+So the super user category was the first of two special categories.
+
+The second being the internal category.
+
+And the internal category only has one role, and that is the underscore underscore system role.
+
+And the underscore underscores system allows you to take any action on any resource.
+
+So this is a very, very internal role that is only used by the server itself for very special internal operations.
+
+And because of this, you should never ever grant this role to a user.
+
+You might see this in like logs or somewhere in the database, and so I wanted to bring it up so you know what was going on, but I also wanted to give you this warning and tell you that you should not use this role or assign this role to any of your users unless you really, really, really have to.
+
+And those are the built-in roles that come with MongoDB.

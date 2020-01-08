@@ -1,0 +1,227 @@
+1
+00:00:00,030 --> 00:00:05,160
+now that we've created a sandbox cluster
+let's connect the Mongo shell to this
+
+2
+00:00:05,160 --> 00:00:10,710
+cluster now in case it's not 100% clear
+to you from this point on we're going to
+
+3
+00:00:10,710 --> 00:00:17,340
+be using two different Atlas clusters
+one is the class Atlas cluster that you
+
+4
+00:00:17,340 --> 00:00:22,800
+were using in Chapter one where we were
+connecting from compass and exploring
+
+5
+00:00:22,800 --> 00:00:27,510
+datasets in this chapter as we explore
+them on going to be query language we
+
+6
+00:00:27,510 --> 00:00:32,340
+will be using that same cluster from
+time to time but we will also be using
+
+7
+00:00:32,340 --> 00:00:39,989
+the sandbox cluster that you've just
+created in Atlas the sandbox cluster
+
+8
+00:00:39,989 --> 00:00:46,590
+because you have full administrative
+access will allow you to issue rights to
+
+9
+00:00:46,590 --> 00:00:52,170
+the datasets that are in this cluster or
+more precisely to the datasets that we
+
+10
+00:00:52,170 --> 00:00:58,140
+will load into this cluster so at this
+point please visit your sandbox cluster
+
+11
+00:00:58,140 --> 00:01:02,879
+in Atlas connecting to the sandbox
+cluster is a pretty straightforward
+
+12
+00:01:02,879 --> 00:01:07,710
+operation
+given what Atlas provides to us from the
+
+13
+00:01:07,710 --> 00:01:13,619
+Atlas view we simply need to click the
+connect button and then scroll down to
+
+14
+00:01:13,619 --> 00:01:17,820
+the instructions for connecting with the
+Mongo shell now it's pretty easy to be
+
+15
+00:01:17,820 --> 00:01:24,060
+confused about whether to use this
+connection command or this connection
+
+16
+00:01:24,060 --> 00:01:29,340
+string for our purposes we will
+completely ignore the URI connection
+
+17
+00:01:29,340 --> 00:01:35,640
+string here at the top of this modal do
+not use this connection string to
+
+18
+00:01:35,640 --> 00:01:40,770
+connect to your Atlas sandbox cluster
+instead scroll to the bottom of this
+
+19
+00:01:40,770 --> 00:01:46,020
+modal where we find a section connect
+with the Mongo shell here you'll see
+
+20
+00:01:46,020 --> 00:01:52,200
+instructions for connecting via the
+Mongo shell to this Atlas cluster we
+
+21
+00:01:52,200 --> 00:01:57,240
+have almost the entire command that
+we'll need in order to do this now your
+
+22
+00:01:57,240 --> 00:02:02,820
+command will differ slightly because you
+will have a different host name for each
+
+23
+00:02:02,820 --> 00:02:08,878
+of the nodes in your replica set for
+your sandbox cluster so while these are
+
+24
+00:02:08,878 --> 00:02:13,620
+the host names for my Atlas cluster
+yours will be different
+
+25
+00:02:13,620 --> 00:02:18,420
+however if you simply click copy here
+and then jump into your command line
+
+26
+00:02:18,420 --> 00:02:23,610
+interface whether it's the terminal
+application on a Mac or the command
+
+27
+00:02:23,610 --> 00:02:28,769
+shell on a Windows machine or some other
+command-line interface on say a Linux
+
+28
+00:02:28,769 --> 00:02:33,810
+machine of some kind regardless of which
+CLI you're using given that we've set up
+
+29
+00:02:33,810 --> 00:02:39,329
+our path this command should work for
+you with one change you simply need to
+
+30
+00:02:39,329 --> 00:02:48,420
+change the password to m001-mongodb-basics. Now sometimes the captioning for
+
+31
+00:02:48,420 --> 00:02:52,709
+these videos doesn't reflect what we're
+typing on the screen exactly so please
+
+32
+00:02:52,709 --> 00:02:56,910
+pay attention to what I'm actually
+showing you here on the screen with this
+
+33
+00:02:56,910 --> 00:03:02,909
+command I can connect my Mongo shell to
+my atlas cluster you can use a very
+
+34
+00:03:02,909 --> 00:03:09,840
+similar command that again you get from
+the Atlas UI here to connect to your own
+
+35
+00:03:09,840 --> 00:03:17,040
+sandbox cluster the only difference for
+you should be in what hosts are listed
+
+36
+00:03:17,040 --> 00:03:21,540
+here everything else should be the same
+including the Mongo command and each of
+
+37
+00:03:21,540 --> 00:03:26,700
+the command line parameters that were
+passing to Mongo again please make sure
+
+38
+00:03:26,700 --> 00:03:33,540
+you don't use this URI connection string
+here but do use this Mongo command
+
+39
+00:03:33,540 --> 00:03:39,419
+provided for us in the connect with the
+Mongo shell section of this modal now if
+
+40
+00:03:39,419 --> 00:03:45,090
+I run this command then I will see a few
+different responses printed out as the
+
+41
+00:03:45,090 --> 00:03:50,129
+Mongo shell starts up but at the end
+what we're looking for is a prompt that
+
+42
+00:03:50,129 --> 00:03:54,750
+looks something like this that indicates
+we have connected to the primary I can
+
+43
+00:03:54,750 --> 00:03:59,459
+do exactly the same thing on Windows
+copying the same command in and changing
+
+44
+00:03:59,459 --> 00:04:07,769
+the password to m001-mongodb-basics and see that I have successfully
+
+45
+00:04:07,769 --> 00:04:13,379
+connected to my Atlas sandbox cluster
+and that is how we connect to our
+
+46
+00:04:13,379 --> 00:00:00,000
+sandbox cluster from the Mongo shell
+

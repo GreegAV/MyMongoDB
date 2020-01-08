@@ -1,0 +1,81 @@
+Welcome back.
+
+In this lesson, we're going to discuss a new feature an Atlas called the data lake, which allows us to query archived data stored in as S3 buckets MongoDB query language.
+
+So keeping all of your data available in' database clusters may not be financially responsible.
+
+So customers archive data from time to time.
+
+Having that data in archive format does not mean we won't ever need it again because you still may need to access this data for data analytics or compliance purposes.
+
+However, now you could also use the Atlas data lake to query the data that you've archived in S3 buckets.
+
+So you create a data lake through the Atlas UI, similar to creating an Atlas cluster.
+
+Your data lakes appear in the UI at the same level as your Atlas clusters.
+
+And once you've created your data lake, you can configure the data stored in your S3 buckets to be exposed as MongoDB databases or collections.
+
+Then you can build and run queries through the Mongo Shell, MongoDB Compass, or through your driver.
+
+So operations can be run using the MongoDB query language, or MQL, which includes most but not all standard server commands.
+
+In particular, the data lake is a read-only service, though we will be adding support for the dollar out aggregation stage sometime in the future.
+
+MQL operations can be run in parallel to enhance performance for large and complex queries.
+
+However, the data lake is meant for analytics-type workloads and is not intended for day-to-day operational workloads.
+
+The data lake supports many different file formats, such as JSON, BSON, CSV, TSV, Avro, and Parquet.
+
+You can specify the file format, or it will be detected automatically.
+
+An AWS IAM role is required to access the S3 data.
+
+This rule is created using the AWS command line interface or the AWS console.
+
+You can then assign a role policy to this role that gives Atlas data lake read-only access to your S3 buckets.
+
+Using this approach, you control what buckets are exposed to the Atlas data lake.
+
+Also, should you decide to terminate access to the archived data, you can remove or restrict a configured AWS role whenever you want.
+
+Instructions are provided in the Atlas UI during the data lake setup to help you create this role.
+
+You can find more detail on IAM role management in the AWS User Guide.
+
+And we'll attach a link to that in the lecture notes.
+
+So a few things to consider about using the Atlas data lake, as this is a very new feature.
+
+Currently, the maximum cursor size is 1 gigabyte.
+
+So if the query returns more than 1 gigabyte of data, the result set will be truncated down to 1 gigabyte and then returned.
+
+So as we mentioned before, the Atlas data lake does not currently support dollar out.
+
+There are a few other aggregation pipeline stages that are not supported by the data lake at this time.
+
+Those stages are collection stats, geoNear, graphLookup, indexStats, and listSessions.
+
+In particular, the collection stats command omits some fields, as they are either not applicable to the data lake, or they would be too expensive to compute.
+
+And lastly, the Atlas data lake supports all of Parquet's base types, except the deprecated INT96 type.
+
+So now let's recap.
+
+The Atlas data lake allows you to run queries against data stored in S3 buckets through the Mongo Shell, your driver, or through MongoDB Compass.
+
+The data lake is integrated with MongoDB Atlas, so you can build data lakes through the Atlas UI, similar to building an Atlas cluster.
+
+There's no infrastructure required.
+
+You just need an AWS IAM user with read-only access to the S3 bucket.
+
+The stored configuration allows you to flexibly define how your S3 data is mapped to databases and collections.
+
+Our Atlas data lake tutorial guides you through the data lake setup process.
+
+There are steps in the procedure on how to set up a data lake, and it'll provide access to a public S3 bucket with sample commands to help you create named spaces and run MQL queries.
+
+We'll also provide a link to this documentation page, as well as some other helpful ones in the lecture notes.

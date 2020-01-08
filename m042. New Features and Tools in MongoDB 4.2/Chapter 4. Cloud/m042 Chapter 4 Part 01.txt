@@ -1,0 +1,73 @@
+Welcome back.
+
+In Ops Manager 4.2, the Enterprise Kubernetes Operator is no longer in beta.
+
+With the new 4.2 release cycle, we are also releasing the general availability of the Kubernetes Operator.
+
+Before we go into the new Operator and what it can do, let's review what Kubernetes is and why we'd want to use it what Ops Manager and MongoDB.
+
+Kubernetes is an open-source container orchestration system for automating application deployment, scaling, and management.
+
+It was originally designed by Google, and is now maintained by the Cloud Native Computing Foundation.
+
+Looking into its formal definition, we can identify that Kubernetes manages deployments of containerized applications, meaning that applications and systems running on top of containers can be managed by a Kubernetes cluster.
+
+There are many different terms and concepts related with a containerized system and Kubernetes, and the main ones that we're going to be looking at are containers, pods, replicasets, nodes, and clusters.
+
+On a high level, Kubernetes can be represented by something similar to this diagram.
+
+Each Kubernetes closer has a master node, which talks to older notes in order to maintain your cluster's health.
+
+It holds an important set of processes that are out of scope with this lesson, but we are going to provide links to the Kubernetes documentation so that you can read up on these processes a bit more.
+
+Kubernetes nodes can have several different specs.
+
+We can compose a Kubernetes cluster with physical, virtual, cloud server nodes.
+
+Each node is composed with the necessary process to run pods.
+
+Each node has a container runtime, which generally Docker, to allow the nodes to deploy and run containers.
+
+A pod is the smallest deployable unit of computing in Kubernetes.
+
+A pod can be composed of one or several different containers, and it also allows the definition of shared network and storage resources.
+
+Kubernetes also allows pods to be fault-tolerant and highly available.
+
+They're meant to provide the same operational high availability as MongoDB replicasets.
+
+However, this is implemented quite differently.
+
+In the new version of Ops Manager, it's easier for you to effectively manage your containerized environment using automation.
+
+To see why we introduced the Operator in Ops Manager 4.2, first, let's have a look at how automation works without Kubernetes in the mix.
+
+There's a single agent installed per host, and that agent pings back to the Ops Manager web server.
+
+The web server stores a JSON representation of the gold state of the cluster, called the automation config.
+
+When this config is changed either in the UI or via the API, the agents on each host will start to go through transformations to get the deployment to its gold state, whether that be adding a node, adding a shard, or updating a user.
+
+This works great when we're talking about hosts in the normal sense of the word, but what about containers?
+
+The concept of a host is somewhat conflated, as a container is an isolated environment in which process is run.
+
+We should really install one agent per container.
+
+And the problem here is that this can become quite complex quite quickly, having to route internal IPs and ports within the container to external IPs and ports on the host.
+
+The Kubernetes Operator is a lightweight process that lives inside a Kubernetes pod.
+
+The Operator handles the deployment of containers with an image which contains the MongoDB agent, and this agent can managed, back up, and monitor your deployment as normal.
+
+The Operator also acts as an intermediary between the agent and the Ops Manager server, removing the complexities of managing your internal or external IP routing between the containers and Ops Manager so that you can use all of the standard monitoring, automation, and backup functionality in Ops Manager as before with the added functionality of being able to deploy and manage containers directly from Ops Manager.
+
+So let's recap.
+
+The Kubernetes Operator is now an official release.
+
+It's no longer in beta.
+
+You can deploy and manage containers directly from Ops Manager by having Ops Manager deploy an image.
+
+Each image installed using the Operator has the MongoDB agent pre-installed and ready to use to monitor, manage, and back up your MongoDB deployment.

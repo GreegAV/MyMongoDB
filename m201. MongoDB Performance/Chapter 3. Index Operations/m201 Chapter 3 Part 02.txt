@@ -1,0 +1,151 @@
+In this lesson, we're going to look at the explain method.
+
+And we're going to talk about what kind of information explain provides us, how it, works what this output looks like on sharded cluster, and we'll also see how to use explain in MongoDB Compass.
+
+Using explain on a query is the best way to analyze what happens when the query is executed.
+
+Explain can also be used to tell us what would happen without the query being executed.
+
+More on those modes of operation a little later in the lesson.
+
+Here's all the different information that explain can tell us.
+
+It can tell us, is our query using the index that we expected?
+
+Is our index providing us a sort?
+
+Can our index provide a projection?
+
+How selective is our index?
+
+And it can also tell us, what's the most expensive stage in our query plan?
+
+Running explain is as easy as appending the explain method to the end of our query.
+
+However, that mode of operation has a few limitations.
+
+So if you have more complex commands, or if you need to rerun several queries, it's suggested that we create an explainable object.
+
+From this explainable object, we can then run our query like so.
+
+We can also run multiple queries right off of the same explainable object, which is really handy.
+
+For both of these examples, the shell would return what would happen without actually executing the query.
+
+Now, this might sound silly at first.
+
+However, if you're dealing with a server that's under tremendous load, you might want to validate your command before executing it.
+
+This is also the reason why it's the default mode of operation for explain.
+
+Passing the parameter query planner to explain does the exact same thing as if we ran explain with no parameters.
+
+This is the default behavior.
+
+We can also pass executionStats as an argument to explain.
+
+This will execute the query and then return different statistics about the query.
+
+And finally, we have allPlansExecution.
+
+This is the most verbose way that we can get explain output.
+
+We generally run this when we want to look at the alternative plans that were considered by the query planner, but got rejected in favor of the winning plan.
+
+But remember, both of these commands actually execute the queries, whereas this command does not.
+
+Let's go ahead and jump into the shell and look at some examples.
+
+So go ahead and use the m201 database, and then we'll create our regular explain object on the people collection.
+
+But we'll go ahead and create another explainable object for executionStats, and even another for allPlansExecution.
+
+And here we can go ahead and execute our query on the explainable object, where we're going to look at execution stats.
+
+And so from this output we can go up to the winning plan, and see that the winning plan is to do a collection scan.
+
+And we can also see some execution stats.
+
+We can see that we had to look at 50,000 documents to return seven, and we looked at 0 index keys.
+
+And by this time, we know that we don't want to do collection scans.
+
+We should probably create an index instead.
+
+So let's do that.
+
+And here we're creating an index on the family name.
+
+And now we can rerun that same query.
+
+And now we can go up here.
+
+Now we can see that our winning plan is to do an index scan followed by a fetch.
+
+And now under execution stats, we're only looking at about 800 documents, examining 800 keys to return our seven documents.
+
+Way better than the 50,000 before.
+
+It's important to point out that for our most optimized queries, we want the total documents examined and the nReturned, to be very close to the same number.
+
+Similarly, with 12 keys examined, we also want this to be very close the amount of documents we actually return.
+
+But we know this is always possible.
+
+So the general rule of thumb is that you want these numbers to be close to each other for your queries that are ran most frequently.
+
+Now let's go and create another index, and see how this affects our explain output.
+
+So we'll rerun the same query.
+
+And now when we do so, there's a new field up here.
+
+And this field is called rejectedPlans.
+
+So we still have our winningPlan field, which includes the fact that we're doing an index scan, followed by a fetch.
+
+But now we also have rejected plans, which were the other plans that were considered.
+
+Before, we never had this, because there were no other indexes that the query planner was even considering.
+
+Now, there are two indexes for them to consider.
+
+There's first the state, last name index, and then there's also our original index, which is on just last name.
+
+And as we can see, we now have a much better index where we have a really, really great ratio, and an even better execution time.
+
+We can also look at sorts.
+
+Here I'm appending explain to the end of our query, so that we can store a variable and access some of the fields more easily.
+
+In this case, I can look directly at the execution status field.
+
+And in here, we can see that we're doing an index scan.
+
+But after our index scan, we're doing a fetch.
+
+And after that fetch, we're doing sort key generator.
+
+And this means that we're doing an in memory sort.
+
+And this is because we don't have any indexes to support our sorting.
+
+So there's two things I want to point out here.
+
+First, there is memory usage, which is how much memory was used by the sort.
+
+Here, we are using about 2.8k.
+
+And there's also the memory limit.
+
+And this is 32 megabytes.
+
+And what this means is, is if we ever have a sort that uses more than 32 megabytes, then the server is going to cancel that query.
+
+And so we can do some simple math.
+
+We can say, OK, how many documents are we returning?
+
+What's the average size of our documents?
+
+And if we multiply those two numbers together, and that's bigger than 32 megabytes, then we can predict that the sort is going to cancel.

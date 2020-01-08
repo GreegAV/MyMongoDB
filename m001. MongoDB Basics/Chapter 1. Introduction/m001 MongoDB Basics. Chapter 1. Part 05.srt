@@ -1,0 +1,719 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:04,350
+In this lesson, we'll explore
+some of the scalar data types
+
+3
+00:00:04,350 --> 00:00:06,450
+MongoDB supports,
+and how to determine
+
+4
+00:00:06,450 --> 00:00:11,010
+the value type of a particular
+field using the Compass schema
+
+5
+00:00:11,010 --> 00:00:12,520
+view.
+
+6
+00:00:12,520 --> 00:00:16,149
+We look at array, document, and
+what I often call special value
+
+7
+00:00:16,149 --> 00:00:18,640
+types in other lessons.
+
+8
+00:00:18,640 --> 00:00:20,710
+Here, we are looking
+at the schema
+
+9
+00:00:20,710 --> 00:00:24,290
+view for the video
+movies collection.
+
+10
+00:00:24,290 --> 00:00:25,870
+Now, I have collapsed
+the nav pane
+
+11
+00:00:25,870 --> 00:00:28,900
+to the left using
+this control so
+
+12
+00:00:28,900 --> 00:00:31,540
+that we have a little bit
+more screen real estate
+
+13
+00:00:31,540 --> 00:00:32,890
+to work with.
+
+14
+00:00:32,890 --> 00:00:35,320
+As we scroll through
+the main panel,
+
+15
+00:00:35,320 --> 00:00:39,840
+you should see a
+number of fields here.
+
+16
+00:00:39,840 --> 00:00:42,570
+In the schema view, a
+field is represented
+
+17
+00:00:42,570 --> 00:00:47,580
+by its name, its
+type, and a graph
+
+18
+00:00:47,580 --> 00:00:49,110
+that reflects the
+range of values
+
+19
+00:00:49,110 --> 00:00:51,210
+for that field in
+this collection
+
+20
+00:00:51,210 --> 00:00:55,770
+and what fraction of
+documents have a given value.
+
+21
+00:00:55,770 --> 00:00:58,380
+As an example, let's take
+a look in more detail
+
+22
+00:00:58,380 --> 00:01:00,000
+at the genre field.
+
+23
+00:01:00,000 --> 00:01:03,540
+For this field, we
+see the name genre.
+
+24
+00:01:03,540 --> 00:01:05,160
+Immediately below
+is a description
+
+25
+00:01:05,160 --> 00:01:07,620
+of the value type for
+this field as determined
+
+26
+00:01:07,620 --> 00:01:10,680
+by sampling documents
+in this collection.
+
+27
+00:01:10,680 --> 00:01:13,770
+Throughout the Compass schema
+view, hovering over elements
+
+28
+00:01:13,770 --> 00:01:15,300
+provides more detail.
+
+29
+00:01:15,300 --> 00:01:17,070
+If we hover over
+the bar immediately
+
+30
+00:01:17,070 --> 00:01:21,810
+below the value type specifier,
+you should see the value 100%.
+
+31
+00:01:21,810 --> 00:01:25,830
+This tells us that 100% of the
+documents in this collection
+
+32
+00:01:25,830 --> 00:01:28,590
+contain a string
+value for this field.
+
+33
+00:01:28,590 --> 00:01:31,350
+To the right of
+the name and type
+
+34
+00:01:31,350 --> 00:01:35,610
+is a graph that shows both a
+range of values for this field
+
+35
+00:01:35,610 --> 00:01:38,220
+and what fraction of
+documents in this collection
+
+36
+00:01:38,220 --> 00:01:40,620
+hold specific values.
+
+37
+00:01:40,620 --> 00:01:42,660
+Skimming through
+the values gives us
+
+38
+00:01:42,660 --> 00:01:47,550
+an idea of all the values this
+field has within documents
+
+39
+00:01:47,550 --> 00:01:49,360
+in this collection.
+
+40
+00:01:49,360 --> 00:01:53,440
+And if we hover over any
+specific element of this graph,
+
+41
+00:01:53,440 --> 00:01:55,170
+we can see what
+fraction of documents
+
+42
+00:01:55,170 --> 00:01:57,000
+have a specific value.
+
+43
+00:01:57,000 --> 00:02:01,080
+Here we can see that 10% of
+documents in this collection
+
+44
+00:02:01,080 --> 00:02:03,900
+describe movies in
+the genre documentary.
+
+45
+00:02:03,900 --> 00:02:06,510
+It is important to keep in
+mind that the value range
+
+46
+00:02:06,510 --> 00:02:09,120
+and fraction of documents
+with a given value,
+
+47
+00:02:09,120 --> 00:02:13,560
+as reported by Compass, is
+based on a sample of documents
+
+48
+00:02:13,560 --> 00:02:14,910
+in the collection.
+
+49
+00:02:14,910 --> 00:02:17,400
+In this example, the
+sample is large enough
+
+50
+00:02:17,400 --> 00:02:19,950
+that you should see
+an accurate summary,
+
+51
+00:02:19,950 --> 00:02:22,650
+but there is a chance the
+summary will change slightly
+
+52
+00:02:22,650 --> 00:02:25,250
+from one viewing to another.
+
+53
+00:02:25,250 --> 00:02:27,600
+As we scroll through
+the rest of the schema
+
+54
+00:02:27,600 --> 00:02:29,660
+view for this
+collection, you can
+
+55
+00:02:29,660 --> 00:02:33,350
+see that Compass provides the
+name, a value type description,
+
+56
+00:02:33,350 --> 00:02:39,470
+and a summary of the range and
+fraction of documents having
+
+57
+00:02:39,470 --> 00:02:44,510
+a specific value for all
+fields found within documents
+
+58
+00:02:44,510 --> 00:02:46,010
+in a collection.
+
+59
+00:02:46,010 --> 00:02:49,640
+In addition to strings,
+other common values
+
+60
+00:02:49,640 --> 00:02:53,270
+for MongoDB documents include
+integers, floating point
+
+61
+00:02:53,270 --> 00:02:55,620
+values, and dates.
+
+62
+00:02:55,620 --> 00:02:58,970
+Let's look at the
+year field next.
+
+63
+00:02:58,970 --> 00:03:02,000
+You can see from the schema
+view that values for this field
+
+64
+00:03:02,000 --> 00:03:06,470
+are int32, meaning they
+are 32-bit integers.
+
+65
+00:03:06,470 --> 00:03:08,720
+Looking at the
+value graph, we can
+
+66
+00:03:08,720 --> 00:03:16,990
+see that the min value is 1,897,
+and the max value is 2,017.
+
+67
+00:03:16,990 --> 00:03:19,000
+We can also see that
+the number of movies
+
+68
+00:03:19,000 --> 00:03:22,660
+in this collection
+for more recent years
+
+69
+00:03:22,660 --> 00:03:27,750
+is much greater than for time
+periods 100 years ago or more.
+
+70
+00:03:27,750 --> 00:03:30,490
+As we skim through
+the bars here,
+
+71
+00:03:30,490 --> 00:03:35,030
+we can see that each represents
+a period of about five years.
+
+72
+00:03:35,030 --> 00:03:37,600
+Now let's look at some
+floating point values.
+
+73
+00:03:37,600 --> 00:03:39,970
+If we scroll up to the
+viewer rating field,
+
+74
+00:03:39,970 --> 00:03:44,090
+you will see a range of
+values from 1.8 to nine,
+
+75
+00:03:44,090 --> 00:03:47,890
+which seems reasonable for a
+viewer rating scale for movies.
+
+76
+00:03:47,890 --> 00:03:50,410
+And again, we can see that
+the majority of values
+
+77
+00:03:50,410 --> 00:03:52,720
+are somewhere in
+this mediocre range,
+
+78
+00:03:52,720 --> 00:03:57,040
+with far fewer ratings being
+extremely low or very, very
+
+79
+00:03:57,040 --> 00:03:58,120
+high.
+
+80
+00:03:58,120 --> 00:03:59,770
+The data type
+double is one option
+
+81
+00:03:59,770 --> 00:04:02,350
+for representing
+floating point values.
+
+82
+00:04:02,350 --> 00:04:04,910
+As you're probably aware,
+floating point arithmetic,
+
+83
+00:04:04,910 --> 00:04:09,910
+while good enough for many
+applications, is imprecise.
+
+84
+00:04:09,910 --> 00:04:12,400
+MongoDB also provides
+a decimal data
+
+85
+00:04:12,400 --> 00:04:17,260
+type for financial transactions
+and other applications
+
+86
+00:04:17,260 --> 00:04:21,173
+that require precise
+floating point arithmetic.
+
+87
+00:04:21,173 --> 00:04:23,590
+Now you might be wondering why
+we're seeing multiple value
+
+88
+00:04:23,590 --> 00:04:26,530
+types listed for viewer rating.
+
+89
+00:04:26,530 --> 00:04:29,500
+In fact, we have both
+some double values
+
+90
+00:04:29,500 --> 00:04:32,050
+and some int32
+values, as well as
+
+91
+00:04:32,050 --> 00:04:34,750
+a proportion of documents for
+which this field is actually
+
+92
+00:04:34,750 --> 00:04:35,950
+undefined.
+
+93
+00:04:35,950 --> 00:04:39,010
+One of the real advantages
+of the Compass schema view
+
+94
+00:04:39,010 --> 00:04:41,140
+is that it gives
+you a sense for what
+
+95
+00:04:41,140 --> 00:04:45,660
+values fields in your
+collection actually have.
+
+96
+00:04:45,660 --> 00:04:48,520
+And for a collection
+that's this large,
+
+97
+00:04:48,520 --> 00:04:51,610
+this can be extremely handy
+when you're going through tasks
+
+98
+00:04:51,610 --> 00:04:54,090
+such as data cleaning.
+
+99
+00:04:54,090 --> 00:04:56,760
+This indicates that we might
+have a little bit of work
+
+100
+00:04:56,760 --> 00:05:00,810
+to do in order to make sure
+that all viewer ratings are
+
+101
+00:05:00,810 --> 00:05:02,820
+of the same data type.
+
+102
+00:05:02,820 --> 00:05:08,330
+The fact that, for many movies,
+viewer rating is undefined,
+
+103
+00:05:08,330 --> 00:05:12,260
+is not necessarily a problem
+because we simply might not
+
+104
+00:05:12,260 --> 00:05:16,430
+have data on viewer ratings
+for a sizable fraction
+
+105
+00:05:16,430 --> 00:05:17,540
+of our dataset.
+
+106
+00:05:17,540 --> 00:05:19,550
+The important takeaway
+here is that Compass
+
+107
+00:05:19,550 --> 00:05:23,030
+identifies fields for which
+there is a mix of value types.
+
+108
+00:05:23,030 --> 00:05:26,300
+This is valuable for developers
+or administrators who
+
+109
+00:05:26,300 --> 00:05:27,920
+might be trying to
+debug an issue that
+
+110
+00:05:27,920 --> 00:05:31,160
+has to do with the data
+type for a particular field.
+
+111
+00:05:31,160 --> 00:05:34,690
+It's also useful
+in considering what
+
+112
+00:05:34,690 --> 00:05:36,190
+needs to be done
+from a scripting
+
+113
+00:05:36,190 --> 00:05:38,980
+standpoint, for
+example, when it becomes
+
+114
+00:05:38,980 --> 00:05:41,140
+necessary to migrate
+a data model from one
+
+115
+00:05:41,140 --> 00:05:42,640
+schema to another.
+
+116
+00:05:42,640 --> 00:05:46,810
+In this lesson, we've looked at
+scalar value types in MongoDB
+
+117
+00:05:46,810 --> 00:05:49,930
+and how to use Compass
+to determine value
+
+118
+00:05:49,930 --> 00:05:53,770
+types for a field and to get a
+sense for the range of values
+
+119
+00:05:53,770 --> 00:05:56,680
+in that field for
+documents in a collection.
+
+120
+00:05:56,680 --> 00:05:59,290
+The examples we've
+looked at in the lesson
+
+121
+00:05:59,290 --> 00:06:02,590
+do not provide a comprehensive
+overview of the scalar value
+
+122
+00:06:02,590 --> 00:06:04,540
+types MongoDB supports.
+
+123
+00:06:04,540 --> 00:06:07,750
+However, they are
+the most common.
+
+124
+00:06:07,750 --> 00:06:10,420
+Before we close this
+lesson, let's take a look
+
+125
+00:06:10,420 --> 00:06:12,580
+at one additional value type.
+
+126
+00:06:12,580 --> 00:06:15,700
+I'd like to look at a field that
+shows us an example of dates.
+
+127
+00:06:15,700 --> 00:06:20,200
+The last updated field provides
+a record of when the data--
+
+128
+00:06:20,200 --> 00:06:22,810
+ratings and such-- for
+a given movie document
+
+129
+00:06:22,810 --> 00:06:25,510
+was last updated, that is,
+when a document was last
+
+130
+00:06:25,510 --> 00:06:27,250
+written to the collection.
+
+131
+00:06:27,250 --> 00:06:30,350
+For date values, Compass does
+something really valuable.
+
+132
+00:06:30,350 --> 00:06:32,680
+You can see here
+that Compass provides
+
+133
+00:06:32,680 --> 00:06:36,760
+the range of date values in a
+way that indicates something
+
+134
+00:06:36,760 --> 00:06:41,650
+like the density of values
+at each date in the range.
+
+135
+00:06:41,650 --> 00:06:44,200
+Just above this,
+you can see a report
+
+136
+00:06:44,200 --> 00:06:48,130
+of what fraction of date values
+for the field in question fall
+
+137
+00:06:48,130 --> 00:06:52,690
+on each day, here, and at
+what time of day, here.
+
+138
+00:06:52,690 --> 00:06:55,990
+In this lesson, we've looked at
+scalar value types in MongoDB
+
+139
+00:06:55,990 --> 00:06:57,970
+and how to use Compass
+to determine value
+
+140
+00:06:57,970 --> 00:07:01,330
+types for a field and get a
+sense for the range of values
+
+141
+00:07:01,330 --> 00:07:04,939
+in that field for
+documents in a collection.
+
+142
+00:07:04,939 --> 00:07:06,730
+The examples we've
+looked at in this lesson
+
+143
+00:07:06,730 --> 00:07:09,910
+do not provide a comprehensive
+overview of the scalar value
+
+144
+00:07:09,910 --> 00:07:11,410
+types MongoDB supports.
+
+145
+00:07:11,410 --> 00:07:14,520
+However, these are
+the most common--
+
+146
+00:07:14,520 --> 00:07:18,550
+int32, double, string, and date.
+
+147
+00:07:18,550 --> 00:07:22,030
+We complete a more complete
+review of MongoDB data types
+
+148
+00:07:22,030 --> 00:07:25,180
+in another lesson on the
+binary format in which MongoDB
+
+149
+00:07:25,180 --> 00:00:00,000
+stores documents.
+

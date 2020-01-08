@@ -1,0 +1,15 @@
+Let's answer some concerns the usage of patterns may arise.
+
+Patterns are a way to get the best out of your data model.
+
+Often, the main goal is to optimize your schema to respond to some performance operation or optimize it for a given use case or access pattern.
+
+Although like many things in life, good things come at a cost.
+
+Many patterns lead to some situations that would require some additional actions.
+
+For example, duplicating data across documents, accepting staleness in some pieces of data, writing extra application side logic to ensure referential integrity.
+
+Choosing a pattern to be applied to your schema requires taking into account these three concerns.
+
+If these concerns are more important than the potential simplicity of performance gains provided by the pattern, you should not use the pattern.

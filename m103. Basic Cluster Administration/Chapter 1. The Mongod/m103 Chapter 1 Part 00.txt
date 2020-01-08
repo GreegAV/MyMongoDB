@@ -1,0 +1,177 @@
+All right.
+
+So in this lesson, we're going to discuss the mongod.
+
+You'll learn what the mongod is how works at a high level and what a daemon is, the availability of mongod, and the options you can use to configure it.
+
+Mongod is the main daemon process for MongoDB.
+
+It's the core unit of the database, handling connections, requests, and the most important part of it, persisting your data-- or writing your data at a disk.
+
+So what's a daemon?
+
+A daemon is a program a process that's meant to be run and not interacted with in a direct manner.
+
+By convention, daemons have a d appended to the end of their name, hence the name mongod.
+
+When we run.
+
+mongod, we don't interact with it directly.
+
+Instead, our application utilizes a driver to communicate with the mongod.
+
+The user interaction is at the application level.
+
+And the driver handles all the nitty gritty details of communication with the mongod.
+
+MongoDB is available on numerous 64-bit architectures, including popular ones, such as Ubuntu, Windows, and others.
+
+For development and demo purposes, you can also install it on a Mac OS.
+
+All right.
+
+So now we have an idea of what mongod is, let's discuss its usage.
+
+Mongod is most easily started by running the command mongod.
+
+We see a bunch of output here, but the most important information is at the very top and the very bottom.
+
+All right.
+
+Now, so we can see here, mongod has told us the process ID of this mongod process, 5838, the port that it's running on, 27017, the dbpath.
+
+And these are both defaults, that's because we didn't specify anything else.
+
+It also gives us the hostname of the vagrant box, m103.
+
+And we can see, at the bottom here, that it's listening for connections on port 27017.
+
+Notice that our terminal is no longer interacted.
+
+For example, if we type, nothing happens.
+
+The terminal just feeds us a new line.
+
+We have to open up a different window and terminal in order to connect to mongo here.
+
+So we're just going to open up a second terminal window here and type the mongo command to connect to mongo.
+
+This will connect on the default port, which is 27017.
+
+And we're connected.
+
+Now, let's run the command show dbs from the shell to get a list of databases.
+
+We see admin and local.
+
+And there were do.
+
+Keep in mind that if you've been using MongoDB locally already, you might see more databases than this.
+
+So looking back at the terminal output from mongod, we can see exactly when we connected.
+
+The lines with the information "connection accepted" can tell us exactly when a connection happened and where it came from.
+
+In this case it was just us connecting through the mongo shell.
+
+OK, we're done with this mongod for now, so we're going to shut down the server and exit the mongo shell.
+
+To do so, we'll switch back to the terminal with the mongo shell, use the admin database, and then run the shutdown command.
+
+Finally, we'll exit the mongo shell with the exit command.
+
+So I'm just going to use the admin database here, and then I'm going to run the command db.shutdownServer.
+
+This is going to close the mongod process.
+
+And if we look at the mongod output, we can see that it's shutdown.
+
+To exit the mongo shell, we simply had to type exit.
+
+We can see the output from mongod, that as it shut down, it removed any socket files, and, in general, just cleaned up after itself, just to be a good process on our computer and not take up too much space while it's not running.
+
+All right.
+
+So now let's talk about how to configure the mongod.
+
+The mongod takes a myriad of flags, and we can see all of them by typing the command mongod --help.
+
+That's a lot of flex.
+
+For right now, the ones we're going to cover are port, dbpath, logpath, and fork.
+
+--port is the argument used to tell mongod which port to listen on.
+
+If this isn't specified, mongod will listen on port 27017 by default.
+
+The --dbpath is where mongod creates the files that will store information for our databases and collections.
+
+--Logpath is one that we didn't specify just now, but it's where mongod will log informational messages.
+
+We saw this early when we ran mongod.
+
+But in that case, it printed it right to standard out, or to the terminal.
+
+Instead, we could specify a destination with a logpath and mongod will output the information in that file instead.
+
+--Fork is an argument used to tell mongod to start as a background process.
+
+We can use this so that mongod doesn't block the current terminal window as it just did.
+
+All right.
+
+So let's give some of these options a try.
+
+I'd like to start MongoDB on port 30,000 with a dbpath to a local directory called first_mongod and forth the process so it doesn't block my shell.
+
+So first, in order to specify a different db path, we have to create the directory beforehand.
+
+Mongod won't do that for us.
+
+So in this command, we're just creating the directory first_mongod.
+
+So now, if we run this, it's going to give us an error.
+
+I forgot to mention that if we specify the fork flag, you must also specify a logpath.
+
+So let's set the logpath to a file called mongod.log in the first mongod directory.
+
+All right.
+
+So now that we've specified our logpath, this should work.
+
+And it does.
+
+It forked the process, it gives us the name of the process ID-- 6114, and tells us that the child process starts succesfully.
+
+So because we forked this process, we actually have access to the shell even after starting mongod.
+
+So we can connect to mongo in the same shell.
+
+However, this isn't going to work, because it's trying to connect on port 27017, but we've started our process on port 30,000.
+
+If we specify that to the mongo command.
+
+It should connect us to the right port.
+
+And it does.
+
+We can just run a quick show dbs to make sure that our databases are expected.
+
+And again, we have the admin database and the local database.
+
+So now I'm going to shut this one down just like we did last time.
+
+So we shut down our server from the admin database, and then we exit out of the mongo shell.
+
+All right.
+
+So just as recap.
+
+In this lesson we learned that mongod is the main daemon process for MongoDB.
+
+We interact with mongod through a driver, not directly.
+
+Mongod is available on many 64-bit systems.
+
+And we learned about some of the basic command-line configuration options.

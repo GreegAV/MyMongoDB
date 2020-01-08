@@ -1,0 +1,147 @@
+In this lesson, we're going to use the builders that are included in the MongoDB Java Driver to greatly ease the composition and structure of our queries.
+
+There are several builder classes to help us.
+
+They are filters, projections, sorts, aggregation, updates, and indexes.
+
+In this lesson, we'll go over filters and projections.
+
+Let's get started.
+
+Let's find the movie with Salma Hayek in it composing a query directly with the document and an identical query with filters builders.
+
+In the shell, this would be db.movies.find cast: Salma Hayek, limit 1.
+
+First, we'll look at what the raw document looks like where we create a new document and specify that the cast should equal Salma Hayek.
+
+given what we know from the data set, the title should be Roadracers, and the expected year is 1994.
+
+And now with the filters API, notice that we've made the switch from document Bson.
+
+Here, we're using the equal filter, specifying that the field name cast should equal Salma Hayek.
+
+We issue our query the same way.
+
+And the result here and the result here should match.
+
+Great, we got the same results.
+
+Now, I don't know about you, but this feels like a much better API to me.
+
+Let's look at a query where we want to find movies with both Salma Hayek and Johnny Depp as cast members.
+
+So in the shell, this would be db.movie.find cast $all: Salma Hayek Johnny Depp.
+
+And here's how we do it with a raw document.
+
+Cast, and then a new document $all.
+
+And specifying a list, Salma Hayek and Johnny Depp.
+
+We'll issue our query and store our results.
+
+There should be only one result.
+
+Now let's look how to do this with filters.
+
+Again, we used the Bson class.
+
+And this time, we specify all, cast, values Salma Hayek, Johnny Depp.
+
+We issue our query and assert that the results here will equal the results here.
+
+And they do.
+
+Now, I'd argue that this query is much cleaner.
+
+Filters contains all of the operators you may be used to.
+
+Now, let's issue a query that's slightly more complex.
+
+We'll find all movies where Tom Hanks is a cast member released after 1990 but before 2005 with a minimum metacritic of 80.
+
+So here, we specify equal cast Tom Hanks.
+
+Greater than where the year is 1990, less than year 2005.
+
+And gte, or greater than or equal to, metacritic with a value of 80.
+
+Here, we issue our query and store them into our results array list.
+
+And we should get four results back with the titles Forrest Gump, Toy Story, Toy Story 2, and Saving Private Ryan.
+
+Perfect.
+
+Filters are powerful and easier to work with compared to assembling a document.
+
+We highly recommend you use them.
+
+Let's move onto projections.
+
+Projections are very succinct and expressive, allowing us to say what we mean.
+
+Let's look at an example.
+
+In this projection, we'll specify that we only want the title and year fields.
+
+And we'll forget to project away the _id field.
+
+In the shell, this will look like db.movies.find cast: Salma Hayek.
+
+and we project title 1, year 1.
+
+Here, we assemble our query using a raw document and a projection using a raw document.
+
+title 1, and we append year 1.
+
+We should have three keys-- title, year, and _ID.
+
+Now, with projections, it takes on a slightly different form.
+
+Here, we're using a filter builder saying where the cast should equal Salma Hayek.
+
+We issue our query.
+
+And this time in the projection, we just specify the fields that we'd like to include-- title and year.
+
+And this result should equal the previous result.
+
+Now, let's say we want to exclude the _ID field.
+
+Well, we issue the same query.
+
+And this time in the projections we specified fields to include as well as exclude.
+
+Perfect.
+
+The results from the old style the new style matched.
+
+If we only wanted to exclude the _ID field, there is a convenience method to do so-- excludeId.
+
+Here, we specify our find.
+
+And in projection, the fields we include are title and year.
+
+And we've specified that we'd like to exclude the _ID.
+
+And this result should match our previous result where we manually specified to remove the _ID.
+
+Great.
+
+This concludes our lesson on builders.
+
+Let's summarize.
+
+Builders allow us to be extremely expressive.
+
+They include all of the query operators and projection operators to allow us to fine-tune our queries.
+
+Here are a few things to keep in mind.
+
+Filters can be composed together for robust queries.
+
+Projections offers methods such as include, exclude, and exclude _ID.
+
+Projections also includes methods for every other projection operation supported by MongoDB.
+
+And that's our lesson on builders.

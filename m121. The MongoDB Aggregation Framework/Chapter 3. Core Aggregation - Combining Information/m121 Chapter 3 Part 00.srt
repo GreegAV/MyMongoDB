@@ -1,0 +1,637 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.510
+The next stage we'll learn
+about is the $group stage.
+
+3
+00:00:03.510 --> 00:00:06.480
+Key to our comprehension of
+group is to understand the one
+
+4
+00:00:06.480 --> 00:00:10.380
+required argument-- the
+_id field of this stage.
+
+5
+00:00:10.380 --> 00:00:14.940
+The expression or expressions
+we specify to _id becomes
+
+6
+00:00:14.940 --> 00:00:18.180
+the criteria the group stage
+uses to categorize and bundle
+
+7
+00:00:18.180 --> 00:00:20.310
+documents together.
+
+8
+00:00:20.310 --> 00:00:22.860
+In this picture, we're
+grouping coins based
+
+9
+00:00:22.860 --> 00:00:27.060
+on their denomination, so the
+expression specified to _id
+
+10
+00:00:27.060 --> 00:00:29.850
+would be the
+denomination field path.
+
+11
+00:00:29.850 --> 00:00:33.150
+Let's see this in
+action using real data.
+
+12
+00:00:33.150 --> 00:00:36.240
+All right, let's group documents
+in our movies collection
+
+13
+00:00:36.240 --> 00:00:38.760
+based on the value they
+have in their year field.
+
+14
+00:00:38.760 --> 00:00:41.580
+
+
+15
+00:00:41.580 --> 00:00:44.010
+By grouping, we can see
+we have fundamentally
+
+16
+00:00:44.010 --> 00:00:46.860
+changed the structure of
+the resulting documents.
+
+17
+00:00:46.860 --> 00:00:49.710
+Group matched them based on
+the value of the year field.
+
+18
+00:00:49.710 --> 00:00:53.220
+Documents with identical
+values got bundled together,
+
+19
+00:00:53.220 --> 00:00:55.980
+and each unique value
+produced an output document
+
+20
+00:00:55.980 --> 00:01:00.030
+that shows us the values
+or value we grouped on.
+
+21
+00:01:00.030 --> 00:01:02.190
+By itself, this may
+or may not be useful
+
+22
+00:01:02.190 --> 00:01:05.440
+depending on the use case, and
+just grouping on one expression
+
+23
+00:01:05.440 --> 00:01:09.780
+is functionally equivalent to
+using the distinct command.
+
+24
+00:01:09.780 --> 00:01:12.720
+Let's explore the other powerful
+feature of the group stage--
+
+25
+00:01:12.720 --> 00:01:16.890
+the ability to use aggregation
+accumulator expressions.
+
+26
+00:01:16.890 --> 00:01:18.810
+We can specify
+additional fields we
+
+27
+00:01:18.810 --> 00:01:20.970
+want to calculate
+in the group stage,
+
+28
+00:01:20.970 --> 00:01:24.150
+and as many as we're required
+to accomplish our goal.
+
+29
+00:01:24.150 --> 00:01:27.990
+Here we are going to group on
+the value of year, as before.
+
+30
+00:01:27.990 --> 00:01:31.920
+We also calculate a new field
+called num_films_in_year
+
+31
+00:01:31.920 --> 00:01:35.190
+using the $sum
+accumulator expression.
+
+32
+00:01:35.190 --> 00:01:37.830
+Each time group categorizes
+a document for us,
+
+33
+00:01:37.830 --> 00:01:39.980
+the sum expression gets called.
+
+34
+00:01:39.980 --> 00:01:43.290
+Since we specified a value
+of 1, each matching document
+
+35
+00:01:43.290 --> 00:01:46.920
+is going to sum 1 to the
+value of num_films_in_year.
+
+36
+00:01:46.920 --> 00:01:49.620
+Let's see it in action.
+
+37
+00:01:49.620 --> 00:01:51.900
+The same results as
+before, with the addition
+
+38
+00:01:51.900 --> 00:01:54.120
+of the num_films_in_year field.
+
+39
+00:01:54.120 --> 00:01:57.820
+We can see that there was only
+one document with a value 1874
+
+40
+00:01:57.820 --> 00:02:00.540
+in the year field,
+while there were 2,058
+
+41
+00:02:00.540 --> 00:02:03.390
+documents with the value 2014.
+
+42
+00:02:03.390 --> 00:02:05.010
+Quite a busy year.
+
+43
+00:02:05.010 --> 00:02:06.600
+Let's perform the
+same aggregation
+
+44
+00:02:06.600 --> 00:02:08.516
+with the source stage
+appended to the end
+
+45
+00:02:08.516 --> 00:02:09.390
+to order our results.
+
+46
+00:02:09.390 --> 00:02:12.540
+
+
+47
+00:02:12.540 --> 00:02:13.490
+Great.
+
+48
+00:02:13.490 --> 00:02:15.170
+We can start to
+get an indication
+
+49
+00:02:15.170 --> 00:02:17.780
+that as a year
+value increases, we
+
+50
+00:02:17.780 --> 00:02:20.570
+have more documents
+in our collection.
+
+51
+00:02:20.570 --> 00:02:22.970
+This brings up an important
+point about the expression we
+
+52
+00:02:22.970 --> 00:02:25.040
+specified _id.
+
+53
+00:02:25.040 --> 00:02:26.990
+Document values used
+in the expression
+
+54
+00:02:26.990 --> 00:02:29.780
+must resolve to the same
+value or combination
+
+55
+00:02:29.780 --> 00:02:32.810
+of values in order for
+documents to match.
+
+56
+00:02:32.810 --> 00:02:34.950
+Let's look at an example.
+
+57
+00:02:34.950 --> 00:02:37.760
+Here we're using
+the size expression
+
+58
+00:02:37.760 --> 00:02:40.370
+to get the value of
+the directors array.
+
+59
+00:02:40.370 --> 00:02:43.730
+I'm wrapping it in this
+$cond conditional expression
+
+60
+00:02:43.730 --> 00:02:46.190
+because if the value
+we specified as size
+
+61
+00:02:46.190 --> 00:02:50.460
+doesn't evaluate to an array
+or is missing, size will error.
+
+62
+00:02:50.460 --> 00:02:56.030
+So if directors is an array,
+return the size of directors.
+
+63
+00:02:56.030 --> 00:02:58.220
+Otherwise, 0.
+
+64
+00:02:58.220 --> 00:03:01.280
+As documents flow in,
+this will be evaluated,
+
+65
+00:03:01.280 --> 00:03:03.440
+and documents with the
+same number of directors
+
+66
+00:03:03.440 --> 00:03:05.060
+will be grouped together.
+
+67
+00:03:05.060 --> 00:03:07.190
+All documents without
+director information
+
+68
+00:03:07.190 --> 00:03:08.990
+or with an empty
+array for directors
+
+69
+00:03:08.990 --> 00:03:10.760
+will be grouped as well.
+
+70
+00:03:10.760 --> 00:03:13.340
+We call the field numDirectors,
+but could have given it
+
+71
+00:03:13.340 --> 00:03:15.440
+any name we wanted.
+
+72
+00:03:15.440 --> 00:03:16.940
+When documents are
+grouped together,
+
+73
+00:03:16.940 --> 00:03:19.130
+we'll calculate a
+field called numFilms
+
+74
+00:03:19.130 --> 00:03:21.460
+and just count how
+many documents match.
+
+75
+00:03:21.460 --> 00:03:24.350
+We'll also average the
+metacritic information,
+
+76
+00:03:24.350 --> 00:03:26.900
+and assign that to a field
+called averageMetacritic
+
+77
+00:03:26.900 --> 00:03:29.550
+for all the matching
+documents in a group.
+
+78
+00:03:29.550 --> 00:03:32.480
+Again, we could have specified
+any name for numFilms
+
+79
+00:03:32.480 --> 00:03:34.430
+or averageMetacritic.
+
+80
+00:03:34.430 --> 00:03:37.672
+Lastly, we'll just sort the
+documents in descending order.
+
+81
+00:03:37.672 --> 00:03:38.630
+Let's see it in action.
+
+82
+00:03:38.630 --> 00:03:42.200
+
+
+83
+00:03:42.200 --> 00:03:45.860
+Wow, a film with 44 directors,
+but the average metacritic
+
+84
+00:03:45.860 --> 00:03:46.880
+is null.
+
+85
+00:03:46.880 --> 00:03:48.860
+Let's explore this by
+looking at the document.
+
+86
+00:03:48.860 --> 00:03:52.740
+
+
+87
+00:03:52.740 --> 00:03:56.110
+All right, scanning
+the document,
+
+88
+00:03:56.110 --> 00:03:59.650
+we can see that the metacritic
+field is missing entirely.
+
+89
+00:03:59.650 --> 00:04:02.170
+This illustrates an
+important concept.
+
+90
+00:04:02.170 --> 00:04:05.020
+It is crucial to understand
+the type of data coming in
+
+91
+00:04:05.020 --> 00:04:07.570
+to properly interpret
+the results we calculate,
+
+92
+00:04:07.570 --> 00:04:10.390
+and we may be required to
+sanitize our input in some way
+
+93
+00:04:10.390 --> 00:04:12.670
+to calculate a result at all.
+
+94
+00:04:12.670 --> 00:04:15.910
+Accumulator expressions will
+ignore documents with a value
+
+95
+00:04:15.910 --> 00:04:18.579
+at the specified field
+that isn't of the type
+
+96
+00:04:18.579 --> 00:04:21.490
+the expression expects, or
+if the value is missing.
+
+97
+00:04:21.490 --> 00:04:23.860
+If all documents encountered
+have an incorrect data
+
+98
+00:04:23.860 --> 00:04:26.480
+type or a missing value
+for the desired field,
+
+99
+00:04:26.480 --> 00:04:29.330
+the expression will
+result in null.
+
+100
+00:04:29.330 --> 00:04:32.020
+OK, we're gaining a good
+understanding of how both
+
+101
+00:04:32.020 --> 00:04:35.500
+the expressions applied to
+the _id groups documents,
+
+102
+00:04:35.500 --> 00:04:38.960
+and how expressions specified
+to our accumulators work.
+
+103
+00:04:38.960 --> 00:04:41.380
+But what if we wanted
+to group all documents,
+
+104
+00:04:41.380 --> 00:04:44.380
+rather than just a subset?
+
+105
+00:04:44.380 --> 00:04:46.930
+By convention, we specify null--
+
+106
+00:04:46.930 --> 00:04:48.160
+or an empty string--
+
+107
+00:04:48.160 --> 00:04:51.460
+as the argument to _id.
+
+108
+00:04:51.460 --> 00:04:54.910
+Before we run this pipeline,
+let's set an expectation.
+
+109
+00:04:54.910 --> 00:04:56.800
+I expect the value
+of count to be
+
+110
+00:04:56.800 --> 00:04:59.710
+equal to the number of documents
+in the movies collection.
+
+111
+00:04:59.710 --> 00:05:00.340
+Let's test.
+
+112
+00:05:00.340 --> 00:05:03.440
+
+
+113
+00:05:03.440 --> 00:05:06.790
+All right, 44,497.
+
+114
+00:05:06.790 --> 00:05:09.040
+And the total
+number of documents?
+
+115
+00:05:09.040 --> 00:05:11.950
+Again 44,497.
+
+116
+00:05:11.950 --> 00:05:13.810
+An exact match.
+
+117
+00:05:13.810 --> 00:05:15.820
+Rather than duplicating
+functionality
+
+118
+00:05:15.820 --> 00:05:18.700
+in a very unoptimized way,
+let's do something that
+
+119
+00:05:18.700 --> 00:05:20.800
+is useful for all documents.
+
+120
+00:05:20.800 --> 00:05:24.290
+Let's calculate the
+average metacritic rating.
+
+121
+00:05:24.290 --> 00:05:27.400
+Here, we use a match stage
+to filter documents out
+
+122
+00:05:27.400 --> 00:05:30.700
+with a metacritic that isn't
+greater than or equal to 0.
+
+123
+00:05:30.700 --> 00:05:33.310
+Documents missing
+metacritic information,
+
+124
+00:05:33.310 --> 00:05:35.860
+or with a non-numeric
+value at that field
+
+125
+00:05:35.860 --> 00:05:39.250
+won't make it through.
+
+126
+00:05:39.250 --> 00:05:41.440
+And we can assume the
+average metacritic rating
+
+127
+00:05:41.440 --> 00:05:44.460
+among all documents that
+had metacritic information
+
+128
+00:05:44.460 --> 00:05:47.370
+is around 56.93.
+
+129
+00:05:47.370 --> 00:05:49.210
+And that covers the group stage.
+
+130
+00:05:49.210 --> 00:05:51.190
+Let's summarize.
+
+131
+00:05:51.190 --> 00:05:54.370
+_id is where we specify what
+incoming documents should be
+
+132
+00:05:54.370 --> 00:05:55.570
+grouped on.
+
+133
+00:05:55.570 --> 00:05:59.140
+We can use all accumulator
+expressions within group.
+
+134
+00:05:59.140 --> 00:06:02.080
+Group can be used multiple
+times within a pipeline,
+
+135
+00:06:02.080 --> 00:06:06.000
+and it may be necessary
+to sanitize incoming data.

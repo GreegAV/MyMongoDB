@@ -1,0 +1,77 @@
+So your application is taking its first baby steps.
+
+You start getting some decent load, and with that you start to understand if the choices that you've made, in terms of hardware provisioning, schema design, and overall system configuration, meet the expected load.
+
+One of the first obvious aspects will be the response time of your system.
+
+If we have a web application, a role of thumb is that any end-to-end Application Request should be under 200 milliseconds.
+
+After that, operations become noticeably slow by the end user and impact the perceived performance of your application.
+
+This does not apply to all operations.
+
+There are several operations that are expected to take longer response times.
+
+Especially if you rely on external services to accomplish a task.
+
+Like a payment service, or a booking service, and other similar services.
+
+However, if we are building an application that relies on intermediary API, like a REST API.
+
+Or just simple, ordinary HTP request, the 200 milliseconds mark is something to consider.
+
+Keeping this in mind, any operation that takes over 100 milliseconds, in regards to MongoDB, is considered slow by default.
+
+This means that if requests to database, which tends to be where the significant amount of the work ends up happening.
+
+Having 100 milliseconds threshold allows you to understand, very quickly, that some operation might be taking longer than originally expected.
+
+Regardless of your SLA's.
+
+Your service level agreement.
+
+For these reasons, you can in fact set the threshold value to something different.
+
+This small command here that I am showing does the trick for us in MongoDB.
+
+If you are in the financial trading business, or your use case requires high speed processing, your SLA's will probably be a few orders magnitude lower.
+
+Therefore, you can set up that threshold to what you need.
+
+The notion of slow queries, or operations for that matter, in an application will be affected by your SLA's.
+
+Any external dependency to services that you do not make part of your stack, and therefore you cannot control.
+
+The workload your application is subjected to, and the infrastructure that you set in place.
+
+All of these need to be considered.
+
+When using [INAUDIBLE], we will look into this topic from three different perspectives.
+
+How much time does it take to read from the database?
+
+Where should we be looking to resolve any issues with the read response time?
+
+How much time does it take to write the database?
+
+Which components will affect the write performance?
+
+And what indicators will we follow to deal with them?
+
+Lastly, the end-to-end response analysis.
+
+This is the cumulative time taken to provide the response back to the client, when multiple different operations in the database need to be packaged together.
+
+Not the response time of a single query or write operation.
+
+In this chapter, we will use sample application, and analyze scenarios where we have to detect slow queries.
+
+Situations where the response time degrades over time.
+
+Or when a single operation impacts expected load, and some other similar situations.
+
+We will use the previously introduced tools so we can diagnose these scenarios.
+
+But in essence, this chapter is all about slowness.
+
+How to identify, measure, and correct its occurrence.

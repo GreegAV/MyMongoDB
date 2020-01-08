@@ -1,0 +1,15 @@
+Before we get started talking about the different authentication mechanisms the MongoDB supports, I want to clarify a common point of confusion.
+
+Authentication and authorization are commonly interchanged with one another, but they're actually two very different things.
+
+Authentication is the process by which we verify the identity of a user, whereas authorization is the process by which we verify the privileges of a user.
+
+The best way to think about it is that authentication answers the question, who are you?
+
+Whereas authorization answers the question, what do you have access to?
+
+I can be authenticated to a system, but I might not be authorized to control a certain resource.
+
+Authentication enables us to do authorization.
+
+Once we know who you are, we can then ask, what do you have access to?

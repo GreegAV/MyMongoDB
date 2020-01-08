@@ -1,0 +1,464 @@
+1
+00:00:00,000 --> 00:00:00,390
+
+
+2
+00:00:00,390 --> 00:00:00,890
+OK.
+
+3
+00:00:00,890 --> 00:00:04,130
+Now let's look at the last
+of our CRUD operations,
+
+4
+00:00:04,130 --> 00:00:06,370
+Delete operations.
+
+5
+00:00:06,370 --> 00:00:10,100
+The MongoDB query language
+supports two different delete
+
+6
+00:00:10,100 --> 00:00:12,780
+methods, deleteOne
+and deleteMany.
+
+7
+00:00:12,780 --> 00:00:16,340
+These are similar to insertOne,
+insertMany, updateOne,
+
+8
+00:00:16,340 --> 00:00:20,120
+updateMany in the sense
+that the first argument is
+
+9
+00:00:20,120 --> 00:00:24,920
+a filter that we're using
+to identify the document
+
+10
+00:00:24,920 --> 00:00:28,640
+or documents that
+we want to delete.
+
+11
+00:00:28,640 --> 00:00:31,490
+So suppose we're developing
+a web application
+
+12
+00:00:31,490 --> 00:00:33,650
+and we want to add
+two additional pieces
+
+13
+00:00:33,650 --> 00:00:37,790
+of functionality, one being
+that users of our website
+
+14
+00:00:37,790 --> 00:00:43,130
+can delete reviews
+they've made of movies,
+
+15
+00:00:43,130 --> 00:00:46,250
+and that when necessary
+we can delete all
+
+16
+00:00:46,250 --> 00:00:48,230
+of the reviews for
+an individual user,
+
+17
+00:00:48,230 --> 00:00:50,600
+say for example if they choose
+to delete their account.
+
+18
+00:00:50,600 --> 00:00:52,724
+Now again, we're going to
+work in the MongoDB shell
+
+19
+00:00:52,724 --> 00:00:55,670
+just as a demonstration of the
+use of deleteOne and deleteMany
+
+20
+00:00:55,670 --> 00:00:58,220
+in this type of
+hypothetical application.
+
+21
+00:00:58,220 --> 00:01:00,750
+And in order to work
+through this example,
+
+22
+00:01:00,750 --> 00:01:04,099
+I'd like to introduce
+an additional data set,
+
+23
+00:01:04,099 --> 00:01:07,160
+and that is small
+data set of reviews.
+
+24
+00:01:07,160 --> 00:01:11,300
+Now, as we did with the
+movie details data set,
+
+25
+00:01:11,300 --> 00:01:16,340
+we can load this reviews data
+set using the Mongo shell.
+
+26
+00:01:16,340 --> 00:01:17,950
+In the handouts for
+this lesson, I've
+
+27
+00:01:17,950 --> 00:01:21,690
+provided a script called
+loadReviewsDataset.js.
+
+28
+00:01:21,690 --> 00:01:24,940
+You can use the Mongo shell
+to execute this script,
+
+29
+00:01:24,940 --> 00:01:28,320
+and the script will load
+the reviews collection
+
+30
+00:01:28,320 --> 00:01:30,930
+into whatever host you specify.
+
+31
+00:01:30,930 --> 00:01:34,080
+Now here, I've specified the
+hosts for my Atlas Sandbox
+
+32
+00:01:34,080 --> 00:01:37,410
+cluster and provided my username
+and password, although I
+
+33
+00:01:37,410 --> 00:01:39,030
+have hidden the password here.
+
+34
+00:01:39,030 --> 00:01:41,880
+Again, for you to do
+this for yourself,
+
+35
+00:01:41,880 --> 00:01:46,620
+you will need to supply your
+own Atlas cluster hostnames,
+
+36
+00:01:46,620 --> 00:01:49,650
+username, and password.
+
+37
+00:01:49,650 --> 00:01:51,720
+And again, this is the
+administrative username
+
+38
+00:01:51,720 --> 00:01:54,030
+and password that you
+created when you set up
+
+39
+00:01:54,030 --> 00:01:55,829
+your Atlas Sandbox cluster.
+
+40
+00:01:55,829 --> 00:01:57,870
+Now, one last thing that
+I want to point out here
+
+41
+00:01:57,870 --> 00:02:01,810
+is that I'm specifying
+the video database.
+
+42
+00:02:01,810 --> 00:02:04,140
+So when I connect
+here, I'm going
+
+43
+00:02:04,140 --> 00:02:08,865
+to use the video database,
+and load reviews data
+
+44
+00:02:08,865 --> 00:02:12,420
+set will therefore
+create a collection
+
+45
+00:02:12,420 --> 00:02:15,530
+in the video database.
+
+46
+00:02:15,530 --> 00:02:18,120
+Now, we know enough about
+the MongoDB query language
+
+47
+00:02:18,120 --> 00:02:20,280
+to actually understand
+how this script works.
+
+48
+00:02:20,280 --> 00:02:22,150
+It's actually quite simple.
+
+49
+00:02:22,150 --> 00:02:24,510
+We make a call to
+insertMany, passing it
+
+50
+00:02:24,510 --> 00:02:27,330
+an array of reviews documents.
+
+51
+00:02:27,330 --> 00:02:31,860
+Again, db should be a
+reference to the video database
+
+52
+00:02:31,860 --> 00:02:35,250
+and will be if you specified
+video as the database
+
+53
+00:02:35,250 --> 00:02:38,470
+to connect to when
+you run this script.
+
+54
+00:02:38,470 --> 00:02:38,970
+OK.
+
+55
+00:02:38,970 --> 00:02:42,720
+So let's take a look at
+this collection in Compass.
+
+56
+00:02:42,720 --> 00:02:44,520
+You can get a pretty
+good sense for what
+
+57
+00:02:44,520 --> 00:02:46,530
+the structure of
+the documents is.
+
+58
+00:02:46,530 --> 00:02:48,450
+Note that there are
+20 documents total,
+
+59
+00:02:48,450 --> 00:02:52,500
+and I want to draw your
+attention to this object ID.
+
+60
+00:02:52,500 --> 00:02:54,960
+In order to delete reviews,
+one way of doing that
+
+61
+00:02:54,960 --> 00:02:56,610
+is by its unique identifier.
+
+62
+00:02:56,610 --> 00:02:59,400
+And in fact, for this
+call to deleteOne,
+
+63
+00:02:59,400 --> 00:03:01,800
+that's exactly what
+we're going to do--
+
+64
+00:03:01,800 --> 00:03:05,610
+595b, 9b3b.
+
+65
+00:03:05,610 --> 00:03:07,650
+In fact, our
+deleteOne statement is
+
+66
+00:03:07,650 --> 00:03:11,736
+going to delete this first
+document from our collection.
+
+67
+00:03:11,736 --> 00:03:13,110
+So now let's go
+ahead and execute
+
+68
+00:03:13,110 --> 00:03:16,770
+this deleteOne statement
+in our Mongo shell.
+
+69
+00:03:16,770 --> 00:03:19,470
+Here, I'm connected to
+my Atlas Sandbox cluster,
+
+70
+00:03:19,470 --> 00:03:21,500
+and I'm going to run deleteOne.
+
+71
+00:03:21,500 --> 00:03:24,000
+And we can see from the output
+that my delete was successful
+
+72
+00:03:24,000 --> 00:03:25,350
+and that I deleted one document.
+
+73
+00:03:25,350 --> 00:03:28,294
+If we go back to
+Compass and refresh,
+
+74
+00:03:28,294 --> 00:03:30,210
+we can see that we're
+now down to 19 documents
+
+75
+00:03:30,210 --> 00:03:32,370
+and that first document is gone.
+
+76
+00:03:32,370 --> 00:03:34,920
+Now let's go ahead and execute
+this deleteMany statement.
+
+77
+00:03:34,920 --> 00:03:36,960
+Now, here what
+we're going to do is
+
+78
+00:03:36,960 --> 00:03:40,965
+delete all of the reviews that
+were created by reviewer 795
+
+79
+00:03:40,965 --> 00:03:42,120
+and so on.
+
+80
+00:03:42,120 --> 00:03:46,830
+So let's find this reviewer
+in our Compass data set.
+
+81
+00:03:46,830 --> 00:03:50,027
+So if I add this
+filter and apply,
+
+82
+00:03:50,027 --> 00:03:52,110
+we can see that I have
+three documents all of them
+
+83
+00:03:52,110 --> 00:03:57,080
+created by reviewer Emile T all
+with the same unique identifier
+
+84
+00:03:57,080 --> 00:03:58,860
+for reviewer ID.
+
+85
+00:03:58,860 --> 00:04:02,030
+So if I run this method
+in the Mongo shell,
+
+86
+00:04:02,030 --> 00:04:04,310
+we see that I have a
+deleted count of three,
+
+87
+00:04:04,310 --> 00:04:06,760
+so my delete was successful.
+
+88
+00:04:06,760 --> 00:04:09,320
+And if I go back to
+Compass and refresh,
+
+89
+00:04:09,320 --> 00:04:12,320
+this filter no longer
+matches any documents.
+
+90
+00:04:12,320 --> 00:04:16,579
+And in fact, if I reset and
+look at all of the documents
+
+91
+00:04:16,579 --> 00:04:18,170
+in this collection,
+I can see that I'm
+
+92
+00:04:18,170 --> 00:04:20,540
+now down to 16 documents.
+
+93
+00:04:20,540 --> 00:04:23,780
+So I deleted one document
+with my deleteOne statement
+
+94
+00:04:23,780 --> 00:04:26,660
+and then three more with
+my deleteMany statement,
+
+95
+00:04:26,660 --> 00:04:30,110
+taking me from 20
+documents down to 16.
+
+96
+00:04:30,110 --> 00:04:33,980
+And that is delete
+operations in MongoDB,
+
+97
+00:04:33,980 --> 00:00:00,000
+using deleteOne and deleteMany.
+

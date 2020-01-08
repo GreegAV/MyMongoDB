@@ -1,0 +1,385 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.690
+So far in facets, what we've
+been seeing in terms of buckets
+
+3
+00:00:03.690 --> 00:00:06.290
+is the manual creation
+of these buckets.
+
+4
+00:00:06.290 --> 00:00:09.840
+We have a bucket we
+group by a field,
+
+5
+00:00:09.840 --> 00:00:14.130
+and then we specify the
+boundaries for those fields,
+
+6
+00:00:14.130 --> 00:00:15.990
+and respectively
+to those buckets.
+
+7
+00:00:15.990 --> 00:00:19.500
+Now, with MongoDB, we can
+also generate automatically
+
+8
+00:00:19.500 --> 00:00:20.530
+those buckets.
+
+9
+00:00:20.530 --> 00:00:24.520
+So let's have a look
+how to set that up.
+
+10
+00:00:24.520 --> 00:00:29.400
+So with MongoDB 3.4, we
+also have $bucketAuto.
+
+11
+00:00:29.400 --> 00:00:33.820
+$bucketAuto is another
+aggregation pipeline stage
+
+12
+00:00:33.820 --> 00:00:37.950
+which is very similar to the
+previous $bucket operator.
+
+13
+00:00:37.950 --> 00:00:42.180
+We also have here the
+groupBy specifying the field
+
+14
+00:00:42.180 --> 00:00:45.300
+on this data set that
+we want to group on.
+
+15
+00:00:45.300 --> 00:00:47.470
+But instead of defining
+the boundaries, what
+
+16
+00:00:47.470 --> 00:00:49.950
+we are expected to
+set is the number
+
+17
+00:00:49.950 --> 00:00:53.160
+of buckets-- in this case, five.
+
+18
+00:00:53.160 --> 00:00:56.490
+It is very similar to
+the previous $bucket,
+
+19
+00:00:56.490 --> 00:01:00.560
+but we reversed the order by
+which we specify our options.
+
+20
+00:01:00.560 --> 00:01:02.160
+Instead of defining
+boundaries, we
+
+21
+00:01:02.160 --> 00:01:04.830
+define the number of buckets.
+
+22
+00:01:04.830 --> 00:01:05.590
+So we run this.
+
+23
+00:01:05.590 --> 00:01:07.980
+You can see that
+the output is very
+
+24
+00:01:07.980 --> 00:01:10.920
+similar to the
+previous $bucket one
+
+25
+00:01:10.920 --> 00:01:12.690
+where we, again, have an ID.
+
+26
+00:01:12.690 --> 00:01:16.290
+Instead of having now _id
+pointing to a value of one
+
+27
+00:01:16.290 --> 00:01:18.990
+of the boundaries--
+the inclusive one--
+
+28
+00:01:18.990 --> 00:01:21.900
+what we're going to have
+is basically a subdocument
+
+29
+00:01:21.900 --> 00:01:25.680
+defining at the min and
+max value of our bucket,
+
+30
+00:01:25.680 --> 00:01:30.090
+and obviously, the count-- the
+number of documents that match
+
+31
+00:01:30.090 --> 00:01:31.950
+or fall into this bucket.
+
+32
+00:01:31.950 --> 00:01:35.400
+Same thing for all different--
+five different buckets.
+
+33
+00:01:35.400 --> 00:01:38.430
+The way that the auto
+bucket generates our buckets
+
+34
+00:01:38.430 --> 00:01:42.930
+is to try to evenly balance
+the number of documents
+
+35
+00:01:42.930 --> 00:01:48.510
+that will be distributed across
+those different five buckets.
+
+36
+00:01:48.510 --> 00:01:52.230
+Similar to $bucket, we can
+also define a different output
+
+37
+00:01:52.230 --> 00:01:54.540
+by defining our fields
+and the accumulators that
+
+38
+00:01:54.540 --> 00:01:59.790
+will calculate those particular
+fields on our output documents.
+
+39
+00:01:59.790 --> 00:02:01.650
+Once we run it, you
+can see that we still
+
+40
+00:02:01.650 --> 00:02:04.350
+have the same exact boundaries.
+
+41
+00:02:04.350 --> 00:02:06.960
+But instead of having
+only one field,
+
+42
+00:02:06.960 --> 00:02:09.220
+we're going to have
+the fields that we
+
+43
+00:02:09.220 --> 00:02:13.080
+defined in our output
+option-- total and average,
+
+44
+00:02:13.080 --> 00:02:14.520
+in this case.
+
+45
+00:02:14.520 --> 00:02:17.760
+Apart from those
+particular options,
+
+46
+00:02:17.760 --> 00:02:23.100
+$bucketAuto also has the
+option of defining granularity.
+
+47
+00:02:23.100 --> 00:02:26.400
+And granularity is basically
+a numerical series-- one
+
+48
+00:02:26.400 --> 00:02:29.880
+that we might prefer from
+these different options
+
+49
+00:02:29.880 --> 00:02:32.940
+that we have
+supported in 3.4 where
+
+50
+00:02:32.940 --> 00:02:35.270
+the boundaries of
+our buckets will
+
+51
+00:02:35.270 --> 00:02:39.820
+adhere to that specific
+numerical series.
+
+52
+00:02:39.820 --> 00:02:41.320
+Now, we have several
+different ones.
+
+53
+00:02:41.320 --> 00:02:43.800
+We have the Renard series.
+
+54
+00:02:43.800 --> 00:02:48.300
+We have the E series,
+the 1-2-5 series,
+
+55
+00:02:48.300 --> 00:02:52.800
+and powers of two series,
+all of them well-specified
+
+56
+00:02:52.800 --> 00:02:55.140
+on this particular
+page with all the
+
+57
+00:02:55.140 --> 00:03:00.380
+supported values for the
+granularity-- R5 to R20,
+
+58
+00:03:00.380 --> 00:03:05.850
+1-2-5, E6 to E192,
+and powers of two.
+
+59
+00:03:05.850 --> 00:03:08.520
+To better see this in action,
+what we can do is generate
+
+60
+00:03:08.520 --> 00:03:13.680
+a series collection where we're
+going to have _id values from 1
+
+61
+00:03:13.680 --> 00:03:15.390
+to 1,000.
+
+62
+00:03:15.390 --> 00:03:17.860
+Once we generate
+that collection,
+
+63
+00:03:17.860 --> 00:03:20.940
+I can just generate
+my auto buckets--
+
+64
+00:03:20.940 --> 00:03:25.940
+so calling my stage for auto
+bucketing-- grouping by _id,
+
+65
+00:03:25.940 --> 00:03:27.690
+and generating five buckets.
+
+66
+00:03:27.690 --> 00:03:32.370
+This is the default behavior
+of our bucketAuto stage.
+
+67
+00:03:32.370 --> 00:03:34.290
+And with this, we
+again see that I evenly
+
+68
+00:03:34.290 --> 00:03:40.620
+get buckets from 1 to 201
+divided, and having around 200,
+
+69
+00:03:40.620 --> 00:03:44.430
+or 200 in this case because
+it's an easy match, of 200
+
+70
+00:03:44.430 --> 00:03:46.670
+documents per bucket.
+
+71
+00:03:46.670 --> 00:03:49.140
+And defining the
+option granularity here
+
+72
+00:03:49.140 --> 00:03:52.350
+to using the Renard series
+R20, which basically
+
+73
+00:03:52.350 --> 00:03:55.680
+takes the 20th root of 10.
+
+74
+00:03:55.680 --> 00:03:59.610
+We will have a slightly
+different set of boundaries
+
+75
+00:03:59.610 --> 00:04:02.280
+where the boundaries'
+values will adhere
+
+76
+00:04:02.280 --> 00:04:05.460
+to that particular
+series, but it still
+
+77
+00:04:05.460 --> 00:04:09.090
+tried to distribute accordingly
+with the number of buckets
+
+78
+00:04:09.090 --> 00:04:12.870
+that we requested the
+number of documents
+
+79
+00:04:12.870 --> 00:04:15.470
+across those different buckets.
+
+80
+00:04:15.470 --> 00:04:19.250
+And this is how
+$bucketAuto works.

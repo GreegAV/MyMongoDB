@@ -1,0 +1,61 @@
+Now, configuring your MongoDB instance, given the number of different options that you have for your MongoDB configuration files to properly connect to LDAP, might get a little bit tricky, not only because of the number of different options, but also considering that the confirmation of LDAP servers might be very well-defined and very extensive, in terms of number of users and different configuration options that it might have.
+
+Testing this settings on itself comes on handy.
+
+It makes this much more effective, doing that before setting up our MongoDB instance itself.
+
+So, for that, with 3.4 we are shipping a new tool called Mongo LDAP.
+
+Now, what Mongo LDAP will do is test your configuration options for MongoDB against the running LDAP server or set of servers.
+
+Let's see how it works.
+
+Now, in this particular Vagrant machine, here, I have been playing around with MongoDB 3.4.
+
+I also have a running LDAP server on a different machine-- here it is-- configured with the set of users that we've been looking into throughout the course.
+
+Now, the first thing that I can do is check if Mongo LDAP is actually configured.
+
+And let's have a look to what configuration options we have available for this particular tool.
+
+Now, the first thing I have is the option of setting up a configuration file that will allow me to test, given a MongoDB configuration file, all the options that are LDAP-related.
+
+I will tell exactly which user I'm going to be trying to connect with, its password, and I can even set it in a different-colored output, which is lovely.
+
+If I don't want to set up any configuration file on its own, I can test individual LDAP module options.
+
+Like, if the LDAP servers are up, if the transport security setting, or if I'm using TLS or none, is actually set up, or any of the other LDAP-related options that MongoDB ships with it.
+
+So, in my case, I do have a configuration file that I want to test.
+
+That configuration file has a bunch of options.
+
+In this case, I'll have a server that I want to connect to-- this other machine, running on my local host.
+
+I have a query template.
+
+I'm going to fully replace the user for whatever I'm passing on to MongoDB.
+
+And also going to have, like, the transportSecurity set to "none." I'm not using TLS at the moment-- neither a bind method.
+
+But I am going to do a transformation of the user that I'm receiving to a distinguished name.
+
+And this is done by the userToDNMapping.
+
+And I specify, here, what's the transformation.
+
+I'm going to pick up whatever user I'm passing to connect to MongoDB and replace it with this VN mapping, over here.
+
+So, basically, I'm going to set uid to whatever I'm passing [?
+
+to ?] the user.
+
+So let's see if my configuration file is correctly set up, given a user.
+
+To do that, what I'm going to do is basically tell MongoDB that I have a file-- the file that I've previously shown you, with all the options, which is called "mongod_ldap.cnf." And I'm going to test the connection using user "alice" and passing on its respective password.
+
+Once I run this particular process, I'll have the full set of steps that MongoD will try to execute, given the credentials that I'm passing to connect.
+
+It will check if the LDAP servers are found, if we can connect to them, if the mapping are valid, if we successfully authenticate against the LDAP server, if we can get the configuration, the query templates, and so on.
+
+So, in essence, we are shipping MongoDB 3.4 with this utility helper to avoid having you drilling down the logs of the normal execution of MongoDB to find out any connection misconfigurations on your configuration file.

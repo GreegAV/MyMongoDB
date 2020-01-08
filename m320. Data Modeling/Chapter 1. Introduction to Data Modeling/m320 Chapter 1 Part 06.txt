@@ -1,0 +1,89 @@
+In this lesson, we will dig into how much you should model-- in other words, how many steps should be done in the three phases of our methodology.
+
+The main trade that you will face is simplicity versus performance, prioritizing one over the other or trying to find a balance between the two.
+
+Modeling for simplicity means we will avoid any complexity that could slow down the development of the system by our engineers.
+
+The most typical case would be developing an application quickly with one or few software engineers.
+
+Frequently, for those kind of projects, there are limited expectations and small requirements in term of CPU, disk, I/O, memory.
+
+Things are generally small and simple.
+
+You should start by identifying the most important operations for the system.
+
+And you will need to establish the relationships between the entities and fields.
+
+To keep the model simple, you are likely to group a lot of those pieces inside a few collection using sub-documents or arrays to represent the one-to-one, one-to-many, too many-to-many many relationships.
+
+By keeping the modeling steps to the minimum, we can remain very agile, with the ability to quickly iterate on our application, reflecting these changes back into the model if needed.
+
+If you model for simplicity, as a result, you will likely see fewer collection in your design where each document contains more information and maps very well to the object you have in your application code-- the objects being represented in your favorite language as hashes, maps, dictionary, or nested objects.
+
+Finally, as a result of having larger documents with embedded documents in them, the application is likely to do less disk accesses to retrieve the information.
+
+These three collection embedded into one, a single read will be sufficient to retrieve the information instead of four.
+
+At other end of our axis, we have the performance criteria.
+
+In this scenario, resources are likely to be used to the maximum I like to compare this situation to an engine running at the red line.
+
+Project that makes use of sharding to scatter horizontally are likely to fall into this category, because you often shard your database because there is not enough resources available with a simple replica set.
+
+The system may require very fast read or writes operation, or it may have to support a ton of operations.
+
+Although situations are demanding a model for performance.
+
+More complex projects are often done by larger teams.
+
+And those larger teams will require a little bit more modeling upfront.
+
+When you model for performance or have more complexity to handle, you want to go over all the steps of the methodology.
+
+Again, you start by identifying the important operations, but also quantify those in terms of metrics like operation per second, required latency, and pinning some quality attributes on those queries such as-- can the application work with data that's a little stale, are those operations parts of the large analytic query?
+
+If you model for performance you will often see more collection in your design.
+
+You will also need to apply a series of schema design patterns to ensure the best usage of resources like CPU, disk, bandwidth.
+
+And in between, well, you have project that have more of a balance or trade between those two criteria.
+
+For example, you may have a project that needs to be developed quickly, but you will also need to apply some transformations and optimization to meet performance requirements.
+
+Here you will need to identify what seems important for this project.
+
+Positioning your project on this axis is a little bit of an art.
+
+My advice is it is easier to find optimization later on than to remove complexity from an application.
+
+So prior to rise simplicity over performance.
+
+Let's look again at the steps you may do for each phase based on your requirements.
+
+Regardless of your project, you will need to start by identifying your workload.
+
+It can go from a simple identification of the most important operations to an exhaustive and complete description of the read and write operations.
+
+Then, you need to choose between embedding or linking the model, the relationship.
+
+Simplicity will favor embedding.
+
+In the final phase, the more performance requirements you have, the more likely patterns will be applied.
+
+Let's recap what we've learned this lesson.
+
+MongoDB makes the development of applications much faster than traditional relational databases.
+
+And we don't want the methodology to slow things down either.
+
+Doing the right thing first and having a way to share information between the team members is important for having a successful project.
+
+First of all, recognize the trade off between modeling for simplicity and performance.
+
+Secondly, use the methodology in a flexible fashion.
+
+Select the step within a phase that makes sense for your project.
+
+Finally, regardless of how much you will model, you need to start by describing the workload of your project.
+
+Identifying the important operations correctly will get you started on the right path.

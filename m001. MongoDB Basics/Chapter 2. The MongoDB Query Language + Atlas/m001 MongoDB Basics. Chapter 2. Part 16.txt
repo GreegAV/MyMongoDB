@@ -1,0 +1,51 @@
+We've been working with updateOne.
+
+All of the same principles apply to updateMany.
+
+UpdateMany is our second update operator in the MongoDB query language.
+
+The difference between updateOne and updateMany is that updateMany will make the same modification to all documents that match the filter.
+
+Let's take a look at an example.
+
+I'd like to work through a data cleaning example for updateMany.
+
+I happen to know that in our movie details data set there are some fields in some documents that are set to null.
+
+What I'd like to do is just eliminate null fields from documents in this collection.
+
+We can see a few of these documents with this simple filter.
+
+Here, we're just pulling in all documents that have null for the rated field and null for the poster field.
+
+Note that there's 1,202 documents matching these criteria.
+
+If we just look for those with rated equal to null, we get quite a few more.
+
+UpdateMany enables us to modify many documents at once, all of which match the same criteria.
+
+What I'd like to do then is update this collection eliminating the rated field where its value is null.
+
+We'll do that using this call to updateMany.
+
+Here, we're using the unset operator, and the unset operator will remove all fields listed here.
+
+In this case, we've only listed one field to remove and that is rated.
+
+Now, it doesn't really matter what value we use here as the value for the rated key in the document we're passing to our unset operator.
+
+I just tend to use an empty string.
+
+From the results of running this command, we can see that we modified 1,599 documents.
+
+And if you'll remember, that is the number of documents for which rated was set to null.
+
+This wraps up our discussion of updateMany.
+
+The principles of filtering and the use of update operators are the same for updateMany as they are for updateOne.
+
+Again, I encourage you to experiment, but be careful.
+
+UpdateMany will modify all documents matching the filter.
+
+Good luck.

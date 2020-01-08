@@ -1,0 +1,465 @@
+1
+00:00:00,000 --> 00:00:00,730
+
+
+2
+00:00:00,730 --> 00:00:03,400
+Time for us to talk a
+little bit about roles,
+
+3
+00:00:03,400 --> 00:00:07,040
+in particular, about
+built-in roles in MongoDB,
+
+4
+00:00:07,040 --> 00:00:11,200
+and how the role-based
+access control system works.
+
+5
+00:00:11,200 --> 00:00:15,340
+Now, there is a fair
+amount to say about roles.
+
+6
+00:00:15,340 --> 00:00:18,790
+But by now, you should be aware
+that MongoDB role-based access
+
+7
+00:00:18,790 --> 00:00:24,250
+control system is in place,
+and that database users will
+
+8
+00:00:24,250 --> 00:00:28,420
+be granted roles to perform
+operations of MongoDB.
+
+9
+00:00:28,420 --> 00:00:31,210
+So we're not going to
+cover that in this lesson.
+
+10
+00:00:31,210 --> 00:00:32,970
+Roles can be of two types.
+
+11
+00:00:32,970 --> 00:00:35,710
+It can be either custom roles,
+which are tailored roles
+
+12
+00:00:35,710 --> 00:00:39,310
+to attend specific needs of
+specific users, which we are
+
+13
+00:00:39,310 --> 00:00:42,670
+also not going to
+cover in this lecture,
+
+14
+00:00:42,670 --> 00:00:46,990
+and built-in roles, which are
+prepackaged MongoDB roles.
+
+15
+00:00:46,990 --> 00:00:49,440
+Now, saying that we are not
+going to cover custom roles,
+
+16
+00:00:49,440 --> 00:00:51,530
+doesn't mean you cannot
+learn about them.
+
+17
+00:00:51,530 --> 00:00:54,640
+And we have a specific
+course, MongoDB Security,
+
+18
+00:00:54,640 --> 00:00:57,770
+for you to learn everything
+related with security,
+
+19
+00:00:57,770 --> 00:00:59,960
+including the custom roles.
+
+20
+00:00:59,960 --> 00:01:02,020
+So I do recommend
+you to take that,
+
+21
+00:01:02,020 --> 00:01:04,660
+if you want to learn a
+lot more about custom
+
+22
+00:01:04,660 --> 00:01:08,500
+roles in other security
+aspects of MongoDB.
+
+23
+00:01:08,500 --> 00:01:11,290
+But before we go into the
+list of built-in roles,
+
+24
+00:01:11,290 --> 00:01:15,280
+the MongoDB packages, let's
+talk about the role structure,
+
+25
+00:01:15,280 --> 00:01:19,290
+how can we define roles, or how
+roles are defined internally.
+
+26
+00:01:19,290 --> 00:01:21,180
+A role is composed
+by the following.
+
+27
+00:01:21,180 --> 00:01:24,760
+There is a set of privileges
+that the role enables.
+
+28
+00:01:24,760 --> 00:01:27,250
+If a new user is
+granted a given role,
+
+29
+00:01:27,250 --> 00:01:29,740
+all privileges that
+that role defines
+
+30
+00:01:29,740 --> 00:01:32,570
+will be made
+available to the user.
+
+31
+00:01:32,570 --> 00:01:36,250
+And a privilege defines
+the action, or actions,
+
+32
+00:01:36,250 --> 00:01:40,114
+that can be performed
+over a resource.
+
+33
+00:01:40,114 --> 00:01:42,850
+A resource on its
+own can be defined
+
+34
+00:01:42,850 --> 00:01:46,600
+by either being a set
+of specific database
+
+35
+00:01:46,600 --> 00:01:51,700
+and specific collection, any
+database in any collection,
+
+36
+00:01:51,700 --> 00:01:55,090
+any database in a
+set of collections,
+
+37
+00:01:55,090 --> 00:01:58,030
+or a specific database
+in all collections
+
+38
+00:01:58,030 --> 00:02:00,020
+within that database.
+
+39
+00:02:00,020 --> 00:02:03,880
+And finally, we also have
+the cluster level resource
+
+40
+00:02:03,880 --> 00:02:06,490
+that applies to operations
+regarding the replica
+
+41
+00:02:06,490 --> 00:02:08,720
+sets or shard clusters.
+
+42
+00:02:08,720 --> 00:02:11,140
+A privilege is
+defined by a resource
+
+43
+00:02:11,140 --> 00:02:14,950
+and the actions allowed
+over that same resource.
+
+44
+00:02:14,950 --> 00:02:17,140
+So for example,
+here, we would have
+
+45
+00:02:17,140 --> 00:02:21,900
+the system allowing the
+shut down of a full cluster.
+
+46
+00:02:21,900 --> 00:02:24,880
+By that, we define the
+resource cluster equals true,
+
+47
+00:02:24,880 --> 00:02:28,870
+and the action to be shutdown.
+
+48
+00:02:28,870 --> 00:02:30,520
+A role with such
+a privilege will
+
+49
+00:02:30,520 --> 00:02:34,910
+be allowed to shut down
+any member of the cluster.
+
+50
+00:02:34,910 --> 00:02:37,380
+But apart of having
+a list of privileges,
+
+51
+00:02:37,380 --> 00:02:41,950
+a role can also inherit
+from other roles, either one
+
+52
+00:02:41,950 --> 00:02:45,910
+or several of them, making
+this a potentially quite
+
+53
+00:02:45,910 --> 00:02:48,110
+elaborate architecture
+of permission
+
+54
+00:02:48,110 --> 00:02:52,000
+and privileges across
+several different roles.
+
+55
+00:02:52,000 --> 00:02:55,600
+And finally, we can also
+define network authentication
+
+56
+00:02:55,600 --> 00:02:58,330
+restrictions at the role level.
+
+57
+00:02:58,330 --> 00:03:02,110
+This basically allows us to
+define that a given role is
+
+58
+00:03:02,110 --> 00:03:05,200
+allowed to connect
+from a clientSource,
+
+59
+00:03:05,200 --> 00:03:10,120
+or to a serverAddress, by
+specifying the set of list
+
+60
+00:03:10,120 --> 00:03:12,010
+of clientSource
+and serverAddress
+
+61
+00:03:12,010 --> 00:03:14,451
+in the network restrictions.
+
+62
+00:03:14,451 --> 00:03:14,950
+OK.
+
+63
+00:03:14,950 --> 00:03:18,790
+So now that we've seen how
+the roles are organized,
+
+64
+00:03:18,790 --> 00:03:23,950
+or defined, let's look into this
+set of different built-in roles
+
+65
+00:03:23,950 --> 00:03:26,450
+that MongoDB provides.
+
+66
+00:03:26,450 --> 00:03:28,210
+So the built-in
+roles are organized
+
+67
+00:03:28,210 --> 00:03:33,160
+by four different sets of
+groups, plus this super user
+
+68
+00:03:33,160 --> 00:03:34,840
+role type.
+
+69
+00:03:34,840 --> 00:03:37,840
+We have database
+level users, which can
+
+70
+00:03:37,840 --> 00:03:39,880
+either be read and readWrite.
+
+71
+00:03:39,880 --> 00:03:43,210
+These are the
+application users that
+
+72
+00:03:43,210 --> 00:03:46,520
+should be allowed to
+read or read and write.
+
+73
+00:03:46,520 --> 00:03:51,470
+We have database administration
+roles, like userAdmin, dbAdmin,
+
+74
+00:03:51,470 --> 00:03:53,680
+and dbOwner.
+
+75
+00:03:53,680 --> 00:03:56,710
+We have cluster level
+administration roles,
+
+76
+00:03:56,710 --> 00:03:59,560
+which are clusterAdmin,
+clusterManager, clusterMonitor,
+
+77
+00:03:59,560 --> 00:04:01,210
+and hostManager.
+
+78
+00:04:01,210 --> 00:04:05,020
+We have specific roles
+for backup and restore.
+
+79
+00:04:05,020 --> 00:04:08,350
+And obviously, we also
+have our super user root
+
+80
+00:04:08,350 --> 00:04:13,090
+role that should be granted
+only in specific situations.
+
+81
+00:04:13,090 --> 00:04:17,410
+All the roles defined here
+are purely database level
+
+82
+00:04:17,410 --> 00:04:18,820
+for each user.
+
+83
+00:04:18,820 --> 00:04:22,450
+That means that I can
+grant different roles,
+
+84
+00:04:22,450 --> 00:04:25,940
+to different users, on
+different databases.
+
+85
+00:04:25,940 --> 00:04:28,030
+But there are also
+built-in roles
+
+86
+00:04:28,030 --> 00:04:30,880
+that are all database level.
+
+87
+00:04:30,880 --> 00:04:34,900
+That means they apply to
+any database in the system.
+
+88
+00:04:34,900 --> 00:04:38,140
+For the database users, we
+have readAnyDatabase or read
+
+89
+00:04:38,140 --> 00:04:39,820
+and write any database.
+
+90
+00:04:39,820 --> 00:04:42,580
+For database administration,
+we have dbAdminAnyDatabase,
+
+91
+00:04:42,580 --> 00:04:44,750
+or userAdminAnyDatabase.
+
+92
+00:04:44,750 --> 00:04:47,950
+And obviously, this
+super user nature of root
+
+93
+00:04:47,950 --> 00:04:53,110
+is, in fact, a whole
+database level role, as well.
+
+94
+00:04:53,110 --> 00:04:54,830
+But these are a lot of them.
+
+95
+00:04:54,830 --> 00:04:57,820
+So I want to focus your
+attention on the ones
+
+96
+00:04:57,820 --> 00:05:00,770
+that we're going to need
+throughout this course--
+
+97
+00:05:00,770 --> 00:00:00,000
+userAdmin, dbOwner, and dbAdmin.
+

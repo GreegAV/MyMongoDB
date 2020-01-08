@@ -1,0 +1,23 @@
+Let's discuss the content that is going to be covered in this course.
+
+Other than the overview chapter, there are four main chapters on performance, Indexes, Index Operations, CRUD Optimizations, and Performance on Clusters.
+
+In the first chapter, Indexes, you learn how indexes are a critical part of providing efficient access to the data that lives in your database.
+
+Here, you'll learn about what indexes are, how both indexes and other data are stored on disk, the most common types of indexes, how we can optimize sorting through the use of indexes, and the different types of secondary indexes and their properties.
+
+After we've covered what indexes are, in the second chapter, we'll then discuss how we practically work with these indexes.
+
+Here, we'll discuss how to build, discover, delete, and rebalance indexes, query plans, the explain method, how to use hint and index filters, how indexes impact our servers resources, and finally, we'll examine some basic benchmarking.
+
+We'll then dig into chapter 3, CRUD Optimizations, where we'll talk about what other factors can affect performance, as well as how indexes can interact with your queries.
+
+Here, we're going to examine optimizing your CRUD optimizations, covered queries, regular expressions, insert performance, index fields with a mixture of data types, and last we'll take a look at how indexes interact with the aggregation pipeline.
+
+In the last chapter, we'll talk about distributed systems.
+
+Here, you're going to learn about performance considerations in a distributed system, increasing write performance with sharding, reading from secondaries in your replica sets, replica sets with specialized indexes, and finally, we'll discuss how to optimize your aggregation pipeline.
+
+That's a great overview of the content in this course.
+
+Now that you know what we're going to discuss, let's get started.

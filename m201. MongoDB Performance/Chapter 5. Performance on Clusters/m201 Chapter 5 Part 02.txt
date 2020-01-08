@@ -1,0 +1,91 @@
+In this lesson, we're going to talk about increasing your write performance with sharding.
+
+First, we're going to discuss the differences between horizontal and vertical scaling.
+
+After that, we'll talk about rules for picking a good shard key.
+
+And finally, we'll spend some time talking about bulk write operations in a sharded cluster.
+
+So there are going to be times when you have too much data or too much throughput for your database to handle.
+
+And this problem is solved by scaling.
+
+And there are two schools of thought when it comes to scaling.
+
+There's vertical scaling, and there's horizontal scaling.
+
+With vertical scaling.
+
+The idea is that your current server has too few resources and is being overworked.
+
+And to fix that issue, you're just going to buy a bigger, faster machine with more CPU, RAM, and disk.
+
+This approach will eventually reach a limit.
+
+There's a ceiling to how much CPU, RAM, and disk one single physical machine can have.
+
+Moreover, the cost to scale your machine vertically is not linear.
+
+When we buy a machine that is twice as fast and powerful as our current server, our cost doesn't double, it normally quadruples or even worse.
+
+With horizontal scaling, on the other hand, instead of increasing the resources of your server you just increase the total number of servers, effectively splitting the workload between many different machines.
+
+When we reach the limit of our current setup, we just add more machines.
+
+This is nice because we can use commodity machines, where we're simply buying more of the same machine.
+
+When we do this, our costs scale nice and linearly with our performance requirements.
+
+Now, it's important to understand that with a sharded cluster, all of our reads and writes are going to go into a mongos.
+
+This is important to realize because this mongos needs to be able to determine where to send the reads and writes.
+
+This is achieved with a shard key.
+
+The shard key defines how our data is partitioned across different machines.
+
+The shard key is either an index field or an index compound of fields that exist in every document in the collection.
+
+Now it's very important that we evenly distribute our data across these shards so that we can evenly distribute their load.
+
+This is why picking a good shard key is the most important part of sharding.
+
+With a shard key, our data is divided up into bite size pieces called chunks.
+
+Each chunk has an inclusive lower bound and exclusive upper bound.
+
+In this hypothetical example, we defined a shard key on last name and we created three chunks.
+
+The first chunk has a lower bound of Abbott and has an upper bound Fisher.
+
+Now in reality, with sharding, we'd have far more chunks than this.
+
+By default, a chunk's maximum size is 64 megabytes.
+
+Chunks will grow close to this value, and then they will be split.
+
+So there are many chunks existing on each of the shards in a cluster.
+
+Now in order for our write throughput to truly scale linearly as we add shards, we need to ensure that these chunks are evenly distributed across each shard.
+
+To achieve this, there are three key things to keep in mind when designing a shard key.
+
+There is carnality, frequency, and rate of change.
+
+Let's take a look at each of these.
+
+With cardinality, we're referring to the number of distinct values for a given shard key.
+
+We want high cardinality.
+
+The cardinality of our shard key determines the maximum number of chunks that can exist in our cluster.
+
+If, for instance, we were to build an application that was used only by people who live in New York City, and we were sharding on state, then we could have a maximum of one chunk, because both the upper and lower bound of this chunk would be New York.
+
+And since we only have one chunk, this means we can only have one shard.
+
+So we want to ensure that our shard key has high cardinality.
+
+If you can't use a field that has higher cardinality, you can increase the cardinality of your shard key by creating a compound shard key.
+
+Now instead of having the range of values just on state, we have a range of values for every state and last name combination.

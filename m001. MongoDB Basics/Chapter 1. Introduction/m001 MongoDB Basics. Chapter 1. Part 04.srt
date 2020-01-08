@@ -1,0 +1,269 @@
+1
+00:00:00,300 --> 00:00:03,500
+OK, now let's browse some of
+the collections in this cluster.
+
+2
+00:00:03,580 --> 00:00:05,780
+If you look to the left
+in the Compass interface,
+
+3
+00:00:05,960 --> 00:00:07,620
+you'll see a navigation
+panel containing
+
+4
+00:00:07,780 --> 00:00:11,300
+a list of all databases in the
+cluster we are connected to,
+
+5
+00:00:11,600 --> 00:00:14,000
+with the collections
+those databases contain
+
+6
+00:00:14,000 --> 00:00:15,720
+nested below them.
+
+7
+00:00:15,720 --> 00:00:18,120
+Note that you can return
+to this view at any point
+
+8
+00:00:18,120 --> 00:00:20,460
+by clicking the Home icon.
+
+9
+00:00:20,480 --> 00:00:23,780
+Right now however, we want to
+dive into the collections here.
+
+10
+00:00:23,840 --> 00:00:25,260
+We have quite a
+few databases here.
+
+11
+00:00:25,260 --> 00:00:27,780
+These are the collections we'll
+use throughout the course.
+
+12
+00:00:27,780 --> 00:00:29,840
+They contain a variety
+of types of data,
+
+13
+00:00:29,840 --> 00:00:32,299
+and a range of data models,
+so that we can illustrate
+
+14
+00:00:32,299 --> 00:00:34,060
+different features of MongoDB.
+
+15
+00:00:34,080 --> 00:00:36,580
+To access documents
+within any collection,
+
+16
+00:00:36,580 --> 00:00:39,520
+simply locate the collection
+in this navigation panel
+
+17
+00:00:39,600 --> 00:00:40,720
+and click.
+
+18
+00:00:40,840 --> 00:00:43,700
+As an example, let's take a
+look at the movies collection
+
+19
+00:00:43,720 --> 00:00:45,660
+of the videos database.
+
+20
+00:00:45,660 --> 00:00:47,060
+As you click on
+this collection, you
+
+21
+00:00:47,060 --> 00:00:48,820
+should see a schema
+view for the collection
+
+22
+00:00:48,820 --> 00:00:50,840
+appear in the main panel.
+
+23
+00:00:50,900 --> 00:00:53,500
+The schema view provides
+a list of the fields
+
+24
+00:00:53,520 --> 00:00:56,040
+found in documents
+within this collection.
+
+25
+00:00:56,060 --> 00:00:58,060
+As you might expect
+for movies, we
+
+26
+00:00:58,060 --> 00:01:02,800
+have fields for
+director, genre, plot,
+
+27
+00:01:03,000 --> 00:01:06,160
+and a number of other
+features relevant to movies.
+
+28
+00:01:06,160 --> 00:01:09,640
+As we scroll through, we can see
+all fields found in documents
+
+29
+00:01:09,640 --> 00:01:11,000
+in this collection.
+
+30
+00:01:11,040 --> 00:01:12,780
+Again, this view
+provides a summary
+
+31
+00:01:12,780 --> 00:01:15,480
+of the schema, or data
+model, for documents
+
+32
+00:01:15,500 --> 00:01:16,980
+in this collection.
+
+33
+00:01:17,000 --> 00:01:21,600
+We have the list of
+fields, their data types,
+
+34
+00:01:21,600 --> 00:01:26,400
+and a summary of the range
+of values for each field
+
+35
+00:01:26,480 --> 00:01:29,220
+found throughout the
+documents in the collection.
+
+36
+00:01:29,360 --> 00:01:32,220
+We'll return to a more detailed
+walkthrough of this information
+
+37
+00:01:32,220 --> 00:01:33,540
+in a later lesson.
+
+38
+00:01:33,540 --> 00:01:35,520
+For now, let's dig into
+this collection a bit,
+
+39
+00:01:35,520 --> 00:01:37,480
+and look at a few
+specific documents.
+
+40
+00:01:37,480 --> 00:01:40,160
+If we click the
+Documents tab, you
+
+41
+00:01:40,160 --> 00:01:42,500
+should see a list of documents
+within this collection.
+
+42
+00:01:42,560 --> 00:01:45,360
+This view gives us the ability
+to browse the actual data found
+
+43
+00:01:45,420 --> 00:01:46,680
+in this collection.
+
+44
+00:01:46,840 --> 00:01:49,880
+Here we can see a document
+recording the details
+
+45
+00:01:49,920 --> 00:01:54,520
+for a one minute long
+film called Carmencita
+
+46
+00:01:54,560 --> 00:01:57,720
+that was produced in 1894.
+
+47
+00:01:57,720 --> 00:02:01,080
+As we scroll through this view,
+we can see other documents
+
+48
+00:02:01,080 --> 00:02:02,540
+in this collection.
+
+49
+00:02:02,680 --> 00:02:04,420
+In later lessons,
+we'll look at how
+
+50
+00:02:04,480 --> 00:02:06,140
+to query this data
+to find documents
+
+51
+00:02:06,140 --> 00:02:08,979
+matching a specific
+set of filter criteria.
+
+52
+00:02:08,979 --> 00:02:11,400
+We'll also learn how to
+insert new documents,
+
+53
+00:02:11,440 --> 00:02:14,480
+and update existing
+ones, with new data.
+
+54
+00:02:14,480 --> 00:02:16,420
+Go ahead and explore
+this data a bit,
+
+55
+00:02:16,600 --> 00:02:21,620
+and peek in on the other
+collections in this Atlas cluster. And then, move on
+to the next lesson.
+
+56
+00:02:23,400 --> 00:00:00,000
+And then, move on
+to the next lesson.
+

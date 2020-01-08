@@ -1,0 +1,578 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,990
+In this lesson, we're going
+to consider logical operators.
+
+3
+00:00:03,990 --> 00:00:09,020
+In particular, we're going
+to focus on $or and $and.
+
+4
+00:00:09,020 --> 00:00:10,560
+Now I also want
+to make you aware
+
+5
+00:00:10,560 --> 00:00:16,520
+that there is a $not
+operator and a $nor operator.
+
+6
+00:00:16,520 --> 00:00:20,190
+But in this lesson, we're going
+to look just at "or" and "and".
+
+7
+00:00:20,190 --> 00:00:23,820
+Let's take a look at an
+example using the $or operator.
+
+8
+00:00:23,820 --> 00:00:26,380
+What we're going
+to do here is look
+
+9
+00:00:26,380 --> 00:00:29,300
+for documents based
+on their rating
+
+10
+00:00:29,300 --> 00:00:31,490
+using both the
+tomato meter, which
+
+11
+00:00:31,490 --> 00:00:34,810
+is produced by the reviews
+of the general public who
+
+12
+00:00:34,810 --> 00:00:38,130
+care to comment, and
+the metacritic, which
+
+13
+00:00:38,130 --> 00:00:41,810
+is a score generated based on
+the reviews of movie critics.
+
+14
+00:00:41,810 --> 00:00:44,390
+Now the assumption
+baked into this query
+
+15
+00:00:44,390 --> 00:00:46,430
+is that the general
+public are easier
+
+16
+00:00:46,430 --> 00:00:49,500
+graders than movie critics.
+
+17
+00:00:49,500 --> 00:00:52,900
+We're looking for documents
+in our movie details
+
+18
+00:00:52,900 --> 00:00:54,710
+collection that have
+a tomato dot meter
+
+19
+00:00:54,710 --> 00:00:59,410
+rating greater than 95 or a
+metacritic rating of greater
+
+20
+00:00:59,410 --> 00:01:00,860
+than 88.
+
+21
+00:01:00,860 --> 00:01:03,070
+Let's look at the syntax here.
+
+22
+00:01:03,070 --> 00:01:11,120
+$or takes as a value an array
+in which we specify selectors.
+
+23
+00:01:11,120 --> 00:01:14,850
+In this case, we're
+using greater than 95
+
+24
+00:01:14,850 --> 00:01:18,570
+for tomato meter and greater
+than 88 for metacritic.
+
+25
+00:01:18,570 --> 00:01:22,090
+Now let's run this query and
+take a look at the results.
+
+26
+00:01:22,090 --> 00:01:26,430
+We can see that "Toy Story 3"
+actually matched both criteria.
+
+27
+00:01:26,430 --> 00:01:28,770
+It has a tomato meter
+rating of greater than 95
+
+28
+00:01:28,770 --> 00:01:32,060
+and a metacritic score
+of greater than 92.
+
+29
+00:01:32,060 --> 00:01:35,760
+And then here's one where the
+general public and the critics
+
+30
+00:01:35,760 --> 00:01:38,930
+we're pretty far apart
+in rating this movie--
+
+31
+00:01:38,930 --> 00:01:41,180
+this being the document
+for "Groundhog Day".
+
+32
+00:01:41,180 --> 00:01:46,710
+So again, $or takes an
+array as an argument.
+
+33
+00:01:46,710 --> 00:01:49,500
+The elements of the
+array are selectors.
+
+34
+00:01:49,500 --> 00:01:52,020
+Any one of which
+can be true in order
+
+35
+00:01:52,020 --> 00:01:55,670
+to match a document that will
+be returned by this query.
+
+36
+00:01:55,670 --> 00:01:58,100
+Now let's look at
+the $and operator.
+
+37
+00:01:58,100 --> 00:02:00,520
+Something that I want
+to point out about $and
+
+38
+00:02:00,520 --> 00:02:03,870
+is that it's necessary
+only in certain situations.
+
+39
+00:02:03,870 --> 00:02:08,889
+For example, we could use
+$and here and restrict results
+
+40
+00:02:08,889 --> 00:02:13,970
+to those movies where both the
+metacritic score and the tomato
+
+41
+00:02:13,970 --> 00:02:15,970
+meter score were high.
+
+42
+00:02:15,970 --> 00:02:17,940
+Let's look at an
+example of that.
+
+43
+00:02:17,940 --> 00:02:20,820
+So now only movies
+where both tomato
+
+44
+00:02:20,820 --> 00:02:26,090
+meter and metacritic scores are
+high are being returned to us.
+
+45
+00:02:26,090 --> 00:02:28,480
+But the thing to note is
+that the $and operator
+
+46
+00:02:28,480 --> 00:02:31,060
+in this particular
+query is superfluous.
+
+47
+00:02:31,060 --> 00:02:34,580
+The reason being that the
+query we just did here
+
+48
+00:02:34,580 --> 00:02:37,180
+is equivalent to this one.
+
+49
+00:02:37,180 --> 00:02:40,720
+Selectors in a
+filter are implicitly
+
+50
+00:02:40,720 --> 00:02:42,461
+anded together already.
+
+51
+00:02:42,461 --> 00:02:44,210
+And we can see that
+if we apply this query
+
+52
+00:02:44,210 --> 00:02:48,240
+without the use of $and that
+we get exactly the same search
+
+53
+00:02:48,240 --> 00:02:49,300
+results.
+
+54
+00:02:49,300 --> 00:02:51,840
+So why is there a $and operator?
+
+55
+00:02:51,840 --> 00:02:54,070
+The reason is
+because sometimes we
+
+56
+00:02:54,070 --> 00:03:01,460
+need to specify the same field
+more than once in a filter.
+
+57
+00:03:01,460 --> 00:03:06,310
+If I were to try to do this,
+using just a simple filter,
+
+58
+00:03:06,310 --> 00:03:09,070
+I would not get the
+intended results
+
+59
+00:03:09,070 --> 00:03:13,460
+because the keys in a JSON
+document must be unique.
+
+60
+00:03:13,460 --> 00:03:17,380
+For example, if our
+query were this instead,
+
+61
+00:03:17,380 --> 00:03:23,340
+the last use of the metacritic
+key would be the one used.
+
+62
+00:03:23,340 --> 00:03:28,460
+The $and operator allows me to
+specify multiple constraints
+
+63
+00:03:28,460 --> 00:03:32,440
+on the same field in
+situations such as this
+
+64
+00:03:32,440 --> 00:03:34,050
+where I need to do so.
+
+65
+00:03:34,050 --> 00:03:38,500
+In this case, we need all
+documents for which metacritic
+
+66
+00:03:38,500 --> 00:03:42,390
+is not equal to
+null, but does exist.
+
+67
+00:03:42,390 --> 00:03:46,220
+Remember that null will
+match keys that actually
+
+68
+00:03:46,220 --> 00:03:49,000
+have the value
+null and those that
+
+69
+00:03:49,000 --> 00:03:51,690
+do not contain the key at all.
+
+70
+00:03:51,690 --> 00:03:54,690
+This type of query might be
+useful for an application
+
+71
+00:03:54,690 --> 00:03:57,610
+in which we know we've got
+a little bit of dirty data
+
+72
+00:03:57,610 --> 00:04:00,250
+where possibly there
+are fields that
+
+73
+00:04:00,250 --> 00:04:04,140
+have a metacritic value
+that is equal to null.
+
+74
+00:04:04,140 --> 00:04:06,470
+But what we really want
+is for all our metacritic
+
+75
+00:04:06,470 --> 00:04:09,980
+values to actually have a
+numerical value of some kind.
+
+76
+00:04:09,980 --> 00:04:12,990
+And so if I execute this,
+then I do get documents
+
+77
+00:04:12,990 --> 00:04:14,530
+where the metacritic
+field exists
+
+78
+00:04:14,530 --> 00:04:18,980
+and where I do have a value
+other than null for that field.
+
+79
+00:04:18,980 --> 00:04:23,360
+And we can always flip this
+to see only documents where
+
+80
+00:04:23,360 --> 00:04:28,250
+metacritic is null and
+the field actually exists.
+
+81
+00:04:28,250 --> 00:04:30,580
+Let's run this query instead.
+
+82
+00:04:30,580 --> 00:04:33,890
+Now, there aren't actually
+any such documents
+
+83
+00:04:33,890 --> 00:04:35,154
+in this collection.
+
+84
+00:04:35,154 --> 00:04:37,070
+And what I mean by that
+is they're not in fact
+
+85
+00:04:37,070 --> 00:04:39,070
+any documents where
+the metacritic field
+
+86
+00:04:39,070 --> 00:04:40,270
+has a value of null.
+
+87
+00:04:40,270 --> 00:04:42,030
+So let's create one.
+
+88
+00:04:42,030 --> 00:04:45,100
+For this, I'm going
+to go to Compass.
+
+89
+00:04:45,100 --> 00:04:47,942
+And despite the fact that the
+document we're looking for
+
+90
+00:04:47,942 --> 00:04:49,400
+is already right
+here, I would like
+
+91
+00:04:49,400 --> 00:04:51,150
+to limit the result
+set that we're looking
+
+92
+00:04:51,150 --> 00:04:55,980
+at to just this document.
+
+93
+00:04:55,980 --> 00:04:59,420
+Applying that filter, we
+see one document returned
+
+94
+00:04:59,420 --> 00:05:02,490
+and that it is in fact "Once
+Upon a Time in the West".
+
+95
+00:05:02,490 --> 00:05:04,420
+Now, in order to
+create a document that
+
+96
+00:05:04,420 --> 00:05:07,550
+has a null value for metacritic,
+what I'm going to do here
+
+97
+00:05:07,550 --> 00:05:11,200
+is use the copy
+document button that I
+
+98
+00:05:11,200 --> 00:05:15,720
+see to the right of my document
+here in the Compass Interface.
+
+99
+00:05:15,720 --> 00:05:20,100
+That pulls up a modal with
+a copy of that document
+
+100
+00:05:20,100 --> 00:05:22,650
+and gives me an
+opportunity to insert it.
+
+101
+00:05:22,650 --> 00:05:25,520
+But before I insert
+it, what I want to do
+
+102
+00:05:25,520 --> 00:05:28,130
+is go to the
+metacritic field change
+
+103
+00:05:28,130 --> 00:05:32,650
+its value to null and
+make sure that I change
+
+104
+00:05:32,650 --> 00:05:34,840
+its type to null, as well.
+
+105
+00:05:34,840 --> 00:05:36,560
+Then what I'll do is insert it.
+
+106
+00:05:36,560 --> 00:05:40,350
+But first, note that
+there is no underscore ID
+
+107
+00:05:40,350 --> 00:05:42,050
+for this copy of the document.
+
+108
+00:05:42,050 --> 00:05:45,920
+When I insert it,
+another score ID value
+
+109
+00:05:45,920 --> 00:05:48,090
+will be created for me.
+
+110
+00:05:48,090 --> 00:05:52,650
+And now I have two documents
+that have this title.
+
+111
+00:05:52,650 --> 00:05:55,030
+The first is the
+original document.
+
+112
+00:05:55,030 --> 00:06:00,710
+And the second is my copy
+with metacritic set to null.
+
+113
+00:06:00,710 --> 00:06:03,510
+Now if I run that
+same query in a shell,
+
+114
+00:06:03,510 --> 00:06:06,880
+we can see that we match the
+document we just inserted.
+
+115
+00:06:06,880 --> 00:06:10,730
+Before we close this lesson,
+I'll just go back to Compass
+
+116
+00:06:10,730 --> 00:06:12,960
+and delete that
+document I inserted
+
+117
+00:06:12,960 --> 00:06:14,450
+to clean up after myself.
+
+118
+00:06:14,450 --> 00:06:18,400
+So again, remember
+that $and is used
+
+119
+00:06:18,400 --> 00:06:22,280
+in situations where we need
+to specify multiple criteria
+
+120
+00:06:22,280 --> 00:00:00,000
+on the same field.
+

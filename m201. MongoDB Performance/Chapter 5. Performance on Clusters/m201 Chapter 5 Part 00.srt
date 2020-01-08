@@ -1,0 +1,406 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.200
+In this lesson, we
+are going to talk
+
+3
+00:00:02.200 --> 00:00:04.450
+about some important
+considerations regarding
+
+4
+00:00:04.450 --> 00:00:08.510
+Performance in a
+Distributed System.
+
+5
+00:00:08.510 --> 00:00:11.950
+A distributed system in MongoDB
+includes both replica sets--
+
+6
+00:00:11.950 --> 00:00:14.560
+or Replica Clusters--
+for a high availability
+
+7
+00:00:14.560 --> 00:00:18.070
+solution, and Shard Clusters.
+
+8
+00:00:18.070 --> 00:00:22.870
+Shard Clusters are our mechanism
+to allow horizontal scalability
+
+9
+00:00:22.870 --> 00:00:24.460
+of our data.
+
+10
+00:00:24.460 --> 00:00:26.500
+When working with a
+distributed system,
+
+11
+00:00:26.500 --> 00:00:28.600
+we need to acknowledge
+a few things.
+
+12
+00:00:28.600 --> 00:00:31.380
+When more than one machine
+talks to each other,
+
+13
+00:00:31.380 --> 00:00:33.790
+latency will be involved.
+
+14
+00:00:33.790 --> 00:00:35.880
+So we need to consider latency.
+
+15
+00:00:35.880 --> 00:00:40.460
+Data is generally spread
+across different notes.
+
+16
+00:00:40.460 --> 00:00:43.000
+It's either copies of the
+data or different sets
+
+17
+00:00:43.000 --> 00:00:45.220
+of data in different charts.
+
+18
+00:00:45.220 --> 00:00:47.290
+There will be read
+implications, so things
+
+19
+00:00:47.290 --> 00:00:50.980
+will be performing
+in a different pace,
+
+20
+00:00:50.980 --> 00:00:53.930
+and obviously, also,
+write implications.
+
+21
+00:00:53.930 --> 00:00:56.200
+Now, regarding
+your replica sets,
+
+22
+00:00:56.200 --> 00:00:59.080
+let me reinforce a
+message around this.
+
+23
+00:00:59.080 --> 00:01:01.890
+Please do use them in
+production environments.
+
+24
+00:01:01.890 --> 00:01:05.710
+High availability is key to
+guarantee that your service is
+
+25
+00:01:05.710 --> 00:01:10.390
+not affected by any potential,
+and probable, system failure.
+
+26
+00:01:10.390 --> 00:01:15.430
+Having a replica set in place
+is super, super important.
+
+27
+00:01:15.430 --> 00:01:19.150
+Apart from the main purpose of
+providing high availability,
+
+28
+00:01:19.150 --> 00:01:21.100
+in case of failure of
+a node, we will still
+
+29
+00:01:21.100 --> 00:01:24.070
+have availability of a service
+provided by the remaining
+
+30
+00:01:24.070 --> 00:01:27.850
+nodes, but replica sets can also
+provide a few other functions,
+
+31
+00:01:27.850 --> 00:01:29.940
+like offloading ventral
+consistency data
+
+32
+00:01:29.940 --> 00:01:33.280
+to secondaries,
+privileging your primary
+
+33
+00:01:33.280 --> 00:01:35.530
+for operational
+workload, or having
+
+34
+00:01:35.530 --> 00:01:38.050
+specific workload
+with target indexes
+
+35
+00:01:38.050 --> 00:01:42.040
+configuration on
+secondary nodes.
+
+36
+00:01:42.040 --> 00:01:45.970
+More on this topic to be
+covered in upcoming lessons.
+
+37
+00:01:45.970 --> 00:01:48.520
+The other side of distributed
+systems in MongoDB,
+
+38
+00:01:48.520 --> 00:01:51.430
+with a purpose of
+horizontal scalability,
+
+39
+00:01:51.430 --> 00:01:54.070
+is our Shard Cluster.
+
+40
+00:01:54.070 --> 00:01:57.340
+In our Shard Cluster, we
+will have our Mongo assets,
+
+41
+00:01:57.340 --> 00:01:59.470
+responsible for routing
+our client application
+
+42
+00:01:59.470 --> 00:02:02.420
+requests to designated nodes.
+
+43
+00:02:02.420 --> 00:02:03.880
+We're going to have
+config servers.
+
+44
+00:02:03.880 --> 00:02:06.160
+These nodes are
+responsible for holding
+
+45
+00:02:06.160 --> 00:02:09.610
+the mapping of our Shard
+Cluster, where data sits
+
+46
+00:02:09.610 --> 00:02:13.210
+at each point in time, but
+also the general configuration
+
+47
+00:02:13.210 --> 00:02:16.510
+of our Shard Cluster in its own.
+
+48
+00:02:16.510 --> 00:02:19.000
+And finally, we have
+our Shard Nodes.
+
+49
+00:02:19.000 --> 00:02:22.870
+Shard Nodes are responsible for
+holding the application data.
+
+50
+00:02:22.870 --> 00:02:25.090
+Databases,
+collections, indexes--
+
+51
+00:02:25.090 --> 00:02:27.310
+these will reside
+in these members,
+
+52
+00:02:27.310 --> 00:02:30.340
+and it will be here that
+all major workload will
+
+53
+00:02:30.340 --> 00:02:32.140
+be performed.
+
+54
+00:02:32.140 --> 00:02:34.840
+Shard Nodes are in
+themselves replica sets.
+
+55
+00:02:34.840 --> 00:02:38.740
+This is important since if a
+Shard Note will be configured
+
+56
+00:02:38.740 --> 00:02:41.620
+as a replica set, therefore
+with no high visibility
+
+57
+00:02:41.620 --> 00:02:45.130
+for that node, we could
+eventually lose access
+
+58
+00:02:45.130 --> 00:02:49.630
+in case of failure for
+a significant portion
+
+59
+00:02:49.630 --> 00:02:53.690
+of our application data,
+and that's not cool.
+
+60
+00:02:53.690 --> 00:02:57.080
+A Shard Cluster does
+require a few steps
+
+61
+00:02:57.080 --> 00:02:59.750
+to be properly configured,
+but these are out
+
+62
+00:02:59.750 --> 00:03:01.880
+of scope for this
+particular lesson.
+
+63
+00:03:01.880 --> 00:03:04.280
+But we will be
+looking to what you
+
+64
+00:03:04.280 --> 00:03:08.570
+need to know before you can
+figure your Shard Cluster.
+
+65
+00:03:08.570 --> 00:03:12.380
+Sharding is our horizontal
+scalability solution,
+
+66
+00:03:12.380 --> 00:03:16.220
+which is great scaling strategy
+for very large data sets.
+
+67
+00:03:16.220 --> 00:03:20.315
+You'll eventually reach the
+limits of your vertical scaling
+
+68
+00:03:20.315 --> 00:03:23.990
+either in terms of cost
+per performance gains.
+
+69
+00:03:23.990 --> 00:03:27.920
+But before you jump
+into charting bandwagon,
+
+70
+00:03:27.920 --> 00:03:32.460
+you need to consider if you're
+already reached those limits.
+
+71
+00:03:32.460 --> 00:03:35.330
+If buying another box
+would not give you
+
+72
+00:03:35.330 --> 00:03:39.050
+that gain in terms of
+performance and cost
+
+73
+00:03:39.050 --> 00:03:41.342
+that you are expecting.
+
+74
+00:03:41.342 --> 00:03:42.800
+Another important
+thing is that you
+
+75
+00:03:42.800 --> 00:03:45.410
+need to understand
+how your data grows,
+
+76
+00:03:45.410 --> 00:03:48.300
+and how your data is accessed.
+
+77
+00:03:48.300 --> 00:03:52.040
+Since Sharding works by
+defining a key base ranges,
+
+78
+00:03:52.040 --> 00:03:55.400
+knowing how your data grows,
+and knowing how your data is
+
+79
+00:03:55.400 --> 00:03:58.340
+being constantly
+accessed allows you
+
+80
+00:03:58.340 --> 00:04:01.460
+to get into a good shard key.
+
+81
+00:04:01.460 --> 00:04:04.640
+And that's a very,
+very important exercise
+
+82
+00:04:04.640 --> 00:04:05.780
+that you need to do.
+
+83
+00:04:05.780 --> 00:04:08.180
+Before doing any
+sharding at all,
+
+84
+00:04:08.180 --> 00:04:13.840
+is defining what will be a good
+shad key for your data sets.

@@ -1,0 +1,277 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.770
+By the way, what about a query
+that doesn't use the shard key.
+
+3
+00:00:03.770 --> 00:00:07.310
+Let's create another
+index and query on it.
+
+4
+00:00:07.310 --> 00:00:11.900
+We'll create our index
+on user.phonenumber.
+
+5
+00:00:11.900 --> 00:00:14.450
+We'll do a little query
+that doesn't use an index
+
+6
+00:00:14.450 --> 00:00:19.050
+and which gives us a
+phone number initially.
+
+7
+00:00:19.050 --> 00:00:21.230
+We'll run a query that
+counts the number of users
+
+8
+00:00:21.230 --> 00:00:24.460
+with that phone number.
+
+9
+00:00:24.460 --> 00:00:26.860
+OK, we're going to
+find a phone number.
+
+10
+00:00:26.860 --> 00:00:31.800
+
+
+11
+00:00:31.800 --> 00:00:32.310
+There we go.
+
+12
+00:00:32.310 --> 00:00:41.780
+
+
+13
+00:00:41.780 --> 00:00:47.180
+OK, so we're going to create
+an index on user.phonenumber.
+
+14
+00:00:47.180 --> 00:00:51.830
+We're going to find a
+single phone number.
+
+15
+00:00:51.830 --> 00:00:53.750
+And we're going to count
+the number of users
+
+16
+00:00:53.750 --> 00:00:54.708
+with that phone number.
+
+17
+00:00:54.708 --> 00:00:57.260
+
+
+18
+00:00:57.260 --> 00:00:59.810
+And it's just the one.
+
+19
+00:00:59.810 --> 00:01:01.840
+All right, let's
+look at index stats.
+
+20
+00:01:01.840 --> 00:01:04.590
+
+
+21
+00:01:04.590 --> 00:01:07.830
+Here, I'm querying just for
+the phone numbers statistics.
+
+22
+00:01:07.830 --> 00:01:10.620
+And I can see that I
+have accessed it twice--
+
+23
+00:01:10.620 --> 00:01:12.906
+one actually in
+querying that first time
+
+24
+00:01:12.906 --> 00:01:14.280
+to get our phone
+number, and then
+
+25
+00:01:14.280 --> 00:01:16.770
+a second time for
+that phone number.
+
+26
+00:01:16.770 --> 00:01:20.730
+You can see these queries
+hit all of our shards.
+
+27
+00:01:20.730 --> 00:01:24.720
+So even though I only wanted
+one document which is only
+
+28
+00:01:24.720 --> 00:01:27.720
+on one server, the query
+hit every single one
+
+29
+00:01:27.720 --> 00:01:31.230
+of my servers, which it
+has to because this query
+
+30
+00:01:31.230 --> 00:01:32.830
+doesn't use the shard key.
+
+31
+00:01:32.830 --> 00:01:35.160
+It's a scatter gather query.
+
+32
+00:01:35.160 --> 00:01:38.830
+We don't know which
+shard has the document.
+
+33
+00:01:38.830 --> 00:01:41.167
+So for queries that
+don't use the shard key,
+
+34
+00:01:41.167 --> 00:01:42.750
+you can just count
+the number of times
+
+35
+00:01:42.750 --> 00:01:44.380
+they appear on any server.
+
+36
+00:01:44.380 --> 00:01:46.890
+If it hits one,
+it hits them all.
+
+37
+00:01:46.890 --> 00:01:49.170
+The moral is that if
+you're using index stats,
+
+38
+00:01:49.170 --> 00:01:50.620
+you need to keep
+track of servers,
+
+39
+00:01:50.620 --> 00:01:53.610
+even for a replica set
+because you want to know
+
+40
+00:01:53.610 --> 00:01:55.440
+when your primary steps down.
+
+41
+00:01:55.440 --> 00:01:57.900
+For sharded cluster, it's
+even more complicated,
+
+42
+00:01:57.900 --> 00:02:01.170
+and you really need to be aware
+of what it is you're measuring.
+
+43
+00:02:01.170 --> 00:02:02.820
+You have to know,
+for each query,
+
+44
+00:02:02.820 --> 00:02:04.920
+how many servers it hits.
+
+45
+00:02:04.920 --> 00:02:07.860
+This is simple for exact
+match queries on a shard key
+
+46
+00:02:07.860 --> 00:02:09.150
+where it hits only one server.
+
+47
+00:02:09.150 --> 00:02:12.240
+And it's also simple for
+scatter gather queries which
+
+48
+00:02:12.240 --> 00:02:14.520
+have to hit all the servers.
+
+49
+00:02:14.520 --> 00:02:16.050
+Range-based queries
+on the shard key
+
+50
+00:02:16.050 --> 00:02:20.730
+though can hit one,
+many, or all servers.
+
+51
+00:02:20.730 --> 00:02:22.840
+OK, what have we learned?
+
+52
+00:02:22.840 --> 00:02:25.440
+Well, we've learned
+how to use index stats
+
+53
+00:02:25.440 --> 00:02:28.110
+and look at the
+accesses.ops field
+
+54
+00:02:28.110 --> 00:02:31.590
+to see what queries are
+hitting what indexes.
+
+55
+00:02:31.590 --> 00:02:34.020
+We've also learned how
+to be careful of the host
+
+56
+00:02:34.020 --> 00:02:36.270
+field for replica sets.
+
+57
+00:02:36.270 --> 00:02:39.510
+And we've learned that
+for charted clusters,
+
+58
+00:02:39.510 --> 00:02:45.510
+a query can be executed by
+one, several, or all servers.
+
+59
+00:02:45.510 --> 00:02:48.440
+And that's how you
+use index stats.

@@ -1,0 +1,169 @@
+Ah, the many-to-many relationship.
+
+Here's the most complicated relationship.
+
+Or is it?
+
+It can trick us, but don't worry too much.
+
+We can also trick it.
+
+The many-to-many relationship is identified by documents on the first side being associated with many documents on the second side, and documents on the second side being associated with many documents on the first side.
+
+Looking at products sold in our stores, we can see that the given store sells many items, and each item is sold in many stores.
+
+This relationship can trick you into thinking it is a one-to-many relationship, if you only consider one side of the relationship.
+
+So ensure you ask the question of associativity from both directions, and that you review your model the few times, especially for these less apparent relationships.
+
+In a normalized relational model, you can't actually link two tables as many-to-many.
+
+However, some design tools can do the extra work for you.
+
+Under the hood, an additional relationship table needs to be created to define this relationship, sometimes referred as a jump table.
+
+It [?
+
+result ?] in breaking up the many-to-many relationship into two one-to-many relationships linked together by our extra third table.
+
+For example, keeping track of the many-to-many relationship between actors and movies requires this table in between our actors and movies.
+
+Misidentifying these types of relations means creating new tables and incurring data migration costs.
+
+This type of modification, it's just not fun with traditional databases.
+
+MongoDB's flexible schema easily allows for this type of schema modification, and is more forgiving, as scatter field can easily be transformed into an array field.
+
+Let's take another example-- people and phone numbers.
+
+Someone may have a few phone numbers.
+
+Some of these phone numbers are exclusive, and some are not.
+
+A family's shares the home phone number.
+
+So a person can have many phone numbers, and the phone number may be owned by many people, resulting in a many-to-many relationship.
+
+Well, not so fast.
+
+We said we could also trick this relationship.
+
+We can treat the phone number for a home as uniquely owned by each member of the family by making copies of it.
+
+Now, we have a one-to-many relationship instead, which removes complexity.
+
+[INAUDIBLE] of this duplication, if the family moves, we must modify each family's members phone numbers separately.
+
+Performing the same update multiple times may not sound like the right design, however, considered the previous design, where we store only one telephone number value in the database.
+
+If someone moves-- like the child, for example-- and updates their phone number, the update will apply to all the members of the family.
+
+We don't get the option to choose between doing multiple updates or one update that applies to all [?
+
+records.
+
+?] Duplication is better, in some occasions, especially when you want to keep control of [INAUDIBLE] data and when you want to avoid joining data.
+
+What are the different ways in which we can model this many-to-many relationship?
+
+Similarly to the other relationships, we can embed the data from the other collection, or we can reference the other collection.
+
+Embedding in one side [?
+
+or ?] [?
+
+the ?] [?
+
+other ?] is a symmetric operation.
+
+Usually we embed documents of the last queried collection inside documents of the more queried collection.
+
+Let's use the carts and items from our product catalog example.
+
+The main entity is the cart in which we want to find the items, not the reverse.
+
+We embed the items in the cart, because we always retrieve this information together.
+
+Having copies of items in the carts period is usually fine, because they represent the state of those items at the time they were added to the cart.
+
+The same applies to addresses and orders.
+
+The address used for that order at the time of the order creation should be duplicated.
+
+Observe that we need to keep a collection for the items.
+
+Even [INAUDIBLE] we embed the items in the carts, these items require [?
+
+a ?] [?
+
+collection ?] to hold their definition for several reasons.
+
+There will be several other access patterns in your application that utilize items without [?
+
+carrying ?] or needing the information on orders they have been added to.
+
+Item documents have different life cycle than cart documents.
+
+An item may exist without being in any carts, like an actor may be listed before being in a movie.
+
+This requirement of keeping a source of input applies only to this specific representation in the many-to-many relationship.
+
+In a one-to-many relationship, if a user is deleted with their phone numbers, we don't care about not having this phone number in any other document, because the phone number only belonged to this deleted user.
+
+Instead of embedding, we can also use references.
+
+Let's start with a representation that keeps the references on the side that is the most often queried.
+
+When a document is retrieved, we will get the list of all the associated object's unique identifiers.
+
+Those are expressed in [INAUDIBLE] [?
+
+field.
+
+?] If we need to add the information on these, we can use a second query, like the [INAUDIBLE] [?
+
+IDs.
+
+?] Or we can use the [?
+
+dollar ?] [?
+
+lookup ?] operator to effectively do a join between the object ID for stores and the corresponding documents in the stores collection.
+
+This is very similar to join operations in the SQL language.
+
+The second representation of the many-to-many relationship that uses references is the one where we keep-- as we may have guessed-- the reference in another collection.
+
+Because this representation [INAUDIBLE] [?
+
+arrays ?] of references, they are very similar.
+
+However, there are few differences.
+
+Here, each store has a field called item sold that carries a list of references to the items sold in the given store.
+
+When we retrieve an item, we still don't know where it is sold.
+
+We need a second query to get this information, which was another case in the previous representation.
+
+A query like the following will return to stores in which the item with an ID of 10 or green MongoDB T-shirt has sold.
+
+So which of those two representation that [?
+
+use ?] [?
+
+references ?] should we use?
+
+The representation that fits [?
+
+our ?] queries and also works well with the way we have the documents in our system.
+
+When we add an item, which happens more often than adding a store, is it better to add the list of store in which it is sold or to individually update all stores to add the item?
+
+How we answer this question will help us pick the right representation.
+
+To recap this lesson, ask the right questions to ensure it is a many-to-many relationship that should not be simplified.
+
+A many-to-many relationship can be replaced by two one-to-many relationship, but does not have to with the document model.
+
+Prefer embedding on the most queried side, prefer embedding for information that is primarily static over time and may profit from duplication, prefer referencing over embedding to avoid managing duplication.

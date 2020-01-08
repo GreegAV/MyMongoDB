@@ -1,0 +1,710 @@
+
+1
+00:00:00.000 --> 00:00:00.554
+
+
+2
+00:00:00.554 --> 00:00:02.720
+In this lesson, we're going
+to talk about how we can
+
+3
+00:00:02.720 --> 00:00:05.510
+optimize our CRUD operations.
+
+4
+00:00:05.510 --> 00:00:08.150
+By now we already understand
+the important rule
+
+5
+00:00:08.150 --> 00:00:11.390
+that indexes play with
+regards to performance.
+
+6
+00:00:11.390 --> 00:00:14.980
+In this lesson, we're going
+to discuss index selectivity,
+
+7
+00:00:14.980 --> 00:00:17.180
+which concerns minimizing
+the number of index keys
+
+8
+00:00:17.180 --> 00:00:19.910
+that we examine;
+the equality, sort,
+
+9
+00:00:19.910 --> 00:00:23.360
+range rule, which is useful
+when building indexes;
+
+10
+00:00:23.360 --> 00:00:26.307
+and finally, we'll discuss the
+trade-offs between these two.
+
+11
+00:00:26.307 --> 00:00:27.890
+Let's go ahead and
+jump into the shell
+
+12
+00:00:27.890 --> 00:00:30.240
+and look at some examples.
+
+13
+00:00:30.240 --> 00:00:32.540
+And for this lesson, we're
+going to continue using
+
+14
+00:00:32.540 --> 00:00:34.700
+the new restaurant data set.
+
+15
+00:00:34.700 --> 00:00:38.690
+Here I'm creating an explainable
+object, and here's our query.
+
+16
+00:00:38.690 --> 00:00:41.030
+We're going to search
+for restaurants whose zip
+
+17
+00:00:41.030 --> 00:00:45.440
+code is over 50,000,
+whose cuisine is sushi,
+
+18
+00:00:45.440 --> 00:00:48.764
+and we're going to sort
+by stars descending.
+
+19
+00:00:48.764 --> 00:00:50.930
+Now, this collection doesn't
+have any indexes on it.
+
+20
+00:00:50.930 --> 00:00:53.666
+So we would assume this
+would not be very performant,
+
+21
+00:00:53.666 --> 00:00:55.040
+and this is exactly
+what we want.
+
+22
+00:00:55.040 --> 00:00:56.930
+This is our baseline.
+
+23
+00:00:56.930 --> 00:00:59.150
+And when we look at
+the explain output,
+
+24
+00:00:59.150 --> 00:01:02.930
+we can see that we're doing
+a collection scan, followed
+
+25
+00:01:02.930 --> 00:01:05.570
+by an in-memory sort.
+
+26
+00:01:05.570 --> 00:01:07.670
+And when we look
+at execution stats,
+
+27
+00:01:07.670 --> 00:01:09.545
+we can see that we
+returned 11,000 documents,
+
+28
+00:01:09.545 --> 00:01:13.190
+and it took 386 milliseconds.
+
+29
+00:01:13.190 --> 00:01:16.070
+But we had to examine one
+million documents to do so.
+
+30
+00:01:16.070 --> 00:01:19.220
+This is pretty terrible,
+but it's what we expected.
+
+31
+00:01:19.220 --> 00:01:21.320
+Looking back at our
+query, we might go ahead
+
+32
+00:01:21.320 --> 00:01:23.750
+and naively create
+an index on zip code,
+
+33
+00:01:23.750 --> 00:01:26.280
+cuisine, and stars,
+which is what we're
+
+34
+00:01:26.280 --> 00:01:28.520
+querying on and sorting on.
+
+35
+00:01:28.520 --> 00:01:30.500
+And now when we
+rerun the same query,
+
+36
+00:01:30.500 --> 00:01:34.320
+we'd expect some better
+results, and we do.
+
+37
+00:01:34.320 --> 00:01:37.400
+We can see that we're no longer
+examining a million documents.
+
+38
+00:01:37.400 --> 00:01:41.060
+We're only examining the 11,000
+that we return, is the same
+
+39
+00:01:41.060 --> 00:01:42.676
+that we're examining.
+
+40
+00:01:42.676 --> 00:01:44.300
+And instead of doing
+a collection scan,
+
+41
+00:01:44.300 --> 00:01:46.220
+we're now doing an index scan.
+
+42
+00:01:46.220 --> 00:01:48.980
+But you can see that we're still
+doing an in-memory sort which
+
+43
+00:01:48.980 --> 00:01:50.590
+isn't very cool.
+
+44
+00:01:50.590 --> 00:01:52.280
+And we're also
+looking at a bunch
+
+45
+00:01:52.280 --> 00:01:55.980
+of unnecessary index keys,
+which also isn't very cool.
+
+46
+00:01:55.980 --> 00:01:58.730
+But in general, our
+execution time is down.
+
+47
+00:01:58.730 --> 00:02:01.850
+And we're examining an
+extra 80,000 index keys
+
+48
+00:02:01.850 --> 00:02:05.060
+because the first key in
+our index is zip code.
+
+49
+00:02:05.060 --> 00:02:08.030
+And in our query here,
+zip code is a range query,
+
+50
+00:02:08.030 --> 00:02:09.740
+which isn't very selective.
+
+51
+00:02:09.740 --> 00:02:11.870
+If zip code was an
+equality condition,
+
+52
+00:02:11.870 --> 00:02:14.750
+then our index key
+would be very selective,
+
+53
+00:02:14.750 --> 00:02:16.550
+because there's only
+a hundred thousand
+
+54
+00:02:16.550 --> 00:02:20.150
+possible different zip codes
+and we have a million documents.
+
+55
+00:02:20.150 --> 00:02:23.480
+So if we were doing
+something like this
+
+56
+00:02:23.480 --> 00:02:26.390
+where we were doing an
+equality condition on zip code,
+
+57
+00:02:26.390 --> 00:02:29.960
+we expect there to only be
+about 10 documents, which
+
+58
+00:02:29.960 --> 00:02:32.180
+is exactly how many there are.
+
+59
+00:02:32.180 --> 00:02:34.460
+However, our query isn't
+doing an equality condition
+
+60
+00:02:34.460 --> 00:02:35.300
+on zip code.
+
+61
+00:02:35.300 --> 00:02:36.950
+It's doing a range query.
+
+62
+00:02:36.950 --> 00:02:40.580
+We're saying that we want all
+zip codes greater than 50,000.
+
+63
+00:02:40.580 --> 00:02:44.630
+So since 50,000 is about half
+of the hundred thousand possible
+
+64
+00:02:44.630 --> 00:02:48.410
+zip codes, we expect about
+half a million documents,
+
+65
+00:02:48.410 --> 00:02:52.190
+which is pretty much
+exactly what we see.
+
+66
+00:02:52.190 --> 00:02:55.850
+So zip code as a range query
+isn't a very selective index
+
+67
+00:02:55.850 --> 00:02:59.610
+because we're returning
+half of our million.
+
+68
+00:02:59.610 --> 00:03:02.990
+On the other hand, cuisine
+has an equality condition,
+
+69
+00:03:02.990 --> 00:03:07.340
+and so we'd expect this to be
+pretty selective, and it is.
+
+70
+00:03:07.340 --> 00:03:11.750
+We're only seeing 23,000
+documents, which is about 2%
+
+71
+00:03:11.750 --> 00:03:14.360
+of our million
+document collection.
+
+72
+00:03:14.360 --> 00:03:17.000
+So this is much more
+selective than the 50%
+
+73
+00:03:17.000 --> 00:03:18.800
+that we'd get with zip code.
+
+74
+00:03:18.800 --> 00:03:21.110
+Knowing the selective
+parts of our query,
+
+75
+00:03:21.110 --> 00:03:24.540
+we can reorder our index
+to take advantage of this.
+
+76
+00:03:24.540 --> 00:03:26.900
+Let's go ahead and this
+time create an index
+
+77
+00:03:26.900 --> 00:03:30.380
+on cuisine first instead
+of zip code first.
+
+78
+00:03:30.380 --> 00:03:33.760
+So we're effectively just
+swapping these two fields.
+
+79
+00:03:33.760 --> 00:03:36.100
+And now we can rerun
+the same query.
+
+80
+00:03:36.100 --> 00:03:38.140
+And when we look at
+the output, you'll
+
+81
+00:03:38.140 --> 00:03:40.870
+see that our execution
+stats are way better.
+
+82
+00:03:40.870 --> 00:03:43.820
+We're now not examining
+any unnecessary index keys.
+
+83
+00:03:43.820 --> 00:03:46.720
+Our execution time is way down.
+
+84
+00:03:46.720 --> 00:03:50.300
+This is almost a third of what
+it took the last time to run.
+
+85
+00:03:50.300 --> 00:03:53.410
+But when we look up
+at the winning plan,
+
+86
+00:03:53.410 --> 00:03:57.250
+you'll see that we're still
+doing an in-memory sort.
+
+87
+00:03:57.250 --> 00:03:59.639
+So we know we can actually
+probably do better.
+
+88
+00:03:59.639 --> 00:04:01.180
+And you might be
+surprised that we're
+
+89
+00:04:01.180 --> 00:04:05.290
+doing an in-memory sort because
+our index includes the stars
+
+90
+00:04:05.290 --> 00:04:06.520
+key.
+
+91
+00:04:06.520 --> 00:04:08.050
+Well, if you remember
+correctly, we
+
+92
+00:04:08.050 --> 00:04:11.180
+can only use an index for
+both filtering and sorting
+
+93
+00:04:11.180 --> 00:04:12.820
+if the keys in our
+query predicate
+
+94
+00:04:12.820 --> 00:04:14.560
+are equality conditions.
+
+95
+00:04:14.560 --> 00:04:16.540
+And since zip code
+is a range query,
+
+96
+00:04:16.540 --> 00:04:19.269
+we're not able to use
+that index for sorting.
+
+97
+00:04:19.269 --> 00:04:21.466
+So we can swap
+stars and zip code,
+
+98
+00:04:21.466 --> 00:04:22.840
+and this will
+allow us to prevent
+
+99
+00:04:22.840 --> 00:04:24.860
+doing an in-memory sort.
+
+100
+00:04:24.860 --> 00:04:26.800
+And so when we look
+at our explain output,
+
+101
+00:04:26.800 --> 00:04:32.260
+we can see that our winning
+plan is just do an index scan
+
+102
+00:04:32.260 --> 00:04:33.670
+followed by a fetch.
+
+103
+00:04:33.670 --> 00:04:35.800
+No more in-memory sort.
+
+104
+00:04:35.800 --> 00:04:38.500
+And when we scroll down
+to execution stats,
+
+105
+00:04:38.500 --> 00:04:41.170
+you'll see that our execution
+time is way down, only
+
+106
+00:04:41.170 --> 00:04:44.380
+43 milliseconds.
+
+107
+00:04:44.380 --> 00:04:46.880
+You might also notice that we're
+looking at a few more index
+
+108
+00:04:46.880 --> 00:04:50.650
+keys, but that's OK because by
+doing this sort with the index,
+
+109
+00:04:50.650 --> 00:04:54.120
+we've actually saved on
+the execution time overall.
+
+110
+00:04:54.120 --> 00:04:57.980
+And this is a nice segue
+into equality, sort, range.
+
+111
+00:04:57.980 --> 00:05:00.310
+Here's our query,
+and here's the index
+
+112
+00:05:00.310 --> 00:05:03.120
+that we just used to get
+our most perform execution.
+
+113
+00:05:03.120 --> 00:05:04.880
+And so we can use
+this phrase equality,
+
+114
+00:05:04.880 --> 00:05:08.770
+sort, range when building our
+indexes to determine the best
+
+115
+00:05:08.770 --> 00:05:10.996
+way to service our queries.
+
+116
+00:05:10.996 --> 00:05:12.370
+At the beginning
+of our index, we
+
+117
+00:05:12.370 --> 00:05:14.180
+should match on
+equality conditions
+
+118
+00:05:14.180 --> 00:05:18.610
+in the query predicate, followed
+by sort conditions, and finally
+
+119
+00:05:18.610 --> 00:05:23.027
+range conditions;
+equality, sort, range.
+
+120
+00:05:23.027 --> 00:05:24.610
+And while this cool
+trick won't always
+
+121
+00:05:24.610 --> 00:05:27.070
+give us the most
+performant results,
+
+122
+00:05:27.070 --> 00:05:28.450
+it's a really
+great rule of thumb
+
+123
+00:05:28.450 --> 00:05:30.640
+and it works most of the time.
+
+124
+00:05:30.640 --> 00:05:32.710
+And as you can see, if
+we don't use indexes,
+
+125
+00:05:32.710 --> 00:05:35.020
+our queries are
+going to be slow.
+
+126
+00:05:35.020 --> 00:05:36.820
+And we can build indexes
+so that we're not
+
+127
+00:05:36.820 --> 00:05:40.566
+examining unnecessary documents
+that we're not returning.
+
+128
+00:05:40.566 --> 00:05:42.190
+We can continue to
+increase performance
+
+129
+00:05:42.190 --> 00:05:43.630
+by thinking about
+selectivity when
+
+130
+00:05:43.630 --> 00:05:45.546
+we build our indexes so
+that we're not looking
+
+131
+00:05:45.546 --> 00:05:47.770
+at superfluous index keys.
+
+132
+00:05:47.770 --> 00:05:50.530
+But that being said, sometimes
+it makes sense for us
+
+133
+00:05:50.530 --> 00:05:53.380
+to make a trade-off between
+examining index keys
+
+134
+00:05:53.380 --> 00:05:55.480
+and doing an in-memory sort.
+
+135
+00:05:55.480 --> 00:05:57.860
+As we can see, the
+rule of equality, sort,
+
+136
+00:05:57.860 --> 00:06:00.940
+range when used as a rule of
+thumb for building our indexes
+
+137
+00:06:00.940 --> 00:06:02.890
+can be very effective.
+
+138
+00:06:02.890 --> 00:06:04.850
+Let's recap what we've learned.
+
+139
+00:06:04.850 --> 00:06:06.760
+So we talked about
+index selectivity.
+
+140
+00:06:06.760 --> 00:06:08.530
+And when we choose
+our indexes, we
+
+141
+00:06:08.530 --> 00:06:11.980
+want to make sure that the most
+selective fields are first.
+
+142
+00:06:11.980 --> 00:06:13.480
+We also talked about
+equality, sort,
+
+143
+00:06:13.480 --> 00:06:16.510
+range, which is a really great
+rule for determining how we
+
+144
+00:06:16.510 --> 00:06:18.730
+should order our index fields.
+
+145
+00:06:18.730 --> 00:06:21.100
+And finally, we talked about
+performance trade-offs.
+
+146
+00:06:21.100 --> 00:06:23.980
+Sometimes it makes sense to be
+a little bit less selective,
+
+147
+00:06:23.980 --> 00:06:26.620
+to prevent an in-memory
+sort because in the end
+
+148
+00:06:26.620 --> 00:06:29.190
+our execution time
+will be the lowest.

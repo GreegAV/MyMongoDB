@@ -1,0 +1,35 @@
+Now at the other extreme, the opposite event can also cause sudden problems, an unexpected index build.
+
+If you're building an index, your storage engine needs to create a lot of index entries.
+
+This will be a blocking operation.
+
+And depending on the size of the index, it could take time.
+
+Your server won't take rights while the index is getting built.
+
+We'll create an index.
+
+Then we'll go to the log.
+
+Here you can see the index build.
+
+And if you look at the start and stop times, you can figure out how long it took.
+
+Obviously, it didn't take long here, since I just spun up my replica set and everything was empty.
+
+If you can catch an index build in action, you can also find it with db.currentOp.
+
+But once an index build is in progress, you've already got a problem.
+
+And by the time you connect, it's probably going to be done with.
+
+But maybe you really need to build an index.
+
+And maybe you can't afford to take the performance hit while an index is getting built.
+
+What are your alternatives?
+
+They basically all come down to planning.
+
+We'll cover this in detail in our lesson on building indexes.

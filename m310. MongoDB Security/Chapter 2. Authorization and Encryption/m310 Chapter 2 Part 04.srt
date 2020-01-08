@@ -1,0 +1,357 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.660
+In this video I'd like to
+examine the different actions
+
+3
+00:00:03.660 --> 00:00:05.510
+that are supported in MongoDB.
+
+4
+00:00:05.510 --> 00:00:08.560
+We already know that there
+are two parts to a privilege--
+
+5
+00:00:08.560 --> 00:00:11.390
+an action and a resource.
+
+6
+00:00:11.390 --> 00:00:15.010
+Actions describe the operations
+that a given user may perform
+
+7
+00:00:15.010 --> 00:00:17.410
+on a resource in the database.
+
+8
+00:00:17.410 --> 00:00:19.180
+You can think of
+actions as verbs.
+
+9
+00:00:19.180 --> 00:00:22.680
+While resources are the
+subjects of these verbs.
+
+10
+00:00:22.680 --> 00:00:26.350
+Within MongoDB, we have several
+different types of actions.
+
+11
+00:00:26.350 --> 00:00:29.500
+Let's go through each of
+these categories one by one.
+
+12
+00:00:29.500 --> 00:00:32.650
+Let's start with query
+and write actions.
+
+13
+00:00:32.650 --> 00:00:36.730
+All of the actions in this
+category are related to CRUD.
+
+14
+00:00:36.730 --> 00:00:39.810
+You can see that we have things
+like find, insert, remove,
+
+15
+00:00:39.810 --> 00:00:42.660
+update, and bypass
+document validation.
+
+16
+00:00:42.660 --> 00:00:44.000
+Pretty straightforward.
+
+17
+00:00:44.000 --> 00:00:47.990
+After query and write actions,
+we have database management
+
+18
+00:00:47.990 --> 00:00:49.370
+actions.
+
+19
+00:00:49.370 --> 00:00:53.210
+Most of these actions
+are DDL operations.
+
+20
+00:00:53.210 --> 00:00:55.270
+These are structural
+to the database.
+
+21
+00:00:55.270 --> 00:00:58.470
+Things like creating an
+index, creating a collection,
+
+22
+00:00:58.470 --> 00:01:01.580
+dropping a user, killing
+cursors, unlocking
+
+23
+00:01:01.580 --> 00:01:03.080
+the database.
+
+24
+00:01:03.080 --> 00:01:05.190
+One thing I want to
+point out is that there's
+
+25
+00:01:05.190 --> 00:01:07.670
+a difference between
+changing your own password
+
+26
+00:01:07.670 --> 00:01:09.260
+and changing a password.
+
+27
+00:01:09.260 --> 00:01:12.150
+The changeOwnPassword
+role allows you
+
+28
+00:01:12.150 --> 00:01:13.840
+to change your own password.
+
+29
+00:01:13.840 --> 00:01:17.370
+Whereas the changePassword
+role grants you the privilege
+
+30
+00:01:17.370 --> 00:01:20.010
+to change anyone's password.
+
+31
+00:01:20.010 --> 00:01:22.300
+After database
+management actions,
+
+32
+00:01:22.300 --> 00:01:25.800
+we can move on to deployment
+management actions.
+
+33
+00:01:25.800 --> 00:01:27.640
+Deployment Management
+Actions are also
+
+34
+00:01:27.640 --> 00:01:28.920
+pretty straightforward.
+
+35
+00:01:28.920 --> 00:01:31.387
+They allow you to
+manage your deployment.
+
+36
+00:01:31.387 --> 00:01:32.970
+The one thing I like
+to point out here
+
+37
+00:01:32.970 --> 00:01:35.170
+is that all of these
+operations-- all
+
+38
+00:01:35.170 --> 00:01:37.480
+of these actions--
+are only applied
+
+39
+00:01:37.480 --> 00:01:39.450
+to the cluster resource.
+
+40
+00:01:39.450 --> 00:01:41.930
+After deployment
+management actions,
+
+41
+00:01:41.930 --> 00:01:44.630
+we have replication actions.
+
+42
+00:01:44.630 --> 00:01:46.780
+As you'd expect,
+all these actions
+
+43
+00:01:46.780 --> 00:01:49.020
+involve getting and setting
+different replications
+
+44
+00:01:49.020 --> 00:01:50.360
+settings.
+
+45
+00:01:50.360 --> 00:01:52.130
+We also have the
+ability to append
+
+46
+00:01:52.130 --> 00:01:55.410
+an oplog note, do a resync.
+
+47
+00:01:55.410 --> 00:01:57.140
+All these actions
+are also applied
+
+48
+00:01:57.140 --> 00:01:58.810
+to the cluster resource.
+
+49
+00:01:58.810 --> 00:02:01.820
+After replication we
+can talk about sharding.
+
+50
+00:02:01.820 --> 00:02:06.160
+All of these sharding actions,
+well, pertain to sharding.
+
+51
+00:02:06.160 --> 00:02:09.280
+Things like adding a
+shard, enabling sharding,
+
+52
+00:02:09.280 --> 00:02:10.900
+listing the shards,
+moving a chunk,
+
+53
+00:02:10.900 --> 00:02:13.490
+and removing a shard, et cetera.
+
+54
+00:02:13.490 --> 00:02:18.170
+Next we can take a look at
+server administration actions.
+
+55
+00:02:18.170 --> 00:02:21.010
+All of these actions
+relate to administering
+
+56
+00:02:21.010 --> 00:02:24.620
+the actual database--
+things like running compact,
+
+57
+00:02:24.620 --> 00:02:27.700
+getting the host info,
+getting a server parameter,
+
+58
+00:02:27.700 --> 00:02:29.790
+shutting the
+database itself down.
+
+59
+00:02:29.790 --> 00:02:31.770
+All these are directly
+related to the server
+
+60
+00:02:31.770 --> 00:02:33.310
+and administrating it.
+
+61
+00:02:33.310 --> 00:02:35.950
+Next we have diagnostic actions.
+
+62
+00:02:35.950 --> 00:02:38.720
+These are the actions often
+required to diagnose or monitor
+
+63
+00:02:38.720 --> 00:02:40.250
+your database.
+
+64
+00:02:40.250 --> 00:02:42.710
+Generally, these are the
+actions that will have access
+
+65
+00:02:42.710 --> 00:02:45.070
+to statistics and
+metrics collected
+
+66
+00:02:45.070 --> 00:02:47.810
+by profiling or
+similar resources--
+
+67
+00:02:47.810 --> 00:02:53.450
+things like connection pool
+stats, db stats, index stats,
+
+68
+00:02:53.450 --> 00:02:55.980
+server status, et cetera.
+
+69
+00:02:55.980 --> 00:02:59.610
+And finally, we can talk
+about internal actions.
+
+70
+00:02:59.610 --> 00:03:02.280
+These actions are the most
+sensitive set of actions
+
+71
+00:03:02.280 --> 00:03:04.180
+that we can grant to a role.
+
+72
+00:03:04.180 --> 00:03:06.140
+Be very careful when
+granting these actions.
+
+73
+00:03:06.140 --> 00:03:08.790
+They should only be granted
+in exceptional circumstances,
+
+74
+00:03:08.790 --> 00:03:10.617
+as they are internal
+to the database.
+
+75
+00:03:10.617 --> 00:03:12.450
+And those are all the
+different actions that
+
+76
+00:03:12.450 --> 00:03:14.750
+are supported with MongoDB.

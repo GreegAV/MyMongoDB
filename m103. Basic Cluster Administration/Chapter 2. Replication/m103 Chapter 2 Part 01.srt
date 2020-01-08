@@ -1,0 +1,825 @@
+1
+00:00:00,000 --> 00:00:00,600
+
+
+2
+00:00:00,600 --> 00:00:04,780
+Now that we've seen why
+replication is important,
+
+3
+00:00:04,780 --> 00:00:08,810
+let's do a quick dive into
+the details of replica sets.
+
+4
+00:00:08,810 --> 00:00:11,670
+Replica sets or groups
+of mongods that share
+
+5
+00:00:11,670 --> 00:00:14,490
+copies of the same
+information between them.
+
+6
+00:00:14,490 --> 00:00:17,590
+Replica set members can have
+one of two different roles.
+
+7
+00:00:17,590 --> 00:00:21,630
+The either can be primary node
+where all reads and all writes
+
+8
+00:00:21,630 --> 00:00:23,460
+are served by this node.
+
+9
+00:00:23,460 --> 00:00:27,480
+Or secondary node where the
+responsibility of this node
+
+10
+00:00:27,480 --> 00:00:29,580
+is to replicate all
+of the information,
+
+11
+00:00:29,580 --> 00:00:31,545
+and then serve as
+a high availability
+
+12
+00:00:31,545 --> 00:00:35,350
+to node in case of
+failure of the primary.
+
+13
+00:00:35,350 --> 00:00:39,300
+The secondaries will get
+the data from the primary
+
+14
+00:00:39,300 --> 00:00:43,010
+through an asynchronous
+replication mechanism.
+
+15
+00:00:43,010 --> 00:00:45,120
+Every time an application
+writes some data
+
+16
+00:00:45,120 --> 00:00:50,040
+to the replica set, that right
+is handled by the primary node.
+
+17
+00:00:50,040 --> 00:00:54,370
+And then data gets replicated
+to the secondary nodes.
+
+18
+00:00:54,370 --> 00:00:57,180
+Now this replication
+mechanism is based out
+
+19
+00:00:57,180 --> 00:01:01,590
+of a protocol that manages the
+way that the secondaries should
+
+20
+00:01:01,590 --> 00:01:04,670
+read data from the primary.
+
+21
+00:01:04,670 --> 00:01:08,580
+In MongoDB this is synchronous
+replication protocol
+
+22
+00:01:08,580 --> 00:01:10,400
+might have different versions.
+
+23
+00:01:10,400 --> 00:01:12,990
+We have PV1 and PV0.
+
+24
+00:01:12,990 --> 00:01:15,630
+The different versions of
+the replication protocol
+
+25
+00:01:15,630 --> 00:01:18,770
+will vary slightly
+on the way durability
+
+26
+00:01:18,770 --> 00:01:23,160
+and availability will be
+forced throughout the set.
+
+27
+00:01:23,160 --> 00:01:28,020
+Currently Protocol Version 1,
+or PV1, is the default version.
+
+28
+00:01:28,020 --> 00:01:31,500
+This protocol is based
+out of the RAFT protocol.
+
+29
+00:01:31,500 --> 00:01:33,900
+If you are not familiar
+with the RAFT protocol,
+
+30
+00:01:33,900 --> 00:01:36,190
+in the lecture notes
+of this lesson,
+
+31
+00:01:36,190 --> 00:01:39,310
+you will find detailed
+information about RAFT.
+
+32
+00:01:39,310 --> 00:01:43,020
+Just keep in mind for now
+that prior versions of MongoDB
+
+33
+00:01:43,020 --> 00:01:46,640
+used the previous
+protocol version PV0,
+
+34
+00:01:46,640 --> 00:01:49,290
+and that there might be
+some configuration details
+
+35
+00:01:49,290 --> 00:01:51,450
+in between both protocols.
+
+36
+00:01:51,450 --> 00:01:54,630
+For now, we'll
+just focus on PV1.
+
+37
+00:01:54,630 --> 00:01:57,140
+At the heart of this
+replication mechanism
+
+38
+00:01:57,140 --> 00:02:01,270
+there's our operations
+log, or oplog for short.
+
+39
+00:02:01,270 --> 00:02:05,610
+The oplog is a segment based
+lock that keeps track of all
+
+40
+00:02:05,610 --> 00:02:09,060
+write operations acknowledged
+by the replica sets.
+
+41
+00:02:09,060 --> 00:02:10,620
+Every time a write
+is successfully
+
+42
+00:02:10,620 --> 00:02:13,290
+applied to the
+primary node, it will
+
+43
+00:02:13,290 --> 00:02:18,010
+get recorded in the oplog
+in its idempotent form.
+
+44
+00:02:18,010 --> 00:02:21,160
+We'll looking into the
+idempotentcy details later.
+
+45
+00:02:21,160 --> 00:02:23,730
+But keep in mind that
+an idempotent operation
+
+46
+00:02:23,730 --> 00:02:26,250
+can be applied multiple times.
+
+47
+00:02:26,250 --> 00:02:28,785
+And the end result
+of that operation
+
+48
+00:02:28,785 --> 00:02:33,570
+will always results in the
+same end result. More on this
+
+49
+00:02:33,570 --> 00:02:34,920
+up ahead.
+
+50
+00:02:34,920 --> 00:02:38,010
+Apart from a primary
+or secondary role,
+
+51
+00:02:38,010 --> 00:02:42,242
+a replica set member can also
+be configured as an arbiter.
+
+52
+00:02:42,242 --> 00:02:45,990
+An arbiter is a member
+that holds no data.
+
+53
+00:02:45,990 --> 00:02:49,980
+It's mere existence is
+to serve as a tiebreaker
+
+54
+00:02:49,980 --> 00:02:53,580
+between secondaries
+in an election.
+
+55
+00:02:53,580 --> 00:02:58,690
+And obviously if it has no data,
+it can never become primary.
+
+56
+00:02:58,690 --> 00:03:00,960
+Replica sets are
+failure resilient.
+
+57
+00:03:00,960 --> 00:03:04,020
+That means that they have
+a failover mechanism that
+
+58
+00:03:04,020 --> 00:03:07,020
+requires a majority of
+nodes in a replica set
+
+59
+00:03:07,020 --> 00:03:10,470
+to be available for a
+primary to be elected.
+
+60
+00:03:10,470 --> 00:03:13,680
+In this particular case, let's
+assume that we lose access
+
+61
+00:03:13,680 --> 00:03:15,030
+to our primary.
+
+62
+00:03:15,030 --> 00:03:17,940
+If we don't have a primary
+we will not be able to write,
+
+63
+00:03:17,940 --> 00:03:19,480
+and that's not good.
+
+64
+00:03:19,480 --> 00:03:21,930
+So we need to clear
+between the remaining
+
+65
+00:03:21,930 --> 00:03:26,820
+nodes of the set, which one
+could become the new primary?
+
+66
+00:03:26,820 --> 00:03:28,620
+That is through
+an election, which
+
+67
+00:03:28,620 --> 00:03:32,850
+is embedded on the details
+of the political version.
+
+68
+00:03:32,850 --> 00:03:35,820
+How a primary gets
+elected or why this--
+
+69
+00:03:35,820 --> 00:03:38,790
+a particular node becomes
+primary instead of another.
+
+70
+00:03:38,790 --> 00:03:40,800
+It's out of scope
+for now, but keep
+
+71
+00:03:40,800 --> 00:03:42,720
+in mind the details
+of these will
+
+72
+00:03:42,720 --> 00:03:44,520
+be related with the
+protocol version
+
+73
+00:03:44,520 --> 00:03:46,260
+that your system may be having.
+
+74
+00:03:46,260 --> 00:03:48,960
+For now just keep in
+mind that there is
+
+75
+00:03:48,960 --> 00:03:51,540
+a failover mechanism in place.
+
+76
+00:03:51,540 --> 00:03:54,270
+Important thing to note
+is that you should always
+
+77
+00:03:54,270 --> 00:03:58,620
+have at least an odd number
+of nodes in your replica set.
+
+78
+00:03:58,620 --> 00:04:01,770
+In case of even number
+of nodes, do make sure
+
+79
+00:04:01,770 --> 00:04:04,920
+that the majority is
+consistently available.
+
+80
+00:04:04,920 --> 00:04:07,350
+In this form of a
+replica set, you
+
+81
+00:04:07,350 --> 00:04:10,800
+will need to have at least
+three nodes to be available.
+
+82
+00:04:10,800 --> 00:04:14,490
+The list the replica set members
+in their configuration options
+
+83
+00:04:14,490 --> 00:04:16,890
+defines the replica
+set topology.
+
+84
+00:04:16,890 --> 00:04:20,519
+Any topology change will
+trigger an election.
+
+85
+00:04:20,519 --> 00:04:23,250
+Adding members to the
+set, failing members,
+
+86
+00:04:23,250 --> 00:04:25,080
+or changing any
+of the replica set
+
+87
+00:04:25,080 --> 00:04:27,240
+configuration aspects
+will be perceived
+
+88
+00:04:27,240 --> 00:04:29,280
+as it's topology change.
+
+89
+00:04:29,280 --> 00:04:32,280
+The topology of a replica set
+is defined in the replica set
+
+90
+00:04:32,280 --> 00:04:33,195
+configuration.
+
+91
+00:04:33,195 --> 00:04:36,330
+The replica set configuration
+is defined in one of the nodes
+
+92
+00:04:36,330 --> 00:04:38,520
+and then shared
+between all members
+
+93
+00:04:38,520 --> 00:04:40,620
+through the
+replication mechanism.
+
+94
+00:04:40,620 --> 00:04:42,690
+We will look into the
+replication configuration
+
+95
+00:04:42,690 --> 00:04:45,180
+documents in detail later.
+
+96
+00:04:45,180 --> 00:04:47,610
+In this case, we
+have four members
+
+97
+00:04:47,610 --> 00:04:49,590
+and I need to raise
+your attention
+
+98
+00:04:49,590 --> 00:04:52,200
+to a specific situation.
+
+99
+00:04:52,200 --> 00:04:57,360
+This topology offers exactly
+the same number of failures
+
+100
+00:04:57,360 --> 00:05:00,260
+as a three node replica sets.
+
+101
+00:05:00,260 --> 00:05:03,020
+can only afford to
+lose one member.
+
+102
+00:05:03,020 --> 00:05:05,060
+In case of losing
+two of them, we
+
+103
+00:05:05,060 --> 00:05:08,720
+will have no majority
+available out of the sets.
+
+104
+00:05:08,720 --> 00:05:09,250
+Why?
+
+105
+00:05:09,250 --> 00:05:11,960
+Well the majority of 4 is 3.
+
+106
+00:05:11,960 --> 00:05:13,940
+Therefore the two
+remaining nodes
+
+107
+00:05:13,940 --> 00:05:18,350
+will not be able to be electing
+a primary in-between them.
+
+108
+00:05:18,350 --> 00:05:22,130
+Having that extra node will
+not provide extra availability
+
+109
+00:05:22,130 --> 00:05:23,090
+of the service.
+
+110
+00:05:23,090 --> 00:05:25,710
+Just another redundant
+copy of our data,
+
+111
+00:05:25,710 --> 00:05:27,530
+which is good, but
+not necessarily
+
+112
+00:05:27,530 --> 00:05:30,260
+for availability reasons.
+
+113
+00:05:30,260 --> 00:05:33,830
+Now, replica sets can
+go up to 50 members.
+
+114
+00:05:33,830 --> 00:05:35,330
+And this might be
+useful, especially
+
+115
+00:05:35,330 --> 00:05:38,390
+for geographical
+distribution of our data
+
+116
+00:05:38,390 --> 00:05:41,660
+where we want copies of our
+data closer to our users
+
+117
+00:05:41,660 --> 00:05:44,780
+and applications, or
+just multiple locations
+
+118
+00:05:44,780 --> 00:05:46,400
+for redundancy.
+
+119
+00:05:46,400 --> 00:05:49,370
+But only a maximum of
+seven of those members
+
+120
+00:05:49,370 --> 00:05:51,660
+can be voting members.
+
+121
+00:05:51,660 --> 00:05:54,830
+More than seven members
+may cause election rounds
+
+122
+00:05:54,830 --> 00:05:57,530
+to take too much time,
+with little to none
+
+123
+00:05:57,530 --> 00:06:00,980
+benefit for availability
+and consistency purposes.
+
+124
+00:06:00,980 --> 00:06:03,170
+So between those
+seven nodes, one
+
+125
+00:06:03,170 --> 00:06:05,750
+of them will become the primary
+and the remaining ones will
+
+126
+00:06:05,750 --> 00:06:10,670
+be electable as primaries if
+in case its policy changes,
+
+127
+00:06:10,670 --> 00:06:13,320
+or in case a new
+election gets triggered.
+
+128
+00:06:13,320 --> 00:06:15,950
+Now if for some reason
+we can't or don't
+
+129
+00:06:15,950 --> 00:06:19,070
+want to have a
+data bearing node,
+
+130
+00:06:19,070 --> 00:06:23,180
+but still be able to
+failover between nodes,
+
+131
+00:06:23,180 --> 00:06:29,000
+we can add a replica set
+member as an arbiter.
+
+132
+00:06:29,000 --> 00:06:33,410
+That said, arbiters do cause
+significant consistency issues
+
+133
+00:06:33,410 --> 00:06:35,940
+in distributed data systems.
+
+134
+00:06:35,940 --> 00:06:38,960
+So we advise you
+use them with care.
+
+135
+00:06:38,960 --> 00:06:41,480
+In my personal view,
+the usage of arbiters
+
+136
+00:06:41,480 --> 00:06:44,240
+is a very sensitive
+and potentially harmful
+
+137
+00:06:44,240 --> 00:06:46,200
+option in many deployments.
+
+138
+00:06:46,200 --> 00:06:50,040
+So I idly discourage
+the usage of arbiters.
+
+139
+00:06:50,040 --> 00:06:53,420
+Withing secondary
+nodes, these can also
+
+140
+00:06:53,420 --> 00:06:58,530
+be set to have specific or
+special properties defined.
+
+141
+00:06:58,530 --> 00:07:01,320
+We can define hidden
+nodes, for example.
+
+142
+00:07:01,320 --> 00:07:05,480
+The purpose of a hidden
+node is to provide
+
+143
+00:07:05,480 --> 00:07:09,650
+specific read-only workloads,
+or have copies over your data
+
+144
+00:07:09,650 --> 00:07:12,780
+which are hidden
+from the application.
+
+145
+00:07:12,780 --> 00:07:15,170
+Hidden nodes can also
+be set with a delay
+
+146
+00:07:15,170 --> 00:07:16,820
+in their replication process.
+
+147
+00:07:16,820 --> 00:07:19,160
+We call these delayed nodes.
+
+148
+00:07:19,160 --> 00:07:21,200
+The purpose of
+having delayed nodes
+
+149
+00:07:21,200 --> 00:07:24,410
+is to allow resilience to
+application level corruption,
+
+150
+00:07:24,410 --> 00:07:26,630
+without relying on
+cold backup files
+
+151
+00:07:26,630 --> 00:07:29,030
+to recover from such an event.
+
+152
+00:07:29,030 --> 00:07:32,210
+If we have a node delayed,
+let's say one hour,
+
+153
+00:07:32,210 --> 00:07:35,750
+and if your DBA accidentally
+drops a collection,
+
+154
+00:07:35,750 --> 00:07:39,800
+we have one hour to recover all
+the data from the delayed node
+
+155
+00:07:39,800 --> 00:07:42,650
+without needing to go
+back to back up file
+
+156
+00:07:42,650 --> 00:07:47,240
+to recover to whatever the
+time that backup was created.
+
+157
+00:07:47,240 --> 00:07:50,930
+Enabling us to have hot backups.
+
+158
+00:07:50,930 --> 00:07:53,600
+Let's recap what we just
+learned in this lecture.
+
+159
+00:07:53,600 --> 00:07:57,410
+Replica sets are groups
+of mongod processes
+
+160
+00:07:57,410 --> 00:08:01,010
+that share the same data between
+all the members of the set.
+
+161
+00:08:01,010 --> 00:08:03,680
+They provide a high availability
+and failover mechanism
+
+162
+00:08:03,680 --> 00:08:09,540
+to our application, making the
+service in case of failure.
+
+163
+00:08:09,540 --> 00:08:11,660
+The failover is
+supported by a majority
+
+164
+00:08:11,660 --> 00:08:13,700
+of nodes that elect
+between them who
+
+165
+00:08:13,700 --> 00:08:17,450
+should be the new primary
+node at each point in time.
+
+166
+00:08:17,450 --> 00:08:20,330
+Replica sets are
+a dynamic system,
+
+167
+00:08:20,330 --> 00:08:22,550
+means that members may
+have different roles
+
+168
+00:08:22,550 --> 00:08:24,830
+at different times,
+and can be set
+
+169
+00:08:24,830 --> 00:08:28,140
+to address specific functional
+purpose like addressing read
+
+170
+00:08:28,140 --> 00:08:30,710
+on workloads, or
+set to be delayed
+
+171
+00:08:30,710 --> 00:00:00,000
+in time to allow hot back-ups.
+

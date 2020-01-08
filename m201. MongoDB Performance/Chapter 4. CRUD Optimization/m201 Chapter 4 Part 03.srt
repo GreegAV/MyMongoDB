@@ -1,0 +1,976 @@
+
+1
+00:00:00.000 --> 00:00:00.910
+
+
+2
+00:00:00.910 --> 00:00:03.700
+In this lesson we're going to
+talk about insert performance
+
+3
+00:00:03.700 --> 00:00:06.069
+from MongoDB.
+
+4
+00:00:06.069 --> 00:00:07.610
+By the end of this
+lesson, you should
+
+5
+00:00:07.610 --> 00:00:09.590
+be familiar with the
+following concepts
+
+6
+00:00:09.590 --> 00:00:12.047
+with regards to
+insert performance.
+
+7
+00:00:12.047 --> 00:00:13.880
+First, we're going to
+talk about how indexes
+
+8
+00:00:13.880 --> 00:00:16.126
+affect our write performance.
+
+9
+00:00:16.126 --> 00:00:18.500
+And we're also going to talk
+about how write concerns can
+
+10
+00:00:18.500 --> 00:00:20.810
+affect our write performance.
+
+11
+00:00:20.810 --> 00:00:23.090
+We already know that
+when we use indexes,
+
+12
+00:00:23.090 --> 00:00:27.140
+we seriously increase the read
+performance of our application.
+
+13
+00:00:27.140 --> 00:00:29.670
+This is because
+indexes store mappings
+
+14
+00:00:29.670 --> 00:00:31.880
+between field values
+and the references
+
+15
+00:00:31.880 --> 00:00:34.920
+to documents that have
+those field values.
+
+16
+00:00:34.920 --> 00:00:37.550
+And these indexes can
+be searched very quickly
+
+17
+00:00:37.550 --> 00:00:39.397
+for these references.
+
+18
+00:00:39.397 --> 00:00:41.480
+But we don't get this read
+performance enhancement
+
+19
+00:00:41.480 --> 00:00:42.620
+for free.
+
+20
+00:00:42.620 --> 00:00:46.400
+The downside is that we need to
+keep these indexes up to date.
+
+21
+00:00:46.400 --> 00:00:49.730
+So as documents are
+inserted, updated or deleted,
+
+22
+00:00:49.730 --> 00:00:52.640
+we may need to
+update our indexes.
+
+23
+00:00:52.640 --> 00:00:55.520
+And this means that for
+every index that we add,
+
+24
+00:00:55.520 --> 00:00:58.640
+we'll be decreasing the overall
+insert, update and delete
+
+25
+00:00:58.640 --> 00:01:01.520
+performance of our application.
+
+26
+00:01:01.520 --> 00:01:04.760
+Before we look at some practical
+examples of the overhead
+
+27
+00:01:04.760 --> 00:01:07.730
+that indexes can incur, let's
+talk about our other topic
+
+28
+00:01:07.730 --> 00:01:10.250
+for this lesson, write concern.
+
+29
+00:01:10.250 --> 00:01:12.350
+When we make writes
+to MongoDB we
+
+30
+00:01:12.350 --> 00:01:14.730
+can specify our write concern.
+
+31
+00:01:14.730 --> 00:01:17.780
+This write concern describes
+the level of acknowledgment
+
+32
+00:01:17.780 --> 00:01:21.410
+requested from MongoDB
+for write operations.
+
+33
+00:01:21.410 --> 00:01:26.700
+A write concern has three
+parameters, w, k, and wtimeout.
+
+34
+00:01:26.700 --> 00:01:29.965
+w describes how many of the
+members of our replica set
+
+35
+00:01:29.965 --> 00:01:31.340
+we're going to
+wait for the write
+
+36
+00:01:31.340 --> 00:01:35.180
+to be propagated to before
+we consider it truly written.
+
+37
+00:01:35.180 --> 00:01:37.520
+This can be a number,
+like one if we just
+
+38
+00:01:37.520 --> 00:01:39.650
+want to wait for
+the primary, or two
+
+39
+00:01:39.650 --> 00:01:41.130
+if we want to wait
+for two members
+
+40
+00:01:41.130 --> 00:01:43.560
+to acknowledge the
+write and so forth.
+
+41
+00:01:43.560 --> 00:01:45.546
+We can also use the
+string "majority"
+
+42
+00:01:45.546 --> 00:01:47.670
+where we want to wait for
+a majority of the members
+
+43
+00:01:47.670 --> 00:01:49.970
+to acknowledge the write.
+
+44
+00:01:49.970 --> 00:01:52.730
+j is a Boolean value
+specifying whether or not
+
+45
+00:01:52.730 --> 00:01:56.222
+we want to wait for
+the on disk journal.
+
+46
+00:01:56.222 --> 00:01:57.680
+When writes come
+into the database,
+
+47
+00:01:57.680 --> 00:01:59.660
+they're primarily
+written to memory.
+
+48
+00:01:59.660 --> 00:02:01.430
+But periodically
+that information
+
+49
+00:02:01.430 --> 00:02:03.950
+is flushed to an
+on disk journal.
+
+50
+00:02:03.950 --> 00:02:05.990
+And finally we have wtimeout.
+
+51
+00:02:05.990 --> 00:02:09.110
+This specifies how long we
+want to wait in milliseconds
+
+52
+00:02:09.110 --> 00:02:11.690
+for the write to be
+acknowledged before we time out.
+
+53
+00:02:11.690 --> 00:02:13.430
+So here's an example
+write concern,
+
+54
+00:02:13.430 --> 00:02:15.980
+where we say we want to wait
+for one member, the primary,
+
+55
+00:02:15.980 --> 00:02:18.320
+to acknowledge the
+write, and we don't
+
+56
+00:02:18.320 --> 00:02:20.810
+want to wait for the on disk
+journal to be written to,
+
+57
+00:02:20.810 --> 00:02:23.960
+and we want a timeout
+after five seconds.
+
+58
+00:02:23.960 --> 00:02:26.660
+I do want to point out that
+just because we time out doesn't
+
+59
+00:02:26.660 --> 00:02:28.250
+mean the write was aborted.
+
+60
+00:02:28.250 --> 00:02:31.430
+We can time out and the
+write can still occur.
+
+61
+00:02:31.430 --> 00:02:33.302
+Here's another example
+of a write concern.
+
+62
+00:02:33.302 --> 00:02:34.760
+Here we're saying
+that we will wait
+
+63
+00:02:34.760 --> 00:02:37.640
+for a majority of the members
+to acknowledge the write.
+
+64
+00:02:37.640 --> 00:02:40.244
+And we also want to wait until
+that write has been journaled.
+
+65
+00:02:40.244 --> 00:02:41.660
+It's somewhat
+intuitive to see how
+
+66
+00:02:41.660 --> 00:02:44.780
+this write concern on the bottom
+will generally take longer
+
+67
+00:02:44.780 --> 00:02:47.630
+to be acknowledged than
+the one on the top.
+
+68
+00:02:47.630 --> 00:02:49.360
+With the top write
+concern, we only
+
+69
+00:02:49.360 --> 00:02:52.280
+need to wait for one server
+to acknowledge the write,
+
+70
+00:02:52.280 --> 00:02:55.060
+and we're not waiting
+on the on disk journal.
+
+71
+00:02:55.060 --> 00:02:56.870
+On the bottom one
+here, however, we
+
+72
+00:02:56.870 --> 00:02:58.688
+have to wait for a
+majority of the members,
+
+73
+00:02:58.688 --> 00:03:00.521
+and we have to wait for
+the on disk journal.
+
+74
+00:03:00.521 --> 00:03:03.170
+
+
+75
+00:03:03.170 --> 00:03:04.670
+Let's go ahead
+and run some tests
+
+76
+00:03:04.670 --> 00:03:07.289
+and see how these two factors
+affect write performance.
+
+77
+00:03:07.289 --> 00:03:09.080
+For this exercise, I'm
+going to use the POC
+
+78
+00:03:09.080 --> 00:03:12.020
+driver that we talked about
+in our benchmarking lesson.
+
+79
+00:03:12.020 --> 00:03:14.900
+And this is MongoDB
+Atlas, our hosted MongoDB
+
+80
+00:03:14.900 --> 00:03:16.820
+as a service offering.
+
+81
+00:03:16.820 --> 00:03:19.730
+Here I've gone ahead and spun
+up a three member replica set,
+
+82
+00:03:19.730 --> 00:03:22.330
+and this will effectively
+act as our testbed.
+
+83
+00:03:22.330 --> 00:03:26.164
+Now let's jump into the
+terminal and run some tests.
+
+84
+00:03:26.164 --> 00:03:27.580
+Here I've gone
+ahead and connected
+
+85
+00:03:27.580 --> 00:03:29.860
+to my Atlas cluster
+via the Mongo shell,
+
+86
+00:03:29.860 --> 00:03:33.010
+where I can go ahead and
+keep this connection open so
+
+87
+00:03:33.010 --> 00:03:35.830
+that we can drop our test
+collection in between tests,
+
+88
+00:03:35.830 --> 00:03:38.470
+and we can also create
+indexes on the fly.
+
+89
+00:03:38.470 --> 00:03:40.360
+Let's head over
+to another shell.
+
+90
+00:03:40.360 --> 00:03:42.490
+Here have gone ahead and
+followed the instructions
+
+91
+00:03:42.490 --> 00:03:45.940
+in the readme, and I've
+compiled our .jar file.
+
+92
+00:03:45.940 --> 00:03:49.040
+Now when we run this .jar
+file with the -p option,
+
+93
+00:03:49.040 --> 00:03:50.989
+it'll print out an
+example document.
+
+94
+00:03:50.989 --> 00:03:52.780
+And this is the kind
+of document that we're
+
+95
+00:03:52.780 --> 00:03:56.490
+going to be inserting into
+the database for our test.
+
+96
+00:03:56.490 --> 00:03:59.880
+And so now I can go ahead and
+use my .jar file with the -c
+
+97
+00:03:59.880 --> 00:04:02.640
+option specified in the
+connection string to my MongoDB
+
+98
+00:04:02.640 --> 00:04:04.980
+Atlas cluster.
+
+99
+00:04:04.980 --> 00:04:07.740
+And now this POC driver is
+going to insert documents
+
+100
+00:04:07.740 --> 00:04:10.945
+as fast as it can
+into my Atlas cluster.
+
+101
+00:04:10.945 --> 00:04:12.820
+And as you can see,
+we're inserting documents
+
+102
+00:04:12.820 --> 00:04:15.370
+at about 16,000 per second.
+
+103
+00:04:15.370 --> 00:04:16.709
+And so this our baseline.
+
+104
+00:04:16.709 --> 00:04:18.149
+We have no indexes
+and we're using
+
+105
+00:04:18.149 --> 00:04:19.695
+the default write concern.
+
+106
+00:04:19.695 --> 00:04:21.570
+Let's go ahead and go
+back to our Mongo shell
+
+107
+00:04:21.570 --> 00:04:23.650
+and create our first index.
+
+108
+00:04:23.650 --> 00:04:26.220
+You'll see that we now
+have this POC database.
+
+109
+00:04:26.220 --> 00:04:28.860
+I'm going to switch to it
+and drop our collection
+
+110
+00:04:28.860 --> 00:04:30.630
+and create an index.
+
+111
+00:04:30.630 --> 00:04:32.239
+And now let's rerun our test.
+
+112
+00:04:32.239 --> 00:04:33.780
+So the only thing
+that's changed here
+
+113
+00:04:33.780 --> 00:04:35.880
+is now I've added
+an index, and so we
+
+114
+00:04:35.880 --> 00:04:37.710
+would expect to have
+a little bit of loss
+
+115
+00:04:37.710 --> 00:04:39.480
+of write performance.
+
+116
+00:04:39.480 --> 00:04:41.670
+And as you can see,
+we're now only inserting
+
+117
+00:04:41.670 --> 00:04:44.520
+documents at about
+15,000 documents
+
+118
+00:04:44.520 --> 00:04:48.780
+per second, a little bit slower
+than our 16,000 we had before.
+
+119
+00:04:48.780 --> 00:04:51.360
+We can now go ahead and
+drop our collection again.
+
+120
+00:04:51.360 --> 00:04:55.689
+And this time we'll create
+indexes on five fields.
+
+121
+00:04:55.689 --> 00:04:58.230
+Now that those five indexes have
+been created, let's go ahead
+
+122
+00:04:58.230 --> 00:05:00.570
+and run our test again.
+
+123
+00:05:00.570 --> 00:05:02.100
+And so now we're
+inserting documents
+
+124
+00:05:02.100 --> 00:05:06.420
+at about 10,000 or 11,000
+documents per second.
+
+125
+00:05:06.420 --> 00:05:08.770
+While it's not a huge
+decrease in performance,
+
+126
+00:05:08.770 --> 00:05:10.189
+it's still noticeable.
+
+127
+00:05:10.189 --> 00:05:11.730
+Now let's go ahead
+and run some tests
+
+128
+00:05:11.730 --> 00:05:14.880
+to see how write concern
+affects our write performance.
+
+129
+00:05:14.880 --> 00:05:17.850
+I've gone ahead and created some
+different .jar files for each
+
+130
+00:05:17.850 --> 00:05:19.350
+of the different write concerns.
+
+131
+00:05:19.350 --> 00:05:21.510
+Unfortunately, this
+POC driver doesn't
+
+132
+00:05:21.510 --> 00:05:24.420
+support different write
+concerns from the command line.
+
+133
+00:05:24.420 --> 00:05:26.904
+So what I did was edit
+the source code directly.
+
+134
+00:05:26.904 --> 00:05:28.320
+If you're interested,
+I went ahead
+
+135
+00:05:28.320 --> 00:05:30.540
+and imported in
+these two classes.
+
+136
+00:05:30.540 --> 00:05:33.220
+And then all I did was
+add these lines of code.
+
+137
+00:05:33.220 --> 00:05:36.540
+And what I did was is for each
+of the different .jar files,
+
+138
+00:05:36.540 --> 00:05:39.840
+I just commented out whichever
+line had the write concern I
+
+139
+00:05:39.840 --> 00:05:40.980
+wanted to test.
+
+140
+00:05:40.980 --> 00:05:43.290
+And that's how I generated
+these different .jar files.
+
+141
+00:05:43.290 --> 00:05:46.170
+So now we just need to rerun our
+same tests with these different
+
+142
+00:05:46.170 --> 00:05:47.310
+.jar files.
+
+143
+00:05:47.310 --> 00:05:50.280
+But first we should go ahead
+and drop our collection.
+
+144
+00:05:50.280 --> 00:05:54.150
+Here I'm running with w set
+to one and j set to false.
+
+145
+00:05:54.150 --> 00:05:55.900
+These are the default settings.
+
+146
+00:05:55.900 --> 00:05:57.810
+So we should expect
+to see similar numbers
+
+147
+00:05:57.810 --> 00:06:00.390
+to our first test.
+
+148
+00:06:00.390 --> 00:06:03.690
+And as you can see, we're
+now inserting about 27,000
+
+149
+00:06:03.690 --> 00:06:05.350
+documents per second.
+
+150
+00:06:05.350 --> 00:06:08.310
+This is a little bit
+faster than our first test,
+
+151
+00:06:08.310 --> 00:06:10.490
+but network latency.
+
+152
+00:06:10.490 --> 00:06:13.500
+Let's go ahead and drop
+our collection again.
+
+153
+00:06:13.500 --> 00:06:16.440
+And now I'm going to run the
+test with w still equal to one,
+
+154
+00:06:16.440 --> 00:06:19.140
+but now journaling is
+going to be set to true.
+
+155
+00:06:19.140 --> 00:06:21.270
+And as you can see,
+we're inserting documents
+
+156
+00:06:21.270 --> 00:06:24.450
+at about 19,000 per second.
+
+157
+00:06:24.450 --> 00:06:27.000
+You should now have an
+idea of how this works.
+
+158
+00:06:27.000 --> 00:06:30.100
+We can go ahead and skip
+to the table of results.
+
+159
+00:06:30.100 --> 00:06:33.510
+And here you can see how the
+different indexes affected
+
+160
+00:06:33.510 --> 00:06:35.430
+our inserts per second.
+
+161
+00:06:35.430 --> 00:06:38.310
+When we had no indexes, we
+were inserting about 16,000
+
+162
+00:06:38.310 --> 00:06:39.570
+per second.
+
+163
+00:06:39.570 --> 00:06:42.000
+When we added one, we
+are talking about 15,000
+
+164
+00:06:42.000 --> 00:06:43.080
+per second.
+
+165
+00:06:43.080 --> 00:06:46.530
+And when we had five, we were
+inserting only about 10,500
+
+166
+00:06:46.530 --> 00:06:47.760
+per second.
+
+167
+00:06:47.760 --> 00:06:49.710
+And you can see here
+I've also added a percent
+
+168
+00:06:49.710 --> 00:06:51.100
+loss from the baseline.
+
+169
+00:06:51.100 --> 00:06:53.100
+And we can also see how
+different write concerns
+
+170
+00:06:53.100 --> 00:06:54.750
+affect our performance.
+
+171
+00:06:54.750 --> 00:06:58.830
+Interestingly enough, it doesn't
+seem like journaling matters
+
+172
+00:06:58.830 --> 00:07:03.949
+that much when we're dealing
+with a majority write concern.
+
+173
+00:07:03.949 --> 00:07:05.490
+But it does seem to
+matter when we're
+
+174
+00:07:05.490 --> 00:07:07.130
+dealing with just the primary.
+
+175
+00:07:07.130 --> 00:07:08.700
+And this kind of makes sense.
+
+176
+00:07:08.700 --> 00:07:10.990
+Here we're waiting
+for multiple members
+
+177
+00:07:10.990 --> 00:07:12.919
+and we have network
+latency going on.
+
+178
+00:07:12.919 --> 00:07:14.460
+And here there is
+no network latency.
+
+179
+00:07:14.460 --> 00:07:17.670
+We're just waiting for the on
+disk journal to be written to.
+
+180
+00:07:17.670 --> 00:07:22.329
+These are my own numbers running
+on my own machine on my iMac
+
+181
+00:07:22.329 --> 00:07:23.495
+talking to an Atlas cluster.
+
+182
+00:07:23.495 --> 00:07:26.130
+So this isn't a
+best case scenario.
+
+183
+00:07:26.130 --> 00:07:29.790
+I really should be running
+these tests inside AWS instance,
+
+184
+00:07:29.790 --> 00:07:33.060
+because AWS is where
+Atlas is hosted on.
+
+185
+00:07:33.060 --> 00:07:34.980
+And we probably want
+to minimize the amount
+
+186
+00:07:34.980 --> 00:07:38.100
+of network latency
+between my Atlas cluster
+
+187
+00:07:38.100 --> 00:07:40.050
+and my application server.
+
+188
+00:07:40.050 --> 00:07:42.690
+But that being said, this still
+gives us a good high level idea
+
+189
+00:07:42.690 --> 00:07:44.280
+of what we're dealing with.
+
+190
+00:07:44.280 --> 00:07:47.010
+Now I don't want you to forget
+about the significant read
+
+191
+00:07:47.010 --> 00:07:49.740
+performance gains that
+we saw by adding indexes
+
+192
+00:07:49.740 --> 00:07:51.510
+to our collection.
+
+193
+00:07:51.510 --> 00:07:54.030
+With each additional
+index, we lost about 6%
+
+194
+00:07:54.030 --> 00:07:55.500
+of our write performance.
+
+195
+00:07:55.500 --> 00:07:58.950
+But often we would see a more
+than 10x read performance
+
+196
+00:07:58.950 --> 00:08:01.959
+increase when we use the
+best index for a query.
+
+197
+00:08:01.959 --> 00:08:03.750
+And so this should give
+you a good overview
+
+198
+00:08:03.750 --> 00:08:05.250
+of insert performance.
+
+199
+00:08:05.250 --> 00:08:07.420
+Let's recap what we've learned.
+
+200
+00:08:07.420 --> 00:08:08.970
+We've talked about
+index overhead
+
+201
+00:08:08.970 --> 00:08:12.120
+and how as we add more
+indexes, our insert performance
+
+202
+00:08:12.120 --> 00:08:13.830
+is going to degrade.
+
+203
+00:08:13.830 --> 00:08:15.480
+And we also talked
+about write concern,
+
+204
+00:08:15.480 --> 00:08:18.240
+where we discussed different
+levels of acknowledgement
+
+205
+00:08:18.240 --> 00:08:21.050
+affecting our write performance.

@@ -1,0 +1,298 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.040
+In this video, I want to cover
+a couple of important issues.
+
+3
+00:00:04.040 --> 00:00:08.610
+First, the way we use TLS/SSL
+between MongoDB and LDAP
+
+4
+00:00:08.610 --> 00:00:10.090
+server.
+
+5
+00:00:10.090 --> 00:00:13.630
+Second one is how LDAP
+configuration differences
+
+6
+00:00:13.630 --> 00:00:16.560
+between different
+LDAP providers and how
+
+7
+00:00:16.560 --> 00:00:20.720
+this can affect the MongoDB
+configuration settings.
+
+8
+00:00:20.720 --> 00:00:24.720
+Now the use of the TLS
+between MongoDB and LDAP
+
+9
+00:00:24.720 --> 00:00:29.550
+server is enforced by default.
+You can, however, disable it,
+
+10
+00:00:29.550 --> 00:00:32.860
+but we will strongly
+recommend it to our users
+
+11
+00:00:32.860 --> 00:00:35.540
+to keep it enabled.
+
+12
+00:00:35.540 --> 00:00:38.610
+We can also bind a
+node to a given user.
+
+13
+00:00:38.610 --> 00:00:42.460
+This will mean that all requests
+exchanged between MongoDB
+
+14
+00:00:42.460 --> 00:00:47.440
+and the LDAP server will be
+bound to a username password.
+
+15
+00:00:47.440 --> 00:00:51.130
+You can also define with the
+bind mechanism which mechanism
+
+16
+00:00:51.130 --> 00:00:54.140
+to use enforcing that bind.
+
+17
+00:00:54.140 --> 00:00:58.110
+By default, it's set to play.
+
+18
+00:00:58.110 --> 00:01:00.160
+Now regarding
+different LDAP servers,
+
+19
+00:01:00.160 --> 00:01:04.500
+we will check the most common
+used ones-- Active Directory
+
+20
+00:01:04.500 --> 00:01:06.880
+and OpenLDAP.
+
+21
+00:01:06.880 --> 00:01:10.310
+To simplify our examples--
+the ones used in this course--
+
+22
+00:01:10.310 --> 00:01:13.790
+we have been playing
+around with OpenLDAP.
+
+23
+00:01:13.790 --> 00:01:16.440
+The labs, the
+demonstrations, and some
+
+24
+00:01:16.440 --> 00:01:18.480
+of the configuration
+code snippets
+
+25
+00:01:18.480 --> 00:01:21.710
+have all been around OpenLDAP.
+
+26
+00:01:21.710 --> 00:01:25.500
+But there are slight differences
+in format and configuration
+
+27
+00:01:25.500 --> 00:01:30.730
+options depending on which
+system we are bound to use.
+
+28
+00:01:30.730 --> 00:01:33.550
+The most common
+MongoDB LDAP deployment
+
+29
+00:01:33.550 --> 00:01:38.410
+is using Active Directory
+as our LDAP server.
+
+30
+00:01:38.410 --> 00:01:40.180
+This has a set of
+different variations
+
+31
+00:01:40.180 --> 00:01:43.410
+when compared with OpenLDAP.
+
+32
+00:01:43.410 --> 00:01:48.270
+The first difference resides on
+the user definition attributes.
+
+33
+00:01:48.270 --> 00:01:50.640
+OpenLDAP that assumes
+that users will
+
+34
+00:01:50.640 --> 00:01:55.870
+be defined by UID attributes,
+while Active Directory allows
+
+35
+00:01:55.870 --> 00:02:00.530
+users to be configured using
+a common name-- CN attribute.
+
+36
+00:02:00.530 --> 00:02:04.730
+This might seem a small,
+insignificant difference,
+
+37
+00:02:04.730 --> 00:02:07.910
+but can cause some headaches
+when debugging configuration
+
+38
+00:02:07.910 --> 00:02:09.759
+validation.
+
+39
+00:02:09.759 --> 00:02:14.960
+The other major significant is
+around MongoDB configuration
+
+40
+00:02:14.960 --> 00:02:19.470
+option-- security LDAP
+authz query template.
+
+41
+00:02:19.470 --> 00:02:22.120
+Active Directory
+allows us to define
+
+42
+00:02:22.120 --> 00:02:24.770
+the complete distinguished
+name structure
+
+43
+00:02:24.770 --> 00:02:28.740
+and just replace the username
+on the user placeholder.
+
+44
+00:02:28.740 --> 00:02:32.030
+For example, our query template
+can be something like cn=
+
+45
+00:02:32.030 --> 00:02:35.050
+the placeholder and then the
+rest of our distinguished name
+
+46
+00:02:35.050 --> 00:02:36.840
+definition.
+
+47
+00:02:36.840 --> 00:02:39.360
+In OpenLDAP, this
+is not possible.
+
+48
+00:02:39.360 --> 00:02:41.940
+We need to use a
+full replacement
+
+49
+00:02:41.940 --> 00:02:44.930
+and use a full
+distinguished name.
+
+50
+00:02:44.930 --> 00:02:47.690
+While in OpenLDAP this is
+not possible to achieve
+
+51
+00:02:47.690 --> 00:02:51.240
+relying alone on the
+query template definition,
+
+52
+00:02:51.240 --> 00:02:53.620
+we can still do this
+by applying a user
+
+53
+00:02:53.620 --> 00:02:57.890
+to DN mapping substitution
+on a regular expression.
+
+54
+00:02:57.890 --> 00:03:02.350
+User to DN option
+matching a substitution
+
+55
+00:03:02.350 --> 00:03:07.590
+and matching regular expression
+is the way to get it done.
+
+56
+00:03:07.590 --> 00:03:09.740
+Why this is important?
+
+57
+00:03:09.740 --> 00:03:13.500
+If we want users to log in to
+MongoDB just passing a user
+
+58
+00:03:13.500 --> 00:03:17.390
+credential and not the complete
+LDAP credentials-- like,
+
+59
+00:03:17.390 --> 00:03:21.380
+for example, when we have Alice,
+or when we have to pass along
+
+60
+00:03:21.380 --> 00:03:25.880
+UID=Alice and so forth in
+the distinguished name.
+
+61
+00:03:25.880 --> 00:03:27.930
+Which, as you can
+imagine, tends to be
+
+62
+00:03:27.930 --> 00:03:30.620
+a much more pleasant usage.

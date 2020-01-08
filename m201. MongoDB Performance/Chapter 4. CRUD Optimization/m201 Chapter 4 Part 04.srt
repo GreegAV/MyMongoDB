@@ -1,0 +1,480 @@
+
+1
+00:00:00.000 --> 00:00:00.610
+
+
+2
+00:00:00.610 --> 00:00:02.370
+In this lesson, we're
+going to be talking
+
+3
+00:00:02.370 --> 00:00:07.060
+about data type implications,
+[INAUDIBLE] different data
+
+4
+00:00:07.060 --> 00:00:12.330
+types across same fields,
+across the documents of a given
+
+5
+00:00:12.330 --> 00:00:14.070
+collection.
+
+6
+00:00:14.070 --> 00:00:16.470
+We will look into
+the implications
+
+7
+00:00:16.470 --> 00:00:21.090
+of data types for flexible
+schema trade-offs, the data
+
+8
+00:00:21.090 --> 00:00:23.580
+consistency implications,
+and the query
+
+9
+00:00:23.580 --> 00:00:26.370
+correctness that you
+should be aware of once
+
+10
+00:00:26.370 --> 00:00:28.890
+dealing with MongoDB.
+
+11
+00:00:28.890 --> 00:00:31.500
+One of the advantages of
+working with documents
+
+12
+00:00:31.500 --> 00:00:34.770
+rather than browsing
+a relational system
+
+13
+00:00:34.770 --> 00:00:38.880
+is the ability to have a
+very natural representation
+
+14
+00:00:38.880 --> 00:00:40.260
+to work with data.
+
+15
+00:00:40.260 --> 00:00:42.840
+The other obvious
+one is the ability
+
+16
+00:00:42.840 --> 00:00:48.420
+to have a very flexible model
+for our data representation.
+
+17
+00:00:48.420 --> 00:00:50.580
+So let's say that we have
+this collection, shapes,
+
+18
+00:00:50.580 --> 00:00:54.540
+where we insert this document,
+which has a type, single length
+
+19
+00:00:54.540 --> 00:00:57.862
+type, base, and height.
+
+20
+00:00:57.862 --> 00:01:00.850
+We can insert that
+document no problem.
+
+21
+00:01:00.850 --> 00:01:04.890
+But if we want to use a slightly
+different document-- let's say
+
+22
+00:01:04.890 --> 00:01:06.780
+that we still have
+our type and it still
+
+23
+00:01:06.780 --> 00:01:09.210
+has a string as a
+value, we're still
+
+24
+00:01:09.210 --> 00:01:11.340
+going to have a
+side_length_type, which
+
+25
+00:01:11.340 --> 00:01:12.540
+is great.
+
+26
+00:01:12.540 --> 00:01:17.400
+But now our base field,
+instead of integer 64,
+
+27
+00:01:17.400 --> 00:01:19.680
+is going to be a NumberDecimal.
+
+28
+00:01:19.680 --> 00:01:21.870
+And we are not going
+to have an i-th,
+
+29
+00:01:21.870 --> 00:01:25.500
+but we are going to have
+a side_length field.
+
+30
+00:01:25.500 --> 00:01:27.890
+If we insert this, no problem.
+
+31
+00:01:27.890 --> 00:01:30.180
+MongoDB kind of likes it.
+
+32
+00:01:30.180 --> 00:01:33.630
+And our variations can continue,
+to have more simplified
+
+33
+00:01:33.630 --> 00:01:37.690
+documents with more
+or less variations.
+
+34
+00:01:37.690 --> 00:01:39.120
+Now, while it is
+possible to have
+
+35
+00:01:39.120 --> 00:01:41.550
+same field with
+different data types,
+
+36
+00:01:41.550 --> 00:01:44.250
+there are implications
+for the application
+
+37
+00:01:44.250 --> 00:01:48.730
+that you should consider, like
+for example on query matching.
+
+38
+00:01:48.730 --> 00:01:52.590
+Now let's say that I'm going
+to be looking for a document
+
+39
+00:01:52.590 --> 00:01:58.760
+where base equals 2.8,
+84, 42, 71, and so forth.
+
+40
+00:01:58.760 --> 00:02:02.640
+A filter matching a field with
+an integer or floating point
+
+41
+00:02:02.640 --> 00:02:05.430
+value is not the
+same as a filter
+
+42
+00:02:05.430 --> 00:02:08.190
+matching a value
+that is represented
+
+43
+00:02:08.190 --> 00:02:10.770
+by a string or decimal type.
+
+44
+00:02:10.770 --> 00:02:15.420
+If we try to look for
+this floating value,
+
+45
+00:02:15.420 --> 00:02:17.200
+we cannot find it.
+
+46
+00:02:17.200 --> 00:02:20.460
+There's no such thing as a
+document where base equals
+
+47
+00:02:20.460 --> 00:02:23.680
+this floating point value.
+
+48
+00:02:23.680 --> 00:02:28.050
+On the other hand, if we try
+to find a shapes document where
+
+49
+00:02:28.050 --> 00:02:33.230
+the base equals a string value
+of the same floating point,
+
+50
+00:02:33.230 --> 00:02:35.740
+obviously it still
+doesn't find it.
+
+51
+00:02:35.740 --> 00:02:41.460
+But if we do express our query
+with the correct NumberDecimal
+
+52
+00:02:41.460 --> 00:02:44.530
+type, where there is
+a document for it,
+
+53
+00:02:44.530 --> 00:02:47.130
+we will most definitely find it.
+
+54
+00:02:47.130 --> 00:02:50.400
+So the fact that we have
+different data types
+
+55
+00:02:50.400 --> 00:02:53.370
+and for correctness
+does not mean that
+
+56
+00:02:53.370 --> 00:02:55.500
+by expressing a
+different data type,
+
+57
+00:02:55.500 --> 00:02:59.520
+even though the representation
+is pretty simple for you
+
+58
+00:02:59.520 --> 00:03:01.440
+to find the correct
+document, you
+
+59
+00:03:01.440 --> 00:03:04.350
+have to provide a
+query where the data
+
+60
+00:03:04.350 --> 00:03:09.520
+type matches the documents on
+the collection with exact data
+
+61
+00:03:09.520 --> 00:03:11.070
+type.
+
+62
+00:03:11.070 --> 00:03:15.660
+Sorting will also be affected
+by different documents having
+
+63
+00:03:15.660 --> 00:03:19.080
+for the same field
+different data types.
+
+64
+00:03:19.080 --> 00:03:23.640
+In this example, we are using
+numerical data types, int64
+
+65
+00:03:23.640 --> 00:03:25.600
+and decimal data types.
+
+66
+00:03:25.600 --> 00:03:29.820
+So this ordering of the
+results becomes very, very easy
+
+67
+00:03:29.820 --> 00:03:31.020
+to perform.
+
+68
+00:03:31.020 --> 00:03:35.340
+If I'm looking for all documents
+and just projecting base
+
+69
+00:03:35.340 --> 00:03:38.400
+and not even
+underscore ID, and I'm
+
+70
+00:03:38.400 --> 00:03:42.630
+sorting based on
+base ascending, we
+
+71
+00:03:42.630 --> 00:03:46.470
+will get the correct
+comparison order
+
+72
+00:03:46.470 --> 00:03:49.680
+by all of the different
+data types that currently
+
+73
+00:03:49.680 --> 00:03:52.270
+have in our shapes collection.
+
+74
+00:03:52.270 --> 00:03:53.700
+It's going to have int64.
+
+75
+00:03:53.700 --> 00:03:56.280
+Then we're going to have
+a NumberDecimal and then
+
+76
+00:03:56.280 --> 00:03:59.710
+another int64 and another int64.
+
+77
+00:03:59.710 --> 00:04:03.910
+However, what if we
+set the field base
+
+78
+00:04:03.910 --> 00:04:06.990
+with non-numerical data type?
+
+79
+00:04:06.990 --> 00:04:08.250
+What happens then?
+
+80
+00:04:08.250 --> 00:04:12.270
+I'm going to go ahead and insert
+these two different documents.
+
+81
+00:04:12.270 --> 00:04:15.630
+These two documents have
+very similar shapes,
+
+82
+00:04:15.630 --> 00:04:19.790
+where the base value is
+represented by a string,
+
+83
+00:04:19.790 --> 00:04:21.519
+in this case 3.
+
+84
+00:04:21.519 --> 00:04:25.020
+And in the second
+document, we just
+
+85
+00:04:25.020 --> 00:04:31.340
+changed the base from
+string 3 to string 14,
+
+86
+00:04:31.340 --> 00:04:34.050
+so very similar documents.
+
+87
+00:04:34.050 --> 00:04:40.200
+If we apply the same sorting
+into this collection,
+
+88
+00:04:40.200 --> 00:04:44.520
+we will have first all
+numerical values represented,
+
+89
+00:04:44.520 --> 00:04:48.030
+and then string values
+represented as well.
+
+90
+00:04:48.030 --> 00:04:51.090
+This means that in
+these cases, MongoDB
+
+91
+00:04:51.090 --> 00:04:54.690
+will be grouping documents and
+comparing their fields based
+
+92
+00:04:54.690 --> 00:04:59.310
+on the different BSON types
+using a specific comparison
+
+93
+00:04:59.310 --> 00:05:00.670
+order.
+
+94
+00:05:00.670 --> 00:05:04.750
+We will start by MinKey, then
+null or non-existent field
+
+95
+00:05:04.750 --> 00:05:09.550
+documents, numerical, symbol
+or string, object, array,
+
+96
+00:05:09.550 --> 00:05:14.770
+and all the way down to MaxKey,
+so that basically that means
+
+97
+00:05:14.770 --> 00:05:17.770
+that we will group documents
+that are represented
+
+98
+00:05:17.770 --> 00:05:22.250
+by MinKey or null or numbers,
+like ints, longs, doubles
+
+99
+00:05:22.250 --> 00:05:23.200
+decimals.
+
+100
+00:05:23.200 --> 00:05:25.270
+Then we will group and
+compare between them
+
+101
+00:05:25.270 --> 00:05:30.240
+symbols and strings, then
+objects, and so forth.

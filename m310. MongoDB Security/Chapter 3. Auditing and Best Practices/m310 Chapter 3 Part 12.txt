@@ -1,0 +1,53 @@
+In this video, I'd like to talk about vulnerability reports with MongoDB.
+
+At MongoDB, we take the security of our database very seriously.
+
+A part of our mission to keep MongoDB secure includes vulnerability reporting from our users.
+
+If you believe you have discovered a vulnerability in MongoDB, or have experienced a security incident related to MongoDB, please report the issue to aid in its resolution.
+
+We've tried to make reporting of vulnerability as easy as possible.
+
+There are two ways to report a potential MongoDB vulnerability.
+
+The first way, which is the recommended notification method, is to submit a ticket to the SECURITY Project on our JIRA.
+
+The second way is to simply just send an email to security@mongodb.com.
+
+If you would like to encrypt your message, you can use our PGP public key encryption, which will be linked below the video.
+
+All vulnerability reports will be responded to within 48 hours.
+
+In order to best serve MongoDB's security team and our developers, all vulnerability reports should contain as much information as possible.
+
+And in particular, these following items are highly recommended.
+
+Of course, you're going to want to include the name of the product that you've identified a potential issue with.
+
+And then next, you can include any common vulnerability information.
+
+If there's a CVSS score, which, if you're not familiar with, is a score from one to 10, 10 being the worst, that rates the severity of a vulnerability.
+
+If the vulnerability is a publicly- or commonly-known type of vulnerability, then please also include the CVE, the Common Vulnerabilities and Exposures identifier.
+
+And of course, if you're open to be contacted by MongoDB security staff, please include any necessary contact information.
+
+If needed, MongoDB representatives will serve a conference call to exchange information regarding the vulnerability.
+
+I would like to point out that MongoDB takes all of our vulnerability reports very seriously.
+
+We validate all submitted vulnerabilities and will use JIRA to track all communications regarding a vulnerability, including requests for clarification or additional information.
+
+Finally, we ask that if you find a potential security vulnerability, that you do not publicly disclose any information regarding the vulnerability or exploit the issue.
+
+This will give us the opportunity to analyze the vulnerability, to respond to the notification, and to notify key users, customers, and partners.
+
+The amount of time required to validate a reported vulnerability depends on the complexity and the severity of the issue.
+
+We take all vulnerabilities very seriously.
+
+And we will always ensure that there is a clear and open channel of communication with the reporter.
+
+After validating an issue, MongoDB will coordinate a public disclosure of the issue with the reporter in a mutually-agreed time frame and format.
+
+If required or requested, the reporter of a vulnerability will receive credit in the published security bulletin.

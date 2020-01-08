@@ -1,0 +1,517 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.840
+In this lesson, we're going
+to perform our first read
+
+3
+00:00:02.840 --> 00:00:05.850
+operation in MongoDB
+using the Java driver.
+
+4
+00:00:05.850 --> 00:00:08.060
+We've taken care of setting
+up our database handle
+
+5
+00:00:08.060 --> 00:00:09.960
+in the abstract lesson class.
+
+6
+00:00:09.960 --> 00:00:12.200
+So let's get started.
+
+7
+00:00:12.200 --> 00:00:14.270
+If you've used other
+drivers in the past
+
+8
+00:00:14.270 --> 00:00:17.600
+you may be familiar with a
+find one collection method.
+
+9
+00:00:17.600 --> 00:00:21.800
+The Java driver for MongoDB
+includes no such method.
+
+10
+00:00:21.800 --> 00:00:25.040
+To find a single document,
+we'll use the limit() method,
+
+11
+00:00:25.040 --> 00:00:27.530
+which you'll learn
+about in a later lesson.
+
+12
+00:00:27.530 --> 00:00:29.000
+This will find
+the first document
+
+13
+00:00:29.000 --> 00:00:31.460
+that matches a query
+predicate in natural sort
+
+14
+00:00:31.460 --> 00:00:35.780
+order, most likely as they
+were entered into the database.
+
+15
+00:00:35.780 --> 00:00:39.320
+We do not expect the
+document returned to be null,
+
+16
+00:00:39.320 --> 00:00:41.900
+so we name this, unexpected.
+
+17
+00:00:41.900 --> 00:00:44.600
+Find() returns a find iterable.
+
+18
+00:00:44.600 --> 00:00:47.240
+We use the iterator()
+method to convert this
+
+19
+00:00:47.240 --> 00:00:48.980
+into a MongoCursor.
+
+20
+00:00:48.980 --> 00:00:52.280
+Because you're passing in a new
+document with no information,
+
+21
+00:00:52.280 --> 00:00:54.980
+we'd expect it to find the
+first document encountered
+
+22
+00:00:54.980 --> 00:00:56.150
+in the collection.
+
+23
+00:00:56.150 --> 00:00:58.970
+In the MongoDB shell
+this would look like,
+
+24
+00:00:58.970 --> 00:01:01.800
+movies.find().limit(1).
+
+25
+00:01:01.800 --> 00:01:06.500
+We use the next method to get
+the next item in the iterator.
+
+26
+00:01:06.500 --> 00:01:09.770
+Running this test, we should
+expect some random document,
+
+27
+00:01:09.770 --> 00:01:13.580
+and after we've consumed
+the iterator with next(),
+
+28
+00:01:13.580 --> 00:01:17.690
+we expect the iterator
+to have nothing left.
+
+29
+00:01:17.690 --> 00:01:18.860
+Excellent.
+
+30
+00:01:18.860 --> 00:01:20.390
+Let's go ahead and
+find a document
+
+31
+00:01:20.390 --> 00:01:22.190
+that matches a predicate.
+
+32
+00:01:22.190 --> 00:01:24.410
+For this example,
+we will find a movie
+
+33
+00:01:24.410 --> 00:01:27.530
+where Salma Hayek is
+listed in the cast field.
+
+34
+00:01:27.530 --> 00:01:29.030
+Let's define our query.
+
+35
+00:01:29.030 --> 00:01:31.670
+We want a document where
+the value, Salma Hayek,
+
+36
+00:01:31.670 --> 00:01:33.470
+is at the cast key.
+
+37
+00:01:33.470 --> 00:01:35.450
+Because cast is
+an array, MongoDB
+
+38
+00:01:35.450 --> 00:01:38.600
+will look at all elements
+of the array to match this.
+
+39
+00:01:38.600 --> 00:01:43.550
+This is because MongoDB treats
+arrays as first class objects.
+
+40
+00:01:43.550 --> 00:01:46.650
+And here we're using a
+shorthand for find one,
+
+41
+00:01:46.650 --> 00:01:49.280
+like used in the previous test.
+
+42
+00:01:49.280 --> 00:01:52.940
+What might happen if we were to
+call next on an iterator, that
+
+43
+00:01:52.940 --> 00:01:54.830
+didn't have anything in it?
+
+44
+00:01:54.830 --> 00:01:58.230
+It will throw a
+NoSuchElementException.
+
+45
+00:01:58.230 --> 00:02:00.860
+Let's issue a query that
+won't match anything.
+
+46
+00:02:00.860 --> 00:02:05.770
+This, will throw a
+NoSuchElementException.
+
+47
+00:02:05.770 --> 00:02:09.169
+To be safe, we should
+use the tryNext() method.
+
+48
+00:02:09.169 --> 00:02:12.460
+This will return null if
+nothing exists in the iterator.
+
+49
+00:02:12.460 --> 00:02:15.380
+
+
+50
+00:02:15.380 --> 00:02:17.900
+Finding one document is
+useful, but it's only
+
+51
+00:02:17.900 --> 00:02:19.610
+one particular use case.
+
+52
+00:02:19.610 --> 00:02:21.740
+What if we want to
+find all documents that
+
+53
+00:02:21.740 --> 00:02:22.610
+match a predicate?
+
+54
+00:02:22.610 --> 00:02:26.590
+One method to do
+so is following.
+
+55
+00:02:26.590 --> 00:02:29.710
+Our query is the same as our
+previous query, where Salma
+
+56
+00:02:29.710 --> 00:02:32.140
+Hayek, is in the cast field.
+
+57
+00:02:32.140 --> 00:02:35.540
+We will create an ArrayList()
+to hold our results,
+
+58
+00:02:35.540 --> 00:02:38.590
+then we issue a query,
+and send them directly
+
+59
+00:02:38.590 --> 00:02:40.360
+into our container.
+
+60
+00:02:40.360 --> 00:02:44.570
+From previously exploring the
+data set, we expect 29 results.
+
+61
+00:02:44.570 --> 00:02:46.520
+Let's look at one of
+the documents now.
+
+62
+00:02:46.520 --> 00:02:48.595
+We'll look at the output
+on the test results.
+
+63
+00:02:48.595 --> 00:02:51.100
+
+
+64
+00:02:51.100 --> 00:02:55.330
+Here the title is,
+Roadracers, year 1994,
+
+65
+00:02:55.330 --> 00:02:58.690
+and so on, and so on,
+and in the cast field
+
+66
+00:02:58.690 --> 00:03:01.520
+there she is, Salma Hayek.
+
+67
+00:03:01.520 --> 00:03:03.750
+Looking at the document,
+we can see that there
+
+68
+00:03:03.750 --> 00:03:06.840
+is a lot of information.
+
+69
+00:03:06.840 --> 00:03:10.100
+What if we only wanted
+the title and year?
+
+70
+00:03:10.100 --> 00:03:12.350
+You may be familiar with
+projection mechanics
+
+71
+00:03:12.350 --> 00:03:15.800
+in the Mongo shell, where
+we might do something like,
+
+72
+00:03:15.800 --> 00:03:17.800
+db.movies.find cast Salma
+Hayek title 1, year 1.
+
+73
+00:03:17.800 --> 00:03:21.540
+
+
+74
+00:03:21.540 --> 00:03:25.190
+The collection object also
+has projection functionality,
+
+75
+00:03:25.190 --> 00:03:28.640
+but the usage is different
+than that in the Mongo shell.
+
+76
+00:03:28.640 --> 00:03:31.640
+Because we specified that
+we want to keep two keys,
+
+77
+00:03:31.640 --> 00:03:34.460
+and didn't explicitly
+remove the ID key,
+
+78
+00:03:34.460 --> 00:03:37.190
+we expect to get a document
+back with three keys
+
+79
+00:03:37.190 --> 00:03:39.610
+title, year, and ID.
+
+80
+00:03:39.610 --> 00:03:41.735
+And let's make sure that
+they are what we expected.
+
+81
+00:03:41.735 --> 00:03:45.240
+
+
+82
+00:03:45.240 --> 00:03:49.040
+So as we just saw, unless we
+explicitly remove the ID key,
+
+83
+00:03:49.040 --> 00:03:52.730
+it will remain in the
+result. To remove the ID,
+
+84
+00:03:52.730 --> 00:03:56.490
+we can pass zero in the
+projection() argument.
+
+85
+00:03:56.490 --> 00:04:00.860
+Remember, one means
+retain, and 0 means remove.
+
+86
+00:04:00.860 --> 00:04:03.800
+For this example, let's
+also search for movies
+
+87
+00:04:03.800 --> 00:04:07.220
+where Johnny Depp, is
+a cast member as well.
+
+88
+00:04:07.220 --> 00:04:10.790
+We'll build a query so that only
+movies with both Salma Hayek,
+
+89
+00:04:10.790 --> 00:04:12.560
+and Johnny Depp, are returned.
+
+90
+00:04:12.560 --> 00:04:15.980
+For that, we'll use the
+$all operator, in the shell,
+
+91
+00:04:15.980 --> 00:04:18.820
+this would be
+something like this.
+
+92
+00:04:18.820 --> 00:04:21.399
+So there should only be
+one result in our data set,
+
+93
+00:04:21.399 --> 00:04:25.590
+and now we should only have
+two keys, title and year.
+
+94
+00:04:25.590 --> 00:04:29.070
+Querying MongoDB through the
+driver may feel odd at first,
+
+95
+00:04:29.070 --> 00:04:31.710
+but eventually it will
+feel like second nature.
+
+96
+00:04:31.710 --> 00:04:34.230
+We saw how to limit the
+results to one document,
+
+97
+00:04:34.230 --> 00:04:37.290
+or get all documents that
+match a query filter.
+
+98
+00:04:37.290 --> 00:04:40.350
+We also saw how to
+include, only the fields
+
+99
+00:04:40.350 --> 00:04:44.430
+we wanted in the result set,
+and how to remove the ID field.
+
+100
+00:04:44.430 --> 00:04:47.670
+A few things to keep in
+mind, finding one document
+
+101
+00:04:47.670 --> 00:04:51.490
+typically involves querying on
+a unique index, such as the ID
+
+102
+00:04:51.490 --> 00:04:52.230
+field.
+
+103
+00:04:52.230 --> 00:04:55.750
+When projecting, by specifying
+inclusion for example,
+
+104
+00:04:55.750 --> 00:04:58.770
+title 1, all fields
+we don't include,
+
+105
+00:04:58.770 --> 00:05:01.770
+will be excluded,
+except for the ID field.
+
+106
+00:05:01.770 --> 00:05:04.260
+If we don't want the ID
+field returned to us,
+
+107
+00:05:04.260 --> 00:05:06.900
+we must explicitly exclude it.
+
+108
+00:05:06.900 --> 00:05:10.140
+Lastly, the specific query
+patterns you saw here
+
+109
+00:05:10.140 --> 00:05:14.900
+are much easier to build,
+again more in a future lesson.

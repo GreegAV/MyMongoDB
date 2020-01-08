@@ -1,0 +1,25 @@
+Organizations are increasingly storing sensitive personally identifiable information, PII, on MongoDB and are facing the challenge of complying with security policies and external regulations such as HIPA, PCI and FERPA.
+
+These policies usually require encryption on disk when storing sensitive or private data in order to protect it from being accessed by unauthorized users.
+
+In order to address these regulated use cases, MongoDB offers database file encryption as part of its enterprise offering.
+
+MongoDB 3.4 is further strengthening its data protection offering by adding an option to redact client data from the system log files.
+
+Additionally, log assertions will contain no content in this mode.
+
+Rather the source file and line number will be provided instead.
+
+This option will prevent potentially sensitive data from being written to system logs, which are stored and encrypted.
+
+This will greatly simplify the best practices for deploying MongoDB in regular environments and helps to ensure PII data is protected where possible.
+
+There are important supportability trade-offs, though, to redacting client data from the system logs.
+
+The new option will redact all values from documents.
+
+Therefore, the logs will only show the set of keys queried against without the actual values used to filter.
+
+While still helpful, this will weaken the power of our system logs from a diagnosability standpoint.
+
+Now, let's have a look to some examples where we can see the configuration options and trade-offs while enabling log redaction.

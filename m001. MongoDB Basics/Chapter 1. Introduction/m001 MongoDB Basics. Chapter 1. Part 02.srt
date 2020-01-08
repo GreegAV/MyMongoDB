@@ -1,0 +1,224 @@
+1
+00:00:00,500 --> 00:00:03,910
+In this lesson, we'll begin
+our exploration of MongoDB.
+
+2
+00:00:03,910 --> 00:00:05,950
+To do this we'll
+use Compass, which
+
+3
+00:00:05,950 --> 00:00:08,650
+is the MongoDB GUI client.
+
+4
+00:00:08,650 --> 00:00:10,780
+If you've not already done
+so, please open Compass
+
+5
+00:00:10,780 --> 00:00:14,110
+and follow along as we
+move through this lesson.
+
+6
+00:00:14,110 --> 00:00:17,620
+I've included instructions for
+download and launch of Compass
+
+7
+00:00:17,620 --> 00:00:20,020
+in the lecture notes
+for this lesson.
+
+8
+00:00:20,020 --> 00:00:23,620
+Compass provides a UI for
+viewing MongoDB databases
+
+9
+00:00:23,620 --> 00:00:25,420
+and the documents they contain.
+
+10
+00:00:25,420 --> 00:00:28,750
+It also supports the
+MongoDB query language,
+
+11
+00:00:28,750 --> 00:00:30,400
+and enables us to
+read and write data
+
+12
+00:00:30,400 --> 00:00:33,730
+using a number of conveniences
+for building queries.
+
+13
+00:00:33,730 --> 00:00:36,160
+Here we're looking at
+Compass's connection screen.
+
+14
+00:00:36,160 --> 00:00:38,770
+On the left side, you
+should see a navigation bar,
+
+15
+00:00:38,770 --> 00:00:42,590
+with sections for Favorites
+and Recent Connections.
+
+16
+00:00:42,590 --> 00:00:44,150
+In the center view
+here, you should
+
+17
+00:00:44,150 --> 00:00:46,250
+see a form we can use to
+establish a connection
+
+18
+00:00:46,250 --> 00:00:47,810
+to a MongoDB cluster.
+
+19
+00:00:47,810 --> 00:00:50,270
+Please note that Compass
+is actively developed.
+
+20
+00:00:50,270 --> 00:00:53,210
+There might be differences
+between the UI I show here
+
+21
+00:00:53,210 --> 00:00:54,800
+and what you are seeing now.
+
+22
+00:00:54,800 --> 00:00:56,810
+In a moment, we'll connect
+to a MongoDB cluster
+
+23
+00:00:56,810 --> 00:00:58,790
+we have set up for this class.
+
+24
+00:00:58,790 --> 00:01:00,770
+This cluster is
+running in Atlas,
+
+25
+00:01:00,770 --> 00:01:05,129
+which is MongoDB's hosted
+MongoDB as a service platform.
+
+26
+00:01:05,129 --> 00:01:08,020
+See the lecture notes for more
+information on MongoDB Atlas.
+
+27
+00:01:08,020 --> 00:01:10,960
+Also don't worry about my
+use of the term cluster.
+
+28
+00:01:10,960 --> 00:01:12,390
+If it is unfamiliar to you.
+
+29
+00:01:12,390 --> 00:01:15,070
+For now, it's not important.
+
+30
+00:01:15,070 --> 00:01:19,030
+In a later lesson, we'll dive
+into what a MongoDB cluster is.
+
+31
+00:01:19,030 --> 00:01:21,460
+OK, so now we're
+ready to connect.
+
+32
+00:01:21,460 --> 00:01:24,610
+You can see the hostname
+for our cluster here.
+
+33
+00:01:24,610 --> 00:01:28,310
+I've also included it in
+the lecture notes below.
+
+34
+00:01:28,310 --> 00:01:32,111
+We will connect on the
+default port of 27017.
+
+35
+00:01:32,111 --> 00:01:36,860
+As the authentication method,
+we'll use username password.
+
+36
+00:01:36,860 --> 00:01:39,895
+Please use the
+username m001-student.
+
+37
+00:01:42,780 --> 00:01:50,950
+And the password
+m001-mongodb-basics
+
+38
+00:01:50,950 --> 00:01:54,420
+We'll use admin as the
+authentication database,
+
+39
+00:01:54,420 --> 00:01:58,830
+and specify Use System CA slash
+Atlas Deployment for the SSL
+
+40
+00:01:58,830 --> 00:02:00,360
+field.
+
+41
+00:02:00,360 --> 00:02:03,450
+This simply means that we will
+encrypt traffic between Compass
+
+42
+00:02:03,450 --> 00:02:05,550
+and our Atlas cluster.
+
+43
+00:02:05,550 --> 00:02:07,590
+Finally, before we press
+the connect button,
+
+44
+00:02:07,590 --> 00:02:09,729
+please create a favorite
+for this connection
+
+45
+00:02:09,729 --> 00:02:11,880
+that you can easily get back to.
+
+46
+00:02:11,880 --> 00:02:17,300
+Now click Connect, and load
+the databases in the M001 class
+
+47
+00:02:17,300 --> 00:00:00,000
+MongoDB deployment.
+

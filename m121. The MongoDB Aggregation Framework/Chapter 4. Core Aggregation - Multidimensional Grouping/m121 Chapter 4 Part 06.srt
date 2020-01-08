@@ -1,0 +1,286 @@
+
+1
+00:00:00.000 --> 00:00:00.170
+
+
+2
+00:00:00.170 --> 00:00:02.100
+Until this point, we've
+been looking to how
+
+3
+00:00:02.100 --> 00:00:04.800
+to determine individual facets.
+
+4
+00:00:04.800 --> 00:00:07.560
+But as you probably
+already realized,
+
+5
+00:00:07.560 --> 00:00:09.510
+when building
+applications, we might
+
+6
+00:00:09.510 --> 00:00:14.340
+need multiple different facets
+to achieve the kind of filters
+
+7
+00:00:14.340 --> 00:00:17.280
+that we want to provide
+to our end users.
+
+8
+00:00:17.280 --> 00:00:19.020
+An initial example.
+
+9
+00:00:19.020 --> 00:00:22.980
+I've shown you that apart from
+the list of results that's
+
+10
+00:00:22.980 --> 00:00:25.350
+given from a
+particular search term
+
+11
+00:00:25.350 --> 00:00:28.140
+or query that we might
+do against a catalog,
+
+12
+00:00:28.140 --> 00:00:33.180
+we might have different filters
+to help us trim down, narrow
+
+13
+00:00:33.180 --> 00:00:36.780
+down the search results that
+we might be more interested on,
+
+14
+00:00:36.780 --> 00:00:38.950
+depending on the
+dimensions that are
+
+15
+00:00:38.950 --> 00:00:41.700
+suited for what we want to do.
+
+16
+00:00:41.700 --> 00:00:43.800
+And we've been
+exploring some of those
+
+17
+00:00:43.800 --> 00:00:46.500
+throughout the previous lessons.
+
+18
+00:00:46.500 --> 00:00:50.010
+When building applications,
+we might want to group
+
+19
+00:00:50.010 --> 00:00:52.800
+our data and their
+orthogonal properties.
+
+20
+00:00:52.800 --> 00:00:54.705
+In running all
+this individually,
+
+21
+00:00:54.705 --> 00:00:58.880
+we might take too many
+round trips to the database.
+
+22
+00:00:58.880 --> 00:01:01.440
+With MongoDB 3.4,
+faceting support
+
+23
+00:01:01.440 --> 00:01:07.710
+can compute several different
+facets in one single command.
+
+24
+00:01:07.710 --> 00:01:10.170
+Due to this, we
+have a new operator
+
+25
+00:01:10.170 --> 00:01:15.460
+called facet that allows
+us to do exactly that.
+
+26
+00:01:15.460 --> 00:01:19.460
+So let's basically take
+all the different facets
+
+27
+00:01:19.460 --> 00:01:22.650
+that we've been building
+throughout the course
+
+28
+00:01:22.650 --> 00:01:23.970
+individually.
+
+29
+00:01:23.970 --> 00:01:30.420
+Let's say the Categories, the
+Employees, the Workforce facet,
+
+30
+00:01:30.420 --> 00:01:34.500
+and the Founded year that
+company's have been created.
+
+31
+00:01:34.500 --> 00:01:36.570
+And let's start
+grouping all of this
+
+32
+00:01:36.570 --> 00:01:40.500
+into one single command in
+our aggregation pipeline.
+
+33
+00:01:40.500 --> 00:01:44.880
+So let's start by matching all
+documents that have databases
+
+34
+00:01:44.880 --> 00:01:49.290
+on their description or
+overview by specifying a text
+
+35
+00:01:49.290 --> 00:01:51.300
+search query.
+
+36
+00:01:51.300 --> 00:01:55.590
+Pass along that list of
+results to our facet stage.
+
+37
+00:01:55.590 --> 00:01:57.510
+And then generating
+the different facets
+
+38
+00:01:57.510 --> 00:02:00.660
+that we've been
+looking into before
+
+39
+00:02:00.660 --> 00:02:02.860
+by the Categories,
+Employees, or Founded
+
+40
+00:02:02.860 --> 00:02:06.570
+dates to provide back that
+set of different facets
+
+41
+00:02:06.570 --> 00:02:09.560
+that we've been
+exploring so far.
+
+42
+00:02:09.560 --> 00:02:12.780
+So in essence,
+with this command,
+
+43
+00:02:12.780 --> 00:02:15.540
+we are collecting back
+all different facets
+
+44
+00:02:15.540 --> 00:02:20.310
+with their matching conditions
+and output variations,
+
+45
+00:02:20.310 --> 00:02:24.450
+bringing in documents from
+the database all at once.
+
+46
+00:02:24.450 --> 00:02:28.930
+Once I run it, I'll get all
+sorts of different facets,
+
+47
+00:02:28.930 --> 00:02:33.540
+facet for Founded, the
+facets for Employees,
+
+48
+00:02:33.540 --> 00:02:38.570
+and the facet for Categories
+that my initial match
+
+49
+00:02:38.570 --> 00:02:41.030
+search provided.
+
+50
+00:02:41.030 --> 00:02:48.660
+Each sub pipeline within facet
+is passed the exact same set
+
+51
+00:02:48.660 --> 00:02:53.780
+of input documents that this
+match stage here generates.
+
+52
+00:02:53.780 --> 00:02:58.440
+And they are completely
+independent from one another.
+
+53
+00:02:58.440 --> 00:03:03.830
+The output of one's sub pipeline
+cannot be used by the following
+
+54
+00:03:03.830 --> 00:03:09.270
+ones within the
+same facet command.
+
+55
+00:03:09.270 --> 00:03:14.970
+This means that we can
+interpret this as sub pipelining
+
+56
+00:03:14.970 --> 00:03:19.770
+inside of our aggregation
+framework pipeline
+
+57
+00:03:19.770 --> 00:03:23.880
+provided via the
+dollar facet stage.
+
+58
+00:03:23.880 --> 00:03:27.390
+And this is how we can
+generate facets navigation
+
+59
+00:03:27.390 --> 00:03:29.960
+using MongoDB 3.4.

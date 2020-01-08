@@ -1,0 +1,396 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.430
+Let's learn about
+one of the stages
+
+3
+00:00:02.430 --> 00:00:04.080
+in the aggregation
+framework that
+
+4
+00:00:04.080 --> 00:00:07.970
+can help us protect information
+from unauthorized access,
+
+5
+00:00:07.970 --> 00:00:10.240
+the redact stage.
+
+6
+00:00:10.240 --> 00:00:13.360
+The redact stage has
+the following form.
+
+7
+00:00:13.360 --> 00:00:16.170
+The expression can be any
+expression or combination
+
+8
+00:00:16.170 --> 00:00:18.240
+of expressions,
+but must ultimately
+
+9
+00:00:18.240 --> 00:00:24.960
+resolve to one of three values,
+descend, prune, and keep.
+
+10
+00:00:24.960 --> 00:00:27.660
+OK, at first these
+seem pretty cryptic.
+
+11
+00:00:27.660 --> 00:00:30.330
+So let's examine what
+each of them does.
+
+12
+00:00:30.330 --> 00:00:33.720
+First, let's look
+at prune and keep.
+
+13
+00:00:33.720 --> 00:00:36.810
+Prune and keep are
+inverse of each other.
+
+14
+00:00:36.810 --> 00:00:40.680
+Prune will exclude all fields
+at the current document level
+
+15
+00:00:40.680 --> 00:00:44.070
+without further inspection,
+while keep will retain
+
+16
+00:00:44.070 --> 00:00:46.170
+all fields at the
+current document level
+
+17
+00:00:46.170 --> 00:00:48.070
+without further inspection.
+
+18
+00:00:48.070 --> 00:00:51.690
+So what do we mean by
+further inspection?
+
+19
+00:00:51.690 --> 00:00:53.580
+Let's look at this
+example document
+
+20
+00:00:53.580 --> 00:00:55.710
+from the employees collection.
+
+21
+00:00:55.710 --> 00:00:59.280
+Each colored square
+represents a document level.
+
+22
+00:00:59.280 --> 00:01:03.540
+Specifying keep or prune
+at any given document level
+
+23
+00:01:03.540 --> 00:01:05.770
+will perform the
+associated action
+
+24
+00:01:05.770 --> 00:01:07.710
+and automatically
+apply this action
+
+25
+00:01:07.710 --> 00:01:11.440
+to all levels of the document.
+
+26
+00:01:11.440 --> 00:01:13.200
+Let's look at this
+example document
+
+27
+00:01:13.200 --> 00:01:15.480
+from the employees collection.
+
+28
+00:01:15.480 --> 00:01:18.870
+Each colored square
+represents a document level.
+
+29
+00:01:18.870 --> 00:01:22.560
+Specifying keep or prune
+at any given document level
+
+30
+00:01:22.560 --> 00:01:24.780
+will perform the
+associated action
+
+31
+00:01:24.780 --> 00:01:28.380
+and automatically apply this
+action to all document levels
+
+32
+00:01:28.380 --> 00:01:31.290
+below the level we specified.
+
+33
+00:01:31.290 --> 00:01:33.810
+OK, so let's look at descend.
+
+34
+00:01:33.810 --> 00:01:36.960
+Descend retains the field at
+the current document level
+
+35
+00:01:36.960 --> 00:01:39.630
+being evaluated except
+for subdocuments
+
+36
+00:01:39.630 --> 00:01:41.220
+and arrays of documents.
+
+37
+00:01:41.220 --> 00:01:46.350
+It will instead traverse
+down, evaluating each level.
+
+38
+00:01:46.350 --> 00:01:49.080
+Let's visualize how
+descend would operate over
+
+39
+00:01:49.080 --> 00:01:52.680
+this document, given this
+conditional expression,
+
+40
+00:01:52.680 --> 00:01:55.560
+determining whether the
+value of user access
+
+41
+00:01:55.560 --> 00:01:58.590
+is in the ACL array.
+
+42
+00:01:58.590 --> 00:02:00.480
+We start with the
+entire document
+
+43
+00:02:00.480 --> 00:02:03.750
+and compare whether
+management is in ACL.
+
+44
+00:02:03.750 --> 00:02:06.780
+Since it is, it descends
+into the sub document
+
+45
+00:02:06.780 --> 00:02:10.979
+at employee compensation, here.
+
+46
+00:02:10.979 --> 00:02:13.350
+We now evaluate
+whether management
+
+47
+00:02:13.350 --> 00:02:15.870
+is in ACL, which it is.
+
+48
+00:02:15.870 --> 00:02:18.150
+So we descend further.
+
+49
+00:02:18.150 --> 00:02:21.390
+At this level, upon
+evaluation prune
+
+50
+00:02:21.390 --> 00:02:24.660
+is returned, because
+the ACL at this level
+
+51
+00:02:24.660 --> 00:02:26.910
+does not include management.
+
+52
+00:02:26.910 --> 00:02:30.450
+This level and any subsequent
+levels, if there were any,
+
+53
+00:02:30.450 --> 00:02:32.760
+would not be returned.
+
+54
+00:02:32.760 --> 00:02:37.360
+To the user, it's as if this
+field doesn't exist at all.
+
+55
+00:02:37.360 --> 00:02:39.650
+Let's look at this in action.
+
+56
+00:02:39.650 --> 00:02:43.380
+We set up our user access
+variable and then the pipeline,
+
+57
+00:02:43.380 --> 00:02:47.880
+ensuring we only have access
+document levels we should.
+
+58
+00:02:47.880 --> 00:02:48.750
+Excellent.
+
+59
+00:02:48.750 --> 00:02:51.060
+We can see that we are
+indeed only getting back
+
+60
+00:02:51.060 --> 00:02:56.400
+document levels where
+management was in the ACL array.
+
+61
+00:02:56.400 --> 00:03:00.060
+The redact stage can be useful
+for implementing access control
+
+62
+00:03:00.060 --> 00:03:02.190
+lists, though it
+is not the only way
+
+63
+00:03:02.190 --> 00:03:04.440
+to limit access to
+information, as we'll
+
+64
+00:03:04.440 --> 00:03:06.660
+learn later in the course.
+
+65
+00:03:06.660 --> 00:03:08.670
+Any user who has
+access to a collection
+
+66
+00:03:08.670 --> 00:03:10.710
+to perform this
+type of aggregation
+
+67
+00:03:10.710 --> 00:03:13.170
+can also perform
+other read operations.
+
+68
+00:03:13.170 --> 00:03:16.110
+So the redact stage is not
+sufficient for collection
+
+69
+00:03:16.110 --> 00:03:18.150
+and field level restrictions.
+
+70
+00:03:18.150 --> 00:03:21.130
+Lastly, if comparing to
+a field in the document,
+
+71
+00:03:21.130 --> 00:03:24.990
+the field must be present at
+every level of using descend,
+
+72
+00:03:24.990 --> 00:03:27.510
+or the expression must
+account for and decide what
+
+73
+00:03:27.510 --> 00:03:29.460
+to do if the field is missing.
+
+74
+00:03:29.460 --> 00:03:31.620
+If we don't take any
+of these precautions,
+
+75
+00:03:31.620 --> 00:03:34.150
+redact is likely to error.
+
+76
+00:03:34.150 --> 00:03:36.510
+Let's summarize some key points.
+
+77
+00:03:36.510 --> 00:03:39.870
+Keep and prune automatically
+apply to all levels
+
+78
+00:03:39.870 --> 00:03:42.240
+below the evaluated level.
+
+79
+00:03:42.240 --> 00:03:44.880
+Descend retains
+the current level
+
+80
+00:03:44.880 --> 00:03:47.670
+and evaluates the
+next level down.
+
+81
+00:03:47.670 --> 00:03:50.010
+And redact is not for
+restricting access
+
+82
+00:03:50.010 --> 00:03:51.430
+to a collection.
+
+83
+00:03:51.430 --> 00:03:54.930
+Remember, if a user has access
+to perform an aggregation
+
+84
+00:03:54.930 --> 00:04:00.020
+on a collection, they have
+access to read that collection.

@@ -1,0 +1,115 @@
+In this lesson, we will go over a methodology to help you through the old process of data modeling for MongoDB.
+
+The methodology we use is composed of three phases.
+
+The first phase is to describe the workload.
+
+In other terms, it means gathering everything there is to know about how you would be using your data.
+
+The second phase is to identify the relationships between the different entities you need to handle and choose how to model those relationships.
+
+And the third phase is to apply design patterns or transformation to the current model to address performance requirements.
+
+Let's describe each phase a little bit more.
+
+As for the details, example, and actions required in each phase, those will be part of the following lessons in this course.
+
+Let's start at the beginning.
+
+Your goal is to create a data model, what is often referred to as your MongoDB schema.
+
+A few things may be available to you.
+
+For example, you may have a requirements document listing the scenarios the system needs to support.
+
+Alternatively, or in complement, you may have an expert on the domain, who can advise on what needs to be done.
+
+You may be migrating from a relational database, or you are evolving an existing MongoDB database.
+
+In both cases, logs, stats, et cetera, give you additional information about the current state of the system.
+
+If they exist, you want to use them.
+
+Finally, someone needs to assemble this information together in the schema.
+
+This is done by the data modeling expert.
+
+This will be you by the end of this course.
+
+So the first phase is to look at the documents that you have in your input and create some artifacts out of them.
+
+You should be able to size the amount of data your system will have initially, in few months, and in few years.
+
+Obviously, you will get those number wrong.
+
+Don't worry.
+
+Practice makes perfect.
+
+So give it your best try.
+
+The action of recording those numbers will permit you to observe any major deviations in your system once it's in operation.
+
+Those differences will be a good indicator that you may have to iterate again over your schema.
+
+The same applies to the operations, the reads and the writes.
+
+You should be able to tell how many are run per unit of time and if each query has additional requirements in terms of execution time, the latency from the application, tolerance to staleness, et cetera.
+
+For each of these operation requirements, record your thoughts and assumptions.
+
+They will also be a good indicator to see whether you need to reevaluate the model again later.
+
+In our second phase, we start with a piece of information that were identified.
+
+Each piece has a relationship with another one.
+
+The ones that have a one-to-one relationship tend to be grouped together in the same table or collection.
+
+In modeling for a relational database, you would probably have come up with those three entities-- actors, movies, and reviews.
+
+And place the piece of information inside the appropriate entity.
+
+For example, a movie title has a one-to-many relationship to the reviews for the movie, while the money earned by the movie has a one-to-one relationship with the movie title.
+
+So the movie title and its revenues are in the same entity or collection, while the reviews are in a separate collection.
+
+With MongoDB, you follow the same process of identifying the relationships between the pieces of information.
+
+However, you need to decide if you embed information or keep it separate.
+
+How do you decide?
+
+This is where you start using the knowledge you will acquire in this class.
+
+At the end of this process, you will have a list of entities with their fields, some of them grouped together inside the common collection.
+
+Our last phase is to apply schema design patterns.
+
+This is where you will get to make your model more performant or more clear by applying some transformations.
+
+We will cover this phase of the methodology in a future chapter by giving you a number of recipes you can apply to your model.
+
+You may need to iteratively improve your solution, and this is fine.
+
+If any of the input information on the left changes, you need to assess the impact on the decision you've made in their corresponding phase.
+
+For example, if you discover another reported query, get more data about the size of your problem, or run benchmarks on your current solution, all that known information, with feedback as the input to the model.
+
+Any successful application will undergo modifications at some point in its lifetime, so be ready to get new inputs at some point.
+
+If you track why you made some decision and what were the assumptions in the past, it will be much easier to apply the needed changes.
+
+Let's recap what we have learned in this lesson.
+
+There are three phases in our methodology.
+
+The first addresses the workload.
+
+You want to identify the size of your data, the important reads and writes of the system, and possibly quantify and qualify those operations.
+
+The second phase regards the identification of the relationships.
+
+Coming out of that step, you should have a list of collection with the decision of whether you embed or link the relationships between them.
+
+Finally, the third step is to apply schema design patterns to your model to address the performance requirements by applying the needed optimizations.

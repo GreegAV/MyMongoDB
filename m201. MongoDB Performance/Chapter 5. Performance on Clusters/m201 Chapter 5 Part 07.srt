@@ -1,0 +1,440 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.880
+What would actually
+be interesting to do
+
+3
+00:00:02.880 --> 00:00:07.590
+is allow our system to
+run special analytics
+
+4
+00:00:07.590 --> 00:00:11.150
+queries on this node alone.
+
+5
+00:00:11.150 --> 00:00:13.140
+Queries that do not
+serve any operation
+
+6
+00:00:13.140 --> 00:00:17.790
+workload therefore never going
+to be run on the primary node.
+
+7
+00:00:17.790 --> 00:00:20.550
+We can do this by
+creating such an index
+
+8
+00:00:20.550 --> 00:00:23.280
+on a particular secondary.
+
+9
+00:00:23.280 --> 00:00:27.820
+For that, what we will do is
+just shut down our server.
+
+10
+00:00:27.820 --> 00:00:33.450
+Once the server is down, we'll
+bring it up as a standalone.
+
+11
+00:00:33.450 --> 00:00:36.930
+To do that, I need to reflect
+the exact same DB path.
+
+12
+00:00:36.930 --> 00:00:38.910
+The port could
+potentially be different,
+
+13
+00:00:38.910 --> 00:00:41.500
+but let's keep some
+consistency here.
+
+14
+00:00:41.500 --> 00:00:44.710
+But the important thing is
+that we are loading a MongoD
+
+15
+00:00:44.710 --> 00:00:48.120
+using the same
+previously set up r2 DB
+
+16
+00:00:48.120 --> 00:00:52.680
+path to load this machine
+without a replica set
+
+17
+00:00:52.680 --> 00:00:53.640
+configuration in place.
+
+18
+00:00:53.640 --> 00:00:58.260
+So bringing it up as
+a standalone node.
+
+19
+00:00:58.260 --> 00:01:03.840
+Once I do that, and I connect
+to the nodes on port 27002,
+
+20
+00:01:03.840 --> 00:01:09.120
+I can confirm that this
+instance is no longer running
+
+21
+00:01:09.120 --> 00:01:12.300
+on replica set enabled mode.
+
+22
+00:01:12.300 --> 00:01:15.150
+Not running with --replSet.
+
+23
+00:01:15.150 --> 00:01:18.930
+Also telling me no replication
+enabled, which is great.
+
+24
+00:01:18.930 --> 00:01:21.990
+This is exactly what we wanted.
+
+25
+00:01:21.990 --> 00:01:24.870
+So let's create a
+specific index to support
+
+26
+00:01:24.870 --> 00:01:26.940
+our analytical query.
+
+27
+00:01:26.940 --> 00:01:29.970
+In this case, we want to be
+able to index the full address
+
+28
+00:01:29.970 --> 00:01:33.550
+information and the
+restaurant's type of cuisine.
+
+29
+00:01:33.550 --> 00:01:36.310
+So for that, we're going to we
+creating an index on cuisine
+
+30
+00:01:36.310 --> 00:01:41.540
+and all members of our address
+sub documents, street, city,
+
+31
+00:01:41.540 --> 00:01:44.940
+state, and zip code.
+
+32
+00:01:44.940 --> 00:01:46.800
+Once we do that, and
+as you can imagine,
+
+33
+00:01:46.800 --> 00:01:51.120
+this is going to be a large
+beefy index, that is only
+
+34
+00:01:51.120 --> 00:01:54.840
+going to serve a set
+of specific queries
+
+35
+00:01:54.840 --> 00:01:57.400
+from the analytical workload.
+
+36
+00:01:57.400 --> 00:02:00.790
+If we then run our
+query, that looks
+
+37
+00:02:00.790 --> 00:02:03.040
+for example for
+cuisine that starts
+
+38
+00:02:03.040 --> 00:02:08.050
+with medi for Mediterranean,
+and in a given address zip code
+
+39
+00:02:08.050 --> 00:02:12.320
+range, which all zip codes
+start with the digit 6.
+
+40
+00:02:12.320 --> 00:02:15.100
+If we explain this
+query, we will
+
+41
+00:02:15.100 --> 00:02:19.690
+see that our recently
+created index is, in fact,
+
+42
+00:02:19.690 --> 00:02:23.410
+supporting our query,
+and therefore being
+
+43
+00:02:23.410 --> 00:02:26.380
+used to optimize
+search types of queries
+
+44
+00:02:26.380 --> 00:02:29.920
+like this one, where we are
+using a regex for the zip code
+
+45
+00:02:29.920 --> 00:02:33.250
+and another regex for cuisine.
+
+46
+00:02:33.250 --> 00:02:35.650
+So apparently we've
+done our job here.
+
+47
+00:02:35.650 --> 00:02:40.060
+So let's go ahead and shut
+down the server once again.
+
+48
+00:02:40.060 --> 00:02:43.240
+Once we shut down the server,
+we can then relaunch our MongoD
+
+49
+00:02:43.240 --> 00:02:48.160
+by just basically relaunching
+with the configuration file
+
+50
+00:02:48.160 --> 00:02:50.470
+that it previously sets.
+
+51
+00:02:50.470 --> 00:02:51.910
+Once we have that
+up and running,
+
+52
+00:02:51.910 --> 00:02:54.260
+we can then connect
+again to our replica
+
+53
+00:02:54.260 --> 00:02:57.670
+set by passing along the set
+list and the replica set name.
+
+54
+00:02:57.670 --> 00:03:00.940
+Once connected to the primary,
+let's use our designated
+
+55
+00:03:00.940 --> 00:03:03.380
+database, which is M201.
+
+56
+00:03:03.380 --> 00:03:06.610
+And if we run the previous
+analytical query that
+
+57
+00:03:06.610 --> 00:03:11.110
+looks for cuisine and zip
+code in a range using regex
+
+58
+00:03:11.110 --> 00:03:14.200
+as we've seen before
+on the primary node,
+
+59
+00:03:14.200 --> 00:03:17.810
+we will see that we are
+no longer using the index.
+
+60
+00:03:17.810 --> 00:03:19.300
+So what happened?
+
+61
+00:03:19.300 --> 00:03:22.930
+Did our index just
+run away scared?
+
+62
+00:03:22.930 --> 00:03:23.800
+No, not at all.
+
+63
+00:03:23.800 --> 00:03:27.100
+Our brave index will
+only be utilized
+
+64
+00:03:27.100 --> 00:03:33.670
+if we run this query on the
+designated secondary node.
+
+65
+00:03:33.670 --> 00:03:35.210
+So let's do just that.
+
+66
+00:03:35.210 --> 00:03:41.710
+Let's go ahead and connect
+again to our 27002 priority 0
+
+67
+00:03:41.710 --> 00:03:43.240
+passive node.
+
+68
+00:03:43.240 --> 00:03:47.140
+Once we connect it, we need
+again to enable reading from
+
+69
+00:03:47.140 --> 00:03:49.630
+secondaries with
+sets labelled k.
+
+70
+00:03:49.630 --> 00:03:54.850
+And if we run the query again
+now under a replica set,
+
+71
+00:03:54.850 --> 00:03:57.400
+no longer in a
+standalone mode, we
+
+72
+00:03:57.400 --> 00:04:02.800
+can see that our index
+is being used to support
+
+73
+00:04:02.800 --> 00:04:04.950
+this particular query.
+
+74
+00:04:04.950 --> 00:04:06.580
+Let's recap what
+we learned today.
+
+75
+00:04:06.580 --> 00:04:10.310
+Again, let's reinforce
+that it is not a usual set
+
+76
+00:04:10.310 --> 00:04:13.090
+up for our indexes.
+
+77
+00:04:13.090 --> 00:04:15.070
+The main purpose
+of our replica set
+
+78
+00:04:15.070 --> 00:04:16.660
+is to enable high availability.
+
+79
+00:04:16.660 --> 00:04:20.589
+Therefore, all nodes should
+be configured homogeneously.
+
+80
+00:04:20.589 --> 00:04:23.800
+It is a very useful set up
+for attending analytical,
+
+81
+00:04:23.800 --> 00:04:28.780
+reporting, and text-based
+search kind of workloads
+
+82
+00:04:28.780 --> 00:04:30.940
+on secondary nodes alone.
+
+83
+00:04:30.940 --> 00:04:33.580
+You should prevent
+your secondaries
+
+84
+00:04:33.580 --> 00:04:37.480
+that hold those indexes
+to ever become primaries.
+
+85
+00:04:37.480 --> 00:04:42.100
+If they do, given the nature
+of the indexes, the expected
+
+86
+00:04:42.100 --> 00:04:44.560
+performance of your
+system, especially
+
+87
+00:04:44.560 --> 00:04:46.900
+in what right
+workload is concerned,
+
+88
+00:04:46.900 --> 00:04:48.760
+will be considerably impacted.
+
+89
+00:04:48.760 --> 00:04:50.600
+So be careful about that.
+
+90
+00:04:50.600 --> 00:04:53.350
+But then again, great
+for analyticals.
+
+91
+00:04:53.350 --> 00:04:56.590
+Not very usual, but awesome.
+
+92
+00:04:56.590 --> 00:04:59.340
+And that's what we learned
+today on replica set
+
+93
+00:04:59.340 --> 00:05:01.860
+nodes with different indexes.

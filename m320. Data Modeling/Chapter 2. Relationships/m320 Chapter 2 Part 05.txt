@@ -1,0 +1,41 @@
+In previous lessons, we used the word zillions, and introduced a graphical notation for representing the one-to-zillions relationships.
+
+We extended the crow's foot notation by adding fingers the foot in order to easily see those zillions sides.
+
+We should also use the notation used in this course for cardinalities.
+
+One thing is to identify a relationship as one to zillions, but better still if you can quantify that same relationship.
+
+What is the minimum number of associated document?
+
+The most likely number and the maximum number.
+
+The maximum number is what we care the most about this relationship.
+
+Zillions means something is humongous, out of proportion, so watch out for it.
+
+The one-to-zillions relationship is not that different relationship, per se.
+
+It is a subcase of the one-to-many relationship.
+
+If we have a one to many relationship and the many's identified as 10,000 or more, we call that relationship one to zillion.
+
+This means we need to be mindful of this relationship every place we use it in the code.
+
+The last thing you want the application to do is to retrieve a document and its zillions associated documents, then process the complete results set, unless this you like long coffee breaks.
+
+So comment those sections of the code with directives on how to handle or reduce the result set that comes back.
+
+Given the cardinality of these relationships and the pressure on computational resources to process them, you need to be on the lookout for very large arrays of subdocuments or unbound arrays of references.
+
+Looking back at the representation for the one-to-many relationships, we have a single one left-- the representation where we referenced the document on the one side of the relationship from the many or zillion side.
+
+As you model this relationship, make an effort to quantify it.
+
+This will become important, so that you can understand the impact of the maximum value on your resources.
+
+To recap the one-to-zillions relationship, it is a particular case of the one-to-many relationship.
+
+The only available representation is to reference a document on the one side of the relationship from the zillion side.
+
+And finally, pay extra attention to queries and code that handles zillions of documents.

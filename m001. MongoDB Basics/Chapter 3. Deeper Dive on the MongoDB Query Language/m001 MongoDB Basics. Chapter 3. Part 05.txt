@@ -1,0 +1,15 @@
+Now let's take a look at dollar size.
+
+We use dollar size to match documents based on the length of an array.
+
+The countries field in the movie details collection stipulates the country in which the movie was filmed.
+
+In cases where the movie was filmed in more than one country, you'll see multiple countries listed in the countries array.
+
+This query will identify movies that were filmed in just one country, because for the country's array field we're specifying a filter such that we see in our search results that have a size or length of one for the countries array.
+
+And if we scroll through our results, we can see that in fact just one country is listed for each one of these documents.
+
+Contrasting these with a number of other films we've seen, if instead of displaying the results we take account, we can see that 1,915 documents in our movie details collection have just one country listed, compared to the 2,295 documents in the collection as a whole.
+
+And that is dollar size.

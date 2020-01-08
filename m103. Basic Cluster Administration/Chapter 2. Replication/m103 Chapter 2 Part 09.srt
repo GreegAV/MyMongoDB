@@ -1,0 +1,682 @@
+1
+00:00:00,000 --> 00:00:00,710
+
+
+2
+00:00:00,710 --> 00:00:02,960
+In this lesson, we're going
+to discuss how failovers
+
+3
+00:00:02,960 --> 00:00:05,300
+and elections work in MongoDB.
+
+4
+00:00:05,300 --> 00:00:06,950
+The primary node
+is the first point
+
+5
+00:00:06,950 --> 00:00:10,370
+of contact for any client
+communicating to the database.
+
+6
+00:00:10,370 --> 00:00:12,241
+Even if secondaries
+go down, the client
+
+7
+00:00:12,241 --> 00:00:14,240
+will continue communicating
+with the node acting
+
+8
+00:00:14,240 --> 00:00:17,550
+as primary until the
+primary is unavailable.
+
+9
+00:00:17,550 --> 00:00:20,490
+But what would cause a
+primary to become unavailable?
+
+10
+00:00:20,490 --> 00:00:22,370
+A common reason is maintenance.
+
+11
+00:00:22,370 --> 00:00:24,120
+So let's say we're
+doing a rolling upgrade
+
+12
+00:00:24,120 --> 00:00:25,674
+on a three-node replica set.
+
+13
+00:00:25,674 --> 00:00:27,090
+A rolling upgrade
+just means we're
+
+14
+00:00:27,090 --> 00:00:30,690
+upgrading one server at a time,
+starting with the secondaries.
+
+15
+00:00:30,690 --> 00:00:33,445
+And eventually, we'll
+upgrade the primary.
+
+16
+00:00:33,445 --> 00:00:35,070
+Rolling upgrades are
+great because they
+
+17
+00:00:35,070 --> 00:00:38,040
+allow us to perform updates
+while maximizing availability
+
+18
+00:00:38,040 --> 00:00:40,820
+to any clients
+using the database.
+
+19
+00:00:40,820 --> 00:00:43,940
+We'll start by stopping the
+MongoDB process on a secondary,
+
+20
+00:00:43,940 --> 00:00:47,420
+and then bringing it back up
+with the new database version.
+
+21
+00:00:47,420 --> 00:00:50,320
+And we can do the same thing
+to upgrade our other secondary.
+
+22
+00:00:50,320 --> 00:00:52,420
+When all of our secondaries
+have been upgraded,
+
+23
+00:00:52,420 --> 00:00:54,190
+it's time to
+upgrade the primary.
+
+24
+00:00:54,190 --> 00:00:56,500
+But restarting the database
+server on the primary would
+
+25
+00:00:56,500 --> 00:00:59,350
+trigger an election anyway, so
+we're going to safely initiate
+
+26
+00:00:59,350 --> 00:01:02,170
+an election with rs.stepDown().
+
+27
+00:01:02,170 --> 00:01:05,140
+Once the election is complete,
+the last database server
+
+28
+00:01:05,140 --> 00:01:08,410
+running the old database version
+will be a secondary node.
+
+29
+00:01:08,410 --> 00:01:10,180
+So we can bring
+it down, and then
+
+30
+00:01:10,180 --> 00:01:12,310
+bring it back up with
+the new database server
+
+31
+00:01:12,310 --> 00:01:14,050
+without affecting
+the availability
+
+32
+00:01:14,050 --> 00:01:16,720
+of the whole replica set.
+
+33
+00:01:16,720 --> 00:01:19,660
+Let's talk a little bit
+about how elections work.
+
+34
+00:01:19,660 --> 00:01:23,020
+Elections take place whenever
+there's a change in topology.
+
+35
+00:01:23,020 --> 00:01:24,880
+Reconfiguring a
+replica set will always
+
+36
+00:01:24,880 --> 00:01:28,032
+trigger an election that may
+or may not elect a new primary.
+
+37
+00:01:28,032 --> 00:01:29,740
+But you will definitely
+see a new primary
+
+38
+00:01:29,740 --> 00:01:31,360
+elected in two cases--
+
+39
+00:01:31,360 --> 00:01:34,300
+anytime the current primary
+node becomes unavailable,
+
+40
+00:01:34,300 --> 00:01:38,370
+or when the current primary node
+steps down to be a secondary.
+
+41
+00:01:38,370 --> 00:01:41,020
+The method to figure out which
+secondary will run for election
+
+42
+00:01:41,020 --> 00:01:43,840
+begins with priority, which
+we'll discuss in a minute;
+
+43
+00:01:43,840 --> 00:01:47,194
+and whichever node has the
+latest copy of the data.
+
+44
+00:01:47,194 --> 00:01:48,610
+So let's say every
+node in our set
+
+45
+00:01:48,610 --> 00:01:51,250
+has the same priority, which
+is the default unless we've
+
+46
+00:01:51,250 --> 00:01:53,470
+been setting priorities
+for the nodes in our set.
+
+47
+00:01:53,470 --> 00:01:55,744
+And this node has the
+latest copy of the data.
+
+48
+00:01:55,744 --> 00:01:57,160
+So it's going to
+run for election,
+
+49
+00:01:57,160 --> 00:01:58,800
+and then automatically
+vote for itself.
+
+50
+00:01:58,800 --> 00:02:01,300
+Then it's going to ask the other
+two nodes for their support
+
+51
+00:02:01,300 --> 00:02:02,340
+in the election.
+
+52
+00:02:02,340 --> 00:02:04,090
+And they're going to
+say, all right, you
+
+53
+00:02:04,090 --> 00:02:05,770
+have a pretty recent
+copy of the data,
+
+54
+00:02:05,770 --> 00:02:07,650
+you seem like a
+good candidate, then
+
+55
+00:02:07,650 --> 00:02:09,979
+they'll pledge their
+support as well.
+
+56
+00:02:09,979 --> 00:02:12,940
+This node will be
+elected primary.
+
+57
+00:02:12,940 --> 00:02:14,800
+There is also the
+very slim possibility
+
+58
+00:02:14,800 --> 00:02:17,590
+that two nodes run for
+election simultaneously.
+
+59
+00:02:17,590 --> 00:02:19,670
+But in a replica set with
+an odd number of nodes,
+
+60
+00:02:19,670 --> 00:02:21,070
+this doesn't matter.
+
+61
+00:02:21,070 --> 00:02:22,750
+These two nodes are
+both going to run,
+
+62
+00:02:22,750 --> 00:02:25,000
+which means they're both
+going to vote for themselves.
+
+63
+00:02:25,000 --> 00:02:27,084
+And then this node is
+going to essentially decide
+
+64
+00:02:27,084 --> 00:02:28,750
+which one of these
+nodes becomes primary
+
+65
+00:02:28,750 --> 00:02:31,607
+by virtue of a tiebreaker.
+
+66
+00:02:31,607 --> 00:02:33,690
+This becomes a problem
+when we have an even number
+
+67
+00:02:33,690 --> 00:02:35,670
+of voting members in a set.
+
+68
+00:02:35,670 --> 00:02:38,852
+If two secondaries are running
+for election simultaneously
+
+69
+00:02:38,852 --> 00:02:41,310
+and there are an even number
+of remaining nodes in the set,
+
+70
+00:02:41,310 --> 00:02:43,350
+there's a possibility
+that they split the vote
+
+71
+00:02:43,350 --> 00:02:44,940
+and there's a tie.
+
+72
+00:02:44,940 --> 00:02:46,650
+Now a tie is not the
+end of the world,
+
+73
+00:02:46,650 --> 00:02:48,608
+because the nodes will
+just start over and hold
+
+74
+00:02:48,608 --> 00:02:50,340
+another election.
+
+75
+00:02:50,340 --> 00:02:52,620
+The problem with repeating
+elections over and over
+
+76
+00:02:52,620 --> 00:02:54,990
+is that any applications
+accessing the data
+
+77
+00:02:54,990 --> 00:02:56,910
+will have to pause
+all activity and wait
+
+78
+00:02:56,910 --> 00:02:58,710
+until a primary is elected.
+
+79
+00:02:58,710 --> 00:03:00,690
+An even number of nodes
+increases the chances
+
+80
+00:03:00,690 --> 00:03:03,300
+an election has to be
+repeated, so we generally
+
+81
+00:03:03,300 --> 00:03:06,030
+try to keep an odd number
+in our replica sets.
+
+82
+00:03:06,030 --> 00:03:07,770
+Another important
+aspect of elections
+
+83
+00:03:07,770 --> 00:03:10,230
+is the priority assigned
+to each node in a set.
+
+84
+00:03:10,230 --> 00:03:12,000
+Priority is essentially
+the likelihood
+
+85
+00:03:12,000 --> 00:03:14,760
+that a node will become the
+primary during an election.
+
+86
+00:03:14,760 --> 00:03:17,330
+The default primary
+for a node is 1,
+
+87
+00:03:17,330 --> 00:03:20,940
+and any node with priority 1 or
+higher can be elected primary.
+
+88
+00:03:20,940 --> 00:03:22,590
+We can increase the
+priority of a node
+
+89
+00:03:22,590 --> 00:03:25,680
+if we want it to be more likely
+at this node becomes primary.
+
+90
+00:03:25,680 --> 00:03:28,680
+But changing this value alone
+does not guarantee that.
+
+91
+00:03:28,680 --> 00:03:30,180
+We can also set the
+priority of node
+
+92
+00:03:30,180 --> 00:03:33,165
+to be 0 if we never want
+that node to become primary.
+
+93
+00:03:33,165 --> 00:03:36,000
+A priority 0 node can
+still vote in elections,
+
+94
+00:03:36,000 --> 00:03:37,950
+but it can't run for election.
+
+95
+00:03:37,950 --> 00:03:41,369
+Let's take a look at how to
+change the priority of a node.
+
+96
+00:03:41,369 --> 00:03:43,410
+So here I'm just storing
+a configuration document
+
+97
+00:03:43,410 --> 00:03:45,307
+in a variable.
+
+98
+00:03:45,307 --> 00:03:47,140
+So here I'm just setting
+the priority of one
+
+99
+00:03:47,140 --> 00:03:49,330
+of our secondaries
+to 0 so it can never
+
+100
+00:03:49,330 --> 00:03:51,412
+become the primary node.
+
+101
+00:03:51,412 --> 00:03:53,370
+And here, I'm just saving
+the new configuration
+
+102
+00:03:53,370 --> 00:03:55,590
+in a replica set.
+
+103
+00:03:55,590 --> 00:03:57,470
+So now we've reconfigured
+our replica set,
+
+104
+00:03:57,470 --> 00:04:01,150
+I'm going to run rs.isMaster()
+through the new topology.
+
+105
+00:04:01,150 --> 00:04:04,860
+So in MongoDB, nodes that aren't
+eligible to become the primary
+
+106
+00:04:04,860 --> 00:04:06,620
+are defined as passive nodes.
+
+107
+00:04:06,620 --> 00:04:08,550
+And we can see the node
+that we reconfigured
+
+108
+00:04:08,550 --> 00:04:12,120
+to have priority 0 has appeared
+in our list of passives.
+
+109
+00:04:12,120 --> 00:04:15,720
+The other two nodes are still
+eligible to become the primary.
+
+110
+00:04:15,720 --> 00:04:17,550
+Something I want
+to point out here.
+
+111
+00:04:17,550 --> 00:04:21,269
+When we call rs.stepDown(), it
+always tries to choose a new
+
+112
+00:04:21,269 --> 00:04:22,470
+primary node.
+
+113
+00:04:22,470 --> 00:04:25,270
+But in this case, other
+than the current primary,
+
+114
+00:04:25,270 --> 00:04:28,290
+there's only one node that's
+eligible to become the primary.
+
+115
+00:04:28,290 --> 00:04:31,560
+Which means that if we were
+to call an election right now,
+
+116
+00:04:31,560 --> 00:04:34,170
+this node would have to
+become the primary node.
+
+117
+00:04:34,170 --> 00:04:36,540
+So incidentally, by
+changing node priority,
+
+118
+00:04:36,540 --> 00:04:39,720
+we've rigged the election
+in favor of this node.
+
+119
+00:04:39,720 --> 00:04:41,250
+So just to prove
+our theory, we'll
+
+120
+00:04:41,250 --> 00:04:44,158
+call an election on
+this replica set.
+
+121
+00:04:44,158 --> 00:04:46,875
+We just have to wait for
+the election to complete.
+
+122
+00:04:46,875 --> 00:04:48,500
+All right, so it
+finished, and I'm just
+
+123
+00:04:48,500 --> 00:04:52,164
+going to check what
+the current primary is.
+
+124
+00:04:52,164 --> 00:04:53,580
+And we can see
+that we were right.
+
+125
+00:04:53,580 --> 00:04:55,110
+This node became
+the primary node
+
+126
+00:04:55,110 --> 00:04:58,490
+because it was the only eligible
+primary in that election.
+
+127
+00:04:58,490 --> 00:05:00,090
+So one last thing to note.
+
+128
+00:05:00,090 --> 00:05:01,840
+If the current
+primary can't reach
+
+129
+00:05:01,840 --> 00:05:04,880
+a majority of the
+other nodes in the set,
+
+130
+00:05:04,880 --> 00:05:08,420
+then it will automatically step
+down to become a secondary.
+
+131
+00:05:08,420 --> 00:05:11,680
+In a three-node replica set,
+a majority is two nodes.
+
+132
+00:05:11,680 --> 00:05:15,230
+So if two nodes go down, even if
+the primary is still available,
+
+133
+00:05:15,230 --> 00:05:16,760
+it will step down.
+
+134
+00:05:16,760 --> 00:05:19,340
+At this point, an election
+cannot take place until enough
+
+135
+00:05:19,340 --> 00:05:21,117
+nodes come back up
+to form a majority,
+
+136
+00:05:21,117 --> 00:05:23,450
+and the clients will be able
+to connect to the whole set
+
+137
+00:05:23,450 --> 00:05:25,560
+because there is no primary.
+
+138
+00:05:25,560 --> 00:05:28,920
+So just to recap, we've covered
+how availability is maintained
+
+139
+00:05:28,920 --> 00:05:33,000
+during elections, the effective
+priority on elections,
+
+140
+00:05:33,000 --> 00:05:34,410
+and the behavior
+of a replica set
+
+141
+00:05:34,410 --> 00:00:00,000
+when a majority of the
+nodes aren't available.
+

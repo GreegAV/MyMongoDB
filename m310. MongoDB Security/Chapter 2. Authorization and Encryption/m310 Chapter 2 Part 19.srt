@@ -1,0 +1,157 @@
+
+1
+00:00:00.000 --> 00:00:00.710
+
+
+2
+00:00:00.710 --> 00:00:04.280
+Let's talk about how transparent
+encryption works with MongoDB.
+
+3
+00:00:04.280 --> 00:00:06.600
+Like we said before,
+transport encryption
+
+4
+00:00:06.600 --> 00:00:09.240
+refers to encrypting the network
+traffic between the Mongo
+
+5
+00:00:09.240 --> 00:00:12.150
+client and the Mongo server.
+
+6
+00:00:12.150 --> 00:00:16.870
+More explicitly, we're
+referring to the use of TLS/SSL
+
+7
+00:00:16.870 --> 00:00:20.046
+to encrypt all the information
+between the client and server.
+
+8
+00:00:20.046 --> 00:00:23.330
+TLS and SSL are often
+used interchangeably.
+
+9
+00:00:23.330 --> 00:00:27.120
+But TLS is actually
+the successor to SSL,
+
+10
+00:00:27.120 --> 00:00:29.290
+and it's considered
+much more secure.
+
+11
+00:00:29.290 --> 00:00:31.690
+Often though, you'll
+see the usage of SSL
+
+12
+00:00:31.690 --> 00:00:34.990
+when people are actually
+referring to TLS.
+
+13
+00:00:34.990 --> 00:00:36.490
+For the sake of
+clarity, I'm just
+
+14
+00:00:36.490 --> 00:00:39.790
+gonna use TLS for the
+remainder of this video.
+
+15
+00:00:39.790 --> 00:00:42.490
+I don't want to get into the
+nitty-gritty details of how
+
+16
+00:00:42.490 --> 00:00:45.190
+TLS works, because it isn't
+directly useful for you
+
+17
+00:00:45.190 --> 00:00:48.490
+to deploy a secure
+MongoDB deployment.
+
+18
+00:00:48.490 --> 00:00:50.290
+I will, however,
+mention that TLS
+
+19
+00:00:50.290 --> 00:00:53.890
+is underpinned by the
+public/private key encryption
+
+20
+00:00:53.890 --> 00:00:55.990
+algorithm through the
+utilization of SSL
+
+21
+00:00:55.990 --> 00:00:57.790
+certificates.
+
+22
+00:00:57.790 --> 00:00:59.590
+This allows the
+client and server
+
+23
+00:00:59.590 --> 00:01:02.890
+to verify that each other
+is who they say they are.
+
+24
+00:01:02.890 --> 00:01:04.966
+And it also provides
+us with the ability
+
+25
+00:01:04.966 --> 00:01:07.090
+to encrypt messages without
+ever sending the shared
+
+26
+00:01:07.090 --> 00:01:10.390
+key across the wire.
+
+27
+00:01:10.390 --> 00:01:13.090
+Because of this, MongoDB
+uses open SSL libraries
+
+28
+00:01:13.090 --> 00:01:15.790
+to implement TLS.
+
+29
+00:01:15.790 --> 00:01:17.890
+MongoDB's SSL encryption
+only allows the use
+
+30
+00:01:17.890 --> 00:01:20.890
+of strong SSL decipherers.
+
+31
+00:01:20.890 --> 00:01:22.690
+And in our case,
+that means a minimum
+
+32
+00:01:22.690 --> 00:01:26.318
+of 128-bit length
+for all connections.
+
+33
+00:01:26.318 --> 00:01:26.818

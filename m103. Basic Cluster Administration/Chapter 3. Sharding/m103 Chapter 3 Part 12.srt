@@ -1,0 +1,302 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,240
+So let's take a look at how you
+can actually see whether or not
+
+3
+00:00:03,240 --> 00:00:07,560
+a query is targeted, and how
+many shards were targeted.
+
+4
+00:00:07,560 --> 00:00:10,390
+I'm using the m103
+database here,
+
+5
+00:00:10,390 --> 00:00:13,780
+and I'm going to show that we
+have our products collection
+
+6
+00:00:13,780 --> 00:00:16,180
+within the m103 database.
+
+7
+00:00:16,180 --> 00:00:20,620
+I'm running sh.status to
+show that we have two shards.
+
+8
+00:00:20,620 --> 00:00:24,310
+As you can see, m103.products
+is sharded on sku,
+
+9
+00:00:24,310 --> 00:00:27,190
+and is distributed in
+three chunks total.
+
+10
+00:00:27,190 --> 00:00:32,130
+I have to on shard
+1 and 1 on shard 2.
+
+11
+00:00:32,130 --> 00:00:34,610
+Now, I'm going to issue a
+find against the products
+
+12
+00:00:34,610 --> 00:00:36,960
+collection specifying
+this document where
+
+13
+00:00:36,960 --> 00:00:39,530
+sku is this value.
+
+14
+00:00:39,530 --> 00:00:41,997
+I'm also going to add the
+explain query modifier
+
+15
+00:00:41,997 --> 00:00:43,580
+so that we can dig
+a little bit deeper
+
+16
+00:00:43,580 --> 00:00:46,260
+into how we get our results.
+
+17
+00:00:46,260 --> 00:00:47,850
+So, let's take a look here.
+
+18
+00:00:47,850 --> 00:00:50,720
+First of all, notice for
+stage we have single shard.
+
+19
+00:00:50,720 --> 00:00:52,220
+That means for this
+specific query,
+
+20
+00:00:52,220 --> 00:00:55,610
+not only was Mongos able to
+target a subset of shards,
+
+21
+00:00:55,610 --> 00:00:57,830
+it was able to retrieve
+the entire results set
+
+22
+00:00:57,830 --> 00:01:01,580
+from a single shard without
+needing to merge the results.
+
+23
+00:01:01,580 --> 00:01:05,030
+This shards array displays
+each shard queried,
+
+24
+00:01:05,030 --> 00:01:07,730
+and provides the specific
+plan executed on that
+
+25
+00:01:07,730 --> 00:01:10,370
+shard for executing the query.
+
+26
+00:01:10,370 --> 00:01:12,650
+As you can see here,
+under the winning plan,
+
+27
+00:01:12,650 --> 00:01:14,750
+there is actually a
+index scan underneath,
+
+28
+00:01:14,750 --> 00:01:18,100
+because the shard
+MongoD could use the sku
+
+29
+00:01:18,100 --> 00:01:20,610
+index to satisfy the query.
+
+30
+00:01:20,610 --> 00:01:22,610
+So let's try to do this
+again, except now, we're
+
+31
+00:01:22,610 --> 00:01:25,580
+going to look up the name
+against this particular video
+
+32
+00:01:25,580 --> 00:01:27,200
+game.
+
+33
+00:01:27,200 --> 00:01:29,870
+So a few clear
+differences, for our stage,
+
+34
+00:01:29,870 --> 00:01:32,030
+we now have shard merge.
+
+35
+00:01:32,030 --> 00:01:34,490
+Furthermore, if you look
+under the shards array,
+
+36
+00:01:34,490 --> 00:01:39,410
+we have both shard
+1 and shard 2.
+
+37
+00:01:39,410 --> 00:01:42,980
+So this is a scatter gather
+query, and required a merge.
+
+38
+00:01:42,980 --> 00:01:45,320
+Remember that name
+isn't in our shard key,
+
+39
+00:01:45,320 --> 00:01:49,790
+so this is necessarily
+a scatter gather query.
+
+40
+00:01:49,790 --> 00:01:53,150
+So, actually, these two
+queries, both sku on this value
+
+41
+00:01:53,150 --> 00:01:57,740
+and the name on this value, were
+returning the same document.
+
+42
+00:01:57,740 --> 00:02:00,380
+But by specifying sku
+instead of the name,
+
+43
+00:02:00,380 --> 00:02:02,880
+I can get a result more quickly.
+
+44
+00:02:02,880 --> 00:02:06,240
+Now if I know that my workload
+would be querying against name
+
+45
+00:02:06,240 --> 00:02:08,270
+90% of the time,
+then it would have
+
+46
+00:02:08,270 --> 00:02:11,420
+been better for me to have
+chosen name instead of as sku
+
+47
+00:02:11,420 --> 00:02:13,310
+as the shard key.
+
+48
+00:02:13,310 --> 00:02:14,870
+So, let's recap.
+
+49
+00:02:14,870 --> 00:02:17,060
+Targeted queries
+require the shard key
+
+50
+00:02:17,060 --> 00:02:18,980
+as part of the query predicate.
+
+51
+00:02:18,980 --> 00:02:20,900
+For compound shard
+keys, it can be
+
+52
+00:02:20,900 --> 00:02:25,160
+a prefix of the shard key
+up to the entire shard key.
+
+53
+00:02:25,160 --> 00:02:27,560
+Ranged queries on the
+shard key may end up
+
+54
+00:02:27,560 --> 00:02:29,240
+with similar
+performance to a scatter
+
+55
+00:02:29,240 --> 00:02:32,210
+gather query, depending
+on how wide your range is.
+
+56
+00:02:32,210 --> 00:02:35,510
+But that's only if you're
+using a very wide shard range,
+
+57
+00:02:35,510 --> 00:02:37,880
+or if you have a
+hashed shard key.
+
+58
+00:02:37,880 --> 00:02:39,590
+Without the shard
+key, the Mongols
+
+59
+00:02:39,590 --> 00:02:42,920
+must perform a
+scatter gather query.
+
+60
+00:02:42,920 --> 00:02:44,510
+This means that the
+Mongo must check
+
+61
+00:02:44,510 --> 00:02:47,240
+in with every single
+shard in the cluster.
+
+62
+00:02:47,240 --> 00:02:48,740
+The scatter gather
+queries are going
+
+63
+00:02:48,740 --> 00:00:00,000
+to be the slowest, compared
+to a targeted query.
+

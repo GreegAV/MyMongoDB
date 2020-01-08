@@ -1,0 +1,618 @@
+
+1
+00:00:00.000 --> 00:00:01.360
+
+
+2
+00:00:01.360 --> 00:00:02.860
+When you see a
+message on your phone
+
+3
+00:00:02.860 --> 00:00:05.500
+or your laptop telling you that
+you're running out of memory,
+
+4
+00:00:05.500 --> 00:00:08.340
+this is your personal device
+being very communicative.
+
+5
+00:00:08.340 --> 00:00:11.530
+However, your database server
+is unlikely to be that direct.
+
+6
+00:00:11.530 --> 00:00:13.930
+Also you would expect
+a database server
+
+7
+00:00:13.930 --> 00:00:15.790
+to do a better
+management of resources
+
+8
+00:00:15.790 --> 00:00:17.780
+than to simply
+run out of memory,
+
+9
+00:00:17.780 --> 00:00:19.870
+and reporting such message.
+
+10
+00:00:19.870 --> 00:00:22.420
+MongoDB tries to
+optimize the use of RAM
+
+11
+00:00:22.420 --> 00:00:25.060
+by pulling in memory only
+the document that it needs
+
+12
+00:00:25.060 --> 00:00:26.800
+from the disk through the RAM.
+
+13
+00:00:26.800 --> 00:00:28.840
+When there is no more
+memory available,
+
+14
+00:00:28.840 --> 00:00:31.960
+it evicts pages that contains
+the document it doesn't need
+
+15
+00:00:31.960 --> 00:00:34.390
+anymore to make room
+for more document it
+
+16
+00:00:34.390 --> 00:00:36.370
+needs to process at the moment.
+
+17
+00:00:36.370 --> 00:00:39.430
+This [? mechanism ?] allows to
+have the hardware configuration
+
+18
+00:00:39.430 --> 00:00:43.450
+that does less RAM than the
+total size of the data on disk.
+
+19
+00:00:43.450 --> 00:00:46.870
+As long as the size of your
+working set fits in RAM,
+
+20
+00:00:46.870 --> 00:00:48.460
+you get good performance.
+
+21
+00:00:48.460 --> 00:00:50.290
+The working set
+refers to the amount
+
+22
+00:00:50.290 --> 00:00:53.890
+of space taken by the documents
+and the portions of indexes
+
+23
+00:00:53.890 --> 00:00:56.030
+that are frequently accessed.
+
+24
+00:00:56.030 --> 00:00:57.640
+Either if you get
+into a situation
+
+25
+00:00:57.640 --> 00:01:00.370
+where the working set
+is larger than RAM--
+
+26
+00:01:00.370 --> 00:01:02.560
+in this picture, the
+four red documents
+
+27
+00:01:02.560 --> 00:01:05.690
+that are needed all the
+time, may not fit in memory.
+
+28
+00:01:05.690 --> 00:01:09.040
+So the server finds itself
+often dropping documents.
+
+29
+00:01:09.040 --> 00:01:11.650
+It will soon have to
+fetch back from disk.
+
+30
+00:01:11.650 --> 00:01:14.590
+This process, of constantly
+ejecting documents that
+
+31
+00:01:14.590 --> 00:01:16.960
+should stay in memory, is bad--
+
+32
+00:01:16.960 --> 00:01:19.090
+pretty, pretty bad.
+
+33
+00:01:19.090 --> 00:01:22.720
+The fix can be either one of
+the following three solution.
+
+34
+00:01:22.720 --> 00:01:24.100
+A, add more RAM--
+
+35
+00:01:24.100 --> 00:01:26.920
+In other terms, scale your
+infrastructure vertically.
+
+36
+00:01:26.920 --> 00:01:29.590
+B-- either start
+sharding, or add
+
+37
+00:01:29.590 --> 00:01:32.110
+more shards if you already
+have a sharded cluster.
+
+38
+00:01:32.110 --> 00:01:34.240
+Sharding has a
+similar effect as A,
+
+39
+00:01:34.240 --> 00:01:36.240
+since you provide more
+RAM to the cluster
+
+40
+00:01:36.240 --> 00:01:38.920
+overall, through
+adding machines to it.
+
+41
+00:01:38.920 --> 00:01:41.620
+This is also called
+scaling horizontally.
+
+42
+00:01:41.620 --> 00:01:44.980
+Or C-- reduce the size
+of the working set.
+
+43
+00:01:44.980 --> 00:01:47.230
+This last solution tries
+to resolve the problem
+
+44
+00:01:47.230 --> 00:01:49.150
+without throwing money at it.
+
+45
+00:01:49.150 --> 00:01:51.190
+For the purpose
+of this lesson, we
+
+46
+00:01:51.190 --> 00:01:54.880
+are going to consider reducing
+the size of the working set.
+
+47
+00:01:54.880 --> 00:01:58.300
+The key to that is breaking up
+huge documents, which we only
+
+48
+00:01:58.300 --> 00:01:59.900
+need a fraction of it.
+
+49
+00:01:59.900 --> 00:02:00.400
+For
+
+50
+00:02:00.400 --> 00:02:02.740
+Example, let's say
+we have a system that
+
+51
+00:02:02.740 --> 00:02:06.310
+keeps a lot of movies in
+memory, and each of these movies
+
+52
+00:02:06.310 --> 00:02:08.380
+is taking a fair
+amount of memory.
+
+53
+00:02:08.380 --> 00:02:11.710
+Maybe there are some information
+that we don't need to use that
+
+54
+00:02:11.710 --> 00:02:13.540
+often in those documents.
+
+55
+00:02:13.540 --> 00:02:15.550
+For example, most
+of the time users
+
+56
+00:02:15.550 --> 00:02:18.720
+want to see the top actors
+and the top reviews,
+
+57
+00:02:18.720 --> 00:02:20.700
+rather than all of them.
+
+58
+00:02:20.700 --> 00:02:23.920
+As for the fields here at
+the bottom-- comments, quote,
+
+59
+00:02:23.920 --> 00:02:24.970
+and release--
+
+60
+00:02:24.970 --> 00:02:28.780
+it's also unlikely that you need
+all of them, most of the time.
+
+61
+00:02:28.780 --> 00:02:32.710
+We could keep only 20 of the
+cast members, the main actors--
+
+62
+00:02:32.710 --> 00:02:35.590
+and also 20 of each of
+those comments, quote,
+
+63
+00:02:35.590 --> 00:02:37.300
+release, and reviews.
+
+64
+00:02:37.300 --> 00:02:40.990
+The rest of the information can
+go into a separate collection.
+
+65
+00:02:40.990 --> 00:02:43.720
+It means if you start with a
+document that has all the info
+
+66
+00:02:43.720 --> 00:02:47.120
+in it, a field that has a
+one-to-one relationship--
+
+67
+00:02:47.120 --> 00:02:48.880
+for example, the full script--
+
+68
+00:02:48.880 --> 00:02:51.460
+could be moved to
+a new collection.
+
+69
+00:02:51.460 --> 00:02:53.920
+And you could access this
+information through the dollar
+
+70
+00:02:53.920 --> 00:02:55.500
+lockup operator.
+
+71
+00:02:55.500 --> 00:02:59.530
+As for a field that has
+a one-to-N relationship,
+
+72
+00:02:59.530 --> 00:03:02.800
+you can move most of those
+objects to another collection
+
+73
+00:03:02.800 --> 00:03:05.830
+and keep only a subset
+of the N relationship
+
+74
+00:03:05.830 --> 00:03:07.780
+in the main document.
+
+75
+00:03:07.780 --> 00:03:10.420
+The result on the working
+set is the following.
+
+76
+00:03:10.420 --> 00:03:12.670
+Here, each document
+has been split
+
+77
+00:03:12.670 --> 00:03:15.370
+into the part that is
+frequently accessed
+
+78
+00:03:15.370 --> 00:03:17.540
+and the part that
+is rarely accessed.
+
+79
+00:03:17.540 --> 00:03:19.780
+Now that the
+documents are smaller,
+
+80
+00:03:19.780 --> 00:03:22.250
+the whole working set
+can fit in memory.
+
+81
+00:03:22.250 --> 00:03:25.600
+And we have additional memory
+to bring in the data we only
+
+82
+00:03:25.600 --> 00:03:27.520
+need to rotate.
+
+83
+00:03:27.520 --> 00:03:29.980
+Let's organize what we've been
+describing and illustrating
+
+84
+00:03:29.980 --> 00:03:30.940
+a little bit.
+
+85
+00:03:30.940 --> 00:03:33.670
+The problem to the
+subset pattern addresses
+
+86
+00:03:33.670 --> 00:03:36.235
+is that too many frequently
+use pieces of information--
+
+87
+00:03:36.235 --> 00:03:38.500
+or I checked it
+from memory, which
+
+88
+00:03:38.500 --> 00:03:41.380
+can be identified by observing
+a working set that this
+
+89
+00:03:41.380 --> 00:03:43.150
+too big to fit in memory.
+
+90
+00:03:43.150 --> 00:03:45.970
+Digging into the majority
+of documents in memory,
+
+91
+00:03:45.970 --> 00:03:48.070
+we can observe that
+we only make use
+
+92
+00:03:48.070 --> 00:03:51.820
+of a small subset of
+information in those documents.
+
+93
+00:03:51.820 --> 00:03:55.240
+So a large part of those
+documents is rarely needed.
+
+94
+00:03:55.240 --> 00:03:58.330
+Our solution is to break
+apart the documents that are
+
+95
+00:03:58.330 --> 00:04:00.550
+taking too much space in RAM.
+
+96
+00:04:00.550 --> 00:04:04.090
+We will divide the fields of
+information into two camps--
+
+97
+00:04:04.090 --> 00:04:07.210
+the field that are often
+required by our system,
+
+98
+00:04:07.210 --> 00:04:09.850
+and the ones that
+are rarely required.
+
+99
+00:04:09.850 --> 00:04:13.900
+This division is frequently used
+for one-to-many or many-to-many
+
+100
+00:04:13.900 --> 00:04:16.240
+relationship, for
+which you only want
+
+101
+00:04:16.240 --> 00:04:21.130
+to keep a subset of the
+many associated document.
+
+102
+00:04:21.130 --> 00:04:23.530
+In which type of
+applications or situation
+
+103
+00:04:23.530 --> 00:04:25.870
+are we likely to
+apply this pattern?
+
+104
+00:04:25.870 --> 00:04:29.530
+A list of reviews for a product,
+a movie, or news articles--
+
+105
+00:04:29.530 --> 00:04:32.710
+well, anything that can
+be discussed or reviewed.
+
+106
+00:04:32.710 --> 00:04:34.330
+List of anything
+that can be long
+
+107
+00:04:34.330 --> 00:04:36.460
+and carries much
+more data than anyone
+
+108
+00:04:36.460 --> 00:04:39.040
+can or wants to process or read.
+
+109
+00:04:39.040 --> 00:04:41.860
+If this list takes a
+substantial amount of memory,
+
+110
+00:04:41.860 --> 00:04:46.030
+they are good candidates to be
+offload to another collection.
+
+111
+00:04:46.030 --> 00:04:48.520
+As a result of applying
+the subset pattern,
+
+112
+00:04:48.520 --> 00:04:51.730
+our working set will
+not only be smaller,
+
+113
+00:04:51.730 --> 00:04:54.730
+but it will make retrieving
+additional documents faster
+
+114
+00:04:54.730 --> 00:04:56.890
+since they will be smaller.
+
+115
+00:04:56.890 --> 00:04:59.050
+On the other hand, there
+are some trade-offs.
+
+116
+00:04:59.050 --> 00:05:01.810
+First, you have more
+documents to retrieve,
+
+117
+00:05:01.810 --> 00:05:03.670
+which means that
+you may have to make
+
+118
+00:05:03.670 --> 00:05:06.920
+more round trips between the
+application and the server.
+
+119
+00:05:06.920 --> 00:05:10.390
+And second, the fact that
+you break documents in two
+
+120
+00:05:10.390 --> 00:05:13.150
+and duplicate some info
+means that the database
+
+121
+00:05:13.150 --> 00:05:16.240
+will require a little
+bit more space on disk.
+
+122
+00:05:16.240 --> 00:05:18.550
+However, this is not a
+big issue as this space
+
+123
+00:05:18.550 --> 00:05:20.990
+is much cheaper than RAM.
+
+124
+00:05:20.990 --> 00:05:21.550
+That's it.
+
+125
+00:05:21.550 --> 00:05:24.610
+This is how the
+subset pattern works.
+
+126
+00:05:24.610 --> 00:05:26.980
+In summary, the subset
+pattern is a great pattern
+
+127
+00:05:26.980 --> 00:05:29.710
+to help you reduce the size of
+your working set by splitting
+
+128
+00:05:29.710 --> 00:05:32.080
+information that you
+want to keep in memory,
+
+129
+00:05:32.080 --> 00:05:35.410
+versus information that
+you fetch on demand.

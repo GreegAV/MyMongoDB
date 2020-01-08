@@ -1,0 +1,771 @@
+
+1
+00:00:00.000 --> 00:00:01.180
+
+
+2
+00:00:01.180 --> 00:00:04.780
+Let's now discuss a powerful
+feature of MongoDB--
+
+3
+00:00:04.780 --> 00:00:06.490
+Views.
+
+4
+00:00:06.490 --> 00:00:09.460
+MongoDB enables
+non-materialized views,
+
+5
+00:00:09.460 --> 00:00:12.550
+meaning they are computed
+every time a rate operation is
+
+6
+00:00:12.550 --> 00:00:14.830
+performed against that view.
+
+7
+00:00:14.830 --> 00:00:17.440
+There are a way to use
+an aggregation pipeline
+
+8
+00:00:17.440 --> 00:00:18.940
+as a collection.
+
+9
+00:00:18.940 --> 00:00:22.500
+From the user perspective, views
+are perceived as collections,
+
+10
+00:00:22.500 --> 00:00:26.450
+with some key differences we'll
+go over later in the lesson.
+
+11
+00:00:26.450 --> 00:00:29.710
+So what might Views
+be useful for?
+
+12
+00:00:29.710 --> 00:00:32.890
+Suppose we're a large financial
+institution with customers
+
+13
+00:00:32.890 --> 00:00:34.360
+of different tiers.
+
+14
+00:00:34.360 --> 00:00:37.030
+We've just recently
+launched a big promotion
+
+15
+00:00:37.030 --> 00:00:39.100
+and are conducting
+a phone campaign.
+
+16
+00:00:39.100 --> 00:00:41.500
+We've hired a temporary
+staffing agency
+
+17
+00:00:41.500 --> 00:00:43.630
+with several regional offices.
+
+18
+00:00:43.630 --> 00:00:47.260
+We'll assign a different
+tier to each regional office.
+
+19
+00:00:47.260 --> 00:00:51.160
+This is a sample of one record
+from our customers collection.
+
+20
+00:00:51.160 --> 00:00:54.190
+As we can see, there is
+sensitive and potentially
+
+21
+00:00:54.190 --> 00:00:58.820
+biasing information that we do
+not want to allow access to.
+
+22
+00:00:58.820 --> 00:01:02.800
+Views allow us to create
+vertical and horizontal slices
+
+23
+00:01:02.800 --> 00:01:04.540
+of our collection.
+
+24
+00:01:04.540 --> 00:01:08.080
+What do we mean by a
+horizontal and vertical slice?
+
+25
+00:01:08.080 --> 00:01:11.380
+Vertical slicing is performed
+through the use of a project
+
+26
+00:01:11.380 --> 00:01:14.140
+stage, and other
+similar stages that
+
+27
+00:01:14.140 --> 00:01:17.200
+change the shape of the
+document being returned.
+
+28
+00:01:17.200 --> 00:01:19.930
+Here we've vertically
+sliced our document
+
+29
+00:01:19.930 --> 00:01:23.920
+to only retain the
+accountType field.
+
+30
+00:01:23.920 --> 00:01:27.220
+Vertical slices will change
+the shape being returned,
+
+31
+00:01:27.220 --> 00:01:30.460
+but not the number of
+documents being returned.
+
+32
+00:01:30.460 --> 00:01:33.370
+Horizontal slicing is
+performed through the use
+
+33
+00:01:33.370 --> 00:01:35.260
+of match stages.
+
+34
+00:01:35.260 --> 00:01:37.390
+We select only a
+subset of documents
+
+35
+00:01:37.390 --> 00:01:39.490
+based on some criteria.
+
+36
+00:01:39.490 --> 00:01:42.760
+Here, we horizontally
+slice our collection
+
+37
+00:01:42.760 --> 00:01:45.250
+with the value of
+the account type.
+
+38
+00:01:45.250 --> 00:01:48.130
+In fact, the documents
+that are grayed out
+
+39
+00:01:48.130 --> 00:01:52.470
+would not be operated on at all
+by the following project stage.
+
+40
+00:01:52.470 --> 00:01:54.640
+We could further slice
+this data horizontally,
+
+41
+00:01:54.640 --> 00:01:57.310
+by only selecting accounts
+that had a specified
+
+42
+00:01:57.310 --> 00:02:01.000
+minimum balance, and are
+within a desired age range,
+
+43
+00:02:01.000 --> 00:02:03.640
+and, you get the idea.
+
+44
+00:02:03.640 --> 00:02:07.540
+It may even be necessary to use
+an intermediary shaping stage
+
+45
+00:02:07.540 --> 00:02:11.500
+to calculate a value that we
+wish to filter documents on.
+
+46
+00:02:11.500 --> 00:02:14.870
+Horizontal slices will affect
+the number of documents
+
+47
+00:02:14.870 --> 00:02:17.820
+returned, not their shape.
+
+48
+00:02:17.820 --> 00:02:19.730
+Let's look at another
+example of this,
+
+49
+00:02:19.730 --> 00:02:23.150
+with documents that have
+the following schema.
+
+50
+00:02:23.150 --> 00:02:26.070
+I would like to vertically
+slice the documents to remove
+
+51
+00:02:26.070 --> 00:02:29.410
+sensitive information, as well
+as make the name and gender
+
+52
+00:02:29.410 --> 00:02:31.570
+information available,
+but present it
+
+53
+00:02:31.570 --> 00:02:34.945
+in a more formal format for
+the call center employees.
+
+54
+00:02:34.945 --> 00:02:38.020
+I would also like to
+horizontally slice
+
+55
+00:02:38.020 --> 00:02:40.780
+our collection, by filtering
+out documents that do not
+
+56
+00:02:40.780 --> 00:02:43.840
+have an account type of bronze.
+
+57
+00:02:43.840 --> 00:02:46.180
+Here's an example of
+creating a view that
+
+58
+00:02:46.180 --> 00:02:49.420
+performs both horizontal
+and vertical slicing.
+
+59
+00:02:49.420 --> 00:02:51.460
+To make data available
+for the call center,
+
+60
+00:02:51.460 --> 00:02:54.160
+we're going to assign
+bronze tier members.
+
+61
+00:02:54.160 --> 00:02:58.000
+We specify the name of the view,
+the source collection, and then
+
+62
+00:02:58.000 --> 00:03:01.330
+the pipeline that will get
+stored to compute this view.
+
+63
+00:03:01.330 --> 00:03:04.900
+Within the pipeline, we perform
+our initial horizontal slice
+
+64
+00:03:04.900 --> 00:03:09.010
+with a match stage, selecting
+only bronze tier members.
+
+65
+00:03:09.010 --> 00:03:11.170
+Then, within the
+project stage, we
+
+66
+00:03:11.170 --> 00:03:14.350
+perform our vertical slicing,
+retaining fields we want
+
+67
+00:03:14.350 --> 00:03:17.980
+and reassigning the name field
+with a more formally formatted
+
+68
+00:03:17.980 --> 00:03:19.360
+name.
+
+69
+00:03:19.360 --> 00:03:22.600
+You can see this view
+in action yourself.
+
+70
+00:03:22.600 --> 00:03:25.060
+Let's run the command to
+get collection information
+
+71
+00:03:25.060 --> 00:03:28.520
+for the current database.
+
+72
+00:03:28.520 --> 00:03:32.290
+Here, we see information
+about every collection.
+
+73
+00:03:32.290 --> 00:03:34.160
+I've already created
+three views--
+
+74
+00:03:34.160 --> 00:03:37.540
+bronze banking, silver
+banking, and gold banking.
+
+75
+00:03:37.540 --> 00:03:40.510
+We can see, they show up
+just like collections,
+
+76
+00:03:40.510 --> 00:03:42.310
+except their type is view.
+
+77
+00:03:42.310 --> 00:03:45.700
+And then in the options we can
+see the view that they are on,
+
+78
+00:03:45.700 --> 00:03:48.340
+and the pipeline
+that funds them.
+
+79
+00:03:48.340 --> 00:03:49.840
+You won't be able
+to create views
+
+80
+00:03:49.840 --> 00:03:51.680
+on the class atlas cluster.
+
+81
+00:03:51.680 --> 00:03:53.440
+If you'd like to see
+these views in action
+
+82
+00:03:53.440 --> 00:03:55.390
+and how restrictive
+they can be, along
+
+83
+00:03:55.390 --> 00:03:57.770
+with proper role-based
+access control,
+
+84
+00:03:57.770 --> 00:03:59.770
+the login credentials
+are contained
+
+85
+00:03:59.770 --> 00:04:02.170
+in the handout in this lesson.
+
+86
+00:04:02.170 --> 00:04:04.690
+If you'd like to learn more
+about role-based access
+
+87
+00:04:04.690 --> 00:04:07.400
+control, refer to our
+security course, which
+
+88
+00:04:07.400 --> 00:04:10.330
+is linked below this video.
+
+89
+00:04:10.330 --> 00:04:13.700
+Views can be created
+in two different ways.
+
+90
+00:04:13.700 --> 00:04:16.970
+We have the shell helper
+method, db.createView,
+
+91
+00:04:16.970 --> 00:04:20.730
+which we already saw, and the
+createCollection method here.
+
+92
+00:04:20.730 --> 00:04:24.130
+A view consists in the
+name, a source collection,
+
+93
+00:04:24.130 --> 00:04:29.350
+an aggregation pipeline, and if
+required, a specific collation.
+
+94
+00:04:29.350 --> 00:04:31.330
+In essence, one
+would call a view
+
+95
+00:04:31.330 --> 00:04:34.090
+and will be executing the
+aggregation pipeline that
+
+96
+00:04:34.090 --> 00:04:36.010
+is used to define the view.
+
+97
+00:04:36.010 --> 00:04:38.560
+New meta information to
+include the pipeline that
+
+98
+00:04:38.560 --> 00:04:43.030
+computes the view, is stored
+in the system.views collection.
+
+99
+00:04:43.030 --> 00:04:47.090
+Let's look at this information.
+
+100
+00:04:47.090 --> 00:04:49.400
+Again, we can see
+the same information
+
+101
+00:04:49.400 --> 00:04:52.250
+we saw before with the get
+collection info command,
+
+102
+00:04:52.250 --> 00:04:54.600
+but now only for our views.
+
+103
+00:04:54.600 --> 00:04:57.440
+Hopefully, this illustrates
+that the only information stored
+
+104
+00:04:57.440 --> 00:05:01.460
+about a view is the name,
+the source collection,
+
+105
+00:05:01.460 --> 00:05:06.110
+the pipeline that defines it,
+and optionally, the collation.
+
+106
+00:05:06.110 --> 00:05:09.170
+All collection read operations
+are available as views.
+
+107
+00:05:09.170 --> 00:05:13.070
+And yes, we can perform
+aggregations on views too.
+
+108
+00:05:13.070 --> 00:05:15.770
+Views do have some
+restrictions--
+
+109
+00:05:15.770 --> 00:05:17.620
+no write operations.
+
+110
+00:05:17.620 --> 00:05:19.910
+Views are read-only and
+computed when we issue
+
+111
+00:05:19.910 --> 00:05:21.890
+a rate operation against them.
+
+112
+00:05:21.890 --> 00:05:24.740
+They are a reflection of
+the defined aggregation
+
+113
+00:05:24.740 --> 00:05:27.170
+on the source collection.
+
+114
+00:05:27.170 --> 00:05:29.785
+No index operations--
+since the views
+
+115
+00:05:29.785 --> 00:05:32.330
+use the source collection
+to get their data,
+
+116
+00:05:32.330 --> 00:05:34.760
+the index operations
+need to be performed
+
+117
+00:05:34.760 --> 00:05:36.620
+on that source collection.
+
+118
+00:05:36.620 --> 00:05:38.900
+Views will use the source
+collections indexes
+
+119
+00:05:38.900 --> 00:05:41.180
+during their creation.
+
+120
+00:05:41.180 --> 00:05:44.630
+No renaming-- view
+names are immutable,
+
+121
+00:05:44.630 --> 00:05:46.560
+so they cannot be renamed.
+
+122
+00:05:46.560 --> 00:05:48.545
+That said, we can
+always drop a view
+
+123
+00:05:48.545 --> 00:05:50.780
+and create it again,
+with a new pipeline,
+
+124
+00:05:50.780 --> 00:05:53.840
+without affecting the
+I/O of the server.
+
+125
+00:05:53.840 --> 00:05:56.840
+No dollar text-- the
+text query operator
+
+126
+00:05:56.840 --> 00:05:59.780
+can only be used in the
+first stage of an aggregation
+
+127
+00:05:59.780 --> 00:06:00.770
+pipeline.
+
+128
+00:06:00.770 --> 00:06:04.400
+And a view will execute
+the defined pipeline first.
+
+129
+00:06:04.400 --> 00:06:08.000
+This query operator
+cannot be used in a view.
+
+130
+00:06:08.000 --> 00:06:11.510
+No geoNear or the geoNear stage.
+
+131
+00:06:11.510 --> 00:06:14.030
+Same as with test,
+junior is required
+
+132
+00:06:14.030 --> 00:06:17.420
+to be the first stage
+of our pipeline.
+
+133
+00:06:17.420 --> 00:06:21.010
+Collation restrictions-- views
+have collation restrictions,
+
+134
+00:06:21.010 --> 00:06:24.620
+such as views do not inherit the
+default collation of the source
+
+135
+00:06:24.620 --> 00:06:26.610
+collection as specified.
+
+136
+00:06:26.610 --> 00:06:29.120
+There are other collations
+specific concerns
+
+137
+00:06:29.120 --> 00:06:30.860
+which you can read
+about by following
+
+138
+00:06:30.860 --> 00:06:33.320
+the link below this video.
+
+139
+00:06:33.320 --> 00:06:37.700
+Lastly, find operations with the
+following projection operators
+
+140
+00:06:37.700 --> 00:06:39.080
+are not permitted.
+
+141
+00:06:39.080 --> 00:06:41.460
+Removing and retaining
+fields is allowed,
+
+142
+00:06:41.460 --> 00:06:45.600
+but trying to use any of
+these operators will fail.
+
+143
+00:06:45.600 --> 00:06:47.840
+View definitions are public.
+
+144
+00:06:47.840 --> 00:06:50.450
+Any role that can list
+collections on a database
+
+145
+00:06:50.450 --> 00:06:53.900
+can see a view definition
+as we saw earlier.
+
+146
+00:06:53.900 --> 00:06:56.420
+Avoid referring to
+sensitive information
+
+147
+00:06:56.420 --> 00:06:59.310
+within the defining pipeline.
+
+148
+00:06:59.310 --> 00:06:59.840
+All right.
+
+149
+00:06:59.840 --> 00:07:01.250
+That sums up Views.
+
+150
+00:07:01.250 --> 00:07:03.340
+Here are a few
+things to remember.
+
+151
+00:07:03.340 --> 00:07:05.750
+Views contain no
+data themselves.
+
+152
+00:07:05.750 --> 00:07:08.270
+They are created on demand
+and reflect the data
+
+153
+00:07:08.270 --> 00:07:10.150
+in the source collection.
+
+154
+00:07:10.150 --> 00:07:11.420
+Views are read-only.
+
+155
+00:07:11.420 --> 00:07:14.440
+Write operations to
+Views will error.
+
+156
+00:07:14.440 --> 00:07:16.250
+Views have some restrictions.
+
+157
+00:07:16.250 --> 00:07:19.220
+They must abide by the rules
+of the aggregation framework,
+
+158
+00:07:19.220 --> 00:07:22.940
+and cannot contain find
+projection operators.
+
+159
+00:07:22.940 --> 00:07:25.750
+Horizontal slicing is
+performed with the matched
+
+160
+00:07:25.750 --> 00:07:30.060
+stage, reducing the number of
+documents that are returned.
+
+161
+00:07:30.060 --> 00:07:32.690
+Vertical slicing is
+performed with a project
+
+162
+00:07:32.690 --> 00:07:37.600
+or other shaping stage,
+modifying individual documents.

@@ -1,0 +1,657 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.880
+The next stage we'll
+learn about is $project.
+
+3
+00:00:02.880 --> 00:00:05.460
+$project, like $match,
+is a vital stage
+
+4
+00:00:05.460 --> 00:00:08.280
+to thoroughly understand, to be
+successful with the aggregation
+
+5
+00:00:08.280 --> 00:00:09.295
+framework.
+
+6
+00:00:09.295 --> 00:00:10.920
+Please don't think
+of $project like the
+
+7
+00:00:10.920 --> 00:00:13.860
+projection functionality
+available with the find query
+
+8
+00:00:13.860 --> 00:00:14.850
+operator.
+
+9
+00:00:14.850 --> 00:00:18.570
+While it is true, $project
+is much, much more.
+
+10
+00:00:18.570 --> 00:00:21.870
+Not only can we selectively
+remove and retain fields,
+
+11
+00:00:21.870 --> 00:00:24.060
+we can reassign
+existing field values
+
+12
+00:00:24.060 --> 00:00:26.550
+and derive entirely new fields.
+
+13
+00:00:26.550 --> 00:00:29.070
+A common method or function
+available in many programming
+
+14
+00:00:29.070 --> 00:00:30.570
+languages is $map.
+
+15
+00:00:30.570 --> 00:00:32.130
+It is a higher
+order function that
+
+16
+00:00:32.130 --> 00:00:34.890
+applies some transformation
+among a collection.
+
+17
+00:00:34.890 --> 00:00:38.520
+If $match is like a filter
+method, $project is like $map.
+
+18
+00:00:38.520 --> 00:00:41.500
+Here is the basic
+syntax for $project.
+
+19
+00:00:41.500 --> 00:00:43.500
+We've appended a
+dollar sign to signify
+
+20
+00:00:43.500 --> 00:00:45.750
+that it is an
+aggregation operator,
+
+21
+00:00:45.750 --> 00:00:49.080
+then open up with a curly brace
+and close with a curly brace.
+
+22
+00:00:49.080 --> 00:00:51.210
+Between these two
+braces is where
+
+23
+00:00:51.210 --> 00:00:54.390
+we use aggregation expressions
+and perform field logic.
+
+24
+00:00:54.390 --> 00:00:56.460
+More on that soon.
+
+25
+00:00:56.460 --> 00:01:00.690
+Here is how we'd specify
+values to remove and retain,
+
+26
+00:01:00.690 --> 00:01:02.940
+just like the projection
+functionality available
+
+27
+00:01:02.940 --> 00:01:05.370
+with the find query operator.
+
+28
+00:01:05.370 --> 00:01:09.210
+This specifies that we wish
+to remove the _id and retain
+
+29
+00:01:09.210 --> 00:01:10.980
+the name field.
+
+30
+00:01:10.980 --> 00:01:14.190
+Notice that since we have
+specified a value to retain,
+
+31
+00:01:14.190 --> 00:01:17.850
+we must specify each
+value we wish to retain.
+
+32
+00:01:17.850 --> 00:01:19.390
+Let's also keep
+the gravity field
+
+33
+00:01:19.390 --> 00:01:22.080
+so we can see some
+difference in real data.
+
+34
+00:01:22.080 --> 00:01:24.420
+And of course, an exception.
+
+35
+00:01:24.420 --> 00:01:28.190
+Here we can say we're getting
+the name and the gravity field,
+
+36
+00:01:28.190 --> 00:01:31.660
+but we're also
+getting the _id field.
+
+37
+00:01:31.660 --> 00:01:35.490
+The _id field is the only field
+that we must explicitly remove.
+
+38
+00:01:35.490 --> 00:01:38.160
+All others will be
+removed when we specify
+
+39
+00:01:38.160 --> 00:01:40.680
+at least one field to retain.
+
+40
+00:01:40.680 --> 00:01:44.040
+Also, it looks like whoever
+put this data together
+
+41
+00:01:44.040 --> 00:01:46.650
+used the international
+system of units, so let's
+
+42
+00:01:46.650 --> 00:01:49.850
+also just get the value.
+
+43
+00:01:49.850 --> 00:01:51.270
+An error.
+
+44
+00:01:51.270 --> 00:01:54.420
+One thing to keep in mind, once
+we start diving into documents
+
+45
+00:01:54.420 --> 00:01:57.870
+selecting on subfields, we
+must surround our arguments
+
+46
+00:01:57.870 --> 00:01:58.590
+with quotes.
+
+47
+00:01:58.590 --> 00:02:01.750
+
+
+48
+00:02:01.750 --> 00:02:05.490
+There, the data we wanted.
+
+49
+00:02:05.490 --> 00:02:08.320
+$project is already showing
+to be pretty useful,
+
+50
+00:02:08.320 --> 00:02:10.889
+but so far, it appears to
+be identical to projection
+
+51
+00:02:10.889 --> 00:02:13.350
+available with the
+find query operator.
+
+52
+00:02:13.350 --> 00:02:16.830
+Let's started exploring what
+makes $project so powerful.
+
+53
+00:02:16.830 --> 00:02:19.350
+Instead of returning a
+subdocument with just the value
+
+54
+00:02:19.350 --> 00:02:23.070
+field, let's directly assign
+the value to the gravity field.
+
+55
+00:02:23.070 --> 00:02:27.400
+
+
+56
+00:02:27.400 --> 00:02:30.370
+Here we can see that we are
+indeed reassigning the gravity
+
+57
+00:02:30.370 --> 00:02:32.230
+field to now contain
+the information that
+
+58
+00:02:32.230 --> 00:02:35.160
+was available at gravity.value.
+
+59
+00:02:35.160 --> 00:02:38.290
+We're prepending gravity.value
+with a dollar sign.
+
+60
+00:02:38.290 --> 00:02:41.096
+This is one of the many
+aggregation expressions,
+
+61
+00:02:41.096 --> 00:02:42.970
+and we're directing the
+aggregation framework
+
+62
+00:02:42.970 --> 00:02:44.600
+to look for and
+fetch the information
+
+63
+00:02:44.600 --> 00:02:47.050
+in the document
+at gravity.value,
+
+64
+00:02:47.050 --> 00:02:49.270
+or a field path expression.
+
+65
+00:02:49.270 --> 00:02:52.630
+As discussed in the aggregation
+structure and syntax lesson,
+
+66
+00:02:52.630 --> 00:02:54.250
+this is one of the
+ways we reference
+
+67
+00:02:54.250 --> 00:02:56.260
+documents for information.
+
+68
+00:02:56.260 --> 00:03:00.430
+We can also create a new
+field called surfaceGravity.
+
+69
+00:03:00.430 --> 00:03:03.270
+This isn't just renaming
+the gravity field.
+
+70
+00:03:03.270 --> 00:03:05.860
+It's creating an
+entirely new field.
+
+71
+00:03:05.860 --> 00:03:07.090
+Very powerful.
+
+72
+00:03:07.090 --> 00:03:08.980
+And we'll be using this
+functionality a lot
+
+73
+00:03:08.980 --> 00:03:11.810
+through the course.
+
+74
+00:03:11.810 --> 00:03:14.440
+Let's have a bit of fun and
+use the aggregation framework
+
+75
+00:03:14.440 --> 00:03:16.090
+to calculate a value.
+
+76
+00:03:16.090 --> 00:03:17.590
+I'd like to see
+what my weight would
+
+77
+00:03:17.590 --> 00:03:20.920
+be on each main body
+in the solar system.
+
+78
+00:03:20.920 --> 00:03:23.650
+I'm going to have to use an
+expression to accomplish this.
+
+79
+00:03:23.650 --> 00:03:26.509
+We'll cover expressions in
+much greater detail shortly,
+
+80
+00:03:26.509 --> 00:03:28.300
+but I'm going to break
+this down since this
+
+81
+00:03:28.300 --> 00:03:30.670
+is our first time seeing
+it, and the syntax
+
+82
+00:03:30.670 --> 00:03:32.740
+can catch people off guard.
+
+83
+00:03:32.740 --> 00:03:34.990
+I weigh about 86 kilograms.
+
+84
+00:03:34.990 --> 00:03:36.880
+Looking at our
+previous results, it
+
+85
+00:03:36.880 --> 00:03:40.120
+looks like if I divide
+the gravity of a body
+
+86
+00:03:40.120 --> 00:03:43.000
+by the gravity of Earth and
+then multiply that value
+
+87
+00:03:43.000 --> 00:03:45.430
+by my weight, I can
+find out how much I'd
+
+88
+00:03:45.430 --> 00:03:47.770
+weigh on every main body.
+
+89
+00:03:47.770 --> 00:03:50.960
+I'm going to have to use an
+expression to accomplish this.
+
+90
+00:03:50.960 --> 00:03:52.720
+The first expression
+I'm going to use
+
+91
+00:03:52.720 --> 00:03:55.570
+is the $multiply
+arithmetic expression.
+
+92
+00:03:55.570 --> 00:03:57.310
+$multiply takes
+an array of values
+
+93
+00:03:57.310 --> 00:03:59.000
+and multiplies them together.
+
+94
+00:03:59.000 --> 00:04:01.780
+So I know I need to
+multiply my weight
+
+95
+00:04:01.780 --> 00:04:04.810
+times the ratio of a specific
+planet's gravity divided
+
+96
+00:04:04.810 --> 00:04:06.640
+by the Earth's gravity.
+
+97
+00:04:06.640 --> 00:04:08.470
+That will look
+something like this.
+
+98
+00:04:08.470 --> 00:04:11.050
+I know my weight is
+about 86 kilograms,
+
+99
+00:04:11.050 --> 00:04:13.050
+so I can just hard
+code that for now.
+
+100
+00:04:13.050 --> 00:04:15.580
+To calculate the
+gravity ratio, I'll
+
+101
+00:04:15.580 --> 00:04:19.120
+need to use the $divide
+arithmetic expression.
+
+102
+00:04:19.120 --> 00:04:21.700
+$divide takes an
+array of two values
+
+103
+00:04:21.700 --> 00:04:24.520
+and divides the
+first by the second.
+
+104
+00:04:24.520 --> 00:04:27.430
+Within $divide, I'll need
+to reference the information
+
+105
+00:04:27.430 --> 00:04:30.440
+at the value subfield
+within gravity.
+
+106
+00:04:30.440 --> 00:04:33.120
+Let's see what this
+will look like.
+
+107
+00:04:33.120 --> 00:04:35.440
+Here we're using a
+field path expression
+
+108
+00:04:35.440 --> 00:04:37.900
+to refer to information
+within the document,
+
+109
+00:04:37.900 --> 00:04:41.200
+specifically the information
+found at the value field
+
+110
+00:04:41.200 --> 00:04:43.660
+within the gravity field.
+
+111
+00:04:43.660 --> 00:04:46.660
+I know the gravity of Earth is
+around 9.8 meters per second
+
+112
+00:04:46.660 --> 00:04:50.080
+per second, so I'll
+just hard code that in.
+
+113
+00:04:50.080 --> 00:04:53.710
+So putting it all together,
+we have the following.
+
+114
+00:04:53.710 --> 00:04:55.570
+All of this is
+assigned to a new field
+
+115
+00:04:55.570 --> 00:04:59.120
+we create called myWeight.
+
+116
+00:04:59.120 --> 00:05:00.010
+Awesome.
+
+117
+00:05:00.010 --> 00:05:03.640
+We can see I'd weigh about
+32.5 kilograms on Mars
+
+118
+00:05:03.640 --> 00:05:06.850
+and 2,404 kilograms on the Sun.
+
+119
+00:05:06.850 --> 00:05:09.640
+We're beginning to see
+the power of $project.
+
+120
+00:05:09.640 --> 00:05:13.420
+$project is a powerful stage
+of the aggregation framework.
+
+121
+00:05:13.420 --> 00:05:16.030
+Not only can we remove
+and retain fields,
+
+122
+00:05:16.030 --> 00:05:19.450
+we can derive new fields and
+reassign existing fields.
+
+123
+00:05:19.450 --> 00:05:21.190
+$project may be
+used as many times
+
+124
+00:05:21.190 --> 00:05:23.860
+as desired within an
+aggregation pipeline,
+
+125
+00:05:23.860 --> 00:05:25.450
+and it should be
+used aggressively
+
+126
+00:05:25.450 --> 00:05:27.340
+to trim data out
+of documents that
+
+127
+00:05:27.340 --> 00:05:30.820
+isn't required in order to
+keep our pipelines performant.
+
+128
+00:05:30.820 --> 00:05:32.680
+Some key things to remember.
+
+129
+00:05:32.680 --> 00:05:35.230
+Once we specify one
+field to retain,
+
+130
+00:05:35.230 --> 00:05:38.290
+we must specify all
+fields we want to retain.
+
+131
+00:05:38.290 --> 00:05:41.650
+The _id field is the
+only exception to this.
+
+132
+00:05:41.650 --> 00:05:43.930
+Beyond simply removing
+and retaining fields,
+
+133
+00:05:43.930 --> 00:05:46.870
+$project let's add new fields.
+
+134
+00:05:46.870 --> 00:05:48.730
+$project can be
+used as many times
+
+135
+00:05:48.730 --> 00:05:51.450
+as required with an
+aggregation pipeline.
+
+136
+00:05:51.450 --> 00:05:53.080
+And finally,
+$project can be used
+
+137
+00:05:53.080 --> 00:05:56.080
+to reassign values to
+existing field names
+
+138
+00:05:56.080 --> 00:05:59.160
+and to derive
+entirely new fields.

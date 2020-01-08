@@ -1,0 +1,259 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:05.510
+Obviously a way to fix this
+would be to edit my hosts file.
+
+3
+00:00:05.510 --> 00:00:08.150
+In this case, in
+my local machine,
+
+4
+00:00:08.150 --> 00:00:10.460
+where I have my application,
+which in this case
+
+5
+00:00:10.460 --> 00:00:12.050
+is just my mongo shell.
+
+6
+00:00:12.050 --> 00:00:14.000
+But it will serve
+the same needs.
+
+7
+00:00:14.000 --> 00:00:17.840
+I will just need to make sure
+that it knows how to identify
+
+8
+00:00:17.840 --> 00:00:21.020
+m2.university.mongodb.
+
+9
+00:00:21.020 --> 00:00:23.690
+And also m2 because
+this is also something
+
+10
+00:00:23.690 --> 00:00:28.260
+that the machine will need
+to know in the future.
+
+11
+00:00:28.260 --> 00:00:30.290
+But would that be enough?
+
+12
+00:00:30.290 --> 00:00:33.140
+Would just knowing
+one of the nodes,
+
+13
+00:00:33.140 --> 00:00:34.700
+or two of the
+nodes in this case,
+
+14
+00:00:34.700 --> 00:00:38.180
+and by the names and
+configuration details
+
+15
+00:00:38.180 --> 00:00:41.630
+that are configured in the
+replica set definition.
+
+16
+00:00:41.630 --> 00:00:43.100
+Would that be enough?
+
+17
+00:00:43.100 --> 00:00:44.690
+Well let's try it out.
+
+18
+00:00:44.690 --> 00:00:46.340
+Now I know I can
+reach the machine
+
+19
+00:00:46.340 --> 00:00:49.280
+because I configured my
+hosts file that responds
+
+20
+00:00:49.280 --> 00:00:51.050
+to m2.university.mongodb.
+
+21
+00:00:51.050 --> 00:00:52.040
+Let's test it out.
+
+22
+00:00:52.040 --> 00:00:52.970
+Yes I can.
+
+23
+00:00:52.970 --> 00:00:53.720
+Here we are.
+
+24
+00:00:53.720 --> 00:00:54.800
+We can connect.
+
+25
+00:00:54.800 --> 00:00:56.330
+Everything is great.
+
+26
+00:00:56.330 --> 00:01:03.050
+Can I reach it through, for the
+previous IP address my m1 IP
+
+27
+00:01:03.050 --> 00:01:05.800
+address, which is also part of
+the configuration of my replica
+
+28
+00:01:05.800 --> 00:01:06.650
+set.
+
+29
+00:01:06.650 --> 00:01:10.100
+In this case, I also can do
+so because both of those IP
+
+30
+00:01:10.100 --> 00:01:12.320
+addresses are known.
+
+31
+00:01:12.320 --> 00:01:17.120
+But now let's see what happens
+when the configuration changes.
+
+32
+00:01:17.120 --> 00:01:20.510
+So essentially what
+we were setting up
+
+33
+00:01:20.510 --> 00:01:22.340
+in the previous
+configuration was
+
+34
+00:01:22.340 --> 00:01:26.180
+that, although our replica
+set is fully well configured,
+
+35
+00:01:26.180 --> 00:01:29.180
+in this case using the IP
+address, in that other case
+
+36
+00:01:29.180 --> 00:01:33.400
+using the fully qualified
+name, and this one using m3,
+
+37
+00:01:33.400 --> 00:01:36.970
+I would not know what m2
+and its fully qualified name
+
+38
+00:01:36.970 --> 00:01:38.570
+would be looking like.
+
+39
+00:01:38.570 --> 00:01:42.950
+So it would effectively
+be out of reach for those.
+
+40
+00:01:42.950 --> 00:01:45.720
+And once that machine
+will be brought down,
+
+41
+00:01:45.720 --> 00:01:50.210
+if was a primary or
+not, since I would not
+
+42
+00:01:50.210 --> 00:01:51.860
+be able to reach
+those machines, I
+
+43
+00:01:51.860 --> 00:01:56.180
+could not failover to the
+existing nodes, defeating
+
+44
+00:01:56.180 --> 00:01:59.570
+the purpose of having multiple
+nodes for high availability.
+
+45
+00:01:59.570 --> 00:02:03.200
+If I only can reach one, if I
+cannot reach the other members
+
+46
+00:02:03.200 --> 00:02:07.400
+of the node, then I don't have
+any availability whatsoever.
+
+47
+00:02:07.400 --> 00:02:10.880
+Once I do add the
+second member by adding
+
+48
+00:02:10.880 --> 00:02:16.850
+my fully qualified name of m2
+and if I express my mongodb
+
+49
+00:02:16.850 --> 00:02:22.490
+URI, specifying more than
+one member that I know of,
+
+50
+00:02:22.490 --> 00:02:26.450
+if one of them is down it will
+try the other one to connect.
+
+51
+00:02:26.450 --> 00:02:28.850
+And if it can
+understand what it is,
+
+52
+00:02:28.850 --> 00:02:31.040
+and how it's reachable
+from the machines,
+
+53
+00:02:31.040 --> 00:02:33.260
+and if it's
+configured properly, I
+
+54
+00:02:33.260 --> 00:02:35.750
+will be able to
+establish a failover
+
+55
+00:02:35.750 --> 00:02:38.800
+operation to that new node.

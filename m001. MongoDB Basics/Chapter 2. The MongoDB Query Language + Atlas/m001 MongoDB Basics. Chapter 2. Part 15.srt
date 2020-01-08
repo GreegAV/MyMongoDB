@@ -1,0 +1,660 @@
+1
+00:00:00,000 --> 00:00:00,110
+
+
+2
+00:00:00,110 --> 00:00:01,568
+What I'd like to
+do now is give you
+
+3
+00:00:01,568 --> 00:00:05,310
+a sense for the different
+types of field update operators
+
+4
+00:00:05,310 --> 00:00:07,020
+that we have available to us.
+
+5
+00:00:07,020 --> 00:00:08,580
+We used dollar set.
+
+6
+00:00:08,580 --> 00:00:12,060
+This completely replaces
+or adds each field
+
+7
+00:00:12,060 --> 00:00:15,940
+specified in its parameter as
+we saw in earlier examples.
+
+8
+00:00:15,940 --> 00:00:17,910
+Let's take a look at
+what other options
+
+9
+00:00:17,910 --> 00:00:20,490
+we have for update operators.
+
+10
+00:00:20,490 --> 00:00:24,220
+And to do this, I'm looking
+at the update operator's page
+
+11
+00:00:24,220 --> 00:00:26,700
+in the MongoDB documentation.
+
+12
+00:00:26,700 --> 00:00:29,520
+In addition to set,
+there's also unset.
+
+13
+00:00:29,520 --> 00:00:31,710
+This will completely
+remove the field
+
+14
+00:00:31,710 --> 00:00:33,840
+that we specify from a document.
+
+15
+00:00:33,840 --> 00:00:36,660
+Others here include min and max.
+
+16
+00:00:36,660 --> 00:00:39,210
+These allow us to update a
+field based on comparison
+
+17
+00:00:39,210 --> 00:00:42,390
+with another value taking
+the min of the two values
+
+18
+00:00:42,390 --> 00:00:44,670
+or the max of the two values.
+
+19
+00:00:44,670 --> 00:00:46,410
+As we scroll
+through here, we can
+
+20
+00:00:46,410 --> 00:00:50,070
+see there are a number
+of other operators.
+
+21
+00:00:50,070 --> 00:00:54,390
+As an exercise, I'd like to ask
+you to please visit the MongoDB
+
+22
+00:00:54,390 --> 00:00:56,880
+documentation on
+update operators
+
+23
+00:00:56,880 --> 00:00:59,340
+and try a few of
+these for yourself.
+
+24
+00:00:59,340 --> 00:01:01,140
+They are all fairly
+self-explanatory
+
+25
+00:01:01,140 --> 00:01:03,840
+and there's good
+documentation on each of them.
+
+26
+00:01:03,840 --> 00:01:06,930
+But before you do that, let's
+take a look at a couple more
+
+27
+00:01:06,930 --> 00:01:09,480
+of these operators as we
+continue moving through
+
+28
+00:01:09,480 --> 00:01:10,960
+our examples here.
+
+29
+00:01:10,960 --> 00:01:14,370
+Now, updates have several
+different use cases.
+
+30
+00:01:14,370 --> 00:01:18,180
+They're used to correct
+errors and over time keep
+
+31
+00:01:18,180 --> 00:01:19,680
+our data current.
+
+32
+00:01:19,680 --> 00:01:23,190
+For movie data, much of
+what's there is static.
+
+33
+00:01:23,190 --> 00:01:26,970
+We've got directors,
+writers, actors, et cetera.
+
+34
+00:01:26,970 --> 00:01:30,630
+Other content, however,
+such as reviews and ratings,
+
+35
+00:01:30,630 --> 00:01:34,200
+will need to be updated as
+users take action creating
+
+36
+00:01:34,200 --> 00:01:35,700
+new reviews or ratings.
+
+37
+00:01:35,700 --> 00:01:39,120
+We could use $set to make
+these kinds of updates.
+
+38
+00:01:39,120 --> 00:01:41,460
+But that's an error
+prone approach.
+
+39
+00:01:41,460 --> 00:01:44,804
+It's too easy to do the
+arithmetic incorrectly or make
+
+40
+00:01:44,804 --> 00:01:45,720
+other types of errors.
+
+41
+00:01:45,720 --> 00:01:49,230
+Instead, we have a number
+of operators that support
+
+42
+00:01:49,230 --> 00:01:51,240
+numeric updates of data.
+
+43
+00:01:51,240 --> 00:01:53,970
+Now as I mentioned,
+we've got min and max.
+
+44
+00:01:53,970 --> 00:01:58,710
+But there's also $inc. This
+increments the value stored
+
+45
+00:01:58,710 --> 00:02:01,030
+in the field we pass to it.
+
+46
+00:02:01,030 --> 00:02:04,390
+Let's take a look at an example
+of using the $inc operator
+
+47
+00:02:04,390 --> 00:02:05,930
+to update reviews.
+
+48
+00:02:05,930 --> 00:02:10,020
+Here what we're going to do is,
+again working with the Martian,
+
+49
+00:02:10,020 --> 00:02:13,710
+increment the
+tomato.reviews by three
+
+50
+00:02:13,710 --> 00:02:17,740
+and the tomato
+user reviews by 25.
+
+51
+00:02:17,740 --> 00:02:20,800
+And in case you're not
+familiar with Rotten Tomatoes,
+
+52
+00:02:20,800 --> 00:02:23,620
+in each of our movie
+details documents
+
+53
+00:02:23,620 --> 00:02:25,420
+there's a tomato field.
+
+54
+00:02:25,420 --> 00:02:28,150
+And the tomato field
+reflects the rating
+
+55
+00:02:28,150 --> 00:02:31,150
+for this movie from
+Rotten Tomatoes.
+
+56
+00:02:31,150 --> 00:02:36,490
+Rotten Tomatoes is a aggregator
+of user ratings for movies.
+
+57
+00:02:36,490 --> 00:02:39,220
+So people who have seen
+a movie drop in a rating.
+
+58
+00:02:39,220 --> 00:02:42,250
+Those are aggregated together
+into a tomato rating.
+
+59
+00:02:42,250 --> 00:02:44,740
+So here we're
+simulating the situation
+
+60
+00:02:44,740 --> 00:02:47,050
+in which we've received
+three additional reviews
+
+61
+00:02:47,050 --> 00:02:48,430
+for the Martian.
+
+62
+00:02:48,430 --> 00:02:52,690
+If we run this and take a look
+at the output, as expected
+
+63
+00:02:52,690 --> 00:02:54,220
+our update was successful.
+
+64
+00:02:54,220 --> 00:02:58,090
+And if we look at the
+document before the update
+
+65
+00:02:58,090 --> 00:03:01,750
+for tomato.reviews
+and tomato.userReviews
+
+66
+00:03:01,750 --> 00:03:07,830
+and then refresh, we see that
+tomato.reviews went to 283.
+
+67
+00:03:07,830 --> 00:03:12,950
+And user reviews got
+up above 105,000.
+
+68
+00:03:12,950 --> 00:03:15,770
+Now let's turn to array fields.
+
+69
+00:03:15,770 --> 00:03:17,450
+As you might imagine,
+there are a number
+
+70
+00:03:17,450 --> 00:03:21,980
+of situations in which we
+want to update array values.
+
+71
+00:03:21,980 --> 00:03:26,300
+MongoDB provides many
+update operators for arrays.
+
+72
+00:03:26,300 --> 00:03:29,870
+Add to set will update
+an array with new values
+
+73
+00:03:29,870 --> 00:03:32,990
+only if the value isn't
+already contained in the array.
+
+74
+00:03:32,990 --> 00:03:37,490
+I can pull off the first
+or last item of an array
+
+75
+00:03:37,490 --> 00:03:40,610
+depending on my parameters
+to the pop operator.
+
+76
+00:03:40,610 --> 00:03:42,770
+I can remove all
+values that match
+
+77
+00:03:42,770 --> 00:03:45,170
+some criteria with pull all.
+
+78
+00:03:45,170 --> 00:03:48,620
+And of course, I can
+push on new values.
+
+79
+00:03:48,620 --> 00:03:50,600
+Now again, I encourage
+you to take a look
+
+80
+00:03:50,600 --> 00:03:53,690
+at the documentation
+for update operators--
+
+81
+00:03:53,690 --> 00:03:56,306
+in m the array update operators.
+
+82
+00:03:56,306 --> 00:03:57,680
+But let's take a
+look at a couple
+
+83
+00:03:57,680 --> 00:04:01,940
+of examples in which we're going
+to need to update array fields.
+
+84
+00:04:01,940 --> 00:04:04,100
+For most web applications,
+we have a desire
+
+85
+00:04:04,100 --> 00:04:06,290
+to structure our
+data in such a way
+
+86
+00:04:06,290 --> 00:04:08,240
+that we can get all
+the data we need
+
+87
+00:04:08,240 --> 00:04:12,320
+to render an individual page
+with as few database queries as
+
+88
+00:04:12,320 --> 00:04:13,390
+possible.
+
+89
+00:04:13,390 --> 00:04:17,300
+For reviews, comments, and
+other user contributions,
+
+90
+00:04:17,300 --> 00:04:21,350
+we recommend that some
+portion of your reviews--
+
+91
+00:04:21,350 --> 00:04:24,560
+often these are the most
+recent or most useful--
+
+92
+00:04:24,560 --> 00:04:28,550
+are included as
+embedded documents.
+
+93
+00:04:28,550 --> 00:04:29,990
+Following this
+best practice, what
+
+94
+00:04:29,990 --> 00:04:33,860
+we might do for movie reviews
+is something like the following.
+
+95
+00:04:33,860 --> 00:04:36,680
+Now you can largely ignore this
+portion other than the fact
+
+96
+00:04:36,680 --> 00:04:38,110
+that it's a review.
+
+97
+00:04:38,110 --> 00:04:41,990
+But let me call your attention
+to the updateOne method call.
+
+98
+00:04:41,990 --> 00:04:46,100
+This, called updateOne, will
+create a key called reviews,
+
+99
+00:04:46,100 --> 00:04:49,190
+create an array as the
+value for this key,
+
+100
+00:04:49,190 --> 00:04:52,410
+and then push this
+review onto the array.
+
+101
+00:04:52,410 --> 00:04:54,830
+Remember that our Martian
+document doesn't actually
+
+102
+00:04:54,830 --> 00:04:57,080
+have a field called reviews.
+
+103
+00:04:57,080 --> 00:05:00,740
+The reason why this works is
+because push creates an array
+
+104
+00:05:00,740 --> 00:05:03,800
+if one does not already exist.
+
+105
+00:05:03,800 --> 00:05:06,320
+Let's take a look
+at the document now.
+
+106
+00:05:06,320 --> 00:05:09,320
+Here we can see our
+reviews field added
+
+107
+00:05:09,320 --> 00:05:11,480
+and reviews is an array.
+
+108
+00:05:11,480 --> 00:05:14,630
+And this array has
+one element, which
+
+109
+00:05:14,630 --> 00:05:19,730
+is the review that we
+specified in our update.
+
+110
+00:05:19,730 --> 00:05:21,980
+Now let's add a
+few more reviews.
+
+111
+00:05:21,980 --> 00:05:23,450
+Again I'm creating review text.
+
+112
+00:05:23,450 --> 00:05:25,550
+And in this case I'm
+creating several of them.
+
+113
+00:05:25,550 --> 00:05:27,860
+But let's take a look
+at our updateOne.
+
+114
+00:05:27,860 --> 00:05:30,080
+Again, we're using $push.
+
+115
+00:05:30,080 --> 00:05:35,000
+And as expected, we're pushing
+onto the reviews array.
+
+116
+00:05:35,000 --> 00:05:39,020
+But here we're using the
+each modifier for push.
+
+117
+00:05:39,020 --> 00:05:40,970
+Some of our update operators--
+
+118
+00:05:40,970 --> 00:05:43,040
+particularly those having
+to do with arrays--
+
+119
+00:05:43,040 --> 00:05:45,670
+have modifiers
+associated with them.
+
+120
+00:05:45,670 --> 00:05:48,710
+This modifier means
+that $push will
+
+121
+00:05:48,710 --> 00:05:53,810
+add each one of these documents
+as individual elements
+
+122
+00:05:53,810 --> 00:05:55,760
+to the reviews array.
+
+123
+00:05:55,760 --> 00:05:59,120
+If we don't use $each
+here, then the entire array
+
+124
+00:05:59,120 --> 00:06:01,580
+specified in our
+use of $push would
+
+125
+00:06:01,580 --> 00:06:04,760
+be added as a single
+element in that array.
+
+126
+00:06:04,760 --> 00:06:07,190
+In some circumstances that
+might be what we want,
+
+127
+00:06:07,190 --> 00:06:08,930
+but not in this case.
+
+128
+00:06:08,930 --> 00:06:11,840
+So let's run this
+command and then look
+
+129
+00:06:11,840 --> 00:06:13,110
+at our Martian document.
+
+130
+00:06:13,110 --> 00:06:15,330
+And here we can see
+that we have in fact
+
+131
+00:06:15,330 --> 00:06:17,810
+added seven additional reviews.
+
+132
+00:06:17,810 --> 00:06:20,030
+And with that, we've
+concluded our overview
+
+133
+00:06:20,030 --> 00:06:21,357
+of update operators.
+
+134
+00:06:21,357 --> 00:06:23,690
+We reviewed a number of the
+operators that are available
+
+135
+00:06:23,690 --> 00:06:25,370
+and worked through
+a few examples.
+
+136
+00:06:25,370 --> 00:06:28,640
+Please feel free to experiment
+for yourself using the movie
+
+137
+00:06:28,640 --> 00:06:29,960
+details collection.
+
+138
+00:06:29,960 --> 00:06:32,150
+I encourage you to try out
+as many update operators
+
+139
+00:06:32,150 --> 00:00:00,000
+as you can using the MongoDB
+documentation as a guide.
+

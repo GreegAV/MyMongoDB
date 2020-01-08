@@ -1,0 +1,204 @@
+
+1
+00:00:00.000 --> 00:00:00.720
+
+
+2
+00:00:00.720 --> 00:00:05.520
+OK, this mgenerate_userdata.json
+is going to be passed
+
+3
+00:00:05.520 --> 00:00:09.300
+to mgenerate, and it's going
+to create some user data based
+
+4
+00:00:09.300 --> 00:00:11.700
+on this document here.
+
+5
+00:00:11.700 --> 00:00:14.370
+Let's make it happen.
+
+6
+00:00:14.370 --> 00:00:18.150
+And wait a few minutes
+for it to finish.
+
+7
+00:00:18.150 --> 00:00:19.990
+That only took a few seconds.
+
+8
+00:00:19.990 --> 00:00:21.890
+OK, let's connect.
+
+9
+00:00:21.890 --> 00:00:24.640
+OK, I'm in the right database.
+
+10
+00:00:24.640 --> 00:00:28.570
+Let's look at our index
+stats before we do anything.
+
+11
+00:00:28.570 --> 00:00:31.710
+OK, so this is a
+lot of information.
+
+12
+00:00:31.710 --> 00:00:34.680
+We have four shards,
+and each index
+
+13
+00:00:34.680 --> 00:00:36.730
+is represented on each shard.
+
+14
+00:00:36.730 --> 00:00:40.740
+So even though we only
+have two indexes on _ID
+
+15
+00:00:40.740 --> 00:00:45.480
+and user.name.last, it's
+giving us eight documents--
+
+16
+00:00:45.480 --> 00:00:48.810
+one per index on each server.
+
+17
+00:00:48.810 --> 00:00:50.310
+And we haven't done
+any queries yet,
+
+18
+00:00:50.310 --> 00:00:56.470
+so the ops field is 0 for each
+of these 0, 0, 0, 0, 0, 0, 0,
+
+19
+00:00:56.470 --> 00:00:57.600
+0.
+
+20
+00:00:57.600 --> 00:01:01.740
+Good, let's run a query.
+
+21
+00:01:01.740 --> 00:01:03.930
+We'll find a document
+using the shard key.
+
+22
+00:01:03.930 --> 00:01:06.790
+
+
+23
+00:01:06.790 --> 00:01:11.170
+OK, and we'll look
+at the index stats.
+
+24
+00:01:11.170 --> 00:01:17.860
+OK, so the ops remain 0 for
+the _id field and 0 for most
+
+25
+00:01:17.860 --> 00:01:18.610
+of the servers.
+
+26
+00:01:18.610 --> 00:01:24.250
+But this server on port
+30001 has run the query
+
+27
+00:01:24.250 --> 00:01:26.770
+and touched that index.
+
+28
+00:01:26.770 --> 00:01:30.340
+That was an exact match query,
+and it hit only one chunk.
+
+29
+00:01:30.340 --> 00:01:33.070
+And my router knows
+it's only on one server
+
+30
+00:01:33.070 --> 00:01:35.500
+and routed to the
+appropriate server,
+
+31
+00:01:35.500 --> 00:01:37.810
+but that won't
+always be the case.
+
+32
+00:01:37.810 --> 00:01:41.020
+Let's do a range query.
+
+33
+00:01:41.020 --> 00:01:46.120
+User.name.last is less
+than or equal to d.
+
+34
+00:01:46.120 --> 00:01:51.160
+Get my results, and we
+will look at index stats.
+
+35
+00:01:51.160 --> 00:01:59.620
+Once again, our _id ops are
+still 0 but 1111 for this
+
+36
+00:01:59.620 --> 00:02:02.320
+user.name.last.
+
+37
+00:02:02.320 --> 00:02:04.900
+What happened was this
+query actually touched
+
+38
+00:02:04.900 --> 00:02:09.310
+the other three shards that
+hadn't seen the first query.
+
+39
+00:02:09.310 --> 00:02:11.000
+That's just a coincidence.
+
+40
+00:02:11.000 --> 00:02:14.500
+The important thing is that
+three servers had chunks
+
+41
+00:02:14.500 --> 00:02:17.680
+that match the query, and
+all three of those servers
+
+42
+00:02:17.680 --> 00:02:22.120
+incremented their ops
+counter for that index.
+
+43
+00:02:22.120 --> 00:02:25.360
+A range query like this
+can touch one, some,
+
+44
+00:02:25.360 --> 00:02:30.540
+or all of your servers depending
+on what the chunk ranges are.

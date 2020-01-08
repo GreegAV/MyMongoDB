@@ -1,0 +1,479 @@
+
+1
+00:00:00.000 --> 00:00:00.260
+
+
+2
+00:00:00.260 --> 00:00:02.635
+In this lesson, we're going
+to talk about the aggregation
+
+3
+00:00:02.635 --> 00:00:04.470
+pipeline on a sharded cluster.
+
+4
+00:00:04.470 --> 00:00:06.060
+Specifically we're
+going to discuss
+
+5
+00:00:06.060 --> 00:00:09.480
+how it works, where
+operations are completed,
+
+6
+00:00:09.480 --> 00:00:11.280
+and we'll also look
+into how pipelines
+
+7
+00:00:11.280 --> 00:00:14.476
+are optimized to perform
+well on sharded clusters.
+
+8
+00:00:14.476 --> 00:00:16.350
+Let's go ahead and talk
+about how aggregation
+
+9
+00:00:16.350 --> 00:00:18.360
+works in a sharded cluster.
+
+10
+00:00:18.360 --> 00:00:21.280
+When we run aggregation queries
+on a replica set or standalone
+
+11
+00:00:21.280 --> 00:00:23.370
+MongoDB, it's much
+easier for the server
+
+12
+00:00:23.370 --> 00:00:27.150
+to reason about because all the
+data is located in one place.
+
+13
+00:00:27.150 --> 00:00:29.700
+In a sharded cluster, since
+our data is partitioned
+
+14
+00:00:29.700 --> 00:00:33.370
+across different shards, this
+become slightly more difficult.
+
+15
+00:00:33.370 --> 00:00:36.270
+Fortunately, MongoDB has some
+good tricks up its sleeve
+
+16
+00:00:36.270 --> 00:00:38.750
+to address these issues.
+
+17
+00:00:38.750 --> 00:00:41.680
+For example, here we have
+the simple aggregation query
+
+18
+00:00:41.680 --> 00:00:44.420
+where I'm using match to find
+all the restaurants in New York
+
+19
+00:00:44.420 --> 00:00:45.710
+state.
+
+20
+00:00:45.710 --> 00:00:49.230
+I'm then using group
+to group by each state
+
+21
+00:00:49.230 --> 00:00:52.830
+and then average the amount
+of stars for that given state.
+
+22
+00:00:52.830 --> 00:00:54.770
+Since my shard key
+is on state, all
+
+23
+00:00:54.770 --> 00:00:56.210
+of the restaurants
+in New York are
+
+24
+00:00:56.210 --> 00:00:58.310
+going to be on the same shard.
+
+25
+00:00:58.310 --> 00:01:00.500
+This means that the server
+is able to simply route
+
+26
+00:01:00.500 --> 00:01:02.900
+the aggregate query
+to that shard, where
+
+27
+00:01:02.900 --> 00:01:05.920
+it can run the
+aggregation and return
+
+28
+00:01:05.920 --> 00:01:09.230
+the results back to the Mongo
+S and then back to the client.
+
+29
+00:01:09.230 --> 00:01:10.650
+Very straightforward.
+
+30
+00:01:10.650 --> 00:01:11.870
+Now look at this example.
+
+31
+00:01:11.870 --> 00:01:14.120
+I've changed the query
+slightly so we're no longer
+
+32
+00:01:14.120 --> 00:01:15.600
+using the match stage.
+
+33
+00:01:15.600 --> 00:01:17.480
+So now we're talking
+about all documents
+
+34
+00:01:17.480 --> 00:01:19.420
+in our sharded collection.
+
+35
+00:01:19.420 --> 00:01:21.950
+Now since these documents are
+spread across multiple shards,
+
+36
+00:01:21.950 --> 00:01:24.680
+we're going to need to do
+some computing on each shard,
+
+37
+00:01:24.680 --> 00:01:26.870
+but then we'll also
+need to somehow get
+
+38
+00:01:26.870 --> 00:01:28.940
+all of those results
+to one place,
+
+39
+00:01:28.940 --> 00:01:31.460
+where we can merge
+the results together.
+
+40
+00:01:31.460 --> 00:01:33.800
+In this case, our pipeline
+needs to be split.
+
+41
+00:01:33.800 --> 00:01:35.740
+The server will
+determine which stages
+
+42
+00:01:35.740 --> 00:01:38.210
+need to be executed
+on each shard,
+
+43
+00:01:38.210 --> 00:01:40.040
+and then what stages
+need to be executed
+
+44
+00:01:40.040 --> 00:01:42.830
+on a single shard where the
+results from the other shards
+
+45
+00:01:42.830 --> 00:01:44.450
+will be merged together.
+
+46
+00:01:44.450 --> 00:01:47.222
+Generally, merging will
+happen on a random shard,
+
+47
+00:01:47.222 --> 00:01:48.680
+but there are
+certain circumstances
+
+48
+00:01:48.680 --> 00:01:50.270
+where this is not the case.
+
+49
+00:01:50.270 --> 00:01:53.330
+This isn't the case when
+we use $out or $facet
+
+50
+00:01:53.330 --> 00:01:55.610
+or $lookup or $graphLookup.
+
+51
+00:01:55.610 --> 00:01:57.530
+For these queries,
+the primary shard
+
+52
+00:01:57.530 --> 00:01:59.840
+will do the work of
+merging our results.
+
+53
+00:01:59.840 --> 00:02:01.400
+And this is important
+to understand
+
+54
+00:02:01.400 --> 00:02:04.070
+because if we're running these
+operations very frequently,
+
+55
+00:02:04.070 --> 00:02:06.740
+then one of our shards,
+the primary shard,
+
+56
+00:02:06.740 --> 00:02:10.009
+will be under a lot more load
+than the rest of our cluster,
+
+57
+00:02:10.009 --> 00:02:12.560
+degrading the benefits of
+our horizontal scaling.
+
+58
+00:02:12.560 --> 00:02:14.600
+Under these specific
+circumstances,
+
+59
+00:02:14.600 --> 00:02:17.180
+you can mitigate this
+issue by using a machine
+
+60
+00:02:17.180 --> 00:02:20.610
+with more resources
+for your primary shard.
+
+61
+00:02:20.610 --> 00:02:22.470
+There are also some
+cool optimizations
+
+62
+00:02:22.470 --> 00:02:24.050
+that the server
+will try to perform
+
+63
+00:02:24.050 --> 00:02:26.010
+that you should be aware of.
+
+64
+00:02:26.010 --> 00:02:28.800
+Most of these will also apply
+when you're not sharding,
+
+65
+00:02:28.800 --> 00:02:30.660
+but are still helpful to know.
+
+66
+00:02:30.660 --> 00:02:32.490
+Take this example.
+
+67
+00:02:32.490 --> 00:02:35.650
+Here we have a sort
+followed by a match.
+
+68
+00:02:35.650 --> 00:02:38.240
+Now the query optimizer
+will move the match
+
+69
+00:02:38.240 --> 00:02:40.800
+in front of the sort to
+reduce the number of documents
+
+70
+00:02:40.800 --> 00:02:42.360
+that need to be sorted.
+
+71
+00:02:42.360 --> 00:02:45.240
+This is particularly
+useful in sharded clusters
+
+72
+00:02:45.240 --> 00:02:46.744
+when we have a split
+in our pipeline
+
+73
+00:02:46.744 --> 00:02:48.660
+and when you want to
+reduce the amount of data
+
+74
+00:02:48.660 --> 00:02:51.990
+being transferred over the
+wire to our merging shard.
+
+75
+00:02:51.990 --> 00:02:54.540
+Similarly, we can reduce
+the number of documents
+
+76
+00:02:54.540 --> 00:02:57.510
+that we need to examine
+by moving the limit
+
+77
+00:02:57.510 --> 00:03:00.550
+after a skip in front of it.
+
+78
+00:03:00.550 --> 00:03:03.060
+Notice that the query planner
+updates the values accordingly
+
+79
+00:03:03.060 --> 00:03:05.220
+to support this optimization.
+
+80
+00:03:05.220 --> 00:03:07.350
+Other than moving stages
+around, the server
+
+81
+00:03:07.350 --> 00:03:10.092
+is also able to combine
+certain stages together.
+
+82
+00:03:10.092 --> 00:03:11.550
+Here we're going
+to see where we're
+
+83
+00:03:11.550 --> 00:03:14.010
+combining two limits into one.
+
+84
+00:03:14.010 --> 00:03:15.390
+Same thing with skip.
+
+85
+00:03:15.390 --> 00:03:18.270
+And finally, we're seeing
+the same thing with match.
+
+86
+00:03:18.270 --> 00:03:20.400
+Now all these optimizations
+will automatically
+
+87
+00:03:20.400 --> 00:03:22.830
+be attempted by the
+query optimizer.
+
+88
+00:03:22.830 --> 00:03:25.290
+That being said, I think
+it's important to point out
+
+89
+00:03:25.290 --> 00:03:27.960
+these optimizations so that
+you can more carefully consider
+
+90
+00:03:27.960 --> 00:03:30.330
+your own aggregation
+pipelines and the performance
+
+91
+00:03:30.330 --> 00:03:31.592
+implications.
+
+92
+00:03:31.592 --> 00:03:34.050
+And that should give you a good
+overview of the aggregation
+
+93
+00:03:34.050 --> 00:03:36.400
+pipeline on a sharded cluster.
+
+94
+00:03:36.400 --> 00:03:38.282
+Let's recap what we learned.
+
+95
+00:03:38.282 --> 00:03:39.990
+We discussed how the
+aggregation pipeline
+
+96
+00:03:39.990 --> 00:03:42.261
+works on a sharded environment.
+
+97
+00:03:42.261 --> 00:03:44.760
+And specifically we looked at
+where the different operations
+
+98
+00:03:44.760 --> 00:03:47.540
+happen when we're
+using sharding.
+
+99
+00:03:47.540 --> 00:03:49.670
+And finally, we looked
+at some optimizations
+
+100
+00:03:49.670 --> 00:03:52.100
+that the server
+will try to do when
+
+101
+00:03:52.100 --> 00:03:54.310
+running aggregation queries.

@@ -1,0 +1,354 @@
+
+1
+00:00:00.840 --> 00:00:03.990
+By now, you probably
+already realize
+
+2
+00:00:03.990 --> 00:00:06.840
+that MongoDB offers a
+flexible data model.
+
+3
+00:00:06.840 --> 00:00:09.870
+Documents can be of
+different shapes and forms,
+
+4
+00:00:09.870 --> 00:00:11.820
+and organized in such
+a way that it reflects
+
+5
+00:00:11.820 --> 00:00:14.580
+both applications
+dynamic data structures
+
+6
+00:00:14.580 --> 00:00:17.610
+and scalability requirements.
+
+7
+00:00:17.610 --> 00:00:20.340
+We can have very flat,
+root level only fields
+
+8
+00:00:20.340 --> 00:00:24.120
+in our documents, are quite
+complex and deeply nested
+
+9
+00:00:24.120 --> 00:00:28.080
+schemas that reflect obligation
+needs for fast operations
+
+10
+00:00:28.080 --> 00:00:30.150
+and business logic.
+
+11
+00:00:30.150 --> 00:00:32.280
+A common set of
+data structures that
+
+12
+00:00:32.280 --> 00:00:35.910
+require both complex nesting
+levels and flexible storage
+
+13
+00:00:35.910 --> 00:00:40.360
+layer tends to be graph, or
+tree hierarchy use cases.
+
+14
+00:00:40.360 --> 00:00:42.930
+Data sets can be as simple
+as a reporting chain
+
+15
+00:00:42.930 --> 00:00:45.990
+HR datastore, or complex
+data structures that
+
+16
+00:00:45.990 --> 00:00:50.340
+map airport traveling routes
+or even social networks.
+
+17
+00:00:50.340 --> 00:00:53.400
+Telco switch, disease
+taxonomy, and fraud
+
+18
+00:00:53.400 --> 00:00:57.720
+detection are among several
+different use cases where graph
+
+19
+00:00:57.720 --> 00:01:03.360
+queryability and flexible data
+representation go hand in hand.
+
+20
+00:01:03.360 --> 00:01:05.910
+Unlike graph specific
+databases, MongoDB
+
+21
+00:01:05.910 --> 00:01:09.280
+is designed to be a
+general purpose database,
+
+22
+00:01:09.280 --> 00:01:12.540
+meaning that we want to provide
+a very good infrastructure
+
+23
+00:01:12.540 --> 00:01:16.450
+to support operational
+and analytical use cases.
+
+24
+00:01:16.450 --> 00:01:20.070
+With MongoDB 3.4, we are
+extending furthermore
+
+25
+00:01:20.070 --> 00:01:21.750
+the query capabilities
+of MongoDB
+
+26
+00:01:21.750 --> 00:01:25.140
+by offering dollar graph lookup.
+
+27
+00:01:25.140 --> 00:01:28.170
+Graph lookup allows developers
+to combine their flexible data
+
+28
+00:01:28.170 --> 00:01:31.560
+sets with graph or
+graph-like operations.
+
+29
+00:01:31.560 --> 00:01:33.510
+This enables all of
+those complex data
+
+30
+00:01:33.510 --> 00:01:36.840
+sets to be processed,
+analyzed, and transformed
+
+31
+00:01:36.840 --> 00:01:39.810
+using a single data source.
+
+32
+00:01:39.810 --> 00:01:42.480
+When designing and implementing
+graph relationships
+
+33
+00:01:42.480 --> 00:01:44.850
+and designing its
+queries, we generally
+
+34
+00:01:44.850 --> 00:01:47.720
+need to think about
+transitive relationships.
+
+35
+00:01:47.720 --> 00:01:51.180
+If a reports to b,
+and b reports to c,
+
+36
+00:01:51.180 --> 00:01:54.200
+then a indirectly reports to c.
+
+37
+00:01:54.200 --> 00:01:56.910
+In standard SQL, such
+hierarchical queries
+
+38
+00:01:56.910 --> 00:02:00.030
+are implemented by way
+of recursive common table
+
+39
+00:02:00.030 --> 00:02:01.470
+expressions.
+
+40
+00:02:01.470 --> 00:02:05.720
+In relational algebra, this
+is called transitive closure.
+
+41
+00:02:05.720 --> 00:02:09.150
+Graph lookup allows looking
+up recursively a set
+
+42
+00:02:09.150 --> 00:02:11.490
+of documents with a
+defined relationship
+
+43
+00:02:11.490 --> 00:02:13.210
+to a starting document.
+
+44
+00:02:13.210 --> 00:02:16.590
+Graph lookup is very similar
+to our dollar lookup operator.
+
+45
+00:02:16.590 --> 00:02:20.730
+It's another lookup with a
+few important variations.
+
+46
+00:02:20.730 --> 00:02:23.430
+We will have from field
+that specifies a collection
+
+47
+00:02:23.430 --> 00:02:26.320
+that this stage
+retrieves results from,
+
+48
+00:02:26.320 --> 00:02:30.660
+a startWith field that specifies
+the connectToField value
+
+49
+00:02:30.660 --> 00:02:35.310
+or values that we should start
+our recursive search with.
+
+50
+00:02:35.310 --> 00:02:37.950
+We have a connectFromField
+that determines
+
+51
+00:02:37.950 --> 00:02:41.280
+a field in each document
+in the from collection
+
+52
+00:02:41.280 --> 00:02:44.700
+that is used to perform
+the next recursive query.
+
+53
+00:02:44.700 --> 00:02:46.740
+And we have the
+connect to field that
+
+54
+00:02:46.740 --> 00:02:50.680
+sets the field in each
+document in the from collection
+
+55
+00:02:50.680 --> 00:02:53.880
+that is queried against
+each recursive query.
+
+56
+00:02:53.880 --> 00:02:56.970
+As specifies a field
+in the output document
+
+57
+00:02:56.970 --> 00:02:59.990
+that will be assigned the
+array of results of that graph
+
+58
+00:02:59.990 --> 00:03:01.350
+lookup.
+
+59
+00:03:01.350 --> 00:03:03.630
+maxDepth-- this is
+an optional field
+
+60
+00:03:03.630 --> 00:03:07.320
+that specifies the maximum
+number of recursive depth
+
+61
+00:03:07.320 --> 00:03:09.670
+for the graph lookup.
+
+62
+00:03:09.670 --> 00:03:13.500
+depthField, also optional,
+specifies the field name
+
+63
+00:03:13.500 --> 00:03:15.030
+in which the result
+document will
+
+64
+00:03:15.030 --> 00:03:18.360
+be set to the recursive depth
+at which the document was
+
+65
+00:03:18.360 --> 00:03:19.610
+retrieved.
+
+66
+00:03:19.610 --> 00:03:22.710
+This will be 0 for
+the first lookup.
+
+67
+00:03:22.710 --> 00:03:25.400
+And we also have
+restrictSearchWithMatch,
+
+68
+00:03:25.400 --> 00:03:28.350
+another optional field
+that specifies a filter
+
+69
+00:03:28.350 --> 00:03:32.190
+to apply when doing the
+lookup in the from collection.
+
+70
+00:03:32.190 --> 00:03:33.900
+Looks right, doesn't it?
+
+71
+00:03:33.900 --> 00:03:37.020
+In the following lesson, we
+are going to get ourselves busy
+
+72
+00:03:37.020 --> 00:03:40.050
+and start experimenting
+with this new feature,
+
+73
+00:03:40.050 --> 00:03:42.991
+looking to a new set
+of different examples.

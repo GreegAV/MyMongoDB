@@ -1,0 +1,25 @@
+Now it's time to dive in, and learn the MongoDB query language.
+
+Regardless of the app you're building, this is going to be important as you work to get data into and out of MongoDB.
+
+We've already had a sample of the query language in our work with Compass so far.
+
+In this chapter, we'll do a deeper dive so that you're fully prepared to work with MongoDB data.
+
+We'll cover CRUD operations.
+
+If you're not familiar with that acronym, it simply stands for create, read, update, and delete.
+
+It's these four types of operations that we'll be discussing in this chapter.
+
+In addition to MongoDB Compass, we'll be using the mongo shell.
+
+Like compass, the mongo shell is a MongoDB client.
+
+However, the mongo shell is text based, rather than visual.
+
+It also provides a number of administrative functions in addition to supporting the MongoDB query language.
+
+We'll be using the shell throughout this chapter because it provides full support for the query language.
+
+Let's dive in.

@@ -1,0 +1,145 @@
+What I'd like to do now is give you a sense for the different types of field update operators that we have available to us.
+
+We used dollar set.
+
+This completely replaces or adds each field specified in its parameter as we saw in earlier examples.
+
+Let's take a look at what other options we have for update operators.
+
+And to do this, I'm looking at the update operator's page in the MongoDB documentation.
+
+In addition to set, there's also unset.
+
+This will completely remove the field that we specify from a document.
+
+Others here include min and max.
+
+These allow us to update a field based on comparison with another value taking the min of the two values or the max of the two values.
+
+As we scroll through here, we can see there are a number of other operators.
+
+As an exercise, I'd like to ask you to please visit the MongoDB documentation on update operators and try a few of these for yourself.
+
+They are all fairly self-explanatory and there's good documentation on each of them.
+
+But before you do that, let's take a look at a couple more of these operators as we continue moving through our examples here.
+
+Now, updates have several different use cases.
+
+They're used to correct errors and over time keep our data current.
+
+For movie data, much of what's there is static.
+
+We've got directors, writers, actors, et cetera.
+
+Other content, however, such as reviews and ratings, will need to be updated as users take action creating new reviews or ratings.
+
+We could use $set to make these kinds of updates.
+
+But that's an error prone approach.
+
+It's too easy to do the arithmetic incorrectly or make other types of errors.
+
+Instead, we have a number of operators that support numeric updates of data.
+
+Now as I mentioned, we've got min and max.
+
+But there's also $inc.
+
+This increments the value stored in the field we pass to it.
+
+Let's take a look at an example of using the $inc operator to update reviews.
+
+Here what we're going to do is, again working with the Martian, increment the tomato.reviews by three and the tomato user reviews by 25.
+
+And in case you're not familiar with Rotten Tomatoes, in each of our movie details documents there's a tomato field.
+
+And the tomato field reflects the rating for this movie from Rotten Tomatoes.
+
+Rotten Tomatoes is a aggregator of user ratings for movies.
+
+So people who have seen a movie drop in a rating.
+
+Those are aggregated together into a tomato rating.
+
+So here we're simulating the situation in which we've received three additional reviews for the Martian.
+
+If we run this and take a look at the output, as expected our update was successful.
+
+And if we look at the document before the update for tomato.reviews and tomato.userReviews and then refresh, we see that tomato.reviews went to 283.
+
+And user reviews got up above 105,000.
+
+Now let's turn to array fields.
+
+As you might imagine, there are a number of situations in which we want to update array values.
+
+MongoDB provides many update operators for arrays.
+
+Add to set will update an array with new values only if the value isn't already contained in the array.
+
+I can pull off the first or last item of an array depending on my parameters to the pop operator.
+
+I can remove all values that match some criteria with pull all.
+
+And of course, I can push on new values.
+
+Now again, I encourage you to take a look at the documentation for update operators-- in m the array update operators.
+
+But let's take a look at a couple of examples in which we're going to need to update array fields.
+
+For most web applications, we have a desire to structure our data in such a way that we can get all the data we need to render an individual page with as few database queries as possible.
+
+For reviews, comments, and other user contributions, we recommend that some portion of your reviews-- often these are the most recent or most useful-- are included as embedded documents.
+
+Following this best practice, what we might do for movie reviews is something like the following.
+
+Now you can largely ignore this portion other than the fact that it's a review.
+
+But let me call your attention to the updateOne method call.
+
+This, called updateOne, will create a key called reviews, create an array as the value for this key, and then push this review onto the array.
+
+Remember that our Martian document doesn't actually have a field called reviews.
+
+The reason why this works is because push creates an array if one does not already exist.
+
+Let's take a look at the document now.
+
+Here we can see our reviews field added and reviews is an array.
+
+And this array has one element, which is the review that we specified in our update.
+
+Now let's add a few more reviews.
+
+Again I'm creating review text.
+
+And in this case I'm creating several of them.
+
+But let's take a look at our updateOne.
+
+Again, we're using $push.
+
+And as expected, we're pushing onto the reviews array.
+
+But here we're using the each modifier for push.
+
+Some of our update operators-- particularly those having to do with arrays-- have modifiers associated with them.
+
+This modifier means that $push will add each one of these documents as individual elements to the reviews array.
+
+If we don't use $each here, then the entire array specified in our use of $push would be added as a single element in that array.
+
+In some circumstances that might be what we want, but not in this case.
+
+So let's run this command and then look at our Martian document.
+
+And here we can see that we have in fact added seven additional reviews.
+
+And with that, we've concluded our overview of update operators.
+
+We reviewed a number of the operators that are available and worked through a few examples.
+
+Please feel free to experiment for yourself using the movie details collection.
+
+I encourage you to try out as many update operators as you can using the MongoDB documentation as a guide.

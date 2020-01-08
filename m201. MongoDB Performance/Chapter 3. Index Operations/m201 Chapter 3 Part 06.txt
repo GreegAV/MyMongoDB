@@ -1,0 +1,91 @@
+The most intensive resource utilization by your indexes will be RAM or memory.
+
+Our deployments should be sized in order to accommodate our indexes in RAM.
+
+This means that we should have enough space in our memory to accommodate all of our indexes.
+
+That's a good role of thumb in terms of sizing.
+
+Now if we don't have enough space in our memory to accommodate our indexes, a great deal of disk access will be required to traverse your index file.
+
+If you have different pages on the index, they will be allocated to your memory.
+
+If you are traversing that space, it means that you will slide your pages into positions that are no longer in memory, so allocating those into memory, and flushing out information to disk.
+
+If you are constantly traversing your index, you will be doing a lot of page in and page out.
+
+Now the first assessment that you should do is make sure you understand the capacity of the server.
+
+In this case I'm using a virtual machine, and I have 4 gigabytes of RAM, 4 gigabytes of memory allocated to this virtual machine.
+
+And I'm already using 3.7.
+
+I have 177 megabytes of free memory.
+
+Some of that is going to be cached.
+
+Now if I start my MongoD with wiredTigerCacheSize of 1 gigabyte, for example, I know that the size of my memory is larger than that.
+
+But the amount of cache size that I'm allocating is only going to be of 1 gigabyte.
+
+So my indexes will be placed within that cache size of 1 gigabyte.
+
+Now that we see that we can have indexes, and the indexes can be quite large, but also that those indexes will occupy a significant amount of memory, it will be nice to know which percentage of that index actually is living in memory.
+
+How can we know that?
+
+How can we determine how much of our index is actually in memory or not?
+
+If we go back to our shell and connect to our londonbikes, we have this interesting command, which is the collection stats.
+
+Now with collection stats, we can also pass a flag saying that we are interested in knowing the index details.
+
+If we run this, we will see that we're going to get a bunch of information back.
+
+So there's a lot of quite nice information around how are our indexes set up, apart from the collection stats that the command gives us.
+
+So before cruising through all this block of text, lets do a little more of an ingenious way of dealing with this information, which is basically putting all of this information into a variable.
+
+And let's see about a couple of indexes that we are going to be interested on.
+
+Start by getting the index details.
+
+As you can see here, there's a bunch of index details for each individual index.
+
+And I'm mostly interested on one of them, the one that we just recently created, our endstation_name.
+
+Now if we look into this particular set of information, we can see some interesting information on this particular setup, especially the cache object.
+
+Inside the cache, we are going to get a clear view of how much bytes are currently in cache, how much bytes are read into cache, for example, or a bunch of other criteria about, for example, the number of pages requested from the cache, or pages read into cache.
+
+So if you are interested in determining how much information is currently allocated in RAM, we most certainly can get that information by looking into the amount of bytes currently in cache.
+
+We can also determine the hit and miss page ratios by analyzing pages read into cache and pages requested from cache.
+
+Currently we have zero.
+
+But if we run our query, the previous explain query here-- actually we don't even need the explain command here.
+
+We just need to run the query.
+
+We get some results.
+
+And then we can iterate on them, and so forth.
+
+If we send our command stats back again, if we rerun the rides other stats again, and if we look again into that particular index and the cache allocation values, we will see that some pages have been requested from cache.
+
+That is great.
+
+We did traverse the index and we needed a couple of pages from RAM.
+
+We need to read pages into cache, and the amount of data of this index currently in cache also [?
+
+erased, ?] because we needed to allocate more information than what we previously added since we had a clean restart of this particular MongoD.
+
+Now there's a bunch of information around this command.
+
+And we are not going to go deep into how to decipher all of this information.
+
+That is out of scope for this particular course.
+
+But do keep in mind that MongoDB does allow you to understand pretty well what goes into cache, what is allocated in RAM, and what isn't, using MongoDB WiredTiger's storage engine.

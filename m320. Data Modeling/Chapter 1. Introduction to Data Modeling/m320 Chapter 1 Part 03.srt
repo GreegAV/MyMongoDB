@@ -1,0 +1,394 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.910
+In this lesson, we're going
+to cover the MongoDB document
+
+3
+00:00:02.910 --> 00:00:03.650
+model.
+
+4
+00:00:03.650 --> 00:00:06.930
+Data in MongoDB stored in
+a hierarchical structure
+
+5
+00:00:06.930 --> 00:00:09.210
+where the database
+are at the top level
+
+6
+00:00:09.210 --> 00:00:13.920
+where each MongoDB deployment
+can have many databases.
+
+7
+00:00:13.920 --> 00:00:17.290
+Then there are one or more
+collections in the database.
+
+8
+00:00:17.290 --> 00:00:19.500
+And finally, there are
+documents which are
+
+9
+00:00:19.500 --> 00:00:22.880
+kept at the collection level.
+
+10
+00:00:22.880 --> 00:00:27.020
+In MongoDB, data is stored
+as BSON documents that
+
+11
+00:00:27.020 --> 00:00:29.540
+are composed of field
+value pairs, where
+
+12
+00:00:29.540 --> 00:00:34.130
+BSON is a binary representation
+of JSON documents.
+
+13
+00:00:34.130 --> 00:00:36.260
+Since BSON is not
+human-readable,
+
+14
+00:00:36.260 --> 00:00:38.240
+we will stick with
+JSON in our examples
+
+15
+00:00:38.240 --> 00:00:39.840
+throughout this course.
+
+16
+00:00:39.840 --> 00:00:42.590
+So how does a document
+like that look?
+
+17
+00:00:42.590 --> 00:00:44.840
+Keeping with the
+standard JSON notation,
+
+18
+00:00:44.840 --> 00:00:47.810
+we have an open curly bracket
+indicating the beginning
+
+19
+00:00:47.810 --> 00:00:50.900
+of a document, followed
+by several field value
+
+20
+00:00:50.900 --> 00:00:53.480
+pairs separated by commas.
+
+21
+00:00:53.480 --> 00:00:58.120
+Each value can be of any BSON
+data type, which in this case
+
+22
+00:00:58.120 --> 00:01:03.140
+are a string, an integer,
+another string, and an array.
+
+23
+00:01:03.140 --> 00:01:05.330
+With MongoDB, a
+document is a collection
+
+24
+00:01:05.330 --> 00:01:07.130
+of attributes for an object.
+
+25
+00:01:07.130 --> 00:01:09.410
+If you're coming
+from SQL, a document
+
+26
+00:01:09.410 --> 00:01:11.450
+is like a row in
+the table that has
+
+27
+00:01:11.450 --> 00:01:15.140
+been joined with other relevant
+rows from other tables.
+
+28
+00:01:15.140 --> 00:01:17.930
+You have a field and
+its assigned value,
+
+29
+00:01:17.930 --> 00:01:21.450
+just like each column
+in a row has a value.
+
+30
+00:01:21.450 --> 00:01:24.110
+In this example, we're looking
+at a variety of field types
+
+31
+00:01:24.110 --> 00:01:26.180
+which are all
+supported by MongoDB.
+
+32
+00:01:26.180 --> 00:01:32.270
+Here we have a string, an
+integer, an array, a document,
+
+33
+00:01:32.270 --> 00:01:36.120
+and an array of documents,
+which make up a single document.
+
+34
+00:01:36.120 --> 00:01:38.390
+This is a powerful
+feature of MongoDB.
+
+35
+00:01:38.390 --> 00:01:41.960
+Instead of having to query
+multiple tables of related data
+
+36
+00:01:41.960 --> 00:01:44.570
+and assembling it
+all together, you
+
+37
+00:01:44.570 --> 00:01:47.330
+can keep your related
+data in a single document
+
+38
+00:01:47.330 --> 00:01:51.230
+and pull it all down
+using a single query.
+
+39
+00:01:51.230 --> 00:01:53.780
+If you're familiar with
+computer programming languages,
+
+40
+00:01:53.780 --> 00:01:56.210
+then you could consider
+a MongoDB document
+
+41
+00:01:56.210 --> 00:01:59.690
+as being similar to
+a dictionary or a map
+
+42
+00:01:59.690 --> 00:02:01.160
+or an associative array--
+
+43
+00:02:01.160 --> 00:02:04.680
+an object that has a
+number of key value pairs.
+
+44
+00:02:04.680 --> 00:02:07.610
+Since MongoDB documents
+support a flexible structure,
+
+45
+00:02:07.610 --> 00:02:10.400
+you can use a document to
+represent an entire object
+
+46
+00:02:10.400 --> 00:02:12.530
+rather than having
+to break up the data
+
+47
+00:02:12.530 --> 00:02:15.290
+across multiple records
+as you would have to do
+
+48
+00:02:15.290 --> 00:02:16.970
+with the relational database.
+
+49
+00:02:16.970 --> 00:02:20.270
+The exact structure of a
+document-- all the fields,
+
+50
+00:02:20.270 --> 00:02:22.580
+values, and embedded documents--
+
+51
+00:02:22.580 --> 00:02:25.310
+represent the schema
+of a document.
+
+52
+00:02:25.310 --> 00:02:28.580
+You've probably heard the term
+flexible schema thrown around
+
+53
+00:02:28.580 --> 00:02:30.050
+in relation to MongoDB.
+
+54
+00:02:30.050 --> 00:02:32.850
+Well, let's just
+clarify this term.
+
+55
+00:02:32.850 --> 00:02:35.198
+MongoDB documents
+have a flexible schema
+
+56
+00:02:35.198 --> 00:02:37.490
+in that you're not required
+to make complicated changes
+
+57
+00:02:37.490 --> 00:02:40.010
+to a collection's
+metadata to add or remove
+
+58
+00:02:40.010 --> 00:02:41.550
+the fields in a documents.
+
+59
+00:02:41.550 --> 00:02:43.490
+Documents in the
+same collection don't
+
+60
+00:02:43.490 --> 00:02:45.920
+need to have the exact
+same list of fields.
+
+61
+00:02:45.920 --> 00:02:48.830
+Furthermore, the data
+type in any given field
+
+62
+00:02:48.830 --> 00:02:50.630
+can vary across documents.
+
+63
+00:02:50.630 --> 00:02:53.090
+You do not have to make
+changes at the cluster level
+
+64
+00:02:53.090 --> 00:02:54.530
+to support this.
+
+65
+00:02:54.530 --> 00:02:56.240
+Another way to view
+this is that you
+
+66
+00:02:56.240 --> 00:02:58.490
+can have multiple
+versions of your schema
+
+67
+00:02:58.490 --> 00:03:01.610
+as your application develops
+over time and all the schema
+
+68
+00:03:01.610 --> 00:03:04.250
+versions can coexist
+in the same collection.
+
+69
+00:03:04.250 --> 00:03:06.050
+Compare this to
+database solutions
+
+70
+00:03:06.050 --> 00:03:08.270
+where adding of removing
+columns or fields
+
+71
+00:03:08.270 --> 00:03:11.390
+or changing the data type
+of that column or field
+
+72
+00:03:11.390 --> 00:03:13.640
+can be a complicated process.
+
+73
+00:03:13.640 --> 00:03:17.180
+That said, chances are that the
+documents in a given collection
+
+74
+00:03:17.180 --> 00:03:19.400
+will have a common
+structure between them.
+
+75
+00:03:19.400 --> 00:03:21.470
+MongoDB supports
+enforcing the schema shape
+
+76
+00:03:21.470 --> 00:03:24.050
+from no rules, rules
+in a few fields,
+
+77
+00:03:24.050 --> 00:03:27.950
+to rules on all the
+fields of the documents.
+
+78
+00:03:27.950 --> 00:03:29.190
+Let's recap.
+
+79
+00:03:29.190 --> 00:03:31.910
+MongoDB stores
+data as documents.
+
+80
+00:03:31.910 --> 00:03:36.140
+Document fields can be values,
+embedded documents, or arrays
+
+81
+00:03:36.140 --> 00:03:37.970
+of values and documents.
+
+82
+00:03:37.970 --> 00:03:42.490
+MongoDB is a flexible
+schema database.

@@ -1,0 +1,47 @@
+In this lesson, we're going to discuss regular expression performance in MongoDB.
+
+Specifically, we're going to discuss how we can utilize indexes on regex conditions.
+
+In the lesson on text indexes, we learned that we can create indexes on string fields to support queries using the $text and $search operators.
+
+But sometimes we don't want to add the overhead of text indexes to our deployment.
+
+In these cases, we can fall back on using vanilla indexes and using regular expressions.
+
+Unfortunately, regex's don't always have the best performance.
+
+In this example, if there isn't an index on username, then we need to do a collection scan.
+
+We'd have to touch every single document in our collection and apply that regular expression against each of these documents.
+
+Like with traditionally quality conditions, we can improve the performance of this query by creating an index on the queried field.
+
+Now we only need to apply our regular expression against every index key instead of against the whole document.
+
+While this will increase the performance of the query, we still need to look at every index key of our index.
+
+This somewhat defeats the purpose of indexes.
+
+Indexes are stored as b-trees because of their ability to reduce the search space to an ordered subset of the entire index.
+
+We can take advantage of this feature of indexes by adding a carrot at the beginning of our regex condition.
+
+The carrot means that we only want to return documents where the following characters start at the beginning of the string.
+
+In this case, I want to find documents where the user name begins with Kirby.
+
+By doing this, we're effectively ignoring all the branches of the b-tree that don't begin with Kirby.
+
+And so we're able to dramatically reduce the number of index keys that need to be examined and therefore increase our overall query performance.
+
+This might be obvious, but I want to point out that this optimization will only work if you're matching at the beginning of a string.
+
+For example, with this wildcard regex, we need to check every single index key because we can't limit ourselves to just where it starts with Kirby.
+
+There could be an index key that is a-i-r-b-y, or k-i-r-b-y, or r-r-i-b-y, or s-i-r-b-y.
+
+We have to look at all these index keys.
+
+Let's recap what we've learned.
+
+We've talked about how to utilize indexes using regular expression conditions in MongoDB.

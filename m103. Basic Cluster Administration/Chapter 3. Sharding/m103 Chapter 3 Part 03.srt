@@ -1,0 +1,728 @@
+
+1
+00:00:00.000 --> 00:00:00.417
+
+
+2
+00:00:00.417 --> 00:00:02.250
+So now that we've gone
+over the architecture
+
+3
+00:00:02.250 --> 00:00:04.282
+of a basic sharded
+cluster MongoDB,
+
+4
+00:00:04.282 --> 00:00:06.240
+we're actually going to
+build one in our course
+
+5
+00:00:06.240 --> 00:00:08.320
+virtual environment.
+
+6
+00:00:08.320 --> 00:00:11.960
+So, right now, all we have
+is a replica set M103 repel.
+
+7
+00:00:11.960 --> 00:00:13.800
+This is just a
+normal replica set,
+
+8
+00:00:13.800 --> 00:00:17.460
+but eventually it will become
+the first shard in our cluster.
+
+9
+00:00:17.460 --> 00:00:19.650
+This diagram is the
+bare minimum required
+
+10
+00:00:19.650 --> 00:00:21.270
+to start a sharded cluster--
+
+11
+00:00:21.270 --> 00:00:25.080
+essentially, just the mongos,
+a config server replica set,
+
+12
+00:00:25.080 --> 00:00:27.120
+and at least one shard.
+
+13
+00:00:27.120 --> 00:00:30.529
+The main things we have to build
+are the CSRS and the mongos.
+
+14
+00:00:30.529 --> 00:00:32.820
+The rest of the work will
+just be connecting everything
+
+15
+00:00:32.820 --> 00:00:34.050
+together.
+
+16
+00:00:34.050 --> 00:00:37.582
+The first thing we're going to
+build is our config servers.
+
+17
+00:00:37.582 --> 00:00:39.290
+So this is the
+configuration file for one
+
+18
+00:00:39.290 --> 00:00:40.797
+of our config servers.
+
+19
+00:00:40.797 --> 00:00:43.130
+It's going to be one of the
+nodes in the CSR's, but it's
+
+20
+00:00:43.130 --> 00:00:45.830
+just a regular
+MongoD, so it's still
+
+21
+00:00:45.830 --> 00:00:50.089
+going to have a port, a
+DB path, and a log path.
+
+22
+00:00:50.089 --> 00:00:52.130
+Now the config servers
+that a very important role
+
+23
+00:00:52.130 --> 00:00:53.430
+in the shard cluster.
+
+24
+00:00:53.430 --> 00:00:55.310
+So we have to specify,
+in the configuration,
+
+25
+00:00:55.310 --> 00:00:57.622
+that this is in fact
+a config server.
+
+26
+00:00:57.622 --> 00:00:59.330
+So, here, I'm just
+going to use that file
+
+27
+00:00:59.330 --> 00:01:00.892
+to start up a mongoD process.
+
+28
+00:01:00.892 --> 00:01:03.350
+And, here, I'm going to do the
+same thing for the other two
+
+29
+00:01:03.350 --> 00:01:04.906
+nodes in the CSRS.
+
+30
+00:01:04.906 --> 00:01:07.280
+And you can find those config
+files in the lecture notes.
+
+31
+00:01:07.280 --> 00:01:09.390
+They look very similar
+to the first one.
+
+32
+00:01:09.390 --> 00:01:12.004
+So we enable this replica
+set to use authentication,
+
+33
+00:01:12.004 --> 00:01:14.420
+and the key file authentication
+is fine because we already
+
+34
+00:01:14.420 --> 00:01:15.980
+created our key file.
+
+35
+00:01:15.980 --> 00:01:18.240
+We're going to share the
+same key file in this setup
+
+36
+00:01:18.240 --> 00:01:19.850
+since all mongoD
+instances are running
+
+37
+00:01:19.850 --> 00:01:21.480
+on the same virtual machine.
+
+38
+00:01:21.480 --> 00:01:23.180
+But in a real
+production environment,
+
+39
+00:01:23.180 --> 00:01:25.820
+X509 certificates
+would be the way to go.
+
+40
+00:01:25.820 --> 00:01:27.650
+Having a shared password
+like the key file,
+
+41
+00:01:27.650 --> 00:01:29.810
+when shared across
+multiple machines,
+
+42
+00:01:29.810 --> 00:01:32.090
+increases the risk of that
+file being compromised.
+
+43
+00:01:32.090 --> 00:01:33.710
+So just keep that in mind.
+
+44
+00:01:33.710 --> 00:01:37.620
+Here, I'm just initiating the
+config server replica set.
+
+45
+00:01:37.620 --> 00:01:39.480
+And here, I just use
+the localhost exception
+
+46
+00:01:39.480 --> 00:01:42.160
+to create our super user.
+
+47
+00:01:42.160 --> 00:01:46.030
+So now, I'm just going to
+authenticate as the super user.
+
+48
+00:01:46.030 --> 00:01:48.260
+One means that it worked.
+
+49
+00:01:48.260 --> 00:01:50.990
+And now we can start
+adding those to the set.
+
+50
+00:01:50.990 --> 00:01:54.900
+Here's our second
+node, and our third,
+
+51
+00:01:54.900 --> 00:01:57.680
+and now we have a complete
+config server replica set.
+
+52
+00:01:57.680 --> 00:02:01.460
+I'm just going to verify
+that with rs.ismaster.
+
+53
+00:02:01.460 --> 00:02:03.960
+And it looks like the set
+has three nodes in it.
+
+54
+00:02:03.960 --> 00:02:07.662
+So now we have our CSRS up and
+running, we can start up mongos
+
+55
+00:02:07.662 --> 00:02:10.120
+and then point mongos in the
+direction of our config server
+
+56
+00:02:10.120 --> 00:02:12.730
+replica set.
+
+57
+00:02:12.730 --> 00:02:14.660
+So this is the configuration
+file for mongos,
+
+58
+00:02:14.660 --> 00:02:16.410
+and the first thing
+you're going to notice
+
+59
+00:02:16.410 --> 00:02:18.390
+is that there is no DB path.
+
+60
+00:02:18.390 --> 00:02:21.060
+That's because mongos doesn't
+need to store any data.
+
+61
+00:02:21.060 --> 00:02:22.860
+All of the data
+used by mongos is
+
+62
+00:02:22.860 --> 00:02:24.450
+stored on the config servers.
+
+63
+00:02:24.450 --> 00:02:27.360
+So in the sharding section,
+we've specified those.
+
+64
+00:02:27.360 --> 00:02:30.000
+And note that we specified
+the entire replica set instead
+
+65
+00:02:30.000 --> 00:02:31.960
+of the individual members.
+
+66
+00:02:31.960 --> 00:02:34.050
+We also enabled key
+file authentication,
+
+67
+00:02:34.050 --> 00:02:36.590
+so we're going to need to
+authenticate to mongos.
+
+68
+00:02:36.590 --> 00:02:39.540
+But it will inherit the same
+users as their config servers,
+
+69
+00:02:39.540 --> 00:02:42.124
+and we'll see that in a minute.
+
+70
+00:02:42.124 --> 00:02:44.040
+So this is the command
+we use to start mongos.
+
+71
+00:02:44.040 --> 00:02:46.500
+We passed the config
+file, like we did before.
+
+72
+00:02:46.500 --> 00:02:49.260
+But, note that this is
+not a mongoD process.
+
+73
+00:02:49.260 --> 00:02:51.750
+Mongos is a different process
+with different properties.
+
+74
+00:02:51.750 --> 00:02:54.100
+So just bear that in mind.
+
+75
+00:02:54.100 --> 00:02:57.071
+So, as we saw before,
+mongos has auth enabled,
+
+76
+00:02:57.071 --> 00:02:59.070
+and it's also going to
+inherit any users that we
+
+77
+00:02:59.070 --> 00:03:00.970
+created on the config servers.
+
+78
+00:03:00.970 --> 00:03:03.970
+So this user is
+actually ready to go.
+
+79
+00:03:03.970 --> 00:03:05.135
+And it looks like we're in.
+
+80
+00:03:05.135 --> 00:03:06.890
+Just going to check
+the status here.
+
+81
+00:03:06.890 --> 00:03:09.670
+
+
+82
+00:03:09.670 --> 00:03:11.740
+So, sh.status is
+the most basic way
+
+83
+00:03:11.740 --> 00:03:13.690
+to get sharding
+data from mongos.
+
+84
+00:03:13.690 --> 00:03:15.520
+And if we take a
+look at the output,
+
+85
+00:03:15.520 --> 00:03:17.860
+we can see that we have the
+number of mongos's currently
+
+86
+00:03:17.860 --> 00:03:21.310
+connected, and we also
+have the number of shards.
+
+87
+00:03:21.310 --> 00:03:23.860
+Right now, this is empty because
+we don't have any shards.
+
+88
+00:03:23.860 --> 00:03:26.320
+But, you can probably
+see where this is going.
+
+89
+00:03:26.320 --> 00:03:28.000
+Right now, we have
+a mongos running
+
+90
+00:03:28.000 --> 00:03:29.800
+with the config servers.
+
+91
+00:03:29.800 --> 00:03:32.756
+And actually we also have a
+replica set that we can use.
+
+92
+00:03:32.756 --> 00:03:34.630
+We just need to tweak
+the configuration so we
+
+93
+00:03:34.630 --> 00:03:37.340
+can use it as a shard node.
+
+94
+00:03:37.340 --> 00:03:38.770
+So this is the
+configuration file
+
+95
+00:03:38.770 --> 00:03:41.020
+for the first node
+in our replica set,
+
+96
+00:03:41.020 --> 00:03:42.850
+and I've changed it slightly.
+
+97
+00:03:42.850 --> 00:03:46.042
+I've added this restriction on
+the cache size and gigabytes,
+
+98
+00:03:46.042 --> 00:03:47.500
+because Vagrant
+only has permission
+
+99
+00:03:47.500 --> 00:03:49.090
+to use two gigabytes of memory.
+
+100
+00:03:49.090 --> 00:03:51.880
+So I wanted to reduce the stress
+on the overall environment.
+
+101
+00:03:51.880 --> 00:03:54.320
+This is generally not good
+practice in production,
+
+102
+00:03:54.320 --> 00:03:56.528
+but it's going to be necessary
+once we start sharding
+
+103
+00:03:56.528 --> 00:03:58.441
+collections in this cluster.
+
+104
+00:03:58.441 --> 00:03:59.940
+So this is the one
+line that we have
+
+105
+00:03:59.940 --> 00:04:02.640
+to add if we want to enable
+sharding on this node.
+
+106
+00:04:02.640 --> 00:04:04.740
+This line is going
+to tell mongos, hey,
+
+107
+00:04:04.740 --> 00:04:07.830
+you know you can use me as a
+shard node in your cluster.
+
+108
+00:04:07.830 --> 00:04:09.970
+We have to add this line
+to every single node
+
+109
+00:04:09.970 --> 00:04:11.730
+in the replica is set.
+
+110
+00:04:11.730 --> 00:04:14.070
+So I just changed the config
+files for all three nodes
+
+111
+00:04:14.070 --> 00:04:15.900
+in our set, but the
+nodes still need
+
+112
+00:04:15.900 --> 00:04:18.756
+to be restarted in order to
+account for those changes.
+
+113
+00:04:18.756 --> 00:04:21.089
+We're going to do a rolling
+upgrade in order to do this.
+
+114
+00:04:21.089 --> 00:04:23.550
+Which means, we're going to
+upgrade the secondaries first,
+
+115
+00:04:23.550 --> 00:04:27.150
+then bring them back up, step
+down the current primary,
+
+116
+00:04:27.150 --> 00:04:29.660
+and then upgrade that last node.
+
+117
+00:04:29.660 --> 00:04:32.460
+Here, I'm just connecting to
+one of the secondary nodes.
+
+118
+00:04:32.460 --> 00:04:34.980
+Just going to switch
+to the admin--
+
+119
+00:04:34.980 --> 00:04:40.100
+database, and
+shutdown, this node.
+
+120
+00:04:40.100 --> 00:04:41.600
+And here, I'm just
+starting a backup
+
+121
+00:04:41.600 --> 00:04:44.550
+with the new configuration.
+
+122
+00:04:44.550 --> 00:04:46.110
+Do the same thing
+for our third node.
+
+123
+00:04:46.110 --> 00:04:50.934
+
+
+124
+00:04:50.934 --> 00:04:52.600
+And here, I'm starting
+up the third node
+
+125
+00:04:52.600 --> 00:04:55.436
+with a new configuration.
+
+126
+00:04:55.436 --> 00:04:56.810
+So now that both
+secondaries have
+
+127
+00:04:56.810 --> 00:04:59.121
+been upgraded for the
+new configuration,
+
+128
+00:04:59.121 --> 00:05:00.620
+I'm going to connect
+to the primary,
+
+129
+00:05:00.620 --> 00:05:04.457
+and then step it down so I
+can upgrade that one, too.
+
+130
+00:05:04.457 --> 00:05:06.790
+I'm just going to force an
+election so this node becomes
+
+131
+00:05:06.790 --> 00:05:10.000
+a secondary, and it worked.
+
+132
+00:05:10.000 --> 00:05:13.182
+Now I'm going to shut
+this node down as well.
+
+133
+00:05:13.182 --> 00:05:14.890
+So now I'm just starting
+up our last node
+
+134
+00:05:14.890 --> 00:05:17.660
+with the new configuration,
+and it worked.
+
+135
+00:05:17.660 --> 00:05:19.240
+So now we've
+successfully enabled
+
+136
+00:05:19.240 --> 00:05:22.070
+sharding on this replica set.
+
+137
+00:05:22.070 --> 00:05:25.360
+Now I'm going to
+connect back to mongos.
+
+138
+00:05:25.360 --> 00:05:27.370
+So once I'm connected
+back to mongos,
+
+139
+00:05:27.370 --> 00:05:30.430
+I can add the shard that
+we just enable sharding on.
+
+140
+00:05:30.430 --> 00:05:32.540
+And we specified the
+entire replica set,
+
+141
+00:05:32.540 --> 00:05:34.450
+so we only need to
+specify one node in order
+
+142
+00:05:34.450 --> 00:05:37.570
+for mongos to discover the
+current primary of this replica
+
+143
+00:05:37.570 --> 00:05:38.920
+set.
+
+144
+00:05:38.920 --> 00:05:40.640
+And, it looks like it worked.
+
+145
+00:05:40.640 --> 00:05:44.490
+I'm just going to
+check sh.status,
+
+146
+00:05:44.490 --> 00:05:47.290
+and our list of shards
+now has one shard in it.
+
+147
+00:05:47.290 --> 00:05:50.250
+And as we can see, we
+only specified one node,
+
+148
+00:05:50.250 --> 00:05:54.020
+but mongo was able to discover
+all the nodes in the set.
+
+149
+00:05:54.020 --> 00:05:56.030
+So just to recap
+here-- we covered
+
+150
+00:05:56.030 --> 00:05:59.700
+how to launch mongos and a
+config server replica set.
+
+151
+00:05:59.700 --> 00:06:01.850
+We learned how to enable
+sharding on a replica set,
+
+152
+00:06:01.850 --> 00:06:05.090
+and we did so by way
+of a rolling upgrade.
+
+153
+00:06:05.090 --> 00:06:07.660
+And we added shards
+to our cluster.

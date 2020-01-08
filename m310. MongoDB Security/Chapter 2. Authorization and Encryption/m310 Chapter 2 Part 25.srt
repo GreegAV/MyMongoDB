@@ -1,0 +1,215 @@
+
+1
+00:00:00.000 --> 00:00:00.012
+
+
+2
+00:00:00.012 --> 00:00:01.470
+I'd like to spend
+some time to talk
+
+3
+00:00:01.470 --> 00:00:04.050
+about KMIP, which is the
+Key Management Communication
+
+4
+00:00:04.050 --> 00:00:05.610
+Protocol.
+
+5
+00:00:05.610 --> 00:00:08.760
+MongoDB Enterprise supports
+secure transfer of key files
+
+6
+00:00:08.760 --> 00:00:11.670
+with a compatible key
+management appliance.
+
+7
+00:00:11.670 --> 00:00:13.950
+Using a key manager
+allows for the keys
+
+8
+00:00:13.950 --> 00:00:16.470
+to be stored in the
+key manager instead of
+
+9
+00:00:16.470 --> 00:00:19.410
+in some random place.
+
+10
+00:00:19.410 --> 00:00:21.695
+By using a KMIP key
+management solution,
+
+11
+00:00:21.695 --> 00:00:25.020
+it will make it very easy for
+you to rotate your master keys,
+
+12
+00:00:25.020 --> 00:00:29.100
+and thus fortify your
+MongoDB deployment.
+
+13
+00:00:29.100 --> 00:00:31.740
+It's important to note
+that using a key manager
+
+14
+00:00:31.740 --> 00:00:36.540
+meets regulatory key management
+guidelines such as HIPPA, PCI,
+
+15
+00:00:36.540 --> 00:00:37.920
+and FERPA.
+
+16
+00:00:37.920 --> 00:00:41.770
+And this is why it's recommended
+over local key management.
+
+17
+00:00:41.770 --> 00:00:44.940
+Enabling the encrypted storage
+engine with a KMIP server
+
+18
+00:00:44.940 --> 00:00:47.842
+is arguably more straightforward
+than using a key file.
+
+19
+00:00:47.842 --> 00:00:49.300
+For the sake of
+this demonstration,
+
+20
+00:00:49.300 --> 00:00:50.883
+I'm willing to assume
+you already have
+
+21
+00:00:50.883 --> 00:00:52.260
+a KMIP server up and running.
+
+22
+00:00:52.260 --> 00:00:55.050
+In my case, I'm using
+pi KMIP and running it
+
+23
+00:00:55.050 --> 00:00:56.910
+on my local machine.
+
+24
+00:00:56.910 --> 00:00:59.700
+So you can see right here I
+have the certificates that I'll
+
+25
+00:00:59.700 --> 00:01:03.850
+be using to talk from
+MongoD to this KMIP server.
+
+26
+00:01:03.850 --> 00:01:05.930
+And this is a pretty
+simple KMIP server.
+
+27
+00:01:05.930 --> 00:01:08.860
+We're using the py KMIP library.
+
+28
+00:01:08.860 --> 00:01:12.450
+And then I'm just specifying
+my server, key files,
+
+29
+00:01:12.450 --> 00:01:15.710
+the port I'm running on, the
+version of SSL I'm using,
+
+30
+00:01:15.710 --> 00:01:17.340
+my CA file.
+
+31
+00:01:17.340 --> 00:01:19.650
+And I'm pretty much just
+starting up the server.
+
+32
+00:01:19.650 --> 00:01:24.840
+So I can just go ahead and
+run Python pyKMIP server.
+
+33
+00:01:24.840 --> 00:01:27.180
+And now my KMIP server
+is up and running.
+
+34
+00:01:27.180 --> 00:01:29.580
+And now we can go ahead
+and start our MongoD
+
+35
+00:01:29.580 --> 00:01:32.010
+and have it connect
+to this KMIP server.
+
+36
+00:01:32.010 --> 00:01:35.640
+So to start MongoDB with storage
+encryption turned on and using
+
+37
+00:01:35.640 --> 00:01:38.970
+KMIP, we're just gonna pass
+the dash dash enable encryption
+
+38
+00:01:38.970 --> 00:01:41.940
+flag, the dash dash
+KMIP server option,
+
+39
+00:01:41.940 --> 00:01:44.490
+passing in the
+local host argument
+
+40
+00:01:44.490 --> 00:01:47.346
+because I'm running the
+KMIP server on this machine.
+
+41
+00:01:47.346 --> 00:01:50.550
+Then gonna pass our CA
+file that we're using,
+
+42
+00:01:50.550 --> 00:01:52.460
+and our Client Certificate.
+
+43
+00:01:52.460 --> 00:01:54.150
+And it really is
+as simple as that.
+
+44
+00:01:54.150 --> 00:01:56.580
+You can see our server is
+up and running and waiting
+
+45
+00:01:56.580 --> 00:01:58.250
+for connections.

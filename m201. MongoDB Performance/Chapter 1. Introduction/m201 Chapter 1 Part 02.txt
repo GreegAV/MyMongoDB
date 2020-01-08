@@ -1,0 +1,85 @@
+But do not forget that not all writes and read operations are non-locking operations.
+
+Writing constantly to the same document, for example, and in similar place updates will require each write to block all other writes on that same document to comply.
+
+In situations such as this, multiple CPU's do not help performance.
+
+Because the threads can not do their work in parallel.
+
+Since always the same document will be affected by the same write.
+
+As you probably already noticed, MongoDB is a database.
+
+And one of the things expected from databases is their ability to persist information written.
+
+Genius we may say.
+
+For persisting data, MongoDB will use disks.
+
+The IOPS, which stands for input output operations per second, that your server DISK provides, the faster we can write and read data.
+
+And the faster your persistency layer will respond to database and application requests.
+
+The types of disks will greatly affect the overall performance of your MongoDB deployment.
+
+If we compare the different types of disks.
+
+HDDs, SSDs, EBS, volumes, in terms of random access latency and IOPS, we can immediately tell that there is going to be a big difference between what one can expect, in terms of performance, given the different types of disks that we might be using.
+
+This can be used in different architectures.
+
+More specifically, we can use RAID architectures in our servers for redundancy of read and write operations.
+
+MongoDB will benefit from some but not all RAID architectures.
+
+The recommended RAID architecture for MongoDB deployments is RAID 10, or RAID 1- 0.
+
+This architecture is the one that offers more redundancy and safeguards guarantees with a good performance combination.
+
+On the other hand, we highly discourage deployments that use RAID 5, or even RAID 6.
+
+Since these do not typically provide sufficient performance to MongoDB deployments.
+
+We also recommend avoiding RAID 0.
+
+Because while providing good write performance, it provides very limited availability.
+
+It can lead to reduced performance on read operations.
+
+Britain is a disk architecture that provides both redundancy of segments across physical drives.
+
+But also allows extended performance, since it last penalization of multiple writes, reads, and reads and writes.
+
+In the same disk allocated segments.
+
+Which is quite awesome for a database like MongoDB.
+
+A particularly important aspect of MongoDB is the ability to use several different disks.
+
+That might be available in your servers.
+
+This will allow to distributing IO load of different databases, indexes, journaling, and other files like lock files.
+
+Which allow you to optimize your MongoDB overall performance.
+
+MongoDB deployments also rely on network hardware.
+
+Applications will reach the database by establishing connections to the hosts, where MongoDB instance is running.
+
+The faster and the larger the bandwidth is for your network, the better performance you will experience.
+
+But this is not the end of the story regarding network utilization with MongoDB.
+
+MongoDB is a distributed database for high availability.
+
+Rapid [INAUDIBLE] clusters do the high availability part.
+
+But also for horizontal scaling, where the shard and cluster in all its different components, allows you to get a horizontal distribution of your data.
+
+The way that your different hosts that hold the different nodes of your cluster are connected, can affect the overall performance of your system.
+
+Also, the types of network switches, load balancers, firewalls, and how far apart the cluster nodes are-- either by being distributed across different data centers or regions.
+
+The type of connections between data centers, especially latency-- we haven't cracked going faster than the speed of light yet-- will play a great deal in the performance experienced by your application.
+
+This aligned with the write concern, read concern, and read preference that your application can set while emitting commands or doing requests to the server, needs to be taken into consideration when analyzing the performance of your application.

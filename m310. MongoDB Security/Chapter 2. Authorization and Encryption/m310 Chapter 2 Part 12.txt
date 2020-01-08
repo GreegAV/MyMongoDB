@@ -1,0 +1,105 @@
+Now it's time to create an account for Dan, our intern.
+
+Dan will be working on the NASA database.
+
+So he's going to need to be able to query the NASA database.
+
+But since he's an intern, he doesn't need to be able do anything else.
+
+He shouldn't be able to write or change data in any way.
+
+Let's go ahead and log in with Alice on the admin database and create this user.
+
+Great.
+
+Now we're logged in.
+
+First we're gonna need to get an instance of the NASA database.
+
+That's because Dan is only allowed to read on the NASA database.
+
+Great.
+
+Now we can go ahead and create the user using the NASA database.
+
+And here we go.
+
+On the NASA database, we're going to run createUser with the user name of intern, a password of slacker, and give Dan the read role on the NASA database.
+
+Awesome.
+
+Our user has been successfully added.
+
+So if we now want to make sure that everything is up and running correctly, let's go ahead and authenticate against this new user.
+
+Wait.
+
+What?
+
+Why can't we authenticate with this user?
+
+Well, that's because we created the user on the NASA database, not on the admin database.
+
+That means that this account needs to authenticate against the NASA database.
+
+Here we go.
+
+We've now successfully switched the NASA database.
+
+And by running this command, we should successfully authenticate.
+
+Awesome.
+
+At this point, we have a database called NASA.
+
+And it has one user-- intern.
+
+And this intern user can only read.
+
+Now this is a problem, since we don't have any data in the database.
+
+To make sure the intern can actually do some reads, we need to create a user that is capable of importing a data set to this database.
+
+Let's create a user called bot loader that has the capabilities of writing on the admin database.
+
+Here we go.
+
+Here we're creating a user called botLoader, whose password is bolts.
+
+And we're going to give them the read role on the admin database, and the readWrite role on the NASA database.
+
+And then we're also going to give write majority in a write time amount of 300.
+
+Awesome.
+
+Our user has been successfully added.
+
+Let's go ahead and load our NASA meteorites.JSON file into the NASA database.
+
+Here I'm using the mongoimport command, specifying our username of botLoader, password of bolts, saying that the collection will be called meteorites on the NASA database.
+
+And then I have our NASA meteorites.JSON file that's provided as a handout.
+
+Wait.
+
+What?
+
+Why isn't this working?
+
+Did we not create our user correctly?
+
+Well, no.
+
+Unfortunately, what is happening is that we're trying to insert data into a database for a user that's created on another database.
+
+For these situations we need to specify the dash dash authentication database option in providing the name of the database that we want to authenticate with.
+
+Now when we run this, it should work.
+
+Connected to localhost.
+
+Awesome.
+
+We can see that we've imported 45,000 documents.
+
+And our intern should be able to run his queries.

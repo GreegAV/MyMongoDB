@@ -1,0 +1,53 @@
+So now that we have our configuration set up and running, it's time for us to load some data.
+
+I'm going to connect to my replica set, passing along the seed list.
+
+And on database M201, very original again, and in collection restaurants, I'm going to load my restaurants.json, our famous file that we've been working with throughout this course.
+
+After we inserted all documents into are brand new replica set, it's then time to run some queries.
+
+Once my 1 million documents of restaurants is all loaded up, I'll go ahead and connect to my replica set.
+
+I'm going to pass on the replica set I'd name, all the seed lists.
+
+Once I'm connected to the primary, I'm going to just go ahead and use my M201 database.
+
+And I can see here that I have my collections, or my recently created restaurants collection.
+
+Great.
+
+And as you are already familiar with it, I'll have my restaurants document, where I have a name, a cuisine, stars, address, and so on.
+
+Let's say that our application wants to be able to query on the restaurant name.
+
+That's the main purpose of our application.
+
+A very lame application, I have to say, but the only thing that he needs to do is actually find elements in this restaurants collection based on the name.
+
+This will be our operational workload going forward.
+
+To do that, we will probably, as you've probably figured out already, need to create an index to support such a query so it's optimized.
+
+In this case, we only need name.
+
+So let's go ahead and create an index to do just that.
+
+Once the index is created, we will see that this index is not only available in the primary node, but also on secondary nodes.
+
+So by running this particular query, where we're looking for one of the restaurants available and explaining the output, we can see that this query is actually supported by our recently created index.
+
+That's all good, but let's connect to one of the secondaries-- in this case, the secondary, which is a passive secondary right now, priority 0-- and see if the same behavior is present.
+
+So once I'm connected to now the secondary node, as you can see here I'm connected to 27002, I will need to enable reads from secondaries.
+
+To do that, I need to express the sets label k command.
+
+Otherwise, as you all know, MongoDB does not allow you to do secondary reads by default.
+
+You need to explicitly enable that.
+
+Once I do this and run exactly the same explain command on the exact same query, I can see that the same winning plan and execution stats apply.
+
+So the same index has been used, and pretty much the same winning plan.
+
+So once I create something on the primary, it will be reflected on the secondary nodes

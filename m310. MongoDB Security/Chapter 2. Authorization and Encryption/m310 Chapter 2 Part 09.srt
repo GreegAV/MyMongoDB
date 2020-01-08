@@ -1,0 +1,211 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.050
+The next user we need
+to create is Ben.
+
+3
+00:00:03.050 --> 00:00:04.750
+He's our sysAdmin.
+
+4
+00:00:04.750 --> 00:00:08.000
+It's Ben's job to manage
+clusters and machines.
+
+5
+00:00:08.000 --> 00:00:10.990
+This means he's going to need
+to be able to do maintenance
+
+6
+00:00:10.990 --> 00:00:14.000
+operations-- things like
+adding and removing members
+
+7
+00:00:14.000 --> 00:00:16.480
+of a replica set or
+adding and removing
+
+8
+00:00:16.480 --> 00:00:18.040
+shards in a sharded cluster.
+
+9
+00:00:18.040 --> 00:00:19.810
+Ben should not,
+however, be allowed
+
+10
+00:00:19.810 --> 00:00:22.290
+to see any collection
+data, create or drop
+
+11
+00:00:22.290 --> 00:00:24.880
+any database or
+collection, or even list
+
+12
+00:00:24.880 --> 00:00:26.900
+any collections or databases.
+
+13
+00:00:26.900 --> 00:00:29.450
+So now it's up to Alice, our
+recently created security
+
+14
+00:00:29.450 --> 00:00:32.180
+officer, to actually
+create such a user.
+
+15
+00:00:32.180 --> 00:00:35.310
+We'll first need to log in
+with Alice's credentials.
+
+16
+00:00:35.310 --> 00:00:38.880
+We created Alice's account
+on the admin database.
+
+17
+00:00:38.880 --> 00:00:41.050
+So we need to switch
+that database first.
+
+18
+00:00:41.050 --> 00:00:43.560
+Now we can log in with
+Alice's credentials.
+
+19
+00:00:43.560 --> 00:00:45.440
+And now we're
+successfully logged in.
+
+20
+00:00:45.440 --> 00:00:48.390
+Before creating this user
+and granting it a role,
+
+21
+00:00:48.390 --> 00:00:50.320
+let's go ahead and
+check which roles
+
+22
+00:00:50.320 --> 00:00:54.210
+we think Ben will allow him
+to do everything he needs.
+
+23
+00:00:54.210 --> 00:00:55.630
+I haven't mentioned this yet.
+
+24
+00:00:55.630 --> 00:00:58.240
+But it's important that you use
+the online documentation that
+
+25
+00:00:58.240 --> 00:01:02.140
+docs.MongoDB.com to look at
+all available built-in roles.
+
+26
+00:01:02.140 --> 00:01:04.519
+It very clearly
+outlines here everything
+
+27
+00:01:04.519 --> 00:01:06.520
+that all the different
+roles can do.
+
+28
+00:01:06.520 --> 00:01:09.220
+And since we want Ben to
+be able to add and remove
+
+29
+00:01:09.220 --> 00:01:12.120
+shards or different
+members of a replica set,
+
+30
+00:01:12.120 --> 00:01:15.190
+it probably makes sense to
+use the Cluster Manager role.
+
+31
+00:01:15.190 --> 00:01:18.700
+This means he'll be able to
+add shards, remove shards, be
+
+32
+00:01:18.700 --> 00:01:21.744
+able to do regular
+replica set operations.
+
+33
+00:01:21.744 --> 00:01:23.910
+But he won't be able to
+look at any collection data,
+
+34
+00:01:23.910 --> 00:01:26.670
+or even list any
+databases or collections.
+
+35
+00:01:26.670 --> 00:01:27.320
+Great.
+
+36
+00:01:27.320 --> 00:01:29.740
+Let's go ahead and
+create this user for Ben.
+
+37
+00:01:29.740 --> 00:01:32.530
+Here I'm going to give
+Ben the username ben.
+
+38
+00:01:32.530 --> 00:01:34.840
+His password, of course,
+is going to be cables.
+
+39
+00:01:34.840 --> 00:01:36.673
+And we're gonna give
+him the Cluster Manager
+
+40
+00:01:36.673 --> 00:01:38.770
+role on the admin database.
+
+41
+00:01:38.770 --> 00:01:40.690
+Let's go ahead and
+see if we can log in.
+
+42
+00:01:40.690 --> 00:01:41.474
+Great.
+
+43
+00:01:41.474 --> 00:01:43.640
+Now Ben should be able to
+configure our replica sets
+
+44
+00:01:43.640 --> 00:01:46.010
+and perform cluster maintenance.

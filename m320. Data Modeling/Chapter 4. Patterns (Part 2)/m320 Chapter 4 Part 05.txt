@@ -1,0 +1,71 @@
+In this lesson, we will summarize some additional patterns that may also be beneficial in your design.
+
+The following patterns are less often applied in designs than the one we have covered so far.
+
+However, it is a beneficial to be aware of them so that you can recognize them when you may need to use them.
+
+The approximation pattern is used to reduce the number of resources needed to perform some write operations.
+
+This pattern uses an approximation function to produce a result.
+
+For example, if an application wants to track page views, it could write to the database every time a page is viewed, but this could quickly overload your database with hundreds of thousands of extra writes per day.
+
+In this case, instead, an approximation function can be used to increment the counter only once in a while, instead of doing a write for each individual page view add from the server.
+
+The approximation pattern is used whenever there is a significant tolerance to data imprecision, or when an operation is expensive to compute with very little value added by precision.
+
+Its implementation is to do fewer writes, but with a higher payload.
+
+The application can do the operation every 10 operations, 100 operations, or whatever factor makes sense.
+
+Typical use cases for the approximation pattern are web page counters, any counters with tolerance to imprecision, metric statistics.
+
+The typical benefits of this pattern are a reduction in the number of writes, less write contention while updating the same documents, statistically valid numbers, even if not exact per unit of time.
+
+The implementation of this pattern must reside in the client side application.
+
+This pattern is not specific to MongoDB.
+
+It can be used with any other databases.
+
+However, the need for this sort of optimization surfaces more often with big data applications.
+
+Our next pattern is used to handle potential outliers in your data.
+
+An outlier is something that stands out from the rest of the crowd.
+
+In the world of big data, standing out means you may have a characteristic that is few orders of magnitude higher than the norm.
+
+For example, a famous singer may have 100 million followers on the social media app, while the majority of users have less than 1,000 followers.
+
+The danger with outliers is that they could drive developers to implement a solution that is suboptimal for 99.99% percent of use cases just to accommodate the outlier.
+
+Implementing a solution like this will honestly harm the majority of queries.
+
+Do not be afraid of implementing a design that works well for the vast majority of use cases and then identifies these outliers as exceptions.
+
+The application can then be instructed to handle just these outliers differently.
+
+Here's an example of implementation where a document representing a movie has a field to store a list of extras, up to 1,000.
+
+This will work for almost every movie.
+
+If a movie happens to have more than 1,000 extras, it refers to additional documents that contain the rest of the extras.
+
+Typical use cases for the outlier pattern are social networks and other applications related to popularity, apps containing famous people or objects.
+
+The main benefit of this pattern is that the application remains optimized for most use cases.
+
+The drawback is that the application must handle the outliers separately.
+
+And it makes it harder to write queries that can process the whole data set in the one uniform operation.
+
+As with other patterns, this one also has a handle on the client side, meaning that it can be used with any database.
+
+However, it also surfaces more often in modern and big data applications.
+
+To recap this lesson, we listed some additional patterns that may be seen less frequently, but they are still worth knowing.
+
+The first is the approximation pattern, which allows us to reduce the number of resources used by an operation that may not be crucial and can be approximated.
+
+The outlier pattern allows your apps to optimize for the most frequent use cases, while still successfully handling important outliers.

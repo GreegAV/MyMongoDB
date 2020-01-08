@@ -1,0 +1,271 @@
+
+1
+00:00:00.000 --> 00:00:00.182
+
+
+2
+00:00:00.182 --> 00:00:01.640
+So in this list
+we're going to talk
+
+3
+00:00:01.640 --> 00:00:03.350
+about the principle
+of least privilege
+
+4
+00:00:03.350 --> 00:00:06.524
+and how we can apply it in
+our own security practices.
+
+5
+00:00:06.524 --> 00:00:08.690
+So here's a short relevant
+quote from Jerry Seltzer,
+
+6
+00:00:08.690 --> 00:00:11.330
+who is a domain expert within
+security and distributed
+
+7
+00:00:11.330 --> 00:00:12.170
+networks.
+
+8
+00:00:12.170 --> 00:00:13.628
+And essentially
+what the quote says
+
+9
+00:00:13.628 --> 00:00:15.590
+is that all programs
+and users on a system
+
+10
+00:00:15.590 --> 00:00:18.173
+should only have the privileges
+that are necessary to complete
+
+11
+00:00:18.173 --> 00:00:19.400
+their intended purposes.
+
+12
+00:00:19.400 --> 00:00:21.550
+We'll see what he means
+by that in a second.
+
+13
+00:00:21.550 --> 00:00:23.550
+So to a certain extent
+at the application layer,
+
+14
+00:00:23.550 --> 00:00:26.370
+we are already kind of doing
+this for our mFlux users.
+
+15
+00:00:26.370 --> 00:00:28.610
+For example, we make sure
+that only certain resources
+
+16
+00:00:28.610 --> 00:00:32.082
+and privileges are available to
+users who have been logged in.
+
+17
+00:00:32.082 --> 00:00:34.040
+And even those users have
+different permissions
+
+18
+00:00:34.040 --> 00:00:35.165
+from each other.
+
+19
+00:00:35.165 --> 00:00:37.790
+For example, a user only has the
+permission once they're logged
+
+20
+00:00:37.790 --> 00:00:40.750
+in to delete their own
+comments and no one else's.
+
+21
+00:00:40.750 --> 00:00:42.710
+So MongoDB actually
+offers the same sort
+
+22
+00:00:42.710 --> 00:00:45.269
+of robust user management
+at the database level.
+
+23
+00:00:45.269 --> 00:00:47.060
+So by creating a database
+user specifically
+
+24
+00:00:47.060 --> 00:00:50.150
+for the application, we
+can in a more granular way
+
+25
+00:00:50.150 --> 00:00:51.770
+select the privileges
+and resources
+
+26
+00:00:51.770 --> 00:00:53.914
+that mFlux should
+have access to.
+
+27
+00:00:53.914 --> 00:00:55.830
+So this kind of forces
+us to ask the question,
+
+28
+00:00:55.830 --> 00:00:58.370
+should the application be able
+to create indexes or create
+
+29
+00:00:58.370 --> 00:01:00.320
+new collections, or
+should the application
+
+30
+00:01:00.320 --> 00:01:02.516
+be able to drop an
+entire database?
+
+31
+00:01:02.516 --> 00:01:04.640
+Questions like these tend
+to require some foresight
+
+32
+00:01:04.640 --> 00:01:06.098
+about what actions
+the applications
+
+33
+00:01:06.098 --> 00:01:08.180
+should be able to perform
+so they won't always
+
+34
+00:01:08.180 --> 00:01:09.380
+be easy to answer.
+
+35
+00:01:09.380 --> 00:01:10.880
+But they are very
+important in order
+
+36
+00:01:10.880 --> 00:01:13.380
+to prevent the application from
+accessing a resource that it
+
+37
+00:01:13.380 --> 00:01:14.866
+should never need.
+
+38
+00:01:14.866 --> 00:01:16.240
+If the application
+has permission
+
+39
+00:01:16.240 --> 00:01:18.070
+to use an important collection
+that it's not programmed
+
+40
+00:01:18.070 --> 00:01:19.780
+to ever use, than
+that permission
+
+41
+00:01:19.780 --> 00:01:22.000
+exists only as a vulnerability
+in our application,
+
+42
+00:01:22.000 --> 00:01:23.910
+and we should remove it.
+
+43
+00:01:23.910 --> 00:01:25.454
+So that's all for
+now about security.
+
+44
+00:01:25.454 --> 00:01:27.370
+We highly recommend that
+if you're interested,
+
+45
+00:01:27.370 --> 00:01:28.680
+you should take our
+MongoDB security
+
+46
+00:01:28.680 --> 00:01:30.679
+course to learn more about
+securing your MongoDB
+
+47
+00:01:30.679 --> 00:01:32.290
+deployments in production.
+
+48
+00:01:32.290 --> 00:01:34.680
+So just to recap, make sure
+to engineer your systems
+
+49
+00:01:34.680 --> 00:01:36.760
+with the principle of
+least privilege in mind.
+
+50
+00:01:36.760 --> 00:01:38.820
+In order to do this, we
+have to first consider
+
+51
+00:01:38.820 --> 00:01:41.040
+what kinds of users
+we'll have on our system
+
+52
+00:01:41.040 --> 00:01:42.910
+and what kind of
+permissions they'll need.
+
+53
+00:01:42.910 --> 00:01:44.520
+This includes
+application users who
+
+54
+00:01:44.520 --> 00:01:46.200
+will be using the
+application itself
+
+55
+00:01:46.200 --> 00:01:49.140
+and database users who will
+connect to and apply operations
+
+56
+00:01:49.140 --> 00:01:51.290
+against the database.

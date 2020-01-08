@@ -1,0 +1,214 @@
+1
+00:00:00,000 --> 00:00:00,120
+
+
+2
+00:00:00,120 --> 00:00:00,780
+OK.
+
+3
+00:00:00,780 --> 00:00:03,510
+Let's talk about the situations
+in which update operators can
+
+4
+00:00:03,510 --> 00:00:05,970
+actually create new documents.
+
+5
+00:00:05,970 --> 00:00:08,940
+We call these
+operations upserts.
+
+6
+00:00:08,940 --> 00:00:11,160
+As I was creating the
+data set for this lesson,
+
+7
+00:00:11,160 --> 00:00:13,620
+I actually made use of
+the upsert functionality
+
+8
+00:00:13,620 --> 00:00:18,000
+in MongoDB to create our
+movie details collection.
+
+9
+00:00:18,000 --> 00:00:19,860
+I'm going to walk
+through an example of how
+
+10
+00:00:19,860 --> 00:00:21,700
+I built this collection.
+
+11
+00:00:21,700 --> 00:00:24,120
+Now, I did this in
+a script, but I'll
+
+12
+00:00:24,120 --> 00:00:25,830
+take a look at the
+same basic steps
+
+13
+00:00:25,830 --> 00:00:28,210
+I went through here
+in this example.
+
+14
+00:00:28,210 --> 00:00:31,260
+So imagine that we have
+this detail object.
+
+15
+00:00:31,260 --> 00:00:34,680
+In the script that I wrote, I
+essentially looped through data
+
+16
+00:00:34,680 --> 00:00:36,760
+that I was bringing
+into the database,
+
+17
+00:00:36,760 --> 00:00:39,660
+but I wanted to make sure
+that I didn't introduce
+
+18
+00:00:39,660 --> 00:00:42,070
+any duplicate movie entries.
+
+19
+00:00:42,070 --> 00:00:44,460
+So the way I dealt
+with this was by using
+
+20
+00:00:44,460 --> 00:00:47,190
+a command that looks like this.
+
+21
+00:00:47,190 --> 00:00:50,070
+The process that I used to
+collect the data that I wanted
+
+22
+00:00:50,070 --> 00:00:52,410
+to put into the movie
+details collection
+
+23
+00:00:52,410 --> 00:00:55,410
+was such that I couldn't
+guarantee only retrieving
+
+24
+00:00:55,410 --> 00:00:59,890
+movies not already present in
+the movie details collection.
+
+25
+00:00:59,890 --> 00:01:04,140
+So what I decided to do was to
+make use of the $set operator.
+
+26
+00:01:04,140 --> 00:01:07,110
+The net effect of this was
+that, if the document already
+
+27
+00:01:07,110 --> 00:01:09,900
+existed, I essentially
+replaced it
+
+28
+00:01:09,900 --> 00:01:13,590
+with exactly the
+same detail data.
+
+29
+00:01:13,590 --> 00:01:18,120
+If it didn't already exist,
+updateOne performed an upsert.
+
+30
+00:01:18,120 --> 00:01:20,820
+Using updateOne with
+the upsert option
+
+31
+00:01:20,820 --> 00:01:23,310
+meant that I didn't
+need to first query
+
+32
+00:01:23,310 --> 00:01:26,220
+the collection to see
+whether the document already
+
+33
+00:01:26,220 --> 00:01:29,640
+existed and then do a
+second query to insert.
+
+34
+00:01:29,640 --> 00:01:32,190
+I let MongoDB do
+all the work for me.
+
+35
+00:01:32,190 --> 00:01:35,850
+The trick here is that I'm
+using this third parameter
+
+36
+00:01:35,850 --> 00:01:40,030
+to updateOne, setting
+upsert to true.
+
+37
+00:01:40,030 --> 00:01:42,930
+This means that if
+this filter doesn't
+
+38
+00:01:42,930 --> 00:01:46,690
+match any documents in my
+collection, this document--
+
+39
+00:01:46,690 --> 00:01:49,800
+which, for the Martian
+example, would be this one--
+
+40
+00:01:49,800 --> 00:01:51,990
+will be inserted
+in the collection.
+
+41
+00:01:51,990 --> 00:01:55,320
+And that's the basic
+idea for upserts.
+
+42
+00:01:55,320 --> 00:01:57,870
+Update documents
+matching the filter.
+
+43
+00:01:57,870 --> 00:02:01,050
+If there are none, insert
+the update document
+
+44
+00:02:01,050 --> 00:00:00,000
+as a new document
+in the collection.
+

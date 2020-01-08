@@ -1,0 +1,165 @@
+OK.
+
+So these first three are all ways to create indexes.
+
+But as I said, creating an index does a collection scan, and that may be an issue, especially with the system under a load.
+
+So next, we're going to create the index on the replica set using what we call a rolling upgrade.
+
+Let's go back into our VM and go to the primary.
+
+And we'll connect to our primary.
+
+From that primary, let's drop the social security number index.
+
+Great.
+
+Now I'm creating a connection object to this secondary and running the shutdown server command on it directly from my primary.
+
+Perfect.
+
+Let's check our status.
+
+And as I can see, we're no longer able to reach this secondary, because we've killed the process.
+
+Now I can check to see that I'm down to only two servers.
+
+Good.
+
+Definitely just the two.
+
+Next, I want to restart the MongoDB process in standalone mode, meaning I am omitting the --repl set option and using a different port.
+
+This change of port is to avoid any traffic trying to connect to that instance while I build the index out of the replica set.
+
+First, I want to know what command I used.
+
+I shut down the server on RS3, so it's not appearing in the list of processes.
+
+I'm going to start with one of these processes I see here.
+
+I'm going to change its port, change its directory, and drop the --repl set argument.
+
+You can do this yourself manually, but I wrote a little script to do it for me.
+
+You're welcome to use it.
+
+But if you do, then use it at your own risk.
+
+Also, if you see a more elegant way to do this, please don't judge me.
+
+Connecting with the Mongo shell, I now can create the index.
+
+This time, there's no reason to build in the background.
+
+Foreground is better.
+
+It's not a part of the replica set.
+
+It's a standalone.
+
+And foreground builds tend to be faster.
+
+Let's make sure we're in the right place.
+
+And yes.
+
+We're in the M312 database, and there's the people collection.
+
+Perfect.
+
+Let's shut down this instance.
+
+And I can restart the MongoD server and verify that it's back in the replica set with another script that's similar to the previous one, just a little different.
+
+Now let's go back to the primary and check up on our replica set.
+
+Secondary, secondary, primary.
+
+Great.
+
+Our server is back up, and it's the secondary.
+
+In real life, there's a chance that the index build would take a really long time.
+
+If that had happened, I would then want this re-added member to catch up on its oplog before doing the same work on the other secondaries.
+
+But this is a class demo, and I haven't done any writes, so I'll just shrink down my other secondary and do the same work on it.
+
+And that member is down.
+
+So we'll go through a similar set of steps, just like we did before.
+
+Now our second server is up as a standalone.
+
+We're in the right place.
+
+We've created our index, so we want to shut down and restart it.
+
+Let's go back to the primary and confirm.
+
+Secondary, secondary, primary.
+
+Great.
+
+All three of my members are up again.
+
+And once I've re-added this member, my two secondaries both have the index, and we're left doing the work on the primary.
+
+Let's step down the primary and then shut it down and do the same procedure.
+
+So now we're no longer the primary.
+
+This server on port 30002 is the primary, and we're just a secondary.
+
+OK.
+
+Let's go through and repeat all of our steps.
+
+First, I'll shut down my server, then exit.
+
+Next, I'll spin it back up as a standalone.
+
+And let's jump to it.
+
+Once again, a sanity check.
+
+We'll create our index, and we'll shut down.
+
+OK.
+
+Let's restart it and confirm.
+
+Server on port 30002 is still primary.
+
+Secondary.
+
+And here we are.
+
+Once I'm done with updating my last replica set member, I'm good to go.
+
+There are a few things to note.
+
+First, the role of primary was exchanged between hosts.
+
+This server on port 30000 used to be the primary.
+
+Now it's a secondary.
+
+And this server on port 30002 is now primary.
+
+By the way, which server steps up to be primary may vary on your system.
+
+It doesn't matter.
+
+The important thing is that another server is going to have to step up.
+
+Also, it's up to me to build the same index with the exact same parameters on all hosts.
+
+There is no check from the system to tell me that the indexes aren't the same across all the nodes.
+
+Even if you're not going to build indexes this way, this is a powerful procedure that you should master in order to do any kind of upgrade on MongoDB.
+
+Use this process anytime you change your MongoDB version or your server's operating system or upgrade your hardware.
+
+You can do all of this by leveraging the replication feature of MongoDB.

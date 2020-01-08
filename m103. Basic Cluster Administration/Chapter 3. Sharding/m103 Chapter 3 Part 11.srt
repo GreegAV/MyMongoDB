@@ -1,0 +1,339 @@
+1
+00:00:00,000 --> 00:00:00,620
+
+
+2
+00:00:00,620 --> 00:00:03,110
+In a prior lesson, we
+talked about how the Mongos
+
+3
+00:00:03,110 --> 00:00:05,150
+routes queries at a high level.
+
+4
+00:00:05,150 --> 00:00:07,670
+We're going to dig into
+more detail here on targeted
+
+5
+00:00:07,670 --> 00:00:11,510
+versus scatter
+gather query routing.
+
+6
+00:00:11,510 --> 00:00:13,160
+Remember that each
+shard contains
+
+7
+00:00:13,160 --> 00:00:16,700
+chunks of sharded data,
+where each chunk represents
+
+8
+00:00:16,700 --> 00:00:21,790
+an inclusive lower bound
+and exclusive upper bound.
+
+9
+00:00:21,790 --> 00:00:23,950
+The context of a replica
+set keeps a table
+
+10
+00:00:23,950 --> 00:00:29,080
+of the shard chunk The Mongos
+s keeps a cached local copy
+
+11
+00:00:29,080 --> 00:00:30,940
+of this metadata table.
+
+12
+00:00:30,940 --> 00:00:34,520
+That means that each Mongos has
+a map of which shard contains
+
+13
+00:00:34,520 --> 00:00:36,950
+any given shard key value.
+
+14
+00:00:36,950 --> 00:00:40,600
+Briefly, minKey represents
+the lowest possible shard
+
+15
+00:00:40,600 --> 00:00:41,830
+key value.
+
+16
+00:00:41,830 --> 00:00:44,320
+Think of this like
+minus infinity,
+
+17
+00:00:44,320 --> 00:00:47,800
+while maxKey represents the
+highest possible shard key
+
+18
+00:00:47,800 --> 00:00:51,880
+value, maximum infinity for
+you math purists out there.
+
+19
+00:00:51,880 --> 00:00:55,360
+These chunks handle capturing
+the lower and upper boundaries
+
+20
+00:00:55,360 --> 00:00:57,340
+of your shard key
+values, so that you
+
+21
+00:00:57,340 --> 00:00:59,200
+don't have to worry
+about redefining what
+
+22
+00:00:59,200 --> 00:01:01,450
+the lowest or highest
+possible shard key value
+
+23
+00:01:01,450 --> 00:01:04,099
+is for the collection.
+
+24
+00:01:04,099 --> 00:01:07,300
+So when the Mongos receives a
+query whose predicate includes
+
+25
+00:01:07,300 --> 00:01:10,480
+the shard key, the Mongos
+can look at the table
+
+26
+00:01:10,480 --> 00:01:14,470
+and know exactly which
+shards to direct at query to.
+
+27
+00:01:14,470 --> 00:01:17,630
+The Mongos opens a cursor
+against only those shards
+
+28
+00:01:17,630 --> 00:01:20,080
+that can satisfy
+the query predicate.
+
+29
+00:01:20,080 --> 00:01:22,750
+Because the Mongos is
+targeting the query
+
+30
+00:01:22,750 --> 00:01:25,340
+to a subset of shards
+in the cluster,
+
+31
+00:01:25,340 --> 00:01:27,910
+these targeted queries
+are generally faster
+
+32
+00:01:27,910 --> 00:01:31,240
+than having to check in with
+every shard in the cluster.
+
+33
+00:01:31,240 --> 00:01:34,570
+If, for example, the Mongos
+can satisfy the entire query
+
+34
+00:01:34,570 --> 00:01:37,230
+by targeting a single
+shard, then the Mongos
+
+35
+00:01:37,230 --> 00:01:41,020
+can even bypass the merge stage
+and just return the results.
+
+36
+00:01:41,020 --> 00:01:43,660
+This is particularly fast.
+
+37
+00:01:43,660 --> 00:01:46,530
+When the query predicate does
+not include the shard key,
+
+38
+00:01:46,530 --> 00:01:49,840
+than the Mongos cannot derive
+exactly which shards satisfy
+
+39
+00:01:49,840 --> 00:01:50,950
+the query.
+
+40
+00:01:50,950 --> 00:01:53,800
+These scatter gather queries
+must necessarily ping and wait
+
+41
+00:01:53,800 --> 00:01:56,386
+for the reply of every
+shard in the cluster,
+
+42
+00:01:56,386 --> 00:01:57,760
+regardless if they
+have something
+
+43
+00:01:57,760 --> 00:02:00,717
+to contribute towards the
+execution of the query or not.
+
+44
+00:02:00,717 --> 00:02:02,800
+Depending on the number
+of shards in your cluster,
+
+45
+00:02:02,800 --> 00:02:05,470
+the amount of network latency
+between shards and Mongos
+
+46
+00:02:05,470 --> 00:02:08,919
+and a number of other factors,
+these queries can be slow.
+
+47
+00:02:08,919 --> 00:02:11,080
+That's why we advised
+in the Shard key lessons
+
+48
+00:02:11,080 --> 00:02:12,760
+to choose a shard
+key that satisfies
+
+49
+00:02:12,760 --> 00:02:15,520
+the majority of your
+queries, or at least the most
+
+50
+00:02:15,520 --> 00:02:17,220
+common and important ones.
+
+51
+00:02:17,220 --> 00:02:20,830
+Now, on a similar note, ranged
+queries on a hashed shard key
+
+52
+00:02:20,830 --> 00:02:23,080
+are almost always
+scatter gather,
+
+53
+00:02:23,080 --> 00:02:25,690
+because two adjacent
+shard key values are
+
+54
+00:02:25,690 --> 00:02:28,760
+likely to be on two
+completely different chunks.
+
+55
+00:02:28,760 --> 00:02:30,970
+There's a pretty low
+probability that the Mongos
+
+56
+00:02:30,970 --> 00:02:32,980
+will be able to satisfy
+the ranged query
+
+57
+00:02:32,980 --> 00:02:35,800
+with a subset of shards
+within the hash based
+
+58
+00:02:35,800 --> 00:02:37,630
+ranged query predicate.
+
+59
+00:02:37,630 --> 00:02:39,590
+Single document queries
+on a hashed shard key
+
+60
+00:02:39,590 --> 00:02:42,670
+can still be targeted though.
+
+61
+00:02:42,670 --> 00:02:46,090
+One thing to emphasize, if
+you're using a compound index
+
+62
+00:02:46,090 --> 00:02:49,630
+as your shard key, then you
+can specify each prefix up
+
+63
+00:02:49,630 --> 00:02:52,840
+to the entire shard key and
+still get a targeted query.
+
+64
+00:02:52,840 --> 00:02:57,130
+So let's say we have a shard
+key on sku, type, and name.
+
+65
+00:02:57,130 --> 00:02:59,770
+I can use any of the
+shard key prefix fields,
+
+66
+00:02:59,770 --> 00:03:04,930
+up to the full shard key,
+to perform a targeted query.
+
+67
+00:03:04,930 --> 00:03:08,470
+But I can't use any arbitrary
+field in the shard key.
+
+68
+00:03:08,470 --> 00:03:12,220
+So even though type and name are
+part of the shard key itself,
+
+69
+00:03:12,220 --> 00:03:14,740
+I haven't included the full
+prefix leading up to either
+
+70
+00:03:14,740 --> 00:00:00,000
+of these fields, so we cannot
+get our targeted query.
+

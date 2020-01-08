@@ -1,0 +1,67 @@
+So let's assume that our intern has proven to be very capable.
+
+And we now want to give him a bit more responsibility.
+
+To do that, Alice, our security officer, will be able to create a new user-defined role, and then can change the intern's role to reflect this new set of privileges.
+
+In this particular case, we want to allow our intern to perform updates on the meteorite collection within the NASA database.
+
+Here we have the db.createRole command.
+
+I'm creating a new role called internRole.
+
+And here's the list of our privileged documents.
+
+We just have one privileged document, which is the privileged document that allows us to update the collection meteorites on the NASA database.
+
+So here's our resource document.
+
+Here's our list of actions, in this case, just the update action.
+
+And then we still want this intern role to be able to inherit the ability to read the NASA database, just like the intern was before.
+
+So here is the read role on the NASA database.
+
+And here are all the inherited roles.
+
+Now when we click Enter, we can see that the role has been successfully created.
+
+To complete this configuration, we just need to update the intern user and grant them the intern role.
+
+Here we go.
+
+I'm now going to update the user intern with a list of roles.
+
+So this will override any roles they currently have.
+
+And the only role that we're going to give them is the intern role on the admin database.
+
+Here I'm going to go ahead and get the NASA database, because that's the database that the intern was created on.
+
+And now I can go ahead and issue updateUser on the NASA database, specifying that I want to update the intern user, and replace all their current roles with this list of roles, which in this case is just our new role-- intern role.
+
+Let's go ahead and authenticate as the intern, and see if we can update our meteorites.
+
+Here we go.
+
+I'm going to go ahead and authenticate as the intern on the NASA database.
+
+And now I can go ahead and find a meteorite.
+
+And here's a nice meteorite.
+
+Now let's go ahead and try and update this meteorite.
+
+Now I'm going to attempt to run update on the meteorites collection.
+
+I'm going to get the same document right here by using ID equals 2.
+
+And then I'm going to set a new field called newfield with the string, "the update worked!" Awesome.
+
+And as you can see, here is our result.
+
+And there's our updated document.
+
+Great.
+
+Now we can assign the task of correcting all the data to the intern.

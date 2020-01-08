@@ -1,0 +1,39 @@
+In this lesson, we're going to be looking at different ways to add an index to a collection.
+
+When you get to building indexes, you're already pretty deep into the process.
+
+You've done a good job of figuring out that an index is missing.
+
+And now it's time to fix the problem.
+
+However, before we start, there is something we have to remind ourselves.
+
+Building an index means doing a collection scan on the collection you're adding the index to.
+
+As we all know, collection scans are evil and can have a severe impact on your performance in production.
+
+We're going to try to minimize that.
+
+First, we could build an index on the Primary from the shell.
+
+Building on the Primary in the foreground is easy.
+
+You simply build the index and the creation will automatically propagate to all other members of the cluster through the oplog.
+
+The index will build in the foreground, which will have the drawback of locking your collection for rights.
+
+The alternative method is to build in the background, which is a non-blocking operation for the rights, but it takes a little longer.
+
+It's usually preferred to building in the foreground for a production system, all else being equal.
+
+Do note that the default is to build in the foreground.
+
+So you have to explicitly say, build in the background.
+
+If you don't want to use the shell, you can use Compass to do either of the first two methods.
+
+The fourth option is to build the index on each member separately using a rolling upgrade method that we'll see.
+
+And the fifth and final option, and by far my favorite, is to do the previous rolling upgrade procedure without getting our hands dirty using Cloud or Ops Manager.
+
+If you have a managed cluster or replica set, meaning a set of machines controlled by automation under a Cloud Manager or Ops Manager, you can let those systems add the index for you.

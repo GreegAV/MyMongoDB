@@ -1,0 +1,282 @@
+
+1
+00:00:00.000 --> 00:00:00.930
+
+
+2
+00:00:00.930 --> 00:00:03.600
+Let's now discuss another
+transformative stage,
+
+3
+00:00:03.600 --> 00:00:05.055
+$addFields.
+
+4
+00:00:05.055 --> 00:00:08.460
+$addFields is extremely
+similar to $project, with
+
+5
+00:00:08.460 --> 00:00:10.120
+one key difference.
+
+6
+00:00:10.120 --> 00:00:14.520
+As the name applies, $addFields
+adds fields to a document.
+
+7
+00:00:14.520 --> 00:00:17.010
+While with $project, we
+can selectively remove and
+
+8
+00:00:17.010 --> 00:00:19.830
+retain fields,
+$addFields only allows
+
+9
+00:00:19.830 --> 00:00:21.660
+you to modify the
+incoming pipeline
+
+10
+00:00:21.660 --> 00:00:23.730
+documents with new
+computed fields
+
+11
+00:00:23.730 --> 00:00:25.940
+or to modify existing fields.
+
+12
+00:00:25.940 --> 00:00:28.470
+Oftentimes, we will want
+to derive a new field
+
+13
+00:00:28.470 --> 00:00:31.080
+or change existing fields,
+and the requirement
+
+14
+00:00:31.080 --> 00:00:34.170
+in $project that once we perform
+a transformation or retain
+
+15
+00:00:34.170 --> 00:00:37.740
+a field then we must specify
+all fields we wish to retain
+
+16
+00:00:37.740 --> 00:00:39.390
+can become tedious.
+
+17
+00:00:39.390 --> 00:00:41.980
+Let's look at an example.
+
+18
+00:00:41.980 --> 00:00:44.400
+First, we'll look at $project.
+
+19
+00:00:44.400 --> 00:00:47.580
+Let's just extract the data
+from the gravity.value field
+
+20
+00:00:47.580 --> 00:00:50.040
+and reassign it to the
+top level, gravity field.
+
+21
+00:00:50.040 --> 00:00:53.070
+
+
+22
+00:00:53.070 --> 00:00:57.720
+As expected, we can get the
+results back with the _id field
+
+23
+00:00:57.720 --> 00:01:00.870
+and the gravity field
+we just calculated.
+
+24
+00:01:00.870 --> 00:01:04.260
+Now let's remove the _id
+field and add the name field
+
+25
+00:01:04.260 --> 00:01:07.800
+for easier reference.
+
+26
+00:01:07.800 --> 00:01:10.270
+All right, this is pretty good.
+
+27
+00:01:10.270 --> 00:01:13.650
+But what if we also want to keep
+the temperature, density, mass,
+
+28
+00:01:13.650 --> 00:01:15.570
+radius, and SMA fields?
+
+29
+00:01:15.570 --> 00:01:19.380
+
+
+30
+00:01:19.380 --> 00:01:22.620
+As we can see, in order to
+keep the information we want,
+
+31
+00:01:22.620 --> 00:01:25.020
+we had to be
+explicit, specifying
+
+32
+00:01:25.020 --> 00:01:27.600
+which fields to retain
+along with performing
+
+33
+00:01:27.600 --> 00:01:29.410
+our transformations.
+
+34
+00:01:29.410 --> 00:01:32.450
+As said, this can
+become tedious.
+
+35
+00:01:32.450 --> 00:01:33.840
+In comes $addFields.
+
+36
+00:01:33.840 --> 00:01:37.080
+If we substitute $addFields
+for $project and execute
+
+37
+00:01:37.080 --> 00:01:43.510
+the following pipeline, we can
+see that we indeed performed
+
+38
+00:01:43.510 --> 00:01:45.160
+the desired transformations.
+
+39
+00:01:45.160 --> 00:01:47.830
+However, we do not
+remove any fields
+
+40
+00:01:47.830 --> 00:01:49.390
+from the original document.
+
+41
+00:01:49.390 --> 00:01:52.540
+Instead, we append new
+transformation fields
+
+42
+00:01:52.540 --> 00:01:54.670
+to the document.
+
+43
+00:01:54.670 --> 00:01:55.480
+OK.
+
+44
+00:01:55.480 --> 00:01:57.400
+One last example.
+
+45
+00:01:57.400 --> 00:01:59.830
+By combining $project
+with $addFields, we
+
+46
+00:01:59.830 --> 00:02:02.170
+remove the annoyance
+of explicitly needing
+
+47
+00:02:02.170 --> 00:02:04.090
+to remove or retain fields.
+
+48
+00:02:04.090 --> 00:02:06.460
+In this example,
+with $project, we
+
+49
+00:02:06.460 --> 00:02:09.100
+are selecting the fields
+that we wish to retain,
+
+50
+00:02:09.100 --> 00:02:12.040
+and in $addFields, we are
+performing our transformation
+
+51
+00:02:12.040 --> 00:02:13.880
+on those pre-selected fields.
+
+52
+00:02:13.880 --> 00:02:15.850
+There is no need
+to go one by one
+
+53
+00:02:15.850 --> 00:02:18.310
+and remove or retain
+fields while performing
+
+54
+00:02:18.310 --> 00:02:20.330
+our transformations.
+
+55
+00:02:20.330 --> 00:02:22.060
+This is a style
+choice and can prevent
+
+56
+00:02:22.060 --> 00:02:23.920
+having to repeatedly
+specify which
+
+57
+00:02:23.920 --> 00:02:26.170
+fields to retain
+in larger pipelines
+
+58
+00:02:26.170 --> 00:02:29.010
+when performing many
+various calculations.
+
+59
+00:02:29.010 --> 00:02:31.030
+Let's see it in action.
+
+60
+00:02:31.030 --> 00:02:34.150
+As we can see, we will
+retain the specified fields
+
+61
+00:02:34.150 --> 00:02:37.590
+and perform the
+specified transformation.

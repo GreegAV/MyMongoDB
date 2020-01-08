@@ -1,0 +1,99 @@
+Hello.
+
+I'm [?
+
+Astiya ?] Comski.
+
+I'm going to talk about updates using aggregation pipeline, which is new in 4.2.
+
+MongoDB 4.2 added a powerful ability to use aggregation pipeline in both update and find and modify commands.
+
+Let's quickly review what an update statement is.
+
+And update operation identifies the document that should be modified and specifies the modification to be performed on it.
+
+The filter or query is the part that specifies which document should be updated.
+
+This update portion specifies how the documents should be transformed.
+
+And then you have access to a number of options to specify whether an upsert should be performed or whether it should be a multi-update, et cetera.
+
+The big change in 4.2 is just to the update section.
+
+So query and options are unchanged.
+
+Now, remember, update takes the form of a document, and you can have two different types.
+
+One is where the top level fields are modifiers.
+
+Those can be things like set, ink, unset, push, add to set, et cetera.
+
+Those indicate which fields should be transformed in what ways.
+
+A second type of update is one where you specify the full document that's going to replace the existing document, and that's called the replacement type update.
+
+One of the shortcomings is that there is no way to reference fields that are currently available in the existing document, other than in a limited way such as ink, which lets you increment an existing value and you get to specify by how much or push to an existing array, et cetera.
+
+The big change in 4.2 is now you will be able to specify either a document for the update portion, in which case, the behavior will be completely unchanged from 4.0 or earlier, or you can specify an array.
+
+And that's new.
+
+The aggregation pipeline will specify what transformation should be applied to the existing document that's being updated.
+
+This means that you will have full access to the current values of all the fields in the document, and to all aggregation expressions and operators to manipulate the document into the result you want.
+
+Now, I said you can only apply transformations to the document being updated, so you don't have access to all of the aggregation stages, only the ones that take as input a single document and output a single document.
+
+So that would be $addFields, which adds new fields to the existing document, or if you specify a field name that already exists, it will overwrite that one field.
+
+Project an exclusion mode, right?
+
+Project will take the names of fields followed by zero or false to exclude, or unset, from a current document, and replace route, which takes new route in and then a specification for the new full document.
+
+We created aliases for these three, which functionally are exactly the same, but maybe seem more similar to operations that already exist in update.
+
+$set is just like $addFields, unset takes an array of fields you want to unset, that's just like exclusion project, and $replaceWith takes the document that will be the replacement document, the complete specification of it, for the new update.
+
+Let's look at a specific example.
+
+First, let's consider how an example we already performed in regular syntax might look like when we switch to new pipeline syntax.
+
+Here, we have an update.
+
+We're specifying document with _id:1.
+
+We're specifying that we should increment field a by 1, then we're specifying upsert true, which means if the document doesn't exist, it will be created.
+
+Let's see what effect that has on some basic document examples.
+
+If the document exist without field a, a will be set to 1 as if it existed would value 0.
+
+If it was some number like 10 becomes 11, 100 becomes 101.
+
+If the document didn't exist, it will get created with _id:1 and a will be set to 1, just like in the example where a didn't exist.
+
+And if the document exists, but a is not a number, you will get an error because we cannot increment the non-numeric value by a number.
+
+Now, let's write this using the aggregation pipeline.
+
+Most importantly, you can see that these brackets in the second argument indicate that this is an array, therefore, a pipeline.
+
+And now we do a $set, which is, remember, just $addFields.
+
+We said a to be the sum of current value of a and 1.
+
+The upsert option is still that.
+
+We now expect to see pretty much the same thing.
+
+This is because sum, if a field doesn't exist, just ignores it.
+
+If it was 10 then we get 11, 100 we get 101.
+
+If the document didn't exist, again, it's just like a being missing.
+
+The only difference is when a was not a number, because in aggregation $sum ignores non-numeric fields, we will actually get a 1 here.
+
+If we wanted to use aggregation, but preserved the behavior of non-numeric fields giving an error, we would use add instead of sum, and then we'll get an error that says that $add only supports numeric things or date types.
+
+Things that can be added, not strings.

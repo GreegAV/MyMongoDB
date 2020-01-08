@@ -1,0 +1,77 @@
+Now that we understand the basics of Explain, let's take a quick look a slightly more complex example, running Explain on a sharded cluster.
+
+Here I'm using mlaunch from mtools to set up my sharded cluster.
+
+Now that my cluster's up and running, let's enable sharding.
+
+First, I'm going to enable sharding on the m201 database and then I'm going to go ahead and shard the people collection on the _id index.
+
+Now, this is a brand new database.
+
+So let's go ahead and import some documents.
+
+And here's our good old mongoimport command.
+
+And from here, we can go ahead and check that we have data on multiple shards.
+
+And as you can see I have most of my data on shard one, and a little bit of my data on shard two.
+
+And that's fine for this demonstration.
+
+Now, when this query is ran on the mongos, not much is happening on that mongos itself.
+
+The mongos is going to send the query to each shard and then each shard is going to evaluate the query, select a plan, and then all that information will be aggregated back on the mongos.
+
+So most of the time, we would expect that the same plan be chosen for each shard.
+
+But it may happen that a shard chose a different plan simply because it had less or more data to process.
+
+And this output is very similar to what we've been seeing.
+
+If we go up to the winningPlan, we will see that the last stage is to this shard merge.
+
+And so when we drill in here, we can see that we have this shards array, and we first have shard 1.
+
+And shard 1 has a winning plan which was to do a collection scan.
+
+And then there's also shard 2, whose winning plan was also to do a collection scan.
+
+So all those documents were passed back up to the mongos, where they were merged together.
+
+Now that we've done the hard work at looking at the full Explain output, let's see how we can browse this information in an easier way.
+
+And for that, we're going to use Compass.
+
+And so here's Compass and I'm already on the people collection.
+
+And I can go ahead and click this Explain Plan tab.
+
+And from here, I can go ahead and run the query we've been running.
+
+And this is really cool because we get this awesome visual output where we can see our index scan followed by our fetch stage.
+
+And we can also see all the important information that we've been looking at.
+
+And now if we want to drill into any information that isn't highlighted up here, we can just click this Raw JSON tab, and we're going to see this JSON object that we've been looking at this whole time.
+
+And we have the ability to hide the different fields we don't care about, and open up fields that we do care about.
+
+It's pretty slick.
+
+In summary, we've seen that the Explain command is extremely powerful in helping us troubleshoot slow queries.
+
+Its output is quite rich.
+
+However, there's a few pieces of common information that we'll be looking at.
+
+Things like execution time, the number of keys read, documents read, and documents returned, and obviously, the plans that were selected and the ones that were rejected.
+
+Let's recap what we've learned.
+
+We've extensively looked at all the information that's Explain provides us.
+
+We've talked about how it works, and the different arguments that we can pass in.
+
+We've seen what Explain outputs look like on a sharded cluster.
+
+And we've also seen the awesome view that MongoDB Compass gives us into Explain.

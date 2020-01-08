@@ -1,0 +1,51 @@
+In this lesson, we are going to start using our MongoDB Java driver by creating a database connection, and walk you through the different objects that this library exposes in order for us to build applications and manipulate data stored in MongoDB.
+
+So let's first define what we are going to be using.
+
+To communicate with the MongoDB database server, that in this course is hosted by our MongoDB Atlas, we need to establish a connection between the client and the server.
+
+To do that, we need to use a client-side library that enables our application code to establish such communication.
+
+These client-side libraries are called drivers in MongoDB lingo.
+
+There are numerous types of drivers from MongoDB covering all the most common programming languages.
+
+In this course, we'll be using the official Java MongoDB driver.
+
+For Java, we publish two different drivers-- mongodb-driver-sync, for synchronous, which we'll be using in this course, mongodb-driver-async, for asynchronous.
+
+That uses callbacks to interact with the application.
+
+We are not going to cover the asynchronous driver in this course.
+
+However, feel free to go ahead and experiment on your own.
+
+There is a third driver, our uber mongodb-driver-legacy, which we have since deprecated, which is used to combine both the sync and async models.
+
+You should not be using that going forward.
+
+Within our [?
+
+mflex ?] application, we have already set up the dependencies for you, so no need to take any action.
+
+But it is always good to know what is out there, so you can make the appropriate decision for your own projects.
+
+Within the driver, there are a set of object classes that we need you to know of-- the MongoDB client, the base connection class that handles configuration options and establishes the communication between the cluster and the application, your app.
+
+The MongoDB database, the MongoCollection class, and then we have Bson objects.
+
+Well, that is also defined in the Java driver classes, since Document implements the Bson interface.
+
+We will be using Document quite a lot, especially to define corporate tickets and return back documents from the collections.
+
+But we are also going to be using quite a lot of Bson objects to define components of our query predicates, update objects, aggregation stages, and some other types of operations.
+
+In MongoDB nearly every piece of information from the database data communication inquiries are documents.
+
+So it's a very important class to keep in mind.
+
+In essence, these are the main basic objects that our MongoDB Java driver exposes.
+
+But enough talk.
+
+Let's see these objects in action.

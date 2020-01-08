@@ -1,0 +1,133 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:04,380
+Now let's look at operators
+for array-valued fields.
+
+3
+00:00:04,380 --> 00:00:07,230
+First, we'll look at $all.
+
+4
+00:00:07,230 --> 00:00:13,010
+$all matches array fields
+against an array of elements.
+
+5
+00:00:13,010 --> 00:00:17,113
+In order for a document to
+match a filter using $all,
+
+6
+00:00:17,113 --> 00:00:20,200
+all the elements
+we're looking for
+
+7
+00:00:20,200 --> 00:00:23,790
+must be included in
+that array field.
+
+8
+00:00:23,790 --> 00:00:27,160
+Now they don't necessarily
+need to be in this order,
+
+9
+00:00:27,160 --> 00:00:31,700
+but each one of these must
+occur in the genre's field
+
+10
+00:00:31,700 --> 00:00:34,030
+in this example.
+
+11
+00:00:34,030 --> 00:00:36,480
+So here, we're
+filtering for documents
+
+12
+00:00:36,480 --> 00:00:40,630
+that have been classified as
+falling into the comedy, crime,
+
+13
+00:00:40,630 --> 00:00:43,710
+and drama genres.
+
+14
+00:00:43,710 --> 00:00:46,570
+Considering the
+syntax for $all, note
+
+15
+00:00:46,570 --> 00:00:50,460
+that it's specified as
+the value of the field
+
+16
+00:00:50,460 --> 00:00:54,970
+were searching on in our
+filter, and that $all
+
+17
+00:00:54,970 --> 00:00:58,270
+has, as its value, an array.
+
+18
+00:00:58,270 --> 00:01:00,714
+And if we try this query
+in the mongo Shell,
+
+19
+00:01:00,714 --> 00:01:02,880
+we see that, in fact, each
+one of the search results
+
+20
+00:01:02,880 --> 00:01:07,570
+does contain these three
+genres in it genres field.
+
+21
+00:01:07,570 --> 00:01:11,030
+Note also that if we loosen
+up our query a little bit,
+
+22
+00:01:11,030 --> 00:01:13,750
+and instead search for movies
+that fall into the genres
+
+23
+00:01:13,750 --> 00:01:17,970
+comedy and drama, then we see
+a mix of movies, all of which
+
+24
+00:01:17,970 --> 00:01:21,010
+have comedy and drama
+listed among their genres,
+
+25
+00:01:21,010 --> 00:01:24,040
+but which also
+list other genres,
+
+26
+00:01:24,040 --> 00:01:28,140
+whether it be romance,
+adventure, thriller,
+
+27
+00:01:28,140 --> 00:01:29,980
+or something else.
+
+28
+00:01:29,980 --> 00:00:00,000
+So that's $all.
+

@@ -1,0 +1,812 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.240
+In this lesson, we're going talk
+about aggregation performance.
+
+3
+00:00:03.240 --> 00:00:05.040
+And specifically,
+we're going to discuss
+
+4
+00:00:05.040 --> 00:00:08.577
+how we can utilize indexes when
+we run aggregation queries.
+
+5
+00:00:08.577 --> 00:00:11.160
+And we're also going to discuss
+some of the memory constraints
+
+6
+00:00:11.160 --> 00:00:13.890
+that apply to
+aggregation in MongoDB.
+
+7
+00:00:13.890 --> 00:00:15.720
+Before we get into
+these different topics,
+
+8
+00:00:15.720 --> 00:00:17.220
+I first want to
+point out that there
+
+9
+00:00:17.220 --> 00:00:21.540
+are two high-level categories
+of aggregation queries.
+
+10
+00:00:21.540 --> 00:00:25.020
+First of all, there are
+real time processing queries
+
+11
+00:00:25.020 --> 00:00:28.530
+and then there are
+batch processed queries.
+
+12
+00:00:28.530 --> 00:00:30.990
+"real time" is in quotes here
+because you can never have
+
+13
+00:00:30.990 --> 00:00:32.845
+truly real time processing.
+
+14
+00:00:32.845 --> 00:00:34.470
+There will always be
+some kind of delay
+
+15
+00:00:34.470 --> 00:00:38.630
+between when a query is executed
+and when that query responds.
+
+16
+00:00:38.630 --> 00:00:41.310
+Real time processing is so
+that we can provide data
+
+17
+00:00:41.310 --> 00:00:43.200
+to applications.
+
+18
+00:00:43.200 --> 00:00:46.530
+This means that performance
+is more important.
+
+19
+00:00:46.530 --> 00:00:48.900
+A user is going to perform
+some kind of action,
+
+20
+00:00:48.900 --> 00:00:51.594
+the action is going to
+trigger an aggregation query,
+
+21
+00:00:51.594 --> 00:00:53.010
+and then the results
+of that query
+
+22
+00:00:53.010 --> 00:00:54.990
+need to be provided
+back to the user
+
+23
+00:00:54.990 --> 00:00:56.790
+in a reasonable amount of time.
+
+24
+00:00:56.790 --> 00:00:58.522
+With batch processing,
+on the other hand,
+
+25
+00:00:58.522 --> 00:01:00.480
+we're generally talking
+about doing aggregation
+
+26
+00:01:00.480 --> 00:01:02.970
+to provide analytics.
+
+27
+00:01:02.970 --> 00:01:05.577
+And since we're
+providing analytics,
+
+28
+00:01:05.577 --> 00:01:07.410
+that means that these
+jobs are typically run
+
+29
+00:01:07.410 --> 00:01:09.630
+on some kind of periodic basis.
+
+30
+00:01:09.630 --> 00:01:11.610
+And the results
+are not inspected
+
+31
+00:01:11.610 --> 00:01:14.760
+until minutes, hours, or
+even days later from when
+
+32
+00:01:14.760 --> 00:01:16.470
+that query was actually ran.
+
+33
+00:01:16.470 --> 00:01:17.850
+This means that
+query performance
+
+34
+00:01:17.850 --> 00:01:21.252
+is less important than
+with real time processing.
+
+35
+00:01:21.252 --> 00:01:22.710
+Throughout this
+lesson, we're going
+
+36
+00:01:22.710 --> 00:01:25.990
+to focus on the first
+type, real time processing.
+
+37
+00:01:25.990 --> 00:01:27.630
+Now some of these
+principles will also
+
+38
+00:01:27.630 --> 00:01:30.190
+apply to the batch
+processing category.
+
+39
+00:01:30.190 --> 00:01:32.370
+But for the most part we'll
+be discussing strategies
+
+40
+00:01:32.370 --> 00:01:35.280
+to optimize aggregation
+performance for real time
+
+41
+00:01:35.280 --> 00:01:36.912
+processing.
+
+42
+00:01:36.912 --> 00:01:38.370
+Now with that out
+of the way, let's
+
+43
+00:01:38.370 --> 00:01:41.070
+go ahead and discuss the
+meat of this lesson, index
+
+44
+00:01:41.070 --> 00:01:43.710
+usage for aggregation queries.
+
+45
+00:01:43.710 --> 00:01:45.600
+Now as you come to
+learn in this course,
+
+46
+00:01:45.600 --> 00:01:48.980
+indexes are a vital part
+of good query performance.
+
+47
+00:01:48.980 --> 00:01:52.110
+And this same idea applies
+to aggregation queries.
+
+48
+00:01:52.110 --> 00:01:54.210
+Basically, we want to
+ensure that our aggregation
+
+49
+00:01:54.210 --> 00:01:57.810
+queries are able to use
+indexes as much as possible.
+
+50
+00:01:57.810 --> 00:01:59.310
+Now naturally,
+since aggregation is
+
+51
+00:01:59.310 --> 00:02:01.650
+a bit different than
+your typical find query,
+
+52
+00:02:01.650 --> 00:02:05.280
+determining index usage is
+a bit different as well.
+
+53
+00:02:05.280 --> 00:02:08.070
+With an aggregation
+query, we form a pipeline
+
+54
+00:02:08.070 --> 00:02:10.030
+of different
+aggregation operators,
+
+55
+00:02:10.030 --> 00:02:13.440
+which transform our data into
+the format that we desire.
+
+56
+00:02:13.440 --> 00:02:15.780
+Now some of these
+aggregation operators
+
+57
+00:02:15.780 --> 00:02:19.620
+are able to use indexes,
+and some of them are not.
+
+58
+00:02:19.620 --> 00:02:21.570
+But more importantly,
+since data moves
+
+59
+00:02:21.570 --> 00:02:25.350
+through our pipeline from the
+first operator to the last,
+
+60
+00:02:25.350 --> 00:02:28.110
+once the server encounters
+a stage that is not
+
+61
+00:02:28.110 --> 00:02:31.620
+able to use indexes, all
+of the following stages
+
+62
+00:02:31.620 --> 00:02:34.320
+will no longer be able
+to use indexes either.
+
+63
+00:02:34.320 --> 00:02:36.690
+Fortunately for us,
+the query optimizer
+
+64
+00:02:36.690 --> 00:02:39.030
+tries its best to
+detect when a stage can
+
+65
+00:02:39.030 --> 00:02:42.920
+be moved forward so that
+indexes can be utilized.
+
+66
+00:02:42.920 --> 00:02:45.840
+But if you understand the
+underlying principles of how
+
+67
+00:02:45.840 --> 00:02:48.139
+this works, you can
+be more confident
+
+68
+00:02:48.139 --> 00:02:49.680
+in your query
+performance, and you'll
+
+69
+00:02:49.680 --> 00:02:52.830
+have to rely less on
+the query optimizer.
+
+70
+00:02:52.830 --> 00:02:55.140
+In order for us to determine
+how aggregation queries is
+
+71
+00:02:55.140 --> 00:02:59.410
+are executed and whether or
+not indexes are being utilized,
+
+72
+00:02:59.410 --> 00:03:02.220
+we can pass the
+explain true document
+
+73
+00:03:02.220 --> 00:03:05.050
+as an option to the
+aggregation method.
+
+74
+00:03:05.050 --> 00:03:06.570
+This will produce
+an explain output
+
+75
+00:03:06.570 --> 00:03:10.102
+similar to what we are
+used to seeing with find.
+
+76
+00:03:10.102 --> 00:03:11.560
+Now for the rest
+of these examples,
+
+77
+00:03:11.560 --> 00:03:13.980
+we're going to be dealing
+with this hypothetical orders
+
+78
+00:03:13.980 --> 00:03:14.614
+collection.
+
+79
+00:03:14.614 --> 00:03:16.530
+And we're going to go
+ahead and assume that we
+
+80
+00:03:16.530 --> 00:03:19.380
+have an index on customer ID.
+
+81
+00:03:19.380 --> 00:03:22.440
+Unsurprisingly,
+the $match operator
+
+82
+00:03:22.440 --> 00:03:24.450
+is able to utilize indexes.
+
+83
+00:03:24.450 --> 00:03:28.376
+This is especially true if it's
+at the beginning of a pipeline.
+
+84
+00:03:28.376 --> 00:03:30.000
+You'll see a natural
+theme here of that
+
+85
+00:03:30.000 --> 00:03:33.540
+we want to see operators
+that use indexes
+
+86
+00:03:33.540 --> 00:03:36.390
+at the front of our pipelines.
+
+87
+00:03:36.390 --> 00:03:38.040
+Similarly, we're
+always going to want
+
+88
+00:03:38.040 --> 00:03:41.790
+to put sort stages as close
+to the front as possible.
+
+89
+00:03:41.790 --> 00:03:44.610
+We saw with find queries how
+serious our performance can
+
+90
+00:03:44.610 --> 00:03:48.139
+be degraded when sorting
+isn't able to use an index.
+
+91
+00:03:48.139 --> 00:03:49.680
+For this reason, we
+want to make sure
+
+92
+00:03:49.680 --> 00:03:53.470
+that our sort stages come before
+any kind of transformations
+
+93
+00:03:53.470 --> 00:03:56.810
+so that we can make sure that
+we utilize indexes for sorting.
+
+94
+00:03:56.810 --> 00:03:59.467
+If you're doing a
+limit and doing a sort,
+
+95
+00:03:59.467 --> 00:04:01.550
+you want to make sure that
+they're near each other
+
+96
+00:04:01.550 --> 00:04:04.490
+and at the front
+of the pipeline.
+
+97
+00:04:04.490 --> 00:04:08.240
+When this happens, the server
+is able to do a top-k sort.
+
+98
+00:04:08.240 --> 00:04:10.610
+This is when the server
+is able to only allocate
+
+99
+00:04:10.610 --> 00:04:15.140
+memory for the final number of
+documents, in this case, 10.
+
+100
+00:04:15.140 --> 00:04:17.300
+This can happen even
+without indexes.
+
+101
+00:04:17.300 --> 00:04:20.060
+This is one of the most highly
+performant non-index situations
+
+102
+00:04:20.060 --> 00:04:22.060
+that you can be in.
+
+103
+00:04:22.060 --> 00:04:24.040
+Optimizations like
+this are performed
+
+104
+00:04:24.040 --> 00:04:26.690
+by the query optimizer
+whenever possible.
+
+105
+00:04:26.690 --> 00:04:29.800
+But if there is a chance that
+this optimization can change
+
+106
+00:04:29.800 --> 00:04:31.930
+the output it results,
+then the query engine
+
+107
+00:04:31.930 --> 00:04:34.240
+will not perform this
+kind of optimization.
+
+108
+00:04:34.240 --> 00:04:36.490
+That's why understanding
+these underlying principles
+
+109
+00:04:36.490 --> 00:04:37.930
+is important.
+
+110
+00:04:37.930 --> 00:04:40.270
+Now those are the
+basic aggregation
+
+111
+00:04:40.270 --> 00:04:42.100
+optimizations that you can do.
+
+112
+00:04:42.100 --> 00:04:44.500
+Now let's discuss some
+of the memory constraints
+
+113
+00:04:44.500 --> 00:04:47.260
+that you should be aware
+of when doing aggregation.
+
+114
+00:04:47.260 --> 00:04:49.510
+First of all, your
+results are all
+
+115
+00:04:49.510 --> 00:04:51.850
+subject to the 16
+megabyte document
+
+116
+00:04:51.850 --> 00:04:54.310
+limit that exist in MongoDB.
+
+117
+00:04:54.310 --> 00:04:57.290
+Aggregation generally
+outputs a single document,
+
+118
+00:04:57.290 --> 00:05:00.520
+and that single document will
+be susceptible to this limit.
+
+119
+00:05:00.520 --> 00:05:02.800
+Now this limit does
+not apply to documents
+
+120
+00:05:02.800 --> 00:05:05.246
+as they flow through
+the pipeline.
+
+121
+00:05:05.246 --> 00:05:07.120
+As you transform documents,
+they can actually
+
+122
+00:05:07.120 --> 00:05:09.780
+exceed the 16 megabyte
+limit, but whatever
+
+123
+00:05:09.780 --> 00:05:13.480
+is actually returned will still
+fall under the 16 megabyte
+
+124
+00:05:13.480 --> 00:05:14.830
+limit.
+
+125
+00:05:14.830 --> 00:05:17.440
+The best way to
+mitigate this issue
+
+126
+00:05:17.440 --> 00:05:22.270
+is by using $limit and $project
+to reduce your resulting
+
+127
+00:05:22.270 --> 00:05:23.922
+document size.
+
+128
+00:05:23.922 --> 00:05:26.380
+Another limitation that you're
+going to want to be aware of
+
+129
+00:05:26.380 --> 00:05:29.350
+is that for each
+stage in our pipeline,
+
+130
+00:05:29.350 --> 00:05:33.320
+there's a 100 megabyte
+limit of RAM usage.
+
+131
+00:05:33.320 --> 00:05:35.590
+Now the absolute best
+way to mitigate this
+
+132
+00:05:35.590 --> 00:05:37.840
+is to ensure that your
+largest stages are
+
+133
+00:05:37.840 --> 00:05:40.000
+able to utilize indexes.
+
+134
+00:05:40.000 --> 00:05:41.950
+This will reduce your
+memory requirements,
+
+135
+00:05:41.950 --> 00:05:45.040
+since indexes are generally much
+smaller than the documents they
+
+136
+00:05:45.040 --> 00:05:46.210
+reference.
+
+137
+00:05:46.210 --> 00:05:49.026
+Moreover, with sorting,
+they dramatically
+
+138
+00:05:49.026 --> 00:05:50.650
+reduce memory
+requirements, because you
+
+139
+00:05:50.650 --> 00:05:54.010
+don't need to allocate extra
+memory for that sorting.
+
+140
+00:05:54.010 --> 00:05:57.010
+Now if you're still running
+into this 100 megabyte limit
+
+141
+00:05:57.010 --> 00:05:58.990
+even if you're using
+indexes, then there's
+
+142
+00:05:58.990 --> 00:06:00.760
+an additional way
+to get around it.
+
+143
+00:06:00.760 --> 00:06:03.550
+And that is by
+specifying allowDiskUse
+
+144
+00:06:03.550 --> 00:06:06.610
+true on your aggregation query.
+
+145
+00:06:06.610 --> 00:06:09.010
+This will allow you to
+spill to disk, rather
+
+146
+00:06:09.010 --> 00:06:11.630
+than doing everything in memory.
+
+147
+00:06:11.630 --> 00:06:13.960
+Now this is important to
+understand that this is
+
+148
+00:06:13.960 --> 00:06:17.140
+a absolute last resort measure.
+
+149
+00:06:17.140 --> 00:06:19.600
+Hard drives are thousands
+of times slower to access
+
+150
+00:06:19.600 --> 00:06:21.730
+than memory, so by
+splitting to disk,
+
+151
+00:06:21.730 --> 00:06:24.420
+you're going to see serious
+performance degration.
+
+152
+00:06:24.420 --> 00:06:26.740
+In some situations,
+this is necessary,
+
+153
+00:06:26.740 --> 00:06:29.080
+but you need to be aware
+that this will seriously
+
+154
+00:06:29.080 --> 00:06:31.030
+decrease performance.
+
+155
+00:06:31.030 --> 00:06:34.480
+Since allowDiskUse true will
+seriously impact performance,
+
+156
+00:06:34.480 --> 00:06:36.880
+you'll see this more often
+on the batch processing
+
+157
+00:06:36.880 --> 00:06:41.130
+kind of jobs, rather than
+real time processing.
+
+158
+00:06:41.130 --> 00:06:43.820
+And the last thing I want to
+point out here is that allow
+
+159
+00:06:43.820 --> 00:06:47.115
+disk usage does not
+work with $ graphLookup,
+
+160
+00:06:47.115 --> 00:06:49.490
+and that's because $graphLookup
+doesn't currently support
+
+161
+00:06:49.490 --> 00:06:51.080
+splitting to disk.
+
+162
+00:06:51.080 --> 00:06:52.401
+Let's recap what we've learned.
+
+163
+00:06:52.401 --> 00:06:53.900
+So in this lesson,
+we discussed some
+
+164
+00:06:53.900 --> 00:06:56.240
+of the different
+optimization strategies
+
+165
+00:06:56.240 --> 00:06:59.990
+for utilizing indexes with
+your queries for aggregation,
+
+166
+00:06:59.990 --> 00:07:02.420
+and we also discussed some
+of the member constraints
+
+167
+00:07:02.420 --> 00:07:05.780
+that apply to aggregation, and
+how you can mitigate and get
+
+168
+00:07:05.780 --> 00:07:07.780
+around those issues.

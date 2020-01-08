@@ -1,0 +1,89 @@
+In this lesson, we're going to talk about query plans.
+
+By the end of this lesson, you should be familiar with what query plans are, how the query optimizer works with them, and how they're cashed.
+
+Let's go ahead and talk about what a query plan is.
+
+I think the best way to illustrate this is with an example.
+
+When a query comes into the database, a query plan is formed.
+
+Which is a series of stages that feed into one another.
+
+So in the case of this query, for this given index, we'd expect the query plan to look like this.
+
+Since we have an index on zip code and cuisine, we're able to fetch the record IDs of the documents that meet our query predicate.
+
+From there, those record IDs are passed up to the fetch stage.
+
+This is where the storage engine is going to convert the record IDs into documents.
+
+And then those documents are then passed up to the sort stage, where an in-memory sort will be performed on them.
+
+This is the only reasonable query plan for this query on this index.
+
+But for a given query, we can have many different query plans based on what indexes are available.
+
+So if we have an index like this, on a cuisine and stars, this could prevent an in-memory sort.
+
+So we'd have a query plan like this.
+
+Here we'd do an index scan.
+
+Where we fetch the record IDs of our documents in store order.
+
+We then pass this up to the fetch stage where they're converted into documents and then returned.
+
+So the available indexes will determine what possible query plans we can use to satisfy our query.
+
+Now that we know what a query plan is, let's talk a little bit about how they're chosen.
+
+When a fresh query comes into the database for the first time, the server is going to look at all the available indexes on the collection.
+
+From there, it will identify which indexes are viable to satisfy the query.
+
+We call these candidate indexes.
+
+From these candidate indexes, the query optimizer can generate candidate plans.
+
+Now MongoDB has what is called an empirical query planner, which means that there is going to be a trial period, where each of the candidate plans is executed over a short period of time.
+
+And the planner will then see which plan performed best.
+
+I don't want to get too into the weeds here, but best can be which plan returned all the results first.
+
+Or it might be, which returned a certain number of documents in store order fastest.
+
+There's a lot of different ways we can describe best, and the query optimizer will do it in different ways, depending on the query.
+
+And so for this run, this is the winning plan.
+
+If we were to run explain and look under the winning plan field, this is the plan it would be talking about.
+
+And so these other plans would fall under the rejected plans field.
+
+Now, it wouldn't make much sense to run a trial run for every query that came into the database.
+
+We're going to have a lot of the queries that are going to have the same shape and would benefit from the same query plans.
+
+Because of this, MongoDB caches which plan it should use for a given query shape.
+
+Now, over time, our collection is going to change in some [INAUDIBLE] indexes.
+
+What this means is, under different conditions, the plan cache will evict a plan.
+
+This can happen if the server is restarted.
+
+Or if the amount of work performed by the first portion of the query exceeds the amount of work performed by the winning plan by a factor of 10.
+
+Plans are also evicted when the indexes are rebuilt, or if an index is created or dropped.
+
+And that should give you a good overview of query plans.
+
+Let's recap what we've learned.
+
+We spent some time talking about what query plans are.
+
+We also discussed how the query optimizer works, and how it determines which plan is best.
+
+And we also discussed query plan caching so that we're not running trial periods for every query that comes into the database.

@@ -1,0 +1,96 @@
+
+1
+00:00:00.000 --> 00:00:00.710
+
+
+2
+00:00:00.710 --> 00:00:02.520
+Encryption plays
+an important part
+
+3
+00:00:02.520 --> 00:00:04.930
+in any security infrastructure.
+
+4
+00:00:04.930 --> 00:00:06.792
+In this series of
+videos, we're going
+
+5
+00:00:06.792 --> 00:00:08.250
+to discuss the
+different corruption
+
+6
+00:00:08.250 --> 00:00:10.890
+options that MongoDB supports.
+
+7
+00:00:10.890 --> 00:00:13.040
+There are two discrete
+categories of encryption
+
+8
+00:00:13.040 --> 00:00:14.180
+with regards to MongoDB.
+
+9
+00:00:14.180 --> 00:00:18.120
+Be There's Transfer
+Encryption, and then there's
+
+10
+00:00:18.120 --> 00:00:21.690
+also Encryption at Rest.
+
+11
+00:00:21.690 --> 00:00:24.360
+Transfer Encryption,
+as the name implies,
+
+12
+00:00:24.360 --> 00:00:28.200
+refers to encrypting
+information over network traffic
+
+13
+00:00:28.200 --> 00:00:30.556
+between the client
+and the server.
+
+14
+00:00:30.556 --> 00:00:33.180
+Encryption at Rest concerns
+actually encrypting the data
+
+15
+00:00:33.180 --> 00:00:35.100
+that we store on disk.
+
+16
+00:00:35.100 --> 00:00:38.130
+There are two broad classes of
+approaches to encrypting data
+
+17
+00:00:38.130 --> 00:00:39.950
+at rest with MongoDB.
+
+18
+00:00:39.950 --> 00:00:42.540
+There's storage level
+encryption, and application
+
+19
+00:00:42.540 --> 00:00:43.800
+level encryption.
+
+20
+00:00:43.800 --> 00:00:46.420
+We'll take a deep dive into
+each of these topics later
+
+21
+00:00:46.420 --> 00:00:48.200
+in this course.

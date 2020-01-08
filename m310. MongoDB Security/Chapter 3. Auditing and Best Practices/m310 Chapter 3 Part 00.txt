@@ -1,0 +1,29 @@
+In this video, we're going to talk about auditing with MongoDB.
+
+Auditing is an enterprise feature of MongoDB.
+
+And for certain organizations and administrators, auditing is a very important part of security infrastructure.
+
+Auditing can be used for a myriad of things.
+
+But from a security perspective, it is most often used for the following three things.
+
+First, it's often used for accountability of the users of our database.
+
+Auditing is also commonly used to investigate suspicious activity.
+
+And finally, it is used to monitor and gather data about specific database activities.
+
+Once enabled, the auditing system can record four different categories of operations.
+
+First, we can monitor schema modification, or DDL.
+
+We can also audit the management and configuration operations used to configure our replica sets and sharded clusters.
+
+Of course, we can also audit the access to our database as well as the authorization [?
+
+within ?] [?
+
+side ?] of our database.
+
+And finally, we can even audit CRUD operations on our database.

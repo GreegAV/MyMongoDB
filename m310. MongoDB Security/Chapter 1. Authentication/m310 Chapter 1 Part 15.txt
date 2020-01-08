@@ -1,0 +1,149 @@
+So for this particular setup, what we are going to do is boot up our MongoDB instance, our mongod, in a virtual machine.
+
+And I have a LDAP server booted up in a second virtual machine that will be supporting both authentication and authorization that MongoDB requires.
+
+So in essence, all users and all authentication credentials will be both managed by LDAP server and accessed by our mongod.
+
+So now what we're going to do is set up a couple of things.
+
+First I'm going to have my mongod running on this particular machine, my m034 vagrant instance that you have accessed through the handouts of this lesson.
+
+And also a vagrant LDAP instance that basically just has an LDAP configuration on it so you can boot up a LDAP server from this particular setup here.
+
+First thing that I'm going to show you is what configuration am I going to run from my mongod.
+
+Now I have this file here, shared mongod dot cnf, which will hold all my configuration for MongoDB.
+
+What I have here is a simple configuration with the typical options, like which port am I going to listen it to.
+
+I'm going to fork the process to run it on the background.
+
+I'm going to have a systemLog defined, a storage dbPath where I'm going to store all my data, and then the particular configuration details of my LDAP setup.
+
+So first of all, I'm going to say that authorization is enabled.
+
+I'm going to specify which server is going to hold my LDAP configuration, or which server will have the LDAP running.
+
+I'm going to need to specify query templates.
+
+And here, this is the query, following the LDAP query syntax, that I'm going to use to match my users and also retrieve any sort of attributes that they are related with.
+
+In this case, I'm going to be using the DN base, so I'm going to only look for users which match this particular distinguished name base, which is ou users, dc mongodb, dc com.
+
+I'm only going to look for one level down, so anything that is like Alice, users, mongodb, and com, I'll find them.
+
+But anything that is above one level, I will not be looking for those.
+
+And obviously I'm going to be looking for anything that is going to be matching the user keyword here, or the placeholder.
+
+Now this is an open LDAP server.
+
+So I'll need to make sure that I'm doing the userToDNMapping syntax substitution.
+
+So I'm going to pass a username, a simple Alice user name, and then I'm going to apply the actual open LDAP DN syntax to it.
+
+So basically I'm going to replace here on the first elements of the substitution string whatever comes from my user credentials, and then pass it along with this queryTemplate.
+
+So apart from that, I'm not going to be using any security right now.
+
+This is just for demo.
+
+I'm not going to be using any binding whatsoever.
+
+And my authentication mechanism-- since I'm having LDAP supporting both my authentication and my authorization, the authentication mechanism also needs to be set up to reflect that configuration.
+
+Great.
+
+On the other hand, I also have my LDAP server configuration which has my base dn.
+
+Again, the users, mongodb, com.
+
+I also have users defined, like Alice, and I also have a few other setups like this particular group here, which Alice belongs to.
+
+Now if you'll look closely, we will need to reflect this particular user, and more concrete its full distinguished name, to a particular thing that now we need to set up with mongodb authorization on three dot four.
+
+So let's stay tuned for this one.
+
+Let's go back to our mongod instance.
+
+Now before we boot up our MongoDB server, it is a good practice to check the configurations for the LDAP settings.
+
+So this is why we have mongodb LDAP, or mongoldap in this case, and pass along the configuration file that we want to validate against.
+
+Don't forget to obviously pass along the user that is required to validate against, and obviously its password.
+
+Otherwise, the LDAP server will not know what to do with this particular set.
+
+Once we run this, and if we have everything OK and nice green lines here, and we can also successfully acquire the following roles, and this is an important one, cn admins, users, dc mongodb, dc com at admin, you see here that the mongoldap utility is expecting this role that doesn't exist yet to be attributed and specified on the admin database.
+
+This is an important thing.
+
+Let's keep a note for the next set of steps that we're going to do.
+
+All right?
+
+So now it's time for us to set up our MongoDB server.
+
+We just need to pass along the configuration options, and we're good to go.
+
+All right.
+
+Now that we have our MongoDB server up and running, it's time for us to connect to the system by specifying the port that we are going to connect to and start operating with it.
+
+Now right now, we have connected to this instance without specifying any credentials whatsoever, which is totally fine in MongoDB.
+
+It just means that we can't do much with it.
+
+The first thing that we need to do, and since we have authentication supported by LDAP, is authenticate against LDAP.
+
+For that, we connect to our external database, getSiblingDB.
+
+The method to do that, passing along the credentials, in this case Alice, the password.
+
+But also don't forget to specify the mechanism by which we are authenticating this particular user, which in this case is PLAIN.
+
+Great.
+
+We got it.
+
+We are authenticated.
+
+Now we can't do much with it.
+
+If we ask to show collections, for example, the system's going to tell us that we are not authorized.
+
+Now the first thing that comes to mind is, well how is this even possible.
+
+Because the user is authenticated, but there's no notion of the user on this instance here.
+
+Since we rely on LDAP to hold all of authentication credentials, but also authorization credentials, the definition of the user is actually based out of LDIF configuration.
+
+So we don't have the need to have the user created on MongoDB instance.
+
+So prior to three or four, the first thing you should be doing is basically creating a user that will have some privileged role that will allow you to do the administrative roles like creating users, creating other resources that will be needed for the system.
+
+This will be possible because we are using the local host exception to do this.
+
+We are connecting through our local instances to this mongod, so we could create this user, no problem.
+
+But now that we have everything defined on the LDAP server, we do not need to create the user at all.
+
+Because all the definition of the user is actually defined in the LDAP configuration.
+
+So after we authenticate, what we actually need to do is create a role on the admin database that will match the roles that the LDAP server is expecting us to have.
+
+This meaning that on our LDAP configuration, Alice actually belongs to a group, and MongoDB will interpret this group as a role that expects it to be created on our MongoDB server.
+
+Now this is only possible to do because the local host exception on three dot four has been extended to allow us to create a role that would enable the user Alice, or any user that belongs to this particular LDAP group, to actually inherit the role privileges of userAdminAnyDatabase.
+
+So in this particular concrete example, we are going to be creating a role, which the name of the role will be the matching DN name of the group that Alice belongs to.
+
+We will not be setting any specific privileges.
+
+And we are going to be inheriting the userAdminAnyDatabase built-in role that MongoDB contains.
+
+So once we have the role defined, we can basically manage all the privileges of admin user AnyDatabase, which includes, for example, granting roles to other roles.
+
+So if I want to extend my own role of cn admins, ou users, dc mongodb and dc com, and extending the role to read and write on database test, I could obviously use test now, and I could just, for example, insert on my collection notes a message where I can define that LDAP authorization is great.
+
+All of this without creating a single user in my MongoDB instance.

@@ -1,0 +1,253 @@
+
+1
+00:00:00.000 --> 00:00:00.520
+
+
+2
+00:00:00.520 --> 00:00:02.680
+Staleness is about
+facing a piece of data
+
+3
+00:00:02.680 --> 00:00:06.110
+to a user that may
+have been out of date.
+
+4
+00:00:06.110 --> 00:00:08.360
+We now live in a world
+that has more staleness
+
+5
+00:00:08.360 --> 00:00:10.540
+than a few years ago.
+
+6
+00:00:10.540 --> 00:00:12.880
+Due to globalization and
+the world being flatter,
+
+7
+00:00:12.880 --> 00:00:16.660
+systems are now accessed by
+millions of concurrent users,
+
+8
+00:00:16.660 --> 00:00:20.860
+impacting the ability to display
+up-to-the-second data to all
+
+9
+00:00:20.860 --> 00:00:24.740
+these users more challenging.
+
+10
+00:00:24.740 --> 00:00:26.960
+For example, the
+availability of a product
+
+11
+00:00:26.960 --> 00:00:29.090
+that is shown to
+a user may still
+
+12
+00:00:29.090 --> 00:00:32.720
+have to be confirmed
+at checkout time.
+
+13
+00:00:32.720 --> 00:00:36.860
+The same goes for prices of
+plane tickets or hotel rooms
+
+14
+00:00:36.860 --> 00:00:40.990
+that change right
+before you book them.
+
+15
+00:00:40.990 --> 00:00:43.000
+Why do we get this staleness?
+
+16
+00:00:43.000 --> 00:00:46.575
+New events come along at such
+a fast rate that updating data
+
+17
+00:00:46.575 --> 00:00:49.610
+constantly can cause
+performance issues.
+
+18
+00:00:49.610 --> 00:00:51.880
+The main concern when
+solving this issue
+
+19
+00:00:51.880 --> 00:00:54.160
+is data quality and reliability.
+
+20
+00:00:54.160 --> 00:00:55.890
+We want to be able to
+trust the data that
+
+21
+00:00:55.890 --> 00:00:58.950
+is stored in the database.
+
+22
+00:00:58.950 --> 00:01:01.160
+The right question
+is, for how long
+
+23
+00:01:01.160 --> 00:01:04.560
+can the user tolerate not
+seeing the most up-to-date value
+
+24
+00:01:04.560 --> 00:01:07.600
+for a specific field.
+
+25
+00:01:07.600 --> 00:01:09.090
+For example, the
+user's threshold
+
+26
+00:01:09.090 --> 00:01:11.820
+for seeing if something
+is still available to buy
+
+27
+00:01:11.820 --> 00:01:14.820
+is lower than knowing how
+many people view or purchase
+
+28
+00:01:14.820 --> 00:01:16.850
+a given item.
+
+29
+00:01:16.850 --> 00:01:18.770
+When performing
+analytic the queries
+
+30
+00:01:18.770 --> 00:01:21.770
+it is often understood
+that the data may be stale
+
+31
+00:01:21.770 --> 00:01:25.940
+and that the data being analyzed
+is based on some past snapshot.
+
+32
+00:01:25.940 --> 00:01:29.660
+Analytic queries are often run
+on the secondary node, which
+
+33
+00:01:29.660 --> 00:01:31.670
+often may have stale data.
+
+34
+00:01:31.670 --> 00:01:35.960
+It may be a fraction of a second
+or a few seconds out of date.
+
+35
+00:01:35.960 --> 00:01:38.150
+However, it is enough
+to break any guarantee
+
+36
+00:01:38.150 --> 00:01:42.200
+that we're looking at the latest
+data recorded by the system.
+
+37
+00:01:42.200 --> 00:01:43.890
+The solution to
+resolve staleness
+
+38
+00:01:43.890 --> 00:01:47.030
+in the world of big data
+is to batch updates.
+
+39
+00:01:47.030 --> 00:01:48.620
+As long as the
+updates are run within
+
+40
+00:01:48.620 --> 00:01:50.600
+the acceptable
+thresholds, staleness
+
+41
+00:01:50.600 --> 00:01:53.090
+is not a significant problem.
+
+42
+00:01:53.090 --> 00:01:55.310
+So, yes, every piece
+of data has a threshold
+
+43
+00:01:55.310 --> 00:01:57.230
+for acceptable
+staleness that goes
+
+44
+00:01:57.230 --> 00:02:01.800
+from 0 to whatever makes sense
+for given piece of information.
+
+45
+00:02:01.800 --> 00:02:04.060
+A common a way to
+refresh stale data
+
+46
+00:02:04.060 --> 00:02:06.100
+is to use a Change
+Stream to see what
+
+47
+00:02:06.100 --> 00:02:08.410
+has changed in some
+documents and derive
+
+48
+00:02:08.410 --> 00:02:12.400
+a list of dependent piece
+of data to be updated.
+
+49
+00:02:12.400 --> 00:02:13.930
+Change Stream's
+a new application
+
+50
+00:02:13.930 --> 00:02:16.810
+to access and respond to data
+changes, either in real time
+
+51
+00:02:16.810 --> 00:02:18.620
+or in a delayed mode.
+
+52
+00:02:18.620 --> 00:02:20.770
+Please consult our docs
+for a complete description
+
+53
+00:02:20.770 --> 00:02:23.070
+of this MongoDB feature.

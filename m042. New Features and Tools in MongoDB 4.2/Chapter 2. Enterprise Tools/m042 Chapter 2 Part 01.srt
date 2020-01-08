@@ -1,0 +1,345 @@
+
+1
+00:00:00.000 --> 00:00:00.260
+
+
+2
+00:00:00.260 --> 00:00:02.290
+Now that we understand
+how data lake works,
+
+3
+00:00:02.290 --> 00:00:04.390
+let's see how we can use it.
+
+4
+00:00:04.390 --> 00:00:07.650
+So we'll start by creating a
+data lake called Atlas Data
+
+5
+00:00:07.650 --> 00:00:08.713
+Lake.
+
+6
+00:00:08.713 --> 00:00:10.630
+To do this we're going
+to select the Data Lake
+
+7
+00:00:10.630 --> 00:00:12.940
+option on the left-hand
+side in the Atlas UI,
+
+8
+00:00:12.940 --> 00:00:15.820
+and then we're going to
+click Configure A Data Lake
+
+9
+00:00:15.820 --> 00:00:18.100
+and follow the
+onscreen commands.
+
+10
+00:00:18.100 --> 00:00:19.960
+As we've mentioned in
+the previous lesson,
+
+11
+00:00:19.960 --> 00:00:23.480
+our data lake tutorial steps
+you through this process.
+
+12
+00:00:23.480 --> 00:00:27.040
+This is what our data looks
+like inside our s3 bucket.
+
+13
+00:00:27.040 --> 00:00:30.400
+We have a JSON folder with
+six sub-directories containing
+
+14
+00:00:30.400 --> 00:00:31.780
+JSON files.
+
+15
+00:00:31.780 --> 00:00:34.930
+For this example we're using
+uncompressed JSON files.
+
+16
+00:00:34.930 --> 00:00:38.827
+We've added the link to the s3
+bucket in the lecture notes.
+
+17
+00:00:38.827 --> 00:00:41.160
+For this example, we're going
+to configure the databases
+
+18
+00:00:41.160 --> 00:00:44.460
+and collection for a data
+lake through the Mongo shell.
+
+19
+00:00:44.460 --> 00:00:46.800
+We configure our JSON data
+files with the storage
+
+20
+00:00:46.800 --> 00:00:48.780
+set config command.
+
+21
+00:00:48.780 --> 00:00:51.960
+Remember we need a MongoDB
+database user with Atlas admin
+
+22
+00:00:51.960 --> 00:00:55.380
+privileges to configure
+our s3 files into databases
+
+23
+00:00:55.380 --> 00:00:56.670
+and collections.
+
+24
+00:00:56.670 --> 00:00:59.130
+The stores object
+defines each data store
+
+25
+00:00:59.130 --> 00:01:01.140
+associated with the data lake.
+
+26
+00:01:01.140 --> 00:01:04.980
+In this example we've defined
+an s3 bucket as the data store,
+
+27
+00:01:04.980 --> 00:01:09.450
+we've named a single data store
+and we've call it s3 store,
+
+28
+00:01:09.450 --> 00:01:11.880
+we've provided the
+name of the AWS region
+
+29
+00:01:11.880 --> 00:01:14.410
+where the s3 bucket is located.
+
+30
+00:01:14.410 --> 00:01:17.460
+We've also defined our
+database name as sampleDB,
+
+31
+00:01:17.460 --> 00:01:20.670
+and here we're using the
+star wildcard operator
+
+32
+00:01:20.670 --> 00:01:22.330
+for the collection name.
+
+33
+00:01:22.330 --> 00:01:24.390
+And the reason we're doing
+that is because we're
+
+34
+00:01:24.390 --> 00:01:26.520
+using the collection
+name function
+
+35
+00:01:26.520 --> 00:01:28.655
+to define our
+collection names here.
+
+36
+00:01:28.655 --> 00:01:30.780
+What this means is that
+the data lake will actually
+
+37
+00:01:30.780 --> 00:01:34.020
+generate the collection names
+from all some directories
+
+38
+00:01:34.020 --> 00:01:35.970
+underneath this JSON directory.
+
+39
+00:01:35.970 --> 00:01:37.740
+What this gives us
+is a database called
+
+40
+00:01:37.740 --> 00:01:43.180
+sampleDB and six collections
+within that database.
+
+41
+00:01:43.180 --> 00:01:45.610
+So let's have a look at
+what we've done so far.
+
+42
+00:01:45.610 --> 00:01:48.330
+We've created a data
+lake, we've configured it
+
+43
+00:01:48.330 --> 00:01:51.780
+by the Mongo shell, and
+we've configured our database
+
+44
+00:01:51.780 --> 00:01:53.010
+and collections.
+
+45
+00:01:53.010 --> 00:01:55.290
+Now we're ready to go and
+run some analytic queries
+
+46
+00:01:55.290 --> 00:01:57.600
+against our raw s3 data.
+
+47
+00:01:57.600 --> 00:02:00.780
+Let's start by searching the
+sample airbnb collection, which
+
+48
+00:02:00.780 --> 00:02:03.600
+contains property reviews
+for short-term rentals
+
+49
+00:02:03.600 --> 00:02:05.100
+in a range of cities.
+
+50
+00:02:05.100 --> 00:02:08.460
+Now, let's say we want to find
+properties in New York which
+
+51
+00:02:08.460 --> 00:02:10.470
+got a high rating from guests.
+
+52
+00:02:10.470 --> 00:02:14.010
+To make it meaningful, we're
+going to exclude any properties
+
+53
+00:02:14.010 --> 00:02:16.610
+with less than five reviews.
+
+54
+00:02:16.610 --> 00:02:19.850
+You may notice that the syntax
+here is the same standard Mongo
+
+55
+00:02:19.850 --> 00:02:20.930
+query language.
+
+56
+00:02:20.930 --> 00:02:22.460
+We can run queries
+and aggregations
+
+57
+00:02:22.460 --> 00:02:24.860
+just as we would run them
+against a standard MongoDB
+
+58
+00:02:24.860 --> 00:02:26.780
+replica set or shard or cluster.
+
+59
+00:02:26.780 --> 00:02:30.750
+The find command should
+return output in this format.
+
+60
+00:02:30.750 --> 00:02:34.310
+Note that this s3 bucket holds
+the same data as our Atlas load
+
+61
+00:02:34.310 --> 00:02:35.540
+sample data.
+
+62
+00:02:35.540 --> 00:02:37.520
+More details on that
+data can be found
+
+63
+00:02:37.520 --> 00:02:40.580
+in our docs page, which we've
+linked in the lecture notes.
+
+64
+00:02:40.580 --> 00:02:42.740
+So let's recap what we've done.
+
+65
+00:02:42.740 --> 00:02:45.500
+We built a data lake
+in the Atlas UI.
+
+66
+00:02:45.500 --> 00:02:48.320
+As part of the process,
+we created a new IAM role
+
+67
+00:02:48.320 --> 00:02:51.620
+and we gave this role read-only
+access to our s3 bucket.
+
+68
+00:02:51.620 --> 00:02:54.500
+We configured our data
+stores from our s3 data
+
+69
+00:02:54.500 --> 00:02:57.095
+through the Mongo shell
+using the new storage set
+
+70
+00:02:57.095 --> 00:02:58.550
+config command.
+
+71
+00:02:58.550 --> 00:03:00.920
+And then when our data
+is stored and configured,
+
+72
+00:03:00.920 --> 00:03:02.420
+we can run queries
+and aggregations
+
+73
+00:03:02.420 --> 00:03:07.330
+as normal through the shell,
+compass, or a MongoDB driver.

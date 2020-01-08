@@ -1,0 +1,606 @@
+
+1
+00:00:00.000 --> 00:00:00.090
+
+
+2
+00:00:00.090 --> 00:00:01.860
+Let's talk about
+LDAP authentication
+
+3
+00:00:01.860 --> 00:00:04.710
+with the Enterprise
+version of MongoDB.
+
+4
+00:00:04.710 --> 00:00:07.500
+LDAP, the Lightweight
+Directory Access Protocol,
+
+5
+00:00:07.500 --> 00:00:10.770
+is a direct use service protocol
+commonly used within companies.
+
+6
+00:00:10.770 --> 00:00:12.560
+With LDAP
+authentication support,
+
+7
+00:00:12.560 --> 00:00:14.400
+users can authenticate
+to MongoDB
+
+8
+00:00:14.400 --> 00:00:16.070
+using their LDAP credentials.
+
+9
+00:00:16.070 --> 00:00:20.460
+MongoDB communicates to an LDAP
+server via the saslauthd proxy
+
+10
+00:00:20.460 --> 00:00:21.360
+service.
+
+11
+00:00:21.360 --> 00:00:23.640
+We'll configure
+saslauthd such that it
+
+12
+00:00:23.640 --> 00:00:25.110
+can connect to our LDAP server.
+
+13
+00:00:25.110 --> 00:00:28.320
+And that way we'll connect our
+mongod to the sasl via Unix
+
+14
+00:00:28.320 --> 00:00:29.460
+socket.
+
+15
+00:00:29.460 --> 00:00:32.400
+It's important to note that
+MongoDB uses the sasl plane
+
+16
+00:00:32.400 --> 00:00:34.620
+mechanism for communicating
+with the clients,
+
+17
+00:00:34.620 --> 00:00:38.110
+thus sending and receiving
+data over plain text.
+
+18
+00:00:38.110 --> 00:00:40.665
+You can configure how
+saslauthd communicates
+
+19
+00:00:40.665 --> 00:00:43.350
+to the LDAP server, but
+by default this will also
+
+20
+00:00:43.350 --> 00:00:45.670
+communicate via plain text.
+
+21
+00:00:45.670 --> 00:00:47.190
+This means it's in
+our best interest
+
+22
+00:00:47.190 --> 00:00:50.280
+to run this set up on a trusted
+channel such as a connection
+
+23
+00:00:50.280 --> 00:00:53.880
+that's encrypted with TLS or
+over our trusted wired network.
+
+24
+00:00:53.880 --> 00:00:55.380
+I'm going to assume
+you already have
+
+25
+00:00:55.380 --> 00:00:57.900
+MongoDB Enterprise
+installed and have an LDAP
+
+26
+00:00:57.900 --> 00:00:59.520
+server up and running.
+
+27
+00:00:59.520 --> 00:01:02.580
+I'd like to point out that
+my LDAP server in mongod
+
+28
+00:01:02.580 --> 00:01:05.760
+will be running on the same
+machine for this demonstration.
+
+29
+00:01:05.760 --> 00:01:08.250
+I'm currently SSH'd
+into an Ubuntu machine,
+
+30
+00:01:08.250 --> 00:01:10.020
+so keep in mind that
+some of my commands
+
+31
+00:01:10.020 --> 00:01:11.978
+will be slightly different
+from yours depending
+
+32
+00:01:11.978 --> 00:01:13.320
+on your flavor of Linux.
+
+33
+00:01:13.320 --> 00:01:16.110
+Let's go ahead and
+install saslauthd.
+
+34
+00:01:16.110 --> 00:01:17.490
+Here I'm running apt-get.
+
+35
+00:01:17.490 --> 00:01:20.520
+And I'm installing
+saslauth2-bin.
+
+36
+00:01:20.520 --> 00:01:22.050
+And we're going to say yes.
+
+37
+00:01:22.050 --> 00:01:24.690
+And this will install saslauthd.
+
+38
+00:01:24.690 --> 00:01:25.260
+Cool.
+
+39
+00:01:25.260 --> 00:01:26.676
+Now that that's
+been installed, we
+
+40
+00:01:26.676 --> 00:01:29.570
+can go ahead and configure
+saslauthd to talk to LDAP.
+
+41
+00:01:29.570 --> 00:01:33.140
+Here I'm using vim to modify
+my saslauthd configuration.
+
+42
+00:01:33.140 --> 00:01:34.827
+And I'm running vim under sudo.
+
+43
+00:01:34.827 --> 00:01:36.660
+And that's because we're
+modifying something
+
+44
+00:01:36.660 --> 00:01:38.630
+that's in the etc directory.
+
+45
+00:01:38.630 --> 00:01:40.380
+And from here, we need
+to go ahead and say
+
+46
+00:01:40.380 --> 00:01:42.570
+that we want start to be yes.
+
+47
+00:01:42.570 --> 00:01:45.300
+And after that, we want to
+change this mechanism from pam
+
+48
+00:01:45.300 --> 00:01:46.465
+to LDAP.
+
+49
+00:01:46.465 --> 00:01:46.965
+Awesome.
+
+50
+00:01:46.965 --> 00:01:49.290
+Now let's go out
+and save this file.
+
+51
+00:01:49.290 --> 00:01:51.900
+Now that saslauthd is
+configured to talk to LDAP,
+
+52
+00:01:51.900 --> 00:01:55.549
+we need to go ahead and specify
+some specifics about our setup.
+
+53
+00:01:55.549 --> 00:01:57.090
+Here I'm going to
+go ahead and create
+
+54
+00:01:57.090 --> 00:02:01.460
+a file called saslauthd.config
+underneath etc.
+
+55
+00:02:01.460 --> 00:02:04.110
+And I'm going to, again,
+need to use sudo because it's
+
+56
+00:02:04.110 --> 00:02:05.742
+under the etc directory.
+
+57
+00:02:05.742 --> 00:02:07.950
+So in here, we can go ahead
+and configure some stuff.
+
+58
+00:02:07.950 --> 00:02:10.800
+So since my LDAP server is
+loading on a local machine,
+
+59
+00:02:10.800 --> 00:02:13.550
+it's local host, answering
+on the default port.
+
+60
+00:02:13.550 --> 00:02:17.370
+And my search space, I'm going
+to specify it as mongodb.com.
+
+61
+00:02:17.370 --> 00:02:19.230
+And then for my
+actual LDAP filter,
+
+62
+00:02:19.230 --> 00:02:22.242
+my users are going to
+be filtered by UID.
+
+63
+00:02:22.242 --> 00:02:24.510
+We can go ahead and save this.
+
+64
+00:02:24.510 --> 00:02:27.610
+And now we can go ahead and
+start the saslauthd service.
+
+65
+00:02:27.610 --> 00:02:30.090
+And here's the command to do so.
+
+66
+00:02:30.090 --> 00:02:32.220
+And now the daemon's
+been started.
+
+67
+00:02:32.220 --> 00:02:34.150
+Now that we have our
+configuration all set up,
+
+68
+00:02:34.150 --> 00:02:36.820
+we can go ahead and do the
+next thing, which is change
+
+69
+00:02:36.820 --> 00:02:38.640
+the permissions on this folder.
+
+70
+00:02:38.640 --> 00:02:40.530
+And I had to run
+sudo, by the way,
+
+71
+00:02:40.530 --> 00:02:42.890
+because this is
+another special folder.
+
+72
+00:02:42.890 --> 00:02:44.640
+And this folder is
+special because there's
+
+73
+00:02:44.640 --> 00:02:46.410
+this file called mux.
+
+74
+00:02:46.410 --> 00:02:48.487
+And this mux is
+actually a Unix socket.
+
+75
+00:02:48.487 --> 00:02:50.070
+And this is the
+socket that will allow
+
+76
+00:02:50.070 --> 00:02:53.250
+mongod to communicate
+with saslauthd,
+
+77
+00:02:53.250 --> 00:02:55.290
+which will then forward
+our messages over
+
+78
+00:02:55.290 --> 00:02:56.910
+to our LDAP server.
+
+79
+00:02:56.910 --> 00:02:59.490
+So we'll go ahead and run
+chmod on this folder
+
+80
+00:02:59.490 --> 00:03:01.530
+so that mongod
+can actually access this mux.
+
+81
+00:03:01.530 --> 00:03:02.460
+Awesome.
+
+82
+00:03:02.460 --> 00:03:04.320
+Now that we have
+changed permissions,
+
+83
+00:03:04.320 --> 00:03:06.810
+we can go ahead and
+verify that saslauthd
+
+84
+00:03:06.810 --> 00:03:08.790
+can communicate
+with our LDAP server
+
+85
+00:03:08.790 --> 00:03:11.190
+by running testsaslauthd.
+
+86
+00:03:11.190 --> 00:03:13.380
+And here I'm going
+to run saslauthd.
+
+87
+00:03:13.380 --> 00:03:15.330
+And on my LDAP server,
+I have a user named
+
+88
+00:03:15.330 --> 00:03:18.090
+Kirby whose password is LDAP.
+
+89
+00:03:18.090 --> 00:03:20.310
+And then I'm
+specifying that mux.
+
+90
+00:03:20.310 --> 00:03:22.110
+And we get, OK, success.
+
+91
+00:03:22.110 --> 00:03:23.370
+Awesome.
+
+92
+00:03:23.370 --> 00:03:25.350
+Now that we verified
+that saslauthd
+
+93
+00:03:25.350 --> 00:03:27.390
+can talk to our LDAP
+server, let's go ahead
+
+94
+00:03:27.390 --> 00:03:31.890
+and configure MongoDB to
+talk to this saslauthd.
+
+95
+00:03:31.890 --> 00:03:33.730
+Now that we have
+everything configured,
+
+96
+00:03:33.730 --> 00:03:36.580
+we can go ahead and get MongoDB
+up and running with LDAP
+
+97
+00:03:36.580 --> 00:03:38.100
+authentication enabled.
+
+98
+00:03:38.100 --> 00:03:39.720
+Here's the command to do so.
+
+99
+00:03:39.720 --> 00:03:41.997
+We're going to go ahead
+and enable authorization.
+
+100
+00:03:41.997 --> 00:03:43.830
+We're going to go ahead
+and set a parameter.
+
+101
+00:03:43.830 --> 00:03:46.220
+We can set the authentication
+mechanism to plain.
+
+102
+00:03:46.220 --> 00:03:49.900
+Going to set saslauthdPath
+to the mux we've been using.
+
+103
+00:03:49.900 --> 00:03:52.800
+And then, of course,
+dpath, logpath, and fork.
+
+104
+00:03:52.800 --> 00:03:53.640
+Awesome.
+
+105
+00:03:53.640 --> 00:03:55.350
+Now that our server
+is up and running,
+
+106
+00:03:55.350 --> 00:03:56.970
+go ahead and connect to it.
+
+107
+00:03:56.970 --> 00:04:00.930
+Now we should be able to run
+show dbs, and get an error.
+
+108
+00:04:00.930 --> 00:04:02.529
+And we do, as expected.
+
+109
+00:04:02.529 --> 00:04:05.070
+And now we can go ahead and take
+advantage of the localhost
+
+110
+00:04:05.070 --> 00:04:07.209
+exception and create
+our first user.
+
+111
+00:04:07.209 --> 00:04:09.000
+Here I'm going to use
+the external database
+
+112
+00:04:09.000 --> 00:04:11.302
+because LDAP is an external
+authentication mechanism.
+
+113
+00:04:11.302 --> 00:04:13.760
+And I'm going to create a user
+called Kirby, because that's
+
+114
+00:04:13.760 --> 00:04:15.300
+the user we were using.
+
+115
+00:04:15.300 --> 00:04:18.029
+And he's going to be a
+root on the admin database.
+
+116
+00:04:18.029 --> 00:04:18.980
+Sweet.
+
+117
+00:04:18.980 --> 00:04:20.279
+User's been created.
+
+118
+00:04:20.279 --> 00:04:22.687
+And now we can go ahead
+and try and authenticate.
+
+119
+00:04:22.687 --> 00:04:24.270
+I'm first going to
+try with a password
+
+120
+00:04:24.270 --> 00:04:25.710
+that we know is incorrect.
+
+121
+00:04:25.710 --> 00:04:27.600
+We know that my
+passwords LDAP, but I'm
+
+122
+00:04:27.600 --> 00:04:30.400
+going to use the password LDAP2.
+
+123
+00:04:30.400 --> 00:04:32.004
+And we get
+authentication failed.
+
+124
+00:04:32.004 --> 00:04:33.420
+And now I'm going
+to run it again,
+
+125
+00:04:33.420 --> 00:04:36.000
+but with my correct
+password being LDAP.
+
+126
+00:04:36.000 --> 00:04:37.860
+And we see that it
+ran successfully.
+
+127
+00:04:37.860 --> 00:04:38.730
+Awesome.
+
+128
+00:04:38.730 --> 00:04:40.560
+We now have a MongoDB
+Enterprise server
+
+129
+00:04:40.560 --> 00:04:44.180
+up and running with LDAP
+authentication enabled.

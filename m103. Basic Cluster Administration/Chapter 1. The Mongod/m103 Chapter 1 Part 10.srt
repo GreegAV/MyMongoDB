@@ -1,0 +1,716 @@
+1
+00:00:00,000 --> 00:00:00,082
+
+
+2
+00:00:00,082 --> 00:00:01,540
+All right, so in
+this lesson, we're
+
+3
+00:00:01,540 --> 00:00:03,998
+going to take a look at the
+tools you get when you download
+
+4
+00:00:03,998 --> 00:00:05,162
+the MongoDB package.
+
+5
+00:00:05,162 --> 00:00:07,370
+You should already be familiar
+with a couple of them,
+
+6
+00:00:07,370 --> 00:00:11,267
+such as mongod, the core
+database process, and Mongo,
+
+7
+00:00:11,267 --> 00:00:12,850
+which is the interactive
+MongoDB shell
+
+8
+00:00:12,850 --> 00:00:15,020
+that you use to
+connect to mongod.
+
+9
+00:00:15,020 --> 00:00:16,520
+In this lesson,
+we're going to cover
+
+10
+00:00:16,520 --> 00:00:17,895
+some of the other
+important tools
+
+11
+00:00:17,895 --> 00:00:19,810
+you get when you
+download MongoDB.
+
+12
+00:00:19,810 --> 00:00:22,070
+So in order to get a full
+list of the Mongo tools
+
+13
+00:00:22,070 --> 00:00:24,320
+that we get when we
+download MongoDB,
+
+14
+00:00:24,320 --> 00:00:26,540
+we can use a find
+command in Unix.
+
+15
+00:00:26,540 --> 00:00:29,390
+To the find command,
+we pass a search term--
+
+16
+00:00:29,390 --> 00:00:30,620
+in this case, mongo*--
+
+17
+00:00:30,620 --> 00:00:32,911
+which just looks for anything
+that begins with the word
+
+18
+00:00:32,911 --> 00:00:35,730
+"mongo" in this
+directory-- /usr/bin/.
+
+19
+00:00:35,730 --> 00:00:37,710
+So this is a lot of stuff.
+
+20
+00:00:37,710 --> 00:00:39,180
+Specifically in
+this lesson, we're
+
+21
+00:00:39,180 --> 00:00:43,380
+going to cover mongostat,
+mongodump, mongorestore,
+
+22
+00:00:43,380 --> 00:00:46,170
+mongoexport, and mongoimport.
+
+23
+00:00:46,170 --> 00:00:49,020
+mongostat is a utility designed
+to give quick statistics
+
+24
+00:00:49,020 --> 00:00:51,436
+on a running mongod
+or mongos process.
+
+25
+00:00:51,436 --> 00:00:54,060
+All right, so I'm just going to
+launch an example mongod, here,
+
+26
+00:00:54,060 --> 00:00:57,330
+on port 30000, and I'm going to
+fork the process so I can still
+
+27
+00:00:57,330 --> 00:01:00,050
+use this terminal window.
+
+28
+00:01:00,050 --> 00:01:01,640
+In order to connect
+to this mongod
+
+29
+00:01:01,640 --> 00:01:03,950
+and get Mongo stats
+from it, I have
+
+30
+00:01:03,950 --> 00:01:06,950
+to specify the port
+in the mongostat call.
+
+31
+00:01:06,950 --> 00:01:09,200
+And here I've specified my port.
+
+32
+00:01:09,200 --> 00:01:10,880
+And if I enter
+this command, it's
+
+33
+00:01:10,880 --> 00:01:13,910
+going to return Mongo
+stats to me every second--
+
+34
+00:01:13,910 --> 00:01:15,890
+indefinitely, because
+I haven't specified
+
+35
+00:01:15,890 --> 00:01:17,937
+when I want it to stop
+or how often to report.
+
+36
+00:01:17,937 --> 00:01:19,520
+So I'm just going
+to cancel this so we
+
+37
+00:01:19,520 --> 00:01:21,350
+can take a look at the output.
+
+38
+00:01:21,350 --> 00:01:23,560
+These first six fields
+represent the number
+
+39
+00:01:23,560 --> 00:01:25,220
+of specific operations
+per second--
+
+40
+00:01:25,220 --> 00:01:30,560
+such as inserts, deletes,
+and just overall commands.
+
+41
+00:01:30,560 --> 00:01:33,410
+The next seven fields represent
+lower-level memory statistics,
+
+42
+00:01:33,410 --> 00:01:36,230
+such as dirty, which is the
+percentage of dirty bytes
+
+43
+00:01:36,230 --> 00:01:39,440
+in the cache, used,
+which is the percentage
+
+44
+00:01:39,440 --> 00:01:41,590
+of currently-used
+bytes in the cache,
+
+45
+00:01:41,590 --> 00:01:44,690
+vsize, which is the total
+amount of virtual memory used
+
+46
+00:01:44,690 --> 00:01:47,150
+by the process,
+and res, which is
+
+47
+00:01:47,150 --> 00:01:50,990
+the total amount of resonant
+memory used by the process.
+
+48
+00:01:50,990 --> 00:01:54,890
+Net_in and net_out are used to
+measure the amount of network
+
+49
+00:01:54,890 --> 00:01:56,900
+traffic that's being
+received and sent out
+
+50
+00:01:56,900 --> 00:01:59,717
+by the mongod or mongos process.
+
+51
+00:01:59,717 --> 00:02:02,050
+All right, so we're going to
+discuss the next four Mongo
+
+52
+00:02:02,050 --> 00:02:03,620
+server tools and pairs.
+
+53
+00:02:03,620 --> 00:02:06,400
+The first pair is
+mongorestore and mongodump,
+
+54
+00:02:06,400 --> 00:02:09,220
+which are used to import and
+export dump files from MongoDB
+
+55
+00:02:09,220 --> 00:02:10,340
+collections.
+
+56
+00:02:10,340 --> 00:02:14,290
+These dump files are in
+BSON, or Binary JSON format.
+
+57
+00:02:14,290 --> 00:02:16,690
+These tools are very quick,
+because the data in MongoDB
+
+58
+00:02:16,690 --> 00:02:19,600
+is already in BSON format,
+and mongodump simply
+
+59
+00:02:19,600 --> 00:02:21,977
+needs to make a copy to export.
+
+60
+00:02:21,977 --> 00:02:24,560
+So we can see the full options
+that we can pass to Mongo, now,
+
+61
+00:02:24,560 --> 00:02:27,870
+by passing the help flag here.
+
+62
+00:02:27,870 --> 00:02:31,980
+The only one we're going
+to use right now is port.
+
+63
+00:02:31,980 --> 00:02:33,920
+All right, so in
+order to use mongodump
+
+64
+00:02:33,920 --> 00:02:36,800
+with access control enabled,
+you must authenticate
+
+65
+00:02:36,800 --> 00:02:39,530
+through the mongodump command.
+
+66
+00:02:39,530 --> 00:02:41,660
+So in addition to
+specifying a port here,
+
+67
+00:02:41,660 --> 00:02:45,410
+we also specify a username,
+password, and authentication
+
+68
+00:02:45,410 --> 00:02:47,852
+database-- in this case, admin.
+
+69
+00:02:47,852 --> 00:02:49,330
+All right, so
+running this command
+
+70
+00:02:49,330 --> 00:02:54,460
+without specifying a directory
+creates a folder called dump.
+
+71
+00:02:54,460 --> 00:02:56,770
+We take a look inside
+dump and then take
+
+72
+00:02:56,770 --> 00:03:00,800
+a look inside the database
+that we dump from,
+
+73
+00:03:00,800 --> 00:03:02,670
+we can see two files.
+
+74
+00:03:02,670 --> 00:03:04,740
+One of them is a BSON file.
+
+75
+00:03:04,740 --> 00:03:06,980
+This file is the actual
+data from the collection,
+
+76
+00:03:06,980 --> 00:03:09,890
+but it's not very readable,
+because it's a BSON.
+
+77
+00:03:09,890 --> 00:03:12,860
+The JSON file here is metadata
+about the collection that
+
+78
+00:03:12,860 --> 00:03:16,670
+was dumped, and we can
+take a look at it with cat
+
+79
+00:03:16,670 --> 00:03:18,299
+and see it's very short.
+
+80
+00:03:18,299 --> 00:03:20,840
+It has a list of the indexes,
+which right now is just the one
+
+81
+00:03:20,840 --> 00:03:24,500
+on _id that comes by default,
+and then the namespace
+
+82
+00:03:24,500 --> 00:03:28,190
+of the collection that we
+dumped-- exampleDB.students.
+
+83
+00:03:28,190 --> 00:03:29,750
+So this is a
+mongorestore command,
+
+84
+00:03:29,750 --> 00:03:32,180
+which is the inverse of
+the mongodump command.
+
+85
+00:03:32,180 --> 00:03:35,600
+It takes a BSON dump file and
+creates a MongoDB collection
+
+86
+00:03:35,600 --> 00:03:36,740
+from it.
+
+87
+00:03:36,740 --> 00:03:39,440
+This drop flag will drop
+the current collection--
+
+88
+00:03:39,440 --> 00:03:41,090
+exampleDB.students--
+
+89
+00:03:41,090 --> 00:03:44,200
+and then replace it with
+what's in the dump file.
+
+90
+00:03:44,200 --> 00:03:45,390
+And now we're done.
+
+91
+00:03:45,390 --> 00:03:47,520
+All we needed to pass
+was the dump directory,
+
+92
+00:03:47,520 --> 00:03:50,400
+because that had the metadata
+in JSON format, which
+
+93
+00:03:50,400 --> 00:03:51,890
+told it about any indexes--
+
+94
+00:03:51,890 --> 00:03:54,120
+in this case, there
+were no indexes--
+
+95
+00:03:54,120 --> 00:03:57,090
+and the namespace--
+exampleDB.students.
+
+96
+00:03:57,090 --> 00:04:00,860
+So mongodump and
+mongorestore output and input
+
+97
+00:04:00,860 --> 00:04:03,749
+BSON, which are binary files.
+
+98
+00:04:03,749 --> 00:04:05,790
+The next couple commands
+we're going to go over--
+
+99
+00:04:05,790 --> 00:04:07,860
+mongoexport and mongoimport--
+
+100
+00:04:07,860 --> 00:04:09,830
+deal with JSON instead.
+
+101
+00:04:09,830 --> 00:04:12,690
+We can see the full list
+of options for mongoexport
+
+102
+00:04:12,690 --> 00:04:14,210
+by passing the help flag, here.
+
+103
+00:04:14,210 --> 00:04:16,550
+And we see there
+are a lot of them.
+
+104
+00:04:16,550 --> 00:04:19,050
+The ones we're going to use are
+the authentication options--
+
+105
+00:04:19,050 --> 00:04:21,779
+username, password, and
+authenticationDatabase--
+
+106
+00:04:21,779 --> 00:04:23,110
+and port.
+
+107
+00:04:23,110 --> 00:04:25,740
+All right, so now we get to
+see mongoexport in action.
+
+108
+00:04:25,740 --> 00:04:29,550
+We still have to authenticate
+and specify a port,
+
+109
+00:04:29,550 --> 00:04:31,920
+but notice that this time,
+we didn't specify a file name
+
+110
+00:04:31,920 --> 00:04:33,150
+for our output.
+
+111
+00:04:33,150 --> 00:04:35,160
+And unlike mongodump,
+mongoexport
+
+112
+00:04:35,160 --> 00:04:37,650
+will not create a
+directory for us.
+
+113
+00:04:37,650 --> 00:04:40,764
+Instead, it'll send the
+output to standard out.
+
+114
+00:04:40,764 --> 00:04:42,930
+This is a lot of information,
+and it's not so useful
+
+115
+00:04:42,930 --> 00:04:45,300
+when it's just printed
+in the terminal.
+
+116
+00:04:45,300 --> 00:04:47,540
+So this is the same
+exact command as before,
+
+117
+00:04:47,540 --> 00:04:49,250
+except this time
+we've passed this -o
+
+118
+00:04:49,250 --> 00:04:51,300
+flag, which is for the output.
+
+119
+00:04:51,300 --> 00:04:53,626
+We specified a new file
+called students.json
+
+120
+00:04:53,626 --> 00:04:56,000
+to store all that output that
+was printed at the terminal
+
+121
+00:04:56,000 --> 00:04:57,590
+before.
+
+122
+00:04:57,590 --> 00:05:00,007
+All right, so now we have a
+new file called students.json,
+
+123
+00:05:00,007 --> 00:05:01,881
+and I'm just going to
+tail the file so we can
+
+124
+00:05:01,881 --> 00:05:03,070
+take a look at what's in it.
+
+125
+00:05:03,070 --> 00:05:05,210
+So as we can see, this
+is a JSON representation
+
+126
+00:05:05,210 --> 00:05:07,960
+of the MongoDB collection.
+
+127
+00:05:07,960 --> 00:05:10,800
+These are just
+documents and arrays.
+
+128
+00:05:10,800 --> 00:05:13,020
+All right, so this is a
+mongoimport statement,
+
+129
+00:05:13,020 --> 00:05:16,230
+which is the inverse
+operation of mongoexport.
+
+130
+00:05:16,230 --> 00:05:19,265
+This is pretty similar to its
+BSON counterpart, mongorestore.
+
+131
+00:05:19,265 --> 00:05:20,640
+In this command,
+I'm going to use
+
+132
+00:05:20,640 --> 00:05:24,540
+mongoimport to import the data
+set that we just exported.
+
+133
+00:05:24,540 --> 00:05:26,430
+So as we can see here,
+we didn't specify
+
+134
+00:05:26,430 --> 00:05:29,940
+a database or a collection for
+this mongoimport statement.
+
+135
+00:05:29,940 --> 00:05:32,430
+Because there's no metadata
+in the JSON export,
+
+136
+00:05:32,430 --> 00:05:35,520
+mongoimport has to figure out
+a place to put all this data.
+
+137
+00:05:35,520 --> 00:05:38,070
+It defaults to use
+test as the database,
+
+138
+00:05:38,070 --> 00:05:40,170
+and the name of the
+JSON files-- students--
+
+139
+00:05:40,170 --> 00:05:42,580
+as the name of the collection.
+
+140
+00:05:42,580 --> 00:05:44,190
+So just to recap,
+in this lesson we
+
+141
+00:05:44,190 --> 00:05:46,620
+covered mongostat, which
+gives quick statistics
+
+142
+00:05:46,620 --> 00:05:49,230
+on a running mongod
+or mongos process.
+
+143
+00:05:49,230 --> 00:05:52,230
+We covered mongodump, which
+outputs BSON representations
+
+144
+00:05:52,230 --> 00:05:54,360
+of MongoDB, and
+mongorestore, which
+
+145
+00:05:54,360 --> 00:05:56,430
+restores BSON
+representation in MongoDB
+
+146
+00:05:56,430 --> 00:05:58,750
+into MongoDB collections.
+
+147
+00:05:58,750 --> 00:06:02,180
+We covered mongoexport,
+which outputs JSON or CSV
+
+148
+00:06:02,180 --> 00:06:04,510
+representations of
+MongoDB collections,
+
+149
+00:06:04,510 --> 00:06:08,270
+and mongoimport, which takes the
+JSON or the CSV representations
+
+150
+00:06:08,270 --> 00:00:00,000
+and creates a MongoDB
+collection from it.
+

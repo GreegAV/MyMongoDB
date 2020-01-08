@@ -1,0 +1,349 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.050
+Hi there, and welcome to
+M042: New Features and Tools
+
+3
+00:00:04.050 --> 00:00:05.730
+in MongoDB 4.2.
+
+4
+00:00:05.730 --> 00:00:08.670
+One of our classics around
+here at MongoDB University.
+
+5
+00:00:08.670 --> 00:00:11.760
+In this course, we'll be
+looking to all the new features
+
+6
+00:00:11.760 --> 00:00:14.640
+that we have assembled for
+you in the MongoDB 4.2 server
+
+7
+00:00:14.640 --> 00:00:17.220
+release and the tools
+that are made available
+
+8
+00:00:17.220 --> 00:00:19.410
+around this release cycle.
+
+9
+00:00:19.410 --> 00:00:22.060
+And what do we have for
+you this time around?
+
+10
+00:00:22.060 --> 00:00:24.900
+Well, a bunch of cool new stuff.
+
+11
+00:00:24.900 --> 00:00:26.790
+On the server side,
+the main feature
+
+12
+00:00:26.790 --> 00:00:30.120
+we are going to be releasing
+is sharded transactions.
+
+13
+00:00:30.120 --> 00:00:31.950
+Multi-document
+transaction support
+
+14
+00:00:31.950 --> 00:00:33.870
+across sharded clusters.
+
+15
+00:00:33.870 --> 00:00:35.850
+You will get a deep
+dive explanation
+
+16
+00:00:35.850 --> 00:00:39.450
+on how sharded transactions
+work and the benefits regarding
+
+17
+00:00:39.450 --> 00:00:41.910
+the management of shard
+keys, for example,
+
+18
+00:00:41.910 --> 00:00:43.590
+that come associated
+with the support
+
+19
+00:00:43.590 --> 00:00:45.310
+of sharded transactions.
+
+20
+00:00:45.310 --> 00:00:46.500
+But there is more.
+
+21
+00:00:46.500 --> 00:00:49.770
+MongoDB 4.2 brings a
+complete new index built
+
+22
+00:00:49.770 --> 00:00:52.690
+system and a new index type.
+
+23
+00:00:52.690 --> 00:00:56.010
+MongoDB 4.2 also introduces
+a more expressive update
+
+24
+00:00:56.010 --> 00:00:59.640
+operator, the new dollar merge
+aggregation pipeline stage
+
+25
+00:00:59.640 --> 00:01:02.490
+that allows for powerful
+on-demand materialized view
+
+26
+00:01:02.490 --> 00:01:05.820
+mechanisms, and a set of
+new aggregation pipeline
+
+27
+00:01:05.820 --> 00:01:07.320
+expressions.
+
+28
+00:01:07.320 --> 00:01:10.170
+On our tools front, we'll
+be looking to improvements
+
+29
+00:01:10.170 --> 00:01:14.470
+and advances around Ops Manager
+backup flows, each agent
+
+30
+00:01:14.470 --> 00:01:17.310
+support, new
+organizations API access,
+
+31
+00:01:17.310 --> 00:01:20.660
+and the general availability
+of our MongoDB enterprise
+
+32
+00:01:20.660 --> 00:01:24.570
+Kubernetes Operator for all of
+you container people out there.
+
+33
+00:01:24.570 --> 00:01:26.910
+Regarding the cloud
+offering, we'll
+
+34
+00:01:26.910 --> 00:01:29.100
+be introducing a
+brand new product that
+
+35
+00:01:29.100 --> 00:01:33.510
+will enable the analysis of data
+stored in S3 buckets or archive
+
+36
+00:01:33.510 --> 00:01:37.050
+data using the MongoDB query
+language and the aggregation
+
+37
+00:01:37.050 --> 00:01:37.890
+framework.
+
+38
+00:01:37.890 --> 00:01:40.860
+Charts got a new set
+of exciting features
+
+39
+00:01:40.860 --> 00:01:44.250
+like new geospatial charts
+types and the ability
+
+40
+00:01:44.250 --> 00:01:48.010
+to embed charts directly
+into your mobile application.
+
+41
+00:01:48.010 --> 00:01:51.000
+So a lot of new exciting
+stuff to look for.
+
+42
+00:01:51.000 --> 00:01:52.470
+But let's talk logistics.
+
+43
+00:01:52.470 --> 00:01:55.050
+In this course we want
+to focus your attention
+
+44
+00:01:55.050 --> 00:01:57.360
+on the new features and
+products and remove away
+
+45
+00:01:57.360 --> 00:02:00.990
+any emphasis on completing
+homework and assignments.
+
+46
+00:02:00.990 --> 00:02:02.880
+This means that we
+are not going to have
+
+47
+00:02:02.880 --> 00:02:05.820
+you go through a final exam
+or any graded assignments
+
+48
+00:02:05.820 --> 00:02:07.060
+in this course.
+
+49
+00:02:07.060 --> 00:02:09.720
+We still want you to follow
+along with lecture material
+
+50
+00:02:09.720 --> 00:02:13.800
+and be able to experiment with
+all the new server versions
+
+51
+00:02:13.800 --> 00:02:15.750
+and the new release tools.
+
+52
+00:02:15.750 --> 00:02:18.840
+Therefore, we will be making
+available a virtual machine
+
+53
+00:02:18.840 --> 00:02:21.870
+supported by Vagrant
+so you can play around
+
+54
+00:02:21.870 --> 00:02:24.630
+with all of those new
+exciting features,
+
+55
+00:02:24.630 --> 00:02:27.090
+intellectual material in
+an isolated environment
+
+56
+00:02:27.090 --> 00:02:30.720
+containing all the necessary
+dependencies pre-installed.
+
+57
+00:02:30.720 --> 00:02:33.430
+That said, it is
+completely optional.
+
+58
+00:02:33.430 --> 00:02:36.690
+You can, if you choose to,
+install all the new features
+
+59
+00:02:36.690 --> 00:02:39.090
+and tools in your workstation.
+
+60
+00:02:39.090 --> 00:02:40.800
+In this lesson
+lecture notes you will
+
+61
+00:02:40.800 --> 00:02:44.640
+find a full list of dependencies
+and installation instructions
+
+62
+00:02:44.640 --> 00:02:46.290
+necessary for this course.
+
+63
+00:02:46.290 --> 00:02:49.590
+The VM is for your
+convenience only.
+
+64
+00:02:49.590 --> 00:02:51.360
+The goal of this
+course is for you
+
+65
+00:02:51.360 --> 00:02:55.140
+to have a clear understanding
+of all these new features
+
+66
+00:02:55.140 --> 00:02:57.960
+introduced in MongoDB
+4.2, have a view of how
+
+67
+00:02:57.960 --> 00:03:00.360
+these new tools help you
+become more effective,
+
+68
+00:03:00.360 --> 00:03:02.550
+and expand the possible
+usage of MongoDB
+
+69
+00:03:02.550 --> 00:03:04.980
+across a variety of
+different use cases.
+
+70
+00:03:04.980 --> 00:03:07.200
+With all that
+said, welcome, hope
+
+71
+00:03:07.200 --> 00:03:09.690
+you enjoy and get to
+learn all the new features
+
+72
+00:03:09.690 --> 00:03:11.640
+and functionality
+we prepared for you.
+
+73
+00:03:11.640 --> 00:03:13.790
+And I'll see you in class.

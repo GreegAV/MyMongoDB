@@ -1,0 +1,95 @@
+Let's get started with this real world example.
+
+We'll start by connecting to our cluster.
+
+And by using the localhost exception we can create our first user.
+
+Now this first user should be a user who has the capability to create other users.
+
+This means we're going to start by creating a user for Alice, and that's because she's our security officer.
+
+This means it's her responsibility to create users that will interact with our database.
+
+It also means that she's going to need to be able to create and drop users in our database, grant and revoke roles, and also be able to create, update, and delete roles.
+
+However, this means she does not need to see any collection data, query or drop any database or collection, or perform backup or restoration operations.
+
+I've already set up a replica set on this machine with authorization enabled.
+
+We can take a quick peek at the commands I used to do this, but you should already be familiar with how to do this because we've covered it in a previous video.
+
+As you can see, we have a pretty standard 3 node replica set, where I'm running the same command again and again for each member, with slight variations for the db path, log path, and port.
+
+I'm using a key file for authentication between the members of our replica set.
+
+Let's go ahead and connect to our replica set and create a user for Alice.
+
+Now that I'm connected I can go ahead and switch to the admin database.
+
+And from here I can run Create User and create a user for Alice.
+
+And as you can see, we created a user name alice with the password sharppencil and she has a role of userAdminAnyDatabase on the admin database.
+
+Now we already know that the userAdminAnyDatabase role will allow us to administer our users on well any database, but we can go ahead and use db dot get role to look a little bit more closely at how this world works.
+
+In order to do this, we're going to need to first authenticate against the database.
+
+Let's go ahead and log in with Alice's credentials.
+
+We're now logged in and we can run get role.
+
+Here I'm saying I want to find out more information about the user admin database role, and I'm saying I want to show all the privileges.
+
+Let's go ahead and assign this to a variable to make it a little bit more readable.
+
+Now as you can see, here is the role, it's quite long.
+
+But let's go into the top here and look at the main stuff.
+
+So here's what we would expect.
+
+Let's go ahead and take a little bit closer look at the privileges.
+
+And this is why we made it a variable.
+
+So we have eight privileges.
+
+Let's go through these one by one.
+
+And this first privilege makes a lot of sense.
+
+We have a resource that would allow us to perform an action on any collection on any database.
+
+And here are the actions that can be performed on any collection.
+
+The ability to change someone's custom data, change their password, create a role, create a user, et cetera.
+
+All the things a user admin, or in this case a security officer, would need to do.
+
+Let's look at the next privilege.
+
+Here's our second privilege, and this makes sense.
+
+These are cluster wide user roles.
+
+The ability to list databases, invalidate the user cache, authSchemsUpgrade, these are all pretty user related roles.
+
+Here's the next one.
+
+Again, we can see that we're interacting with the special system dot users collection, which makes sense since Alice is going to have to be able to do user related task.
+
+Here's system dot users on the admin database.
+
+Again, basically the ability to do basic interactions with system dot users.
+
+Again roles, also makes sense for a user admin.
+
+System dot version also makes sense.
+
+More user admin stuff, and more user admin stuff.
+
+All this looks nice and dandy.
+
+And now that we've looked at all of Alice's privileges for her userAdminAnyDatabase role, we now know that she can do these three things and she can't do any of these three things.
+
+So we have confidence that Alice has all the actions and privileges needed to do her job correctly.

@@ -1,0 +1,49 @@
+Let's see how we can do the same with Compass.
+
+There isn't a Compass for Linux as of this recording.
+
+And we're running a headless VM, anyway.
+
+So I'll exit and run this on my host machine.
+
+First, I'll need to connect.
+
+I've got my system setup to forward ports 30,000 30,001, and 30,002 from my VM onto my host machine.
+
+So I'm going to be looking at the same data here that I have in the virtual machine.
+
+Great.
+
+We're connected.
+
+Now let's go to m312.people.
+
+And we'll click on the Indexes tab.
+
+Great.
+
+This page is presenting me with a view-- well, a much prettier view-- of my current indexes, but with a lot of cool additional stats.
+
+For purposes of this lesson, what we're interested in is this green button, Create Index.
+
+The first thing that we see is that we don't have to remember all the options when creating indexes.
+
+They're right there in front of us, including the Build Index and the Background option.
+
+If you want to name the index, go ahead.
+
+Otherwise, you'll get the default name constructed by the field names and types.
+
+Note that you can also name your index in the shell, but I rarely do that.
+
+Let's add the field address.city of type Ascending.
+
+We'll create it in the background.
+
+And we click Create.
+
+That's it.
+
+We can see the new index in the list.
+
+This is obviously much easier than the command line interface.

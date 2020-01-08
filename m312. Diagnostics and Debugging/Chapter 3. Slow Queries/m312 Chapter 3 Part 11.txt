@@ -1,0 +1,73 @@
+Now let's use mplotqueries.
+
+To do this, I'm going to have to get out of the virtual machine.
+
+I've set it up on my laptop.
+
+And it'll show us what we want to see.
+
+First, I'm going to go to a tab of my terminal that's not in the Vagrant box.
+
+I'll go into the Shared folder.
+
+And we'll look at the help documentation.
+
+This is a very rich tool and there are a lot of options.
+
+It may look overwhelming.
+
+But you can run the tool with all the defaults, and it's likely to do what you want.
+
+Once you become more accustomed to it, you can do things like change the y-axis to a logarithmic scale so outliers aren't as distorting to your view.
+
+You can create different types of graphs, for example, looking at connections instead of slow queries.
+
+And you can overlay a few of those graphs together to correlate events.
+
+Let's go ahead and run it by passing the log file to it.
+
+This tool goes deeper.
+
+And it doesn't just give you aggregates per query shape.
+
+It plots every single slow query as a dot in the picture.
+
+You may want to keep that in mind if you try to plot millions of slow queries.
+
+Reducing the scope of your log ahead of time may save you some processing time for the mplotqueries tool.
+
+Our x-axis is the timeline, while the y-axis is the value in milliseconds each query takes.
+
+And every dot in this picture is one of those slow queries.
+
+The first thing you probably want to do here is to narrow down the graph to a time frame that interests you.
+
+Again, if you know that period in advance, use mlogfilter to do it beforehand.
+
+Let's say you want to pay attention to the beginning of when we get a lot of those slow queries.
+
+Just click on the Zoom icon and draw a rectangle with your mouse.
+
+The graph is a little less crowded now.
+
+You can also get out of Zoom Mode when you're done.
+
+There seems to be a lot of green dots, which correspond to the hamster.wallaby namespace, as indicated by our legend on the left, though it may be a bit small for you to read.
+
+My apologies to those of you who are colorblind.
+
+I know there is a lot to parse.
+
+If I wanted to omit this namespace, I could simply click on the dot in the legend.
+
+However, I think I want to keep those right now.
+
+Let's look at one of those early green dots and click on it.
+
+The corresponding query from the mongod log is printed into the console where I started the tool.
+
+At this point, I can take this query and figure out if there is something wrong with the indexes or conclude that it's slow because of another issue, like an overloaded system, an underprovisioned system, et cetera.
+
+We'll go through some of those in a more complete way in other exercises.
+
+For right now, we just want to easily identify the slow queries.

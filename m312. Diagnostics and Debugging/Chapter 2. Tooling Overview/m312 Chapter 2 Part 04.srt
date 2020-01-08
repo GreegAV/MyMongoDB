@@ -1,0 +1,533 @@
+
+1
+00:00:00.000 --> 00:00:00.230
+
+
+2
+00:00:00.230 --> 00:00:03.030
+In this lesson, we'll be looking
+into the server status command.
+
+3
+00:00:03.030 --> 00:00:05.190
+Service status does a lot.
+
+4
+00:00:05.190 --> 00:00:08.010
+It's used under the hood of
+several tools and services
+
+5
+00:00:08.010 --> 00:00:10.380
+that help manage and
+monitor a MongoDB instance.
+
+6
+00:00:10.380 --> 00:00:13.020
+Tools like Cloud Manager,
+and Ops Manager, Compass,
+
+7
+00:00:13.020 --> 00:00:14.610
+and MongoStat, all
+use this command
+
+8
+00:00:14.610 --> 00:00:18.150
+to create snapshots or real
+time series data of the instance
+
+9
+00:00:18.150 --> 00:00:19.770
+utilization and status.
+
+10
+00:00:19.770 --> 00:00:21.990
+Server status is a MongoDB
+administrative command
+
+11
+00:00:21.990 --> 00:00:24.330
+that gives us an overview
+of the important metrics
+
+12
+00:00:24.330 --> 00:00:26.260
+about our database.
+
+13
+00:00:26.260 --> 00:00:30.146
+As you can see, it's an
+absolutely huge document.
+
+14
+00:00:30.146 --> 00:00:32.020
+But the output of this
+command can be grouped
+
+15
+00:00:32.020 --> 00:00:34.000
+into a few different sections--
+
+16
+00:00:34.000 --> 00:00:37.240
+instance information, asserts,
+connections and network,
+
+17
+00:00:37.240 --> 00:00:41.470
+locking, operation stats,
+security, replication stats,
+
+18
+00:00:41.470 --> 00:00:43.740
+storage engine
+stats, and metrics.
+
+19
+00:00:43.740 --> 00:00:46.180
+These sections span everything
+from overall information,
+
+20
+00:00:46.180 --> 00:00:47.830
+like the instance
+in information,
+
+21
+00:00:47.830 --> 00:00:50.740
+to very specific information on
+operation counters and storage
+
+22
+00:00:50.740 --> 00:00:51.880
+engine stats.
+
+23
+00:00:51.880 --> 00:00:55.300
+We're going to go on a
+whirlwind tour, so buckle up.
+
+24
+00:00:55.300 --> 00:00:57.310
+Since this command gives
+us so much information,
+
+25
+00:00:57.310 --> 00:00:59.560
+we'll focus on the most
+relevant data for debugging
+
+26
+00:00:59.560 --> 00:01:02.200
+and diagnostics, like asserts,
+connections and network,
+
+27
+00:01:02.200 --> 00:01:04.750
+operation stats,
+locking, and metrics.
+
+28
+00:01:04.750 --> 00:01:07.030
+Given the server status
+can be a bit overwhelming,
+
+29
+00:01:07.030 --> 00:01:09.730
+and to minimize the pixel
+real estate on our screen,
+
+30
+00:01:09.730 --> 00:01:12.646
+we can also suppress any of the
+root level server status output
+
+31
+00:01:12.646 --> 00:01:14.770
+document fields, much like
+we would when projecting
+
+32
+00:01:14.770 --> 00:01:16.870
+information in a find query.
+
+33
+00:01:16.870 --> 00:01:19.180
+You can see that we're
+going to the admin server
+
+34
+00:01:19.180 --> 00:01:21.520
+and doing run command.
+
+35
+00:01:21.520 --> 00:01:24.100
+That's what this
+admin command means.
+
+36
+00:01:24.100 --> 00:01:27.430
+We do this by running the
+server status command directly.
+
+37
+00:01:27.430 --> 00:01:29.695
+In this command, we're
+removing from the output, all
+
+38
+00:01:29.695 --> 00:01:32.890
+of the replication metrics
+and WiredTiger information,
+
+39
+00:01:32.890 --> 00:01:36.700
+and explicitly including
+locks information.
+
+40
+00:01:36.700 --> 00:01:38.290
+It's still a huge document.
+
+41
+00:01:38.290 --> 00:01:40.870
+A good way to keep track of the
+keys for such a huge document
+
+42
+00:01:40.870 --> 00:01:44.360
+is with the
+object.keys function.
+
+43
+00:01:44.360 --> 00:01:45.860
+This is just a
+JavaScript function
+
+44
+00:01:45.860 --> 00:01:49.950
+that tells us what the
+keys of JSON object are.
+
+45
+00:01:49.950 --> 00:01:53.080
+OK, let's dig into how
+server status works.
+
+46
+00:01:53.080 --> 00:01:55.060
+To provide server
+status information,
+
+47
+00:01:55.060 --> 00:01:57.670
+the MongoDB process keeps
+track of a set of counters
+
+48
+00:01:57.670 --> 00:01:59.860
+and statistics, all
+of them counting up
+
+49
+00:01:59.860 --> 00:02:02.500
+since that very
+MongoDB server process
+
+50
+00:02:02.500 --> 00:02:05.380
+first started up, potentially
+quite some time ago.
+
+51
+00:02:05.380 --> 00:02:09.580
+These counters will be reflected
+in this command output.
+
+52
+00:02:09.580 --> 00:02:12.610
+Tools that run this command
+will be able to plot or provide
+
+53
+00:02:12.610 --> 00:02:15.970
+statistical information,
+let's say, inserts per second,
+
+54
+00:02:15.970 --> 00:02:17.530
+for a given instance
+by calculating
+
+55
+00:02:17.530 --> 00:02:20.590
+the difference between two
+calls to server status.
+
+56
+00:02:20.590 --> 00:02:23.530
+I'm going to go to another shell
+connected to the same server.
+
+57
+00:02:23.530 --> 00:02:26.290
+Here, I'm going to set
+some inserts running.
+
+58
+00:02:26.290 --> 00:02:28.210
+I'm telling it to
+insert 10 documents,
+
+59
+00:02:28.210 --> 00:02:31.509
+then wait one second,
+and just repeat forever.
+
+60
+00:02:31.509 --> 00:02:32.800
+Looks like it had to reconnect.
+
+61
+00:02:32.800 --> 00:02:34.510
+And were good.
+
+62
+00:02:34.510 --> 00:02:37.090
+Here we're looking at the
+opcounters.insert field,
+
+63
+00:02:37.090 --> 00:02:39.730
+and the value is
+282 inserts that
+
+64
+00:02:39.730 --> 00:02:42.950
+have occurred since the
+server was started up.
+
+65
+00:02:42.950 --> 00:02:46.870
+If we run this again, ah, we can
+see that it's a little higher.
+
+66
+00:02:46.870 --> 00:02:49.840
+And if I start doing
+this every second or so,
+
+67
+00:02:49.840 --> 00:02:52.450
+I can see that it's counting
+up by 10 per second.
+
+68
+00:02:52.450 --> 00:02:53.890
+Obviously, I'm a
+bad judge of what
+
+69
+00:02:53.890 --> 00:02:55.960
+a second is, so they
+aren't totally consistent,
+
+70
+00:02:55.960 --> 00:02:57.370
+but you get the idea.
+
+71
+00:02:57.370 --> 00:02:59.950
+By finding the difference
+between the opcounters.insert
+
+72
+00:02:59.950 --> 00:03:02.470
+field one second apart, you
+can get the inserts that
+
+73
+00:03:02.470 --> 00:03:04.315
+would be shown in MongoStat.
+
+74
+00:03:04.315 --> 00:03:05.940
+Let's look into some
+of the information
+
+75
+00:03:05.940 --> 00:03:08.290
+in the output of server status.
+
+76
+00:03:08.290 --> 00:03:11.810
+We can get the hostname, the
+version number, the process,
+
+77
+00:03:11.810 --> 00:03:15.670
+which would be either a MongoDB
+server or a MongoS router,
+
+78
+00:03:15.670 --> 00:03:18.940
+the process ID on the
+system, and a set of values
+
+79
+00:03:18.940 --> 00:03:21.550
+like how long the server
+has been running in seconds,
+
+80
+00:03:21.550 --> 00:03:24.100
+milliseconds, and what time
+the server thinks it is
+
+81
+00:03:24.100 --> 00:03:27.340
+when you ask for server status.
+
+82
+00:03:27.340 --> 00:03:29.230
+Server status also
+gathers information
+
+83
+00:03:29.230 --> 00:03:30.940
+on current established
+connections
+
+84
+00:03:30.940 --> 00:03:32.920
+and the number of
+available connections.
+
+85
+00:03:32.920 --> 00:03:36.070
+This value will be related
+to the Unix ulimit values
+
+86
+00:03:36.070 --> 00:03:37.540
+set for this host.
+
+87
+00:03:37.540 --> 00:03:39.910
+Ulimits are set at the
+operating system level,
+
+88
+00:03:39.910 --> 00:03:42.520
+and they control the maximum
+number of open files.
+
+89
+00:03:42.520 --> 00:03:45.660
+Unix systems need one
+open file per connection.
+
+90
+00:03:45.660 --> 00:03:47.927
+Ulimits isn't the only
+factor that controls
+
+91
+00:03:47.927 --> 00:03:49.010
+the available connections.
+
+92
+00:03:49.010 --> 00:03:51.426
+You can also limit it in the
+configuration of your MongoDB
+
+93
+00:03:51.426 --> 00:03:53.170
+instance where we can
+control the number
+
+94
+00:03:53.170 --> 00:03:55.600
+of allowed connections by
+setting the configuration
+
+95
+00:03:55.600 --> 00:03:58.420
+option minus minus max cons.
+
+96
+00:03:58.420 --> 00:04:00.400
+Let's exit the shell,
+kill our process,
+
+97
+00:04:00.400 --> 00:04:03.240
+and run it with a lower
+number of maximum connections.
+
+98
+00:04:03.240 --> 00:04:06.250
+
+
+99
+00:04:06.250 --> 00:04:08.870
+Here's my MongoD on port 27017.
+
+100
+00:04:08.870 --> 00:04:10.750
+I have copied the command.
+
+101
+00:04:10.750 --> 00:04:14.320
+It's process ID is 26620--
+
+102
+00:04:14.320 --> 00:04:18.220
+killing it-- and starting
+up with max connections
+
+103
+00:04:18.220 --> 00:04:20.920
+of, let's say, 10.
+
+104
+00:04:20.920 --> 00:04:23.520
+We'll go back in the shell.
+
+105
+00:04:23.520 --> 00:04:26.890
+OK, we've become primary again.
+
+106
+00:04:26.890 --> 00:04:29.740
+And now we have five
+connections total because we're
+
+107
+00:04:29.740 --> 00:04:30.910
+part of a replica set.
+
+108
+00:04:30.910 --> 00:04:32.380
+And I'm connected
+with the shell.
+
+109
+00:04:32.380 --> 00:04:36.160
+We have five available,
+and five have been created.
+
+110
+00:04:36.160 --> 00:04:37.780
+The connections field
+of server status
+
+111
+00:04:37.780 --> 00:04:40.450
+will be useful when we look at
+configuration and networking
+
+112
+00:04:40.450 --> 00:04:42.000
+issues.

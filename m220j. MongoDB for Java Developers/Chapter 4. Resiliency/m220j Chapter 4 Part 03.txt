@@ -1,0 +1,63 @@
+In this lesson, we're going to talk about error handling.
+
+We will consider a few scenarios in error categories and find ways to fix those errors.
+
+This way, we can ensure that your application is resilient to issues that can occur in concurrent and distributed systems.
+
+Concurrent systems will most likely have situations where duplicate keys will occur, while distributed systems are prone to issues related to network and concurrency.
+
+While all of the errors covered in this lesson are not very likely to occur, it is helpful to know how to deal with them if and when they manifest themselves.
+
+First common error can occur when you're trying to insert a document in place of an already existing document.
+
+In our example, there is already a document with id that equals 0.
+
+So inserting another document with the same id value should cause a duplicate key error.
+
+Let's try and see if this is true.
+
+And it is true.
+
+In this test case, we are specifying that we're expecting a MongoWriteException error.
+
+So since the previous test passed, it would be great to know exactly what kind of error we're getting.
+
+So in this test case, you can see that the error return is specifically DUPLICATE_KEY error, which means that in order to correct it, we should not be trying to insert a document with an existing key.
+
+Let's run it.
+
+Excellent.
+
+Now to fix the error, simply change the _id value, and that should do the trick.
+
+Another error to be on the lookout for is the timer error.
+
+In this test case, we're trying to avoid breaking the application by using the try and catch block.
+
+This particular test case won't cause the WriteConcernTimeout error.
+
+In fact, it is very hard to induce a WriteConcernTimeout error or any of the errors covered in this lesson on an application that is running on Atlas.
+
+But if that does happen, then a try catch block will help you identify the situation.
+
+To fix a WriteConcernTimeout error issue, you need to consider the needs of your application.
+
+And depending on that, you can either reduce the durability guarantees by changing the WriteConcern value, or increase the timeout and keep the app durability.
+
+Another possible error can occur when the WriteConcern that is requested cannot be fulfilled.
+
+For example, our replica set has three nodes that were automatically created by Atlas.
+
+We can dictate the type of write concern that we want for our write operations.
+
+In this example, we're asking for a 5 node acknowledgment, which is impossible in our situation.
+
+As a result, we get a WriteConcernException.
+
+This error is easy to solve by either assigning a majority WriteConcern or a number that is less than or equal to 3, instead of 5.
+
+Excellent.
+
+That's it for our lesson on error handling.
+
+Enjoy the rest of the course.

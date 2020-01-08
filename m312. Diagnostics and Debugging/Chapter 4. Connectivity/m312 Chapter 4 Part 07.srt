@@ -1,0 +1,459 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.450
+Another event that might
+cause connections to drop
+
+3
+00:00:03.450 --> 00:00:06.290
+is the high availability
+mechanism itself, especially
+
+4
+00:00:06.290 --> 00:00:07.460
+around elections.
+
+5
+00:00:07.460 --> 00:00:10.250
+When we elect a new
+primary, something happens.
+
+6
+00:00:10.250 --> 00:00:13.700
+And you should, at the very
+least, drop some corrections.
+
+7
+00:00:13.700 --> 00:00:15.130
+Let's see about that.
+
+8
+00:00:15.130 --> 00:00:18.230
+Replica sets exist to allow our
+application to remain active
+
+9
+00:00:18.230 --> 00:00:20.210
+in case of server failure.
+
+10
+00:00:20.210 --> 00:00:21.770
+Once our primary
+is disconnected,
+
+11
+00:00:21.770 --> 00:00:24.830
+either for maintenance or due
+to unplanned system shut down,
+
+12
+00:00:24.830 --> 00:00:27.590
+our application is
+capable of staying up
+
+13
+00:00:27.590 --> 00:00:30.080
+because there's an election
+process in place where
+
+14
+00:00:30.080 --> 00:00:33.140
+a new member of the node
+will become the primary.
+
+15
+00:00:33.140 --> 00:00:35.760
+And the application will
+know who to connect to.
+
+16
+00:00:35.760 --> 00:00:38.700
+Now, there is something
+that happens here
+
+17
+00:00:38.700 --> 00:00:41.420
+that the application
+needs to be aware of.
+
+18
+00:00:41.420 --> 00:00:43.910
+The previous primary
+is no longer available.
+
+19
+00:00:43.910 --> 00:00:48.200
+So you should know about it
+and connect to the new primary.
+
+20
+00:00:48.200 --> 00:00:50.030
+So let's see this in action.
+
+21
+00:00:50.030 --> 00:00:51.920
+And let's simulate
+in an environment
+
+22
+00:00:51.920 --> 00:00:54.560
+where we have a
+replica set to do that.
+
+23
+00:00:54.560 --> 00:00:56.840
+First thing I'm going to do
+is create a folder called,
+
+24
+00:00:56.840 --> 00:00:59.810
+conns replica set, or
+connsrepl, in this case, where
+
+25
+00:00:59.810 --> 00:01:02.930
+I'm going to hold all the
+data of my replica nodes.
+
+26
+00:01:02.930 --> 00:01:06.830
+Second step is to create the
+replica set using a launch.
+
+27
+00:01:06.830 --> 00:01:09.570
+Then I'm going to
+name here, conns.
+
+28
+00:01:09.570 --> 00:01:11.240
+And I'm going to
+store all that data
+
+29
+00:01:11.240 --> 00:01:14.780
+in this newly created folder.
+
+30
+00:01:14.780 --> 00:01:19.030
+On a separate tab, I can
+launch my mongostats with dash,
+
+31
+00:01:19.030 --> 00:01:22.160
+dash, discover to allow
+me to connect to a node
+
+32
+00:01:22.160 --> 00:01:24.800
+and then discover
+all the replica set,
+
+33
+00:01:24.800 --> 00:01:28.130
+or even shared member
+that are affected
+
+34
+00:01:28.130 --> 00:01:30.830
+to this particular node
+that I'm connecting to.
+
+35
+00:01:30.830 --> 00:01:32.930
+So here, once I
+connect to this node,
+
+36
+00:01:32.930 --> 00:01:37.020
+I can see that there's
+a repl status here
+
+37
+00:01:37.020 --> 00:01:40.040
+that allows me to know one
+of these particular nodes
+
+38
+00:01:40.040 --> 00:01:42.890
+is a primary, another
+secondary, another secondary.
+
+39
+00:01:42.890 --> 00:01:47.330
+Now what I'm going to
+do is pick up my script
+
+40
+00:01:47.330 --> 00:01:50.330
+and create a connection
+to this replica set.
+
+41
+00:01:50.330 --> 00:01:53.320
+So I'm seeing 600
+different connections.
+
+42
+00:01:53.320 --> 00:01:55.850
+So I can see that all
+my nodes are going
+
+43
+00:01:55.850 --> 00:01:59.090
+to be connected by this script.
+
+44
+00:01:59.090 --> 00:02:04.340
+If I go into the system and ask
+for, who is primary right now,
+
+45
+00:02:04.340 --> 00:02:06.870
+I can see it's 27,000.
+
+46
+00:02:06.870 --> 00:02:10.699
+Once I know who my primary
+is, which is 27,000,
+
+47
+00:02:10.699 --> 00:02:12.650
+I will tell it to step down.
+
+48
+00:02:12.650 --> 00:02:14.660
+So you will no longer
+become primary.
+
+49
+00:02:14.660 --> 00:02:19.340
+You will relinquish that role
+to another member of the set.
+
+50
+00:02:19.340 --> 00:02:23.360
+After we step down, we can
+see that, in our application,
+
+51
+00:02:23.360 --> 00:02:26.810
+a few errors have been merged.
+
+52
+00:02:26.810 --> 00:02:29.427
+Now what the system will
+tell us one of two things.
+
+53
+00:02:29.427 --> 00:02:31.010
+Either it will not
+be able to complete
+
+54
+00:02:31.010 --> 00:02:34.480
+the operation it's trying to
+do because this node is not
+
+55
+00:02:34.480 --> 00:02:34.980
+master.
+
+56
+00:02:34.980 --> 00:02:37.820
+So it will attempt
+to run an operation
+
+57
+00:02:37.820 --> 00:02:38.930
+against the secondary.
+
+58
+00:02:38.930 --> 00:02:43.430
+So the previous machine was
+a primary, no longer primary,
+
+59
+00:02:43.430 --> 00:02:44.360
+needs to reconnect.
+
+60
+00:02:44.360 --> 00:02:48.200
+But all in-flight
+operations will either
+
+61
+00:02:48.200 --> 00:02:51.030
+get a not master
+error or will get
+
+62
+00:02:51.030 --> 00:02:54.410
+an out to reconnect exception
+on your client application.
+
+63
+00:02:54.410 --> 00:02:59.480
+By throwing you this not master
+error or the out to reconnect
+
+64
+00:02:59.480 --> 00:03:02.130
+exception, is mode is
+basically telling you,
+
+65
+00:03:02.130 --> 00:03:04.820
+hey, you are no longer
+connected to a primary.
+
+66
+00:03:04.820 --> 00:03:07.220
+What do you want to do now?
+
+67
+00:03:07.220 --> 00:03:11.180
+All subsequent connections,
+or instructions let's say,
+
+68
+00:03:11.180 --> 00:03:13.340
+will go through no problem.
+
+69
+00:03:13.340 --> 00:03:17.270
+Because the system will know
+who to reconnect after getting
+
+70
+00:03:17.270 --> 00:03:18.870
+the first error message.
+
+71
+00:03:18.870 --> 00:03:21.470
+So the driver will take
+care of that for you.
+
+72
+00:03:21.470 --> 00:03:25.580
+For all in-flight
+operations, those
+
+73
+00:03:25.580 --> 00:03:28.700
+will need to be decided
+by the application what
+
+74
+00:03:28.700 --> 00:03:30.110
+to do with them.
+
+75
+00:03:30.110 --> 00:03:35.000
+So look for those kind of error
+messages from in your code
+
+76
+00:03:35.000 --> 00:03:36.290
+if you're a developer.
+
+77
+00:03:36.290 --> 00:03:39.860
+Or if you are dba, please
+make sure your developers know
+
+78
+00:03:39.860 --> 00:03:42.470
+about this and not
+assuming that mongodb
+
+79
+00:03:42.470 --> 00:03:47.750
+will handle all things related
+with in-flight operations.
+
+80
+00:03:47.750 --> 00:03:50.420
+Again, mongodb will not
+try to outsmart you.
+
+81
+00:03:50.420 --> 00:03:53.840
+One thing that we could do
+is making our application
+
+82
+00:03:53.840 --> 00:03:56.960
+aware of the exceptions by
+capturing those and doing
+
+83
+00:03:56.960 --> 00:03:57.890
+something about it.
+
+84
+00:03:57.890 --> 00:03:59.690
+In this case, we will
+just need to say,
+
+85
+00:03:59.690 --> 00:04:01.355
+well I can handle
+this no problem
+
+86
+00:04:01.355 --> 00:04:02.900
+since we are only reading.
+
+87
+00:04:02.900 --> 00:04:05.510
+But if you imagine
+any right that
+
+88
+00:04:05.510 --> 00:04:09.080
+could appear within
+this block of code,
+
+89
+00:04:09.080 --> 00:04:12.235
+we will need to know what
+do we want to do about it.
+
+90
+00:04:12.235 --> 00:04:13.940
+Do we want to retry
+the operation?
+
+91
+00:04:13.940 --> 00:04:16.430
+Do we just want to discard
+it and try it later?
+
+92
+00:04:16.430 --> 00:04:19.250
+Or are we just not going
+to be dealing with that?
+
+93
+00:04:19.250 --> 00:04:22.670
+Mongodb will not be smarter
+than you on those situations.
+
+94
+00:04:22.670 --> 00:04:25.730
+It will let you decide
+what you want to do.
+
+95
+00:04:25.730 --> 00:04:27.830
+Keep that in mind
+for your application
+
+96
+00:04:27.830 --> 00:04:30.310
+building in a future.

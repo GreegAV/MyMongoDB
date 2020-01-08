@@ -1,0 +1,265 @@
+
+1
+00:00:00.500 --> 00:00:02.430
+Another pattern
+that we can apply
+
+2
+00:00:02.430 --> 00:00:05.070
+will be to have the
+reverse referencing.
+
+3
+00:00:05.070 --> 00:00:06.500
+Let's say that in
+this case, we're
+
+4
+00:00:06.500 --> 00:00:08.590
+going to have the
+definition of our CEO,
+
+5
+00:00:08.590 --> 00:00:10.450
+but inside of that
+document we're
+
+6
+00:00:10.450 --> 00:00:13.430
+going to have the reference
+to all his direct reports,
+
+7
+00:00:13.430 --> 00:00:15.370
+its children nodes.
+
+8
+00:00:15.370 --> 00:00:18.420
+Same thing for CTO,
+we can be referencing
+
+9
+00:00:18.420 --> 00:00:21.420
+all of its immediate
+reports, and the same thing
+
+10
+00:00:21.420 --> 00:00:22.810
+down the line.
+
+11
+00:00:22.810 --> 00:00:25.950
+To do this, we just need
+to transform our documents.
+
+12
+00:00:25.950 --> 00:00:29.820
+Instead of having a reference
+back to its parents, what we're
+
+13
+00:00:29.820 --> 00:00:33.210
+going to have is each
+single document referencing
+
+14
+00:00:33.210 --> 00:00:34.930
+is direct reports.
+
+15
+00:00:34.930 --> 00:00:37.330
+In this example here,
+we can see that Dave,
+
+16
+00:00:37.330 --> 00:00:42.500
+with his title of CEO, has this
+list of direct reports, Eliot,
+
+17
+00:00:42.500 --> 00:00:45.120
+Meagan, Carlos,
+Richard, and Kristen.
+
+18
+00:00:45.120 --> 00:00:47.850
+With this structure,
+getting immediate children
+
+19
+00:00:47.850 --> 00:00:50.130
+can be achieved by
+a single operation.
+
+20
+00:00:50.130 --> 00:00:54.660
+If I find documents
+where name equals Dave
+
+21
+00:00:54.660 --> 00:00:58.500
+I immediately get its full
+list of direct reports.
+
+22
+00:00:58.500 --> 00:01:01.360
+So a level down from Dave.
+
+23
+00:01:01.360 --> 00:01:04.590
+But getting the full
+tree to its last element
+
+24
+00:01:04.590 --> 00:01:06.660
+requires something
+more elaborate.
+
+25
+00:01:06.660 --> 00:01:09.710
+And again, $graphLookup
+is here for the rescue
+
+26
+00:01:09.710 --> 00:01:12.270
+with one single operation.
+
+27
+00:01:12.270 --> 00:01:15.300
+In this scenario, we
+changed the document schema
+
+28
+00:01:15.300 --> 00:01:17.710
+starring the immediate
+child references,
+
+29
+00:01:17.710 --> 00:01:19.180
+again, on direct_reports.
+
+30
+00:01:19.180 --> 00:01:22.650
+And therefore, if we want to
+get the full list of descendants
+
+31
+00:01:22.650 --> 00:01:24.640
+we will need to
+do the following.
+
+32
+00:01:24.640 --> 00:01:26.820
+We will go through
+again the same
+
+33
+00:01:26.820 --> 00:01:30.150
+matching, finding the node
+where we want to begin with,
+
+34
+00:01:30.150 --> 00:01:33.030
+expressing where are we going
+to fetch the information from.
+
+35
+00:01:33.030 --> 00:01:36.420
+In this case, again, a self
+graphLookup, self lookup.
+
+36
+00:01:36.420 --> 00:01:38.550
+We're going to start
+with the direct reports,
+
+37
+00:01:38.550 --> 00:01:40.230
+so this is the
+first set of values
+
+38
+00:01:40.230 --> 00:01:42.930
+that we're going to be
+using to iterate from.
+
+39
+00:01:42.930 --> 00:01:45.470
+We're going to connectFromField
+direct_reports,
+
+40
+00:01:45.470 --> 00:01:49.150
+going to be using that for
+the subsequent graph queries
+
+41
+00:01:49.150 --> 00:01:52.200
+but we are going to
+connectToField name.
+
+42
+00:01:52.200 --> 00:01:56.190
+So every time we match a element
+of direct reports with a name
+
+43
+00:01:56.190 --> 00:01:58.200
+we'll do this recursively.
+
+44
+00:01:58.200 --> 00:02:00.990
+And we'll start
+this in all_reports.
+
+45
+00:02:00.990 --> 00:02:04.170
+Once we run this, we'll have
+the following structure.
+
+46
+00:02:04.170 --> 00:02:07.320
+We'll find that Dave has
+a set of direct_reports
+
+47
+00:02:07.320 --> 00:02:11.070
+but all_reports are going
+to be matched and found
+
+48
+00:02:11.070 --> 00:02:12.500
+on this field.
+
+49
+00:02:12.500 --> 00:02:15.270
+We're going to have Dan,
+Shannon, Elyse, Ron,
+
+50
+00:02:15.270 --> 00:02:18.490
+Andrew, and so on.
+
+51
+00:02:18.490 --> 00:02:21.090
+So at the very end, what
+we have is basically,
+
+52
+00:02:21.090 --> 00:02:23.030
+for all different
+direct reports,
+
+53
+00:02:23.030 --> 00:02:27.240
+we match, or are trying to find,
+a document in the name field.
+
+54
+00:02:27.240 --> 00:02:29.820
+And for his
+direct reports,
+
+55
+00:02:29.820 --> 00:02:31.840
+we do this recursively,

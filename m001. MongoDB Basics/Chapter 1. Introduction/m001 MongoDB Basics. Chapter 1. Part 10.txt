@@ -1,0 +1,101 @@
+Much of our interaction with MongoDB will require an understanding of JSON.
+
+MongoDB is a document database, and we frequently discuss data models looking at JSON representations of documents.
+
+In addition, the MongoDB query language, and much of the administration of MongoDB, requires some level of understanding of JSON.
+
+JSON, which is an acronym for JavaScript Object Notation, is a popular format for representing documents.
+
+As an example, here is a document representing a popular movie.
+
+When discussing MongoDB, we typically use the term JSON document to refer to such structures.
+
+But JSON object is equally correct.
+
+JSON is a widely used data format because it is both easy for humans to read and edit and easy for computers to parse and output.
+
+JSON documents begin and end with curly braces.
+
+They're composed of fields, and each field has a key and a value.
+
+In other programming languages, JSON documents are analogous to objects, structs, maps, or dictionaries.
+
+One big advantage of using MongoDB is that the data model used by the database closely resembles the data structures you work with in your programming language of choice.
+
+This has a number of advantages, which we discuss at some length in other lessons.
+
+Returning to our example document, we can see that there are fields for title, year, cast, viewer rating, and plot, in addition to a number of others.
+
+This example illustrates a few additional requirements of the JSON grammar.
+
+The first is that all keys must be surrounded in double quotes.
+
+You can see that all keys here have double quotes around them.
+
+Keys and values must be separated by colons.
+
+And again, we see that for each field here.
+
+Fields are separated from one another by commas, as we see at the end of each field in this document.
+
+JSON documents support a number of value types.
+
+There are strings, which must be surrounded by double quotes.
+
+Also, note that inside strings is the only time when white space is significant within a JSON document.
+
+New lines and other white space outside of quotes is not really part of the JSON document.
+
+In addition to strings, JSON values can be floating point numbers, Boolean values, and the null value.
+
+Finally, arrays and objects can themselves be values and nested in any combination.
+
+JSON arrays are defined by square brackets.
+
+Arrays contain an ordered, comma separated list of values.
+
+JSON arrays are analogous to arrays lists, vectors, or sequences found in other programming languages, such as Java, Python, C Sharp, etc.
+
+This example happens to include an array as the value for the cast field.
+
+This array contains one element for each cast member of note in this movie or, I should say, each cast member captured in this particular collection.
+
+Note that three of the elements are strings, but the fourth is actually an embedded document.
+
+This records the stage name of Billy Zane as well as his birth name.
+
+This array illustrates the last thing about JSON that I really want you to walk away with, that being that Jason documents support any level of hierarchy that is appropriate to your application's data model.
+
+MongoDB is designed from the ground up to support this.
+
+The query language, indexes, and internal data structures are designed to support a wide variety of data models.
+
+Now, let's take a look at the Compass representation for documents such as these.
+
+Here we're looking at the video.movies collection and the Documents tab for this collection.
+
+And if we scroll through here, we can see a number of documents in this collection.
+
+Using the filter functionality and Compass, we can construct a filter that will find all movies where the title is Titanic.
+
+Applying this filter, we'll see that we have eight documents with the title Titanic.
+
+Scrolling down, we can find the document we were just looking at it in its raw JSON form as it's represented in Compass.
+
+Now, unlike the schema view in Compass, this is not a summary representation of the data in this collection but the individual documents themselves.
+
+For the sake of a cleaner UI, compass does not depict documents as JSON.
+
+Rather, for each document, it simply lists the fields.
+
+For aggregate values, such as arrays and embedded documents, it shows a tree view that you can click on to expand the value of the field, as we see for cast.
+
+It uses this mechanism for any level of hierarchy within documents.
+
+You can expand successive values to drive down into any documents you wish.
+
+Here, we'll expand the Billy Zane element of this array to see the full document or object as it's stored in this document.
+
+And with that, we've concluded our overview of JSON and it's importance in MongoDB.
+
+For more information about the JSON document format, feel free to read about it in detail www.JSON.org.

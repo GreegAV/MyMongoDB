@@ -1,0 +1,734 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.450
+Let's talk about
+pipeline optimization.
+
+3
+00:00:03.450 --> 00:00:05.640
+We've already learned
+about using match and sort
+
+4
+00:00:05.640 --> 00:00:08.990
+stages early, and to use
+indexes using limit and sort
+
+5
+00:00:08.990 --> 00:00:11.660
+stages to produce top
+K results, and how
+
+6
+00:00:11.660 --> 00:00:15.370
+to allow the use of more
+than 100 megabytes of memory.
+
+7
+00:00:15.370 --> 00:00:18.300
+Let's dive further and look
+at pipelines themselves
+
+8
+00:00:18.300 --> 00:00:20.700
+and how they might be optimized.
+
+9
+00:00:20.700 --> 00:00:22.740
+Let's consider the
+following aggregation
+
+10
+00:00:22.740 --> 00:00:24.560
+that gives the length
+of movie titles
+
+11
+00:00:24.560 --> 00:00:28.000
+that begin with vowels and
+sorts them by the frequency.
+
+12
+00:00:28.000 --> 00:00:30.810
+So we begin with
+our match stage,
+
+13
+00:00:30.810 --> 00:00:33.330
+looking for titles that
+begin with a vowel,
+
+14
+00:00:33.330 --> 00:00:34.980
+ignoring the case.
+
+15
+00:00:34.980 --> 00:00:38.430
+We then project our title
+size, composing size and split
+
+16
+00:00:38.430 --> 00:00:43.320
+together, and splitting
+the title on spaces.
+
+17
+00:00:43.320 --> 00:00:46.230
+In our group stage, we're
+grouping like documents
+
+18
+00:00:46.230 --> 00:00:49.440
+together based on that title
+size we just calculated
+
+19
+00:00:49.440 --> 00:00:50.960
+and getting a count.
+
+20
+00:00:50.960 --> 00:00:54.150
+Finally, we're going to sort
+in descending direction.
+
+21
+00:00:54.150 --> 00:00:59.330
+So the highest frequency
+should be coming back first.
+
+22
+00:00:59.330 --> 00:01:01.330
+Let's run this to get
+an idea of the results.
+
+23
+00:01:01.330 --> 00:01:05.590
+
+
+24
+00:01:05.590 --> 00:01:08.860
+We can see that the most
+common length for a movie title
+
+25
+00:01:08.860 --> 00:01:13.660
+appears to be three words and
+there were 1,450 documents that
+
+26
+00:01:13.660 --> 00:01:15.880
+fell into this group.
+
+27
+00:01:15.880 --> 00:01:19.420
+We can also see that the most
+uncommon length for a movie
+
+28
+00:01:19.420 --> 00:01:24.660
+title is 17 words, with only
+one document in this group.
+
+29
+00:01:24.660 --> 00:01:26.920
+Let's now examine the
+explain information
+
+30
+00:01:26.920 --> 00:01:29.710
+for this aggregation.
+
+31
+00:01:29.710 --> 00:01:32.450
+So we have the same
+pipeline as before.
+
+32
+00:01:32.450 --> 00:01:34.540
+But this time we're
+appending explain
+
+33
+00:01:34.540 --> 00:01:37.450
+true to get the explain output.
+
+34
+00:01:37.450 --> 00:01:40.390
+Let's take a look
+at the results.
+
+35
+00:01:40.390 --> 00:01:43.300
+There is a lot of
+interesting information here.
+
+36
+00:01:43.300 --> 00:01:47.110
+We can see what our query was,
+the fields that were kept which
+
+37
+00:01:47.110 --> 00:01:51.960
+happened to be title and _id,
+and then the query planner.
+
+38
+00:01:51.960 --> 00:01:55.230
+A little further down, we
+can also the winning plan
+
+39
+00:01:55.230 --> 00:01:59.215
+that used a fetch stage
+followed by an index scan.
+
+40
+00:01:59.215 --> 00:02:01.090
+We can probably do a
+little better than this,
+
+41
+00:02:01.090 --> 00:02:03.370
+because we know that
+we have an index that
+
+42
+00:02:03.370 --> 00:02:06.200
+should support this query.
+
+43
+00:02:06.200 --> 00:02:08.830
+We can also see the
+stages that were executed.
+
+44
+00:02:08.830 --> 00:02:12.970
+Here's our converted project
+stage where we see _id true--
+
+45
+00:02:12.970 --> 00:02:15.190
+this is implicit, remember--
+
+46
+00:02:15.190 --> 00:02:17.230
+the title size
+where we calculated
+
+47
+00:02:17.230 --> 00:02:19.750
+the size of our
+title, and then we
+
+48
+00:02:19.750 --> 00:02:25.120
+can see our group and our
+sort along with the sort key;
+
+49
+00:02:25.120 --> 00:02:27.410
+pretty interesting information.
+
+50
+00:02:27.410 --> 00:02:29.300
+So let's see if
+we can do better.
+
+51
+00:02:29.300 --> 00:02:32.320
+Our goal is to try and get this
+to be a covered query, meaning
+
+52
+00:02:32.320 --> 00:02:35.950
+there is no fetch stage.
+
+53
+00:02:35.950 --> 00:02:39.910
+So this aggregation pipeline is
+nearly identical to the first
+
+54
+00:02:39.910 --> 00:02:42.880
+one we had, except I'm
+explicitly getting rid
+
+55
+00:02:42.880 --> 00:02:44.410
+of the _id field.
+
+56
+00:02:44.410 --> 00:02:46.600
+Remember, the project
+stage implicitly
+
+57
+00:02:46.600 --> 00:02:48.830
+keeps it unless
+we tell it not to.
+
+58
+00:02:48.830 --> 00:02:51.550
+Let's see if we get
+the same results.
+
+59
+00:02:51.550 --> 00:02:54.460
+And we do indeed get the
+same results as before,
+
+60
+00:02:54.460 --> 00:02:58.240
+where it looks like movies
+with a length of three words
+
+61
+00:02:58.240 --> 00:03:02.690
+have the most occurrence
+with 1,450 documents.
+
+62
+00:03:02.690 --> 00:03:03.340
+OK.
+
+63
+00:03:03.340 --> 00:03:05.090
+We verified the same results.
+
+64
+00:03:05.090 --> 00:03:07.660
+Let's check the explain output
+to see if we've improved
+
+65
+00:03:07.660 --> 00:03:09.820
+our query performance at all.
+
+66
+00:03:09.820 --> 00:03:15.250
+Again, the same pipeline we just
+used also projecting out _id,
+
+67
+00:03:15.250 --> 00:03:19.120
+just adding the explain true
+option to the aggregation
+
+68
+00:03:19.120 --> 00:03:20.680
+function.
+
+69
+00:03:20.680 --> 00:03:22.930
+And looking at the
+explain plan, we
+
+70
+00:03:22.930 --> 00:03:26.390
+see again we have the
+same query on the cursor.
+
+71
+00:03:26.390 --> 00:03:28.120
+This time the fields
+are different.
+
+72
+00:03:28.120 --> 00:03:32.470
+We're keeping the title
+and projecting away _id.
+
+73
+00:03:32.470 --> 00:03:34.480
+Let's go ahead and go
+down to the winning plan
+
+74
+00:03:34.480 --> 00:03:38.710
+to see if we avoided
+that fetch stage.
+
+75
+00:03:38.710 --> 00:03:41.280
+All right, so looking
+at our winning plan,
+
+76
+00:03:41.280 --> 00:03:43.650
+we can see it's much better.
+
+77
+00:03:43.650 --> 00:03:45.690
+I can see there's
+no fetch stage.
+
+78
+00:03:45.690 --> 00:03:47.970
+So our match stage
+was indeed covered.
+
+79
+00:03:47.970 --> 00:03:49.710
+When we see a fetch
+stage, it means
+
+80
+00:03:49.710 --> 00:03:52.860
+MongoDB had to go to the
+document for more information,
+
+81
+00:03:52.860 --> 00:03:55.620
+rather than just using
+information from the index
+
+82
+00:03:55.620 --> 00:03:57.120
+alone.
+
+83
+00:03:57.120 --> 00:04:01.680
+Of some interest here, we
+can also see that _id was now
+
+84
+00:04:01.680 --> 00:04:03.030
+projected as false.
+
+85
+00:04:03.030 --> 00:04:07.060
+This is because we explicitly
+provided that information.
+
+86
+00:04:07.060 --> 00:04:11.910
+So let's see if we
+can do even better.
+
+87
+00:04:11.910 --> 00:04:14.430
+So here's our new
+modified pipeline, where
+
+88
+00:04:14.430 --> 00:04:16.350
+we have the same match stage.
+
+89
+00:04:16.350 --> 00:04:19.470
+However, this time we
+have no project stage.
+
+90
+00:04:19.470 --> 00:04:22.770
+Instead, we perform the
+logic we need within group
+
+91
+00:04:22.770 --> 00:04:25.000
+and then sort on those results.
+
+92
+00:04:25.000 --> 00:04:27.464
+Let's see it in action.
+
+93
+00:04:27.464 --> 00:04:28.830
+All right, pretty cool.
+
+94
+00:04:28.830 --> 00:04:31.290
+We got the same
+results, three words,
+
+95
+00:04:31.290 --> 00:04:34.230
+count of 1,450 documents.
+
+96
+00:04:34.230 --> 00:04:36.150
+Let's check the
+explain output to see
+
+97
+00:04:36.150 --> 00:04:38.310
+the difference
+between this pipeline
+
+98
+00:04:38.310 --> 00:04:41.050
+and our previous pipeline.
+
+99
+00:04:41.050 --> 00:04:43.650
+All right, let's look
+at the explain output.
+
+100
+00:04:43.650 --> 00:04:45.810
+We can see that the
+query is the same.
+
+101
+00:04:45.810 --> 00:04:49.410
+We can see that the fields are
+the same as well-- title 1,
+
+102
+00:04:49.410 --> 00:04:51.420
+_id is 0.
+
+103
+00:04:51.420 --> 00:04:52.890
+How did the
+aggregation framework
+
+104
+00:04:52.890 --> 00:04:56.850
+know to do this when we didn't
+specify a project stage?
+
+105
+00:04:56.850 --> 00:04:58.890
+Let's cover that in a moment.
+
+106
+00:04:58.890 --> 00:05:01.650
+Down in our winning
+plan, we can see
+
+107
+00:05:01.650 --> 00:05:03.780
+there was no fetch
+stage, which meant
+
+108
+00:05:03.780 --> 00:05:05.940
+that this is a covered query.
+
+109
+00:05:05.940 --> 00:05:07.830
+If we scroll all the
+way down to the bottom
+
+110
+00:05:07.830 --> 00:05:11.700
+to look at the rest of
+our pipeline stages,
+
+111
+00:05:11.700 --> 00:05:16.650
+we can see the next stage
+after our query is group, then
+
+112
+00:05:16.650 --> 00:05:20.850
+our sort, and we're done.
+
+113
+00:05:20.850 --> 00:05:24.930
+A key takeaway here is to
+avoid needless projects.
+
+114
+00:05:24.930 --> 00:05:26.910
+As we saw, the
+aggregation framework
+
+115
+00:05:26.910 --> 00:05:30.880
+assumed we knew what we were
+doing with each project.
+
+116
+00:05:30.880 --> 00:05:33.270
+However, if the
+aggregation framework
+
+117
+00:05:33.270 --> 00:05:36.690
+can determine the shape of
+the final document based only
+
+118
+00:05:36.690 --> 00:05:40.430
+on initial input, internally
+it will project away
+
+119
+00:05:40.430 --> 00:05:42.750
+unnecessary fields.
+
+120
+00:05:42.750 --> 00:05:44.010
+That was a mouthful.
+
+121
+00:05:44.010 --> 00:05:47.370
+So let me explain that
+in a little more detail.
+
+122
+00:05:47.370 --> 00:05:50.610
+In the first match stage,
+the only field we cared about
+
+123
+00:05:50.610 --> 00:05:52.290
+was the title.
+
+124
+00:05:52.290 --> 00:05:55.830
+In the group stage, again,
+the only field we care about
+
+125
+00:05:55.830 --> 00:05:57.120
+is the title.
+
+126
+00:05:57.120 --> 00:05:59.670
+We use this composition
+of expressions
+
+127
+00:05:59.670 --> 00:06:02.570
+to get the number of
+words in the title.
+
+128
+00:06:02.570 --> 00:06:05.430
+But we can do that
+in line by evaluating
+
+129
+00:06:05.430 --> 00:06:09.000
+first splitting the title
+on spaces into an array,
+
+130
+00:06:09.000 --> 00:06:11.660
+and then getting in
+the size of the array.
+
+131
+00:06:11.660 --> 00:06:14.880
+There's no need for an
+intermediary project stage,
+
+132
+00:06:14.880 --> 00:06:19.350
+because we can just calculate
+that value in line here.
+
+133
+00:06:19.350 --> 00:06:21.840
+This is a very powerful feature.
+
+134
+00:06:21.840 --> 00:06:25.410
+We should always strive to
+let the optimizer work for us.
+
+135
+00:06:25.410 --> 00:06:29.250
+Additionally, this removes a
+stage that ultimately adds time
+
+136
+00:06:29.250 --> 00:06:30.690
+to the pipeline.
+
+137
+00:06:30.690 --> 00:06:32.360
+Let's think about that.
+
+138
+00:06:32.360 --> 00:06:36.450
+Say we have 100,000 documents
+in our movies collection.
+
+139
+00:06:36.450 --> 00:06:39.810
+In the match, we
+filter down to 10,000.
+
+140
+00:06:39.810 --> 00:06:43.290
+Now in group, we have 10,000
+documents come through.
+
+141
+00:06:43.290 --> 00:06:47.970
+And in sort, we have maybe 15.
+
+142
+00:06:47.970 --> 00:06:51.210
+Well, with that intermediary
+project stage that we really
+
+143
+00:06:51.210 --> 00:06:55.800
+didn't need, we had 100,000
+come in, then we have 10,000,
+
+144
+00:06:55.800 --> 00:06:59.460
+and we'd send all 10,000 through
+that intermediary project
+
+145
+00:06:59.460 --> 00:07:01.630
+before they got to
+the group stage.
+
+146
+00:07:01.630 --> 00:07:04.020
+That's 10,000
+additional iterations
+
+147
+00:07:04.020 --> 00:07:05.940
+that we just avoided.
+
+148
+00:07:05.940 --> 00:07:09.030
+So as a general
+rule, don't project
+
+149
+00:07:09.030 --> 00:07:11.530
+unless you are doing some
+real work in this stage.
+
+150
+00:07:11.530 --> 00:07:15.480
+And remember that add
+fields is available.
+
+151
+00:07:15.480 --> 00:07:18.090
+OK, one last note
+before we move on,
+
+152
+00:07:18.090 --> 00:07:21.540
+we could replace group
+and sort by sort by count.
+
+153
+00:07:21.540 --> 00:07:24.000
+It really is the
+same under the hood.
+
+154
+00:07:24.000 --> 00:07:25.770
+It just saves us on typing.
+
+155
+00:07:25.770 --> 00:07:27.740
+Keep that in mind.

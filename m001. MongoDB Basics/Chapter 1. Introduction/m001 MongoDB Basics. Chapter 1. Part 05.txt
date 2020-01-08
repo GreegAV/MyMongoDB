@@ -1,0 +1,105 @@
+In this lesson, we'll explore some of the scalar data types MongoDB supports, and how to determine the value type of a particular field using the Compass schema view.
+
+We look at array, document, and what I often call special value types in other lessons.
+
+Here, we are looking at the schema view for the video movies collection.
+
+Now, I have collapsed the nav pane to the left using this control so that we have a little bit more screen real estate to work with.
+
+As we scroll through the main panel, you should see a number of fields here.
+
+In the schema view, a field is represented by its name, its type, and a graph that reflects the range of values for that field in this collection and what fraction of documents have a given value.
+
+As an example, let's take a look in more detail at the genre field.
+
+For this field, we see the name genre.
+
+Immediately below is a description of the value type for this field as determined by sampling documents in this collection.
+
+Throughout the Compass schema view, hovering over elements provides more detail.
+
+If we hover over the bar immediately below the value type specifier, you should see the value 100%.
+
+This tells us that 100% of the documents in this collection contain a string value for this field.
+
+To the right of the name and type is a graph that shows both a range of values for this field and what fraction of documents in this collection hold specific values.
+
+Skimming through the values gives us an idea of all the values this field has within documents in this collection.
+
+And if we hover over any specific element of this graph, we can see what fraction of documents have a specific value.
+
+Here we can see that 10% of documents in this collection describe movies in the genre documentary.
+
+It is important to keep in mind that the value range and fraction of documents with a given value, as reported by Compass, is based on a sample of documents in the collection.
+
+In this example, the sample is large enough that you should see an accurate summary, but there is a chance the summary will change slightly from one viewing to another.
+
+As we scroll through the rest of the schema view for this collection, you can see that Compass provides the name, a value type description, and a summary of the range and fraction of documents having a specific value for all fields found within documents in a collection.
+
+In addition to strings, other common values for MongoDB documents include integers, floating point values, and dates.
+
+Let's look at the year field next.
+
+You can see from the schema view that values for this field are int32, meaning they are 32-bit integers.
+
+Looking at the value graph, we can see that the min value is 1,897, and the max value is 2,017.
+
+We can also see that the number of movies in this collection for more recent years is much greater than for time periods 100 years ago or more.
+
+As we skim through the bars here, we can see that each represents a period of about five years.
+
+Now let's look at some floating point values.
+
+If we scroll up to the viewer rating field, you will see a range of values from 1.8 to nine, which seems reasonable for a viewer rating scale for movies.
+
+And again, we can see that the majority of values are somewhere in this mediocre range, with far fewer ratings being extremely low or very, very high.
+
+The data type double is one option for representing floating point values.
+
+As you're probably aware, floating point arithmetic, while good enough for many applications, is imprecise.
+
+MongoDB also provides a decimal data type for financial transactions and other applications that require precise floating point arithmetic.
+
+Now you might be wondering why we're seeing multiple value types listed for viewer rating.
+
+In fact, we have both some double values and some int32 values, as well as a proportion of documents for which this field is actually undefined.
+
+One of the real advantages of the Compass schema view is that it gives you a sense for what values fields in your collection actually have.
+
+And for a collection that's this large, this can be extremely handy when you're going through tasks such as data cleaning.
+
+This indicates that we might have a little bit of work to do in order to make sure that all viewer ratings are of the same data type.
+
+The fact that, for many movies, viewer rating is undefined, is not necessarily a problem because we simply might not have data on viewer ratings for a sizable fraction of our dataset.
+
+The important takeaway here is that Compass identifies fields for which there is a mix of value types.
+
+This is valuable for developers or administrators who might be trying to debug an issue that has to do with the data type for a particular field.
+
+It's also useful in considering what needs to be done from a scripting standpoint, for example, when it becomes necessary to migrate a data model from one schema to another.
+
+In this lesson, we've looked at scalar value types in MongoDB and how to use Compass to determine value types for a field and to get a sense for the range of values in that field for documents in a collection.
+
+The examples we've looked at in the lesson do not provide a comprehensive overview of the scalar value types MongoDB supports.
+
+However, they are the most common.
+
+Before we close this lesson, let's take a look at one additional value type.
+
+I'd like to look at a field that shows us an example of dates.
+
+The last updated field provides a record of when the data-- ratings and such-- for a given movie document was last updated, that is, when a document was last written to the collection.
+
+For date values, Compass does something really valuable.
+
+You can see here that Compass provides the range of date values in a way that indicates something like the density of values at each date in the range.
+
+Just above this, you can see a report of what fraction of date values for the field in question fall on each day, here, and at what time of day, here.
+
+In this lesson, we've looked at scalar value types in MongoDB and how to use Compass to determine value types for a field and get a sense for the range of values in that field for documents in a collection.
+
+The examples we've looked at in this lesson do not provide a comprehensive overview of the scalar value types MongoDB supports.
+
+However, these are the most common-- int32, double, string, and date.
+
+We complete a more complete review of MongoDB data types in another lesson on the binary format in which MongoDB stores documents.

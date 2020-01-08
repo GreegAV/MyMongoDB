@@ -1,0 +1,451 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.080
+Hi there.
+
+3
+00:00:01.080 --> 00:00:04.430
+In this lesson, we're going to
+talk about wildcard indexes.
+
+4
+00:00:04.430 --> 00:00:08.090
+Wildcard indexes are a
+new index type in MongoDB.
+
+5
+00:00:08.090 --> 00:00:11.420
+Which, as their name suggests,
+allow you to dynamically create
+
+6
+00:00:11.420 --> 00:00:14.270
+indexes on all
+fields, or a selected
+
+7
+00:00:14.270 --> 00:00:17.970
+subset of fields for each
+document in a collection.
+
+8
+00:00:17.970 --> 00:00:20.090
+Let's take a step back
+and talk about why we
+
+9
+00:00:20.090 --> 00:00:22.070
+would want to use this feature.
+
+10
+00:00:22.070 --> 00:00:24.320
+Here at MongoDB, we
+always say that you
+
+11
+00:00:24.320 --> 00:00:28.490
+should only index fields that
+your queries frequently access.
+
+12
+00:00:28.490 --> 00:00:29.870
+And that still applies.
+
+13
+00:00:29.870 --> 00:00:32.030
+Wildcard indexes
+aren't a replacement
+
+14
+00:00:32.030 --> 00:00:34.370
+for traditional indexes.
+
+15
+00:00:34.370 --> 00:00:37.340
+So remember, indexes are
+great for query performance,
+
+16
+00:00:37.340 --> 00:00:38.840
+but come at a cost.
+
+17
+00:00:38.840 --> 00:00:41.060
+Each index needs
+to be maintained.
+
+18
+00:00:41.060 --> 00:00:43.400
+And every document that's
+written to the database
+
+19
+00:00:43.400 --> 00:00:47.000
+needs to update all the
+relevant indexes as well.
+
+20
+00:00:47.000 --> 00:00:49.580
+Then why would we index
+everything, I hear you say.
+
+21
+00:00:49.580 --> 00:00:51.860
+And I can definitely
+understand your trepidation.
+
+22
+00:00:51.860 --> 00:00:54.470
+There is a method to
+our madness, however.
+
+23
+00:00:54.470 --> 00:00:57.870
+Some workloads have
+unpredictable access patterns.
+
+24
+00:00:57.870 --> 00:00:59.750
+For instance,
+sensor data for IoT
+
+25
+00:00:59.750 --> 00:01:02.330
+use cases, or weather stations.
+
+26
+00:01:02.330 --> 00:01:04.970
+In such cases, each
+query may include
+
+27
+00:01:04.970 --> 00:01:07.850
+a combination of an
+arbitrarily large number
+
+28
+00:01:07.850 --> 00:01:09.540
+of different fields.
+
+29
+00:01:09.540 --> 00:01:12.740
+This can make it very difficult
+to plan an effective indexing
+
+30
+00:01:12.740 --> 00:01:14.000
+strategy.
+
+31
+00:01:14.000 --> 00:01:16.160
+For these workloads,
+we needed a way
+
+32
+00:01:16.160 --> 00:01:18.860
+to be able to index
+on multiple fields
+
+33
+00:01:18.860 --> 00:01:21.760
+without the overhead of
+maintaining multiple indexes.
+
+34
+00:01:21.760 --> 00:01:25.550
+MongoDB indexes any
+scalar values associated
+
+35
+00:01:25.550 --> 00:01:28.310
+with a specified path or paths.
+
+36
+00:01:28.310 --> 00:01:30.590
+For fields that are
+documents, MongoDB
+
+37
+00:01:30.590 --> 00:01:33.830
+descends into the document
+and creates index keys
+
+38
+00:01:33.830 --> 00:01:36.230
+for each field
+value paired finds.
+
+39
+00:01:36.230 --> 00:01:38.570
+For fields that
+are arrays, MongoDB
+
+40
+00:01:38.570 --> 00:01:42.420
+creates an index key for
+each value in the array.
+
+41
+00:01:42.420 --> 00:01:44.840
+This is similar to how multi
+key indexes handle arrays
+
+42
+00:01:44.840 --> 00:01:46.010
+at the moment.
+
+43
+00:01:46.010 --> 00:01:48.200
+If the array contains
+sub-documents,
+
+44
+00:01:48.200 --> 00:01:51.470
+MongoDB again will descend
+through those documents,
+
+45
+00:01:51.470 --> 00:01:54.540
+and index all field value pairs.
+
+46
+00:01:54.540 --> 00:01:57.480
+Let's have a look at how
+we can use these indexes.
+
+47
+00:01:57.480 --> 00:01:59.240
+Let's say we have a
+collection, and decide
+
+48
+00:01:59.240 --> 00:02:03.080
+that we want every field in
+the collection to be indexed.
+
+49
+00:02:03.080 --> 00:02:04.970
+Without wildcard
+indexes, we would
+
+50
+00:02:04.970 --> 00:02:07.760
+have to create and
+maintain a lot of indexes
+
+51
+00:02:07.760 --> 00:02:11.450
+based on whatever new access
+pattern our application uses.
+
+52
+00:02:11.450 --> 00:02:13.820
+If we instead use
+a wildcard index,
+
+53
+00:02:13.820 --> 00:02:17.030
+we can assume that certain
+indexes exist without the need
+
+54
+00:02:17.030 --> 00:02:18.533
+to manually create them.
+
+55
+00:02:18.533 --> 00:02:20.450
+So let's have a look at
+our weather collection
+
+56
+00:02:20.450 --> 00:02:23.480
+here, which we've loaded into
+Atlas Cluster using the sample
+
+57
+00:02:23.480 --> 00:02:25.070
+data feature.
+
+58
+00:02:25.070 --> 00:02:27.940
+We've created a new
+application, and during testing
+
+59
+00:02:27.940 --> 00:02:30.320
+have noticed that
+the access pattern is
+
+60
+00:02:30.320 --> 00:02:32.000
+completely unpredictable.
+
+61
+00:02:32.000 --> 00:02:33.830
+And are really struggling
+to see a pattern
+
+62
+00:02:33.830 --> 00:02:35.840
+where a set of
+indexes would serve
+
+63
+00:02:35.840 --> 00:02:38.010
+all our queries efficiently.
+
+64
+00:02:38.010 --> 00:02:40.880
+Wildcard indexes give
+us the ability to index
+
+65
+00:02:40.880 --> 00:02:44.030
+all fields in all
+documents in a collection.
+
+66
+00:02:44.030 --> 00:02:47.990
+We want to index all fields in
+the sample_weather collection.
+
+67
+00:02:47.990 --> 00:02:50.570
+Let's jump into a Mongo
+Shell and do that.
+
+68
+00:02:50.570 --> 00:02:54.230
+This command uses $**
+as a wildcard operator,
+
+69
+00:02:54.230 --> 00:02:58.010
+which tells MongoDB to index
+everything in the collection.
+
+70
+00:02:58.010 --> 00:03:00.200
+OK, so our index is created.
+
+71
+00:03:00.200 --> 00:03:01.500
+Let's check it out.
+
+72
+00:03:01.500 --> 00:03:04.520
+We're going to query on a nested
+document in our collection.
+
+73
+00:03:04.520 --> 00:03:07.290
+Let's say that we need to
+view all data points where
+
+74
+00:03:07.290 --> 00:03:10.080
+a wave height is 0.5.
+
+75
+00:03:10.080 --> 00:03:13.490
+Let's write a query to get
+that data from our database.
+
+76
+00:03:13.490 --> 00:03:17.090
+OK, so here we're
+querying on a sub-document
+
+77
+00:03:17.090 --> 00:03:19.970
+of wave measurement
+that waves are height.
+
+78
+00:03:19.970 --> 00:03:22.100
+So great, our query
+used the index.
+
+79
+00:03:22.100 --> 00:03:26.390
+But what if we wanted to query
+on two fields in the document?
+
+80
+00:03:26.390 --> 00:03:28.190
+So here, we're
+querying on two fields.
+
+81
+00:03:28.190 --> 00:03:30.700
+Let's say I execute the query
+and look at our Explain Plan
+
+82
+00:03:30.700 --> 00:03:31.820
+again.
+
+83
+00:03:31.820 --> 00:03:35.420
+We have a winning plan,
+which uses an index.
+
+84
+00:03:35.420 --> 00:03:39.690
+And we also have our
+rejected plans down below.
+
+85
+00:03:39.690 --> 00:03:43.280
+So what you may have noticed
+is that each of these plans
+
+86
+00:03:43.280 --> 00:03:45.590
+is on a single field index.
+
+87
+00:03:45.590 --> 00:03:47.840
+And this is because
+the wildcard index
+
+88
+00:03:47.840 --> 00:03:52.190
+will generate one virtual single
+field index at query execution
+
+89
+00:03:52.190 --> 00:03:52.978
+time.
+
+90
+00:03:52.978 --> 00:03:54.770
+And then the planner
+will assess them using
+
+91
+00:03:54.770 --> 00:03:57.500
+the standard query plan score.
+
+92
+00:03:57.500 --> 00:03:59.510
+This is because
+the wildcard index
+
+93
+00:03:59.510 --> 00:04:03.440
+will generate one virtual
+single field at execution time
+
+94
+00:04:03.440 --> 00:04:05.320
+for each field in the query.
+
+95
+00:04:05.320 --> 00:04:09.220
+And the planner will assess them
+using standard plan scoring.

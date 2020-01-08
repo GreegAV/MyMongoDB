@@ -1,0 +1,151 @@
+So let's go ahead and set up our MongoD instance.
+
+But let's start by setting it up in the-- let's say-- normal mode without any log redaction.
+
+And then we're going to be activating the redaction to see the differences in the logs.
+
+The first thing that we need to do is pretty much go to our data folder.
+
+And there's a redaction folder there.
+
+So as you can see here, it's completely empty.
+
+So I'm going to use this as my DB path on this particular shell.
+
+Now I'm going to specify the DB path, and just point there to this folder MongoD.
+
+There's no other flag.
+
+There's no other thing then just putting it up on 27017, and this DB path right here.
+
+So as you can see from the logs everything is boot up correctly.
+
+So I'm going to keep this window here.
+
+And I'm just going to jump to another one that I have here already set up.
+
+So I can establish here my connections.
+
+Then the next thing that I'm going to do is basically connect to my instance.
+
+Here we are.
+
+Connected on my local instance, I can now set up a couple different things to get a more comprehensive look.
+
+First thing I'm going to do is to show you how to set up a profiling level that allows us to capture every single [INAUDIBLE] instruction into our logs.
+
+And to do that, I just need to set my profiling level.
+
+Keep it at 0.
+
+This is a default set up.
+
+But setting up the slow ms value to minus 1.
+
+This is a simple trick to just collect every single instruction they had my MongoD instance is going to process.
+
+It will be captured on its log.
+
+And so I do this.
+
+I can see how it was before.
+
+Our slow ms was set to 100 milliseconds, as you should all know.
+
+And it's all good.
+
+It's all OK equals 1.
+
+Now that I have that, I'm going to use a redact database.
+
+So once I move there, I'm going to create a collection.
+
+Right now there's no collections whatsoever.
+
+So I'm just going to create a new collection that I'm going to call sensitive, for sensitive data.
+
+And I'm going to insert a document which I'm going to say that going to have a field called secret.
+
+And I'm going to say that this should not be found in the logs.
+
+It's a single string, all very clear that I do not want to find this message in my logs.
+
+So once I do this and once I insert, if I move back to my output of my logs, we can see clearly here in clear text the message that I've just inserted.
+
+In this case, as you can see, I'm writing to the sensitive namespace, or collection this case, and I'm writing this document.
+
+It has the message secret.
+
+This should not be found in the logs which unfortunately, this is the case right now.
+
+Because we haven't enabled redaction yet.
+
+Now to enable redaction, we have three different options.
+
+The first option is to pass to the MongoD at boot up time.
+
+The client log data flag.
+
+With this set up, we will immediately initiate MongoD with the capability of redacting the client's data into the logs.
+
+So any logged operation, any of slow ms operation that MongoD has to process, it will be logged in the logs, but redacted.
+
+The other option would be to set it up on the MongoDB config files.
+
+Like for example, if I have this sample here, called MongoD underscore redaction dot com, can see that I'm setting up the db path, a log system where I'm going to throw the log into the file.
+
+And importantly, under Security, there's a new flag called redact client log equals true.
+
+Now the other option, the third option, would be to just connect to MongoDB.
+
+And again, you know that we are not using any redaction at the moment.
+
+Now what I need to do is basically run the admin command.
+
+Setting up a perimeter, which in this case it will be redact client log data to true or 1, in this case.
+
+And once I do this, now I've enabled this MongoD to redact all operations that are going to be taking more time than slow ms.
+
+To do that, let's go to our redact database and just run sensitive collection again with a new insert statement saying that our secret now is going to be really, do not show this in the logs.
+
+And hopefully we will not see such a message in our logs.
+
+So once we insert it, we go back to our message.
+
+And here we see a lot of hashes.
+
+All of these operations were in fact commands that MongoDB completely redacted so they would not show its content on the logs.
+
+From all the three different options that we have to set up this file correctly, we should take in consideration a few things.
+
+If we do it in the run time, we can definitely do that.
+
+But once the server reboots, we need to make sure that we set it up again.
+
+So that is a risk that we forget about it.
+
+So pay attention to that.
+
+If we set it up on the config file, or even on the MongoD runtime-- so when we specify a service or something like that, the best way to do it is to use the config file obviously.
+
+But this will guarantee us that from the initial point in our execution of this MongoD instances, we will have log redaction enabled.
+
+And in case that our server reboots, you always pick up the configuration options from its file.
+
+So we will be safe that all the log information will be redacted.
+
+Now also take note that the flag can be set on MongoS, or should be set on MongoS and MongoD.
+
+In the shard environment you need to go to all individual MongoS's and all individual MongoD's to make sure you do not forget to redact the log messages on all of these machines.
+
+So for Hyperloop purposes, you might add new nodes to a replica set.
+
+If you are redacting everything, you intend everything to be redacted on both your primary and secondaries, you need to make sure that all of them have this flag active.
+
+Otherwise, might get a leak there from one of the MongoD's which have not enabled the redaction flag.
+
+Another interesting thing is that we've seen an insert command, but for find commands or update commands we will not see the actual data of our queries.
+
+We only be seeing the query shape of the queries that will be logged in our logs.
+
+And this is how you set up your log redaction on MongoD 3.4.

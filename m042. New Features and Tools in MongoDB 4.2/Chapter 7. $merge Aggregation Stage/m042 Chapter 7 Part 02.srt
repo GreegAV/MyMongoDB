@@ -1,0 +1,227 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.560
+Let's look at a few examples
+now using this new stage.
+
+3
+00:00:04.560 --> 00:00:07.560
+Single view example
+would be where
+
+4
+00:00:07.560 --> 00:00:10.380
+you may be maintaining
+in a particular database
+
+5
+00:00:10.380 --> 00:00:13.500
+a collection of users
+and, among other things,
+
+6
+00:00:13.500 --> 00:00:16.770
+you want to track
+whatever arbitrary fields
+
+7
+00:00:16.770 --> 00:00:20.040
+you know about the
+users from some--
+
+8
+00:00:20.040 --> 00:00:22.380
+maybe a third party
+API that you're
+
+9
+00:00:22.380 --> 00:00:26.370
+pulling in for mflix service.
+
+10
+00:00:26.370 --> 00:00:29.790
+And the same thing for
+mfriendbook service.
+
+11
+00:00:29.790 --> 00:00:33.360
+So you have multiple collections
+that represent that user
+
+12
+00:00:33.360 --> 00:00:34.090
+information.
+
+13
+00:00:34.090 --> 00:00:36.450
+You want to merge
+it in periodically
+
+14
+00:00:36.450 --> 00:00:38.640
+into your single view.
+
+15
+00:00:38.640 --> 00:00:41.160
+So imagine your single
+view is the user.
+
+16
+00:00:41.160 --> 00:00:45.870
+The _id would be the unique
+merging key here that would be
+
+17
+00:00:45.870 --> 00:00:49.830
+used, maybe a date of birth
+and some other fields.
+
+18
+00:00:49.830 --> 00:00:55.160
+Now you'd construct a pipeline
+from mflix.users collection
+
+19
+00:00:55.160 --> 00:00:58.880
+and merge it into single
+view users collection.
+
+20
+00:00:58.880 --> 00:01:05.160
+So you might have a project
+that creates this _id field,
+
+21
+00:01:05.160 --> 00:01:06.570
+which is $username.
+
+22
+00:01:06.570 --> 00:01:11.480
+So maybe the same user name is
+stored in username field there.
+
+23
+00:01:11.480 --> 00:01:13.180
+And now you merge into.
+
+24
+00:01:13.180 --> 00:01:16.250
+You specify a different
+database and collection name.
+
+25
+00:01:16.250 --> 00:01:18.830
+You see whenNotMatched, discard.
+
+26
+00:01:18.830 --> 00:01:21.950
+This makes sense because you
+don't want this merging service
+
+27
+00:01:21.950 --> 00:01:26.210
+to create a new record for
+a user that doesn't exist,
+
+28
+00:01:26.210 --> 00:01:29.240
+because it would be missing
+a lot of required fields,
+
+29
+00:01:29.240 --> 00:01:30.900
+for example.
+
+30
+00:01:30.900 --> 00:01:34.140
+But when it does
+match, then it's
+
+31
+00:01:34.140 --> 00:01:35.580
+going to do a
+default merge, which
+
+32
+00:01:35.580 --> 00:01:39.540
+means that the fields here--
+
+33
+00:01:39.540 --> 00:01:41.220
+which _id of course matches.
+
+34
+00:01:41.220 --> 00:01:44.910
+And then mflix has the full
+document from this mflix
+
+35
+00:01:44.910 --> 00:01:46.950
+collection, so it
+will just get merged
+
+36
+00:01:46.950 --> 00:01:48.400
+into an existing document.
+
+37
+00:01:48.400 --> 00:01:51.450
+If there was an earlier
+mflix field here,
+
+38
+00:01:51.450 --> 00:01:55.140
+it will get overwritten
+by the new document.
+
+39
+00:01:55.140 --> 00:01:57.120
+Now you can run the
+exact same thing
+
+40
+00:01:57.120 --> 00:02:00.510
+on your mfriendbook.users
+collection.
+
+41
+00:02:00.510 --> 00:02:03.870
+You have the same pipeline
+again transforming the username
+
+42
+00:02:03.870 --> 00:02:06.110
+into the _id field.
+
+43
+00:02:06.110 --> 00:02:09.240
+And now here the mfriendbook
+field, which will get
+
+44
+00:02:09.240 --> 00:02:13.110
+added, or set, or overwritten,
+if there was one there already,
+
+45
+00:02:13.110 --> 00:02:15.390
+with whatever this
+new information is.
+
+46
+00:02:15.390 --> 00:02:19.830
+Again, if a user doesn't
+match an existing _id value,
+
+47
+00:02:19.830 --> 00:02:23.430
+it will just get discarded
+rather than inserted if that
+
+48
+00:02:23.430 --> 00:02:25.760
+option was not there.

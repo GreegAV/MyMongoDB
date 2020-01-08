@@ -1,0 +1,149 @@
+Now let's look at how to query MongoDB so that we can locate just those documents that match a specific set of filters.
+
+In doing this, we'll be sending a request to our MongoDB cluster and MongoDB will find in return only those documents that meet our stated criteria.
+
+Compass provides a rich point and click interface for filtering collections.
+
+Let's look at some examples of filtering collections using the citibike.trips collection.
+
+This dataset contains documents recording trips taken within New York City using the Citi Bike network of publicly accessible bicycles and stations.
+
+The documents in this collection provide details on the start and end stations, duration, start and end day and time for trips taken using a city bike.
+
+There's also a very small amount of demographic information, including birth year and gender.
+
+Now as you're aware, the graph to the right for each field in the Compass schema view provides a summary of the range of values found within a given field for documents in the collection.
+
+If we hover over a graph element, we can see what values that element represents.
+
+Now if we click on a graph element, we open up a whole new area of Compass functionality.
+
+As an example, I've clicked on this bar within the end station name graph.
+
+At first you might notice only that the bar changed color.
+
+But if you look here, in the schema view for Compass, you should see that the filter form element in this view has been updated.
+
+Let's take a minute to talk about this.
+
+Chances are you're already familiar with JavaScript Object Notation, also known by its acronym JSON.
+
+That's J-S-O-N.
+
+As you become more experienced in your use of MongoDB, much of your interaction with the database will be through JSON documents of one type or another.
+
+Though Compass is a GUI client, a little of the JSON orientation of MongoDB comes through in this aspect of the Compass interface.
+
+We explore JSON in greater detail in another lesson.
+
+For now, you only really need to know a few simple facts about JSON documents.
+
+First, JSON documents begin and end with curly braces.
+
+Second, JSON documents are composed of fields.
+
+In the example we're looking at here, this document has one field.
+
+And finally, fields have two parts.
+
+A key and a value.
+
+The key is a string, and must be enclosed in quotes, as we see here.
+
+The value can be any valid JavaScript data type, including a nested JSON document.
+
+The value of the field in this document is Broadway and East 22nd Street.
+
+Within a field, the key and value are separated by a colon.
+
+For now, that's all you really need to know about JSON.
+
+In this lesson, we'll see a couple of different examples of JSON documents as we look at filtering collections.
+
+Now, let's apply our filter.
+
+The filter we've just applied can be expressed as follows.
+
+Show me all documents for which the end station name has the value Broadway and East 22nd Street.
+
+Note that rather than the nearly 2 million documents reported by Compass for the entire collection, upon applying the filter, Compass reports a little more than 13,000 documents matching our query.
+
+Before we move on, it is important for me to mention that the type of filter we have applied here is called an equality filter.
+
+This simply means that we're looking for documents with this exact value in the end station name field.
+
+Now let's look at a different type of filter for situations in which we want to select documents that fall into a particular range of values.
+
+A good example for us to work with here is the birth year field of the city bike collection.
+
+Note that when hovering on any of the bars in the summary graph, that each bar represents a range of values.
+
+At the far left are birth years less than 1940, and the other bars represent a range of five years each.
+
+Let's click on the bar from 1985 to 1990.
+
+Note the filter document created for us here.
+
+This filter stipulates a constraint that can be expressed as follows.
+
+Show me all the documents for which the birth year field has a value that is greater than or equal to 1985, and less than 1990.
+
+Instead of a single value, as we had for the equality filter, this filter specifies a range of values.
+
+There are two things to note here.
+
+One is that the value for the birth year field in our filtered document is a nested JSON document.
+
+It follows all the rules of JSON documents with respect to the fields, and the key value pairs this document contains.
+
+The second thing to note is that the fields together to find a range of values because of the use of a couple of special keys.
+
+$gte and $lt.
+
+In MongoDB this type of key is called an operator.
+
+MongoDB defines many operators in its query language.
+
+In other lessons we'll go into detail on operators, and all other aspects of the MongoDB query language.
+
+Applying this filter, we can see that about 343,000 documents match the range we've specified here for birth year.
+
+Now that we have a better understanding of range filters, let's experiment a bit to get a sense for what's possible with Compass and range filters.
+
+Rather than clicking on just one bar in the summary graph for birth year, let's click and hold the mouse button, and select several bars in this graph.
+
+Note that the filter document now expresses a much broader range of birth years.
+
+If we apply this filter, MongoDB will return all documents that have a birth year value that is greater than or equal to '70, and less than 1990.
+
+Before we move on from range filters, let's take a look at one last example.
+
+After resetting our filter, let's scroll down to the bottom of the schema view.
+
+Here we'll find a field called trip duration.
+
+Trip duration stores the length of the trip in seconds.
+
+Let's just select a region of this graph and apply the filter.
+
+Here I've selected a trip duration in the range 2,000 to 4,000.
+
+In this example, we can see one reason why Compass-- even though it's a visual tool-- gives a JSON filter to work with, in addition to the point, click, drag interface.
+
+For fields that have values that are this granular, sometimes it's just faster to edit the JSON filter directly to get what we want.
+
+For example, say we want to filter for trips that have a duration of between 10 and 20 minutes.
+
+We can simply edit the JSON filter directly to be greater than 600 seconds, and less than 1,200 seconds, like this.
+
+And if we apply this filter, we can see that more than 600,000 documents match our query.
+
+Scrolling down to the trip duration field, we can see that the range of values in the schema view now reflects just those documents matching our query.
+
+The min is 600, and the max is 1,199.
+
+In this lesson we've reviewed how to use the Compass interface to complete queries involving equality filters and range filters.
+
+We've also taken a look at JSON documents that represent these filters, as we begin to get comfortable interacting with MongoDB using JSON syntax.
+
+In other lessons in this course, we go much deeper on JSON, queries, and a number of other operations essential to using MongoDB.

@@ -1,0 +1,469 @@
+
+1
+00:00:00.000 --> 00:00:00.252
+
+
+2
+00:00:00.252 --> 00:00:01.710
+Now let's take a
+moment and discuss
+
+3
+00:00:01.710 --> 00:00:04.390
+how to configure MongoDB
+for internal authentication
+
+4
+00:00:04.390 --> 00:00:07.949
+between the members of a
+replica set or sharded cluster.
+
+5
+00:00:07.949 --> 00:00:09.990
+There are two methods for
+internal authentication
+
+6
+00:00:09.990 --> 00:00:13.830
+between nodes with MongoDB,
+key file based authentication,
+
+7
+00:00:13.830 --> 00:00:17.160
+and X509 certificate
+based authentication.
+
+8
+00:00:17.160 --> 00:00:19.600
+Let's first walk through
+how to set MongoDB to use
+
+9
+00:00:19.600 --> 00:00:21.320
+key file based authentication.
+
+10
+00:00:21.320 --> 00:00:22.960
+If you recall
+correctly, key files
+
+11
+00:00:22.960 --> 00:00:25.760
+use the scram shaw
+one, challenge response
+
+12
+00:00:25.760 --> 00:00:27.301
+authentication mechanism.
+
+13
+00:00:27.301 --> 00:00:29.300
+The key files between the
+members of our replica
+
+14
+00:00:29.300 --> 00:00:33.750
+set act as a shared pass route
+between each of the members.
+
+15
+00:00:33.750 --> 00:00:36.980
+Key files can be between 6
+and 1024 characters in length.
+
+16
+00:00:36.980 --> 00:00:40.130
+And can only contain
+characters in the Base 64 set.
+
+17
+00:00:40.130 --> 00:00:42.250
+Let's go ahead and
+generic our key file.
+
+18
+00:00:42.250 --> 00:00:44.570
+Here I'm going to use the
+open SSL command to generate
+
+19
+00:00:44.570 --> 00:00:49.990
+a random 1024 character string,
+random characters, Base 64 set.
+
+20
+00:00:49.990 --> 00:00:54.940
+755 ends up being 1024
+characters with the Base 64
+
+21
+00:00:54.940 --> 00:00:55.630
+set.
+
+22
+00:00:55.630 --> 00:00:57.300
+And then we just
+redirect this output
+
+23
+00:00:57.300 --> 00:01:00.390
+to a key file called
+MongoDB dash key file.
+
+24
+00:01:00.390 --> 00:01:02.100
+Now this key file
+has been created,
+
+25
+00:01:02.100 --> 00:01:06.460
+the next thing we want to do is
+set this file to be read only.
+
+26
+00:01:06.460 --> 00:01:08.440
+So here I'm using chmod.
+
+27
+00:01:08.440 --> 00:01:10.800
+Saying 400 for read only.
+
+28
+00:01:10.800 --> 00:01:14.180
+And then Mongo DB key file,
+they key file we just created.
+
+29
+00:01:14.180 --> 00:01:16.180
+Now that we have our
+key file ready to go,
+
+30
+00:01:16.180 --> 00:01:18.750
+we can go ahead and create the
+members of our replica set.
+
+31
+00:01:18.750 --> 00:01:20.458
+The first thing we're
+going to want to do
+
+32
+00:01:20.458 --> 00:01:22.540
+is create a folder
+for each database.
+
+33
+00:01:22.540 --> 00:01:25.400
+Here we have replica
+set 1, 2, and 3.
+
+34
+00:01:25.400 --> 00:01:28.366
+Each of which will have
+a subfolder called DB.
+
+35
+00:01:28.366 --> 00:01:32.270
+The -p option for mkdir
+will automatically
+
+36
+00:01:32.270 --> 00:01:35.320
+create folders if there is
+some kind of dependency that
+
+37
+00:01:35.320 --> 00:01:37.142
+doesn't exist.
+
+38
+00:01:37.142 --> 00:01:38.850
+Now that these folders
+have been created,
+
+39
+00:01:38.850 --> 00:01:40.599
+we can go ahead and
+start our first member
+
+40
+00:01:40.599 --> 00:01:41.680
+in our replica set.
+
+41
+00:01:41.680 --> 00:01:43.950
+Here is the command to
+start our first node.
+
+42
+00:01:43.950 --> 00:01:45.490
+We're saying MongoD.
+
+43
+00:01:45.490 --> 00:01:47.910
+We're saying the
+repl set option,
+
+44
+00:01:47.910 --> 00:01:51.450
+giving a name to our replica
+set called my repl set.
+
+45
+00:01:51.450 --> 00:01:54.270
+Of course, we're going
+to use db path, log path.
+
+46
+00:01:54.270 --> 00:01:57.620
+Since we are going to have three
+members in our replica set,
+
+47
+00:01:57.620 --> 00:02:00.530
+we're going to go ahead and
+specify ports for each of them.
+
+48
+00:02:00.530 --> 00:02:03.130
+I'm going to start with 27 0 17.
+
+49
+00:02:03.130 --> 00:02:04.787
+We're going to pass in the fork.
+
+50
+00:02:04.787 --> 00:02:07.120
+And then, of course, we're
+going to pass in our key file
+
+51
+00:02:07.120 --> 00:02:08.050
+that we just created.
+
+52
+00:02:08.050 --> 00:02:10.759
+The first process is
+started successfully.
+
+53
+00:02:10.759 --> 00:02:12.830
+Here's the second member
+of our replica set.
+
+54
+00:02:12.830 --> 00:02:18.130
+The only thing I'd change here
+was the file path and the port.
+
+55
+00:02:18.130 --> 00:02:22.010
+And now we can start
+our last member.
+
+56
+00:02:22.010 --> 00:02:23.660
+Here is the last
+member of our replica
+
+57
+00:02:23.660 --> 00:02:27.060
+set I just changed the
+path again and the port
+
+58
+00:02:27.060 --> 00:02:28.390
+number again.
+
+59
+00:02:28.390 --> 00:02:30.790
+And all three of our
+members are now started.
+
+60
+00:02:30.790 --> 00:02:32.630
+We can now go ahead
+and use the Mongo shell
+
+61
+00:02:32.630 --> 00:02:34.390
+to initiate the replica set.
+
+62
+00:02:34.390 --> 00:02:38.060
+Since I used the default port
+for our first member of 27 0
+
+63
+00:02:38.060 --> 00:02:40.230
+17, the Mongo
+shell automatically
+
+64
+00:02:40.230 --> 00:02:42.665
+is going to connect
+to that first number.
+
+65
+00:02:42.665 --> 00:02:45.040
+And from here, we can go ahead
+and initialize the replica
+
+66
+00:02:45.040 --> 00:02:48.000
+set with RS initiate.
+
+67
+00:02:48.000 --> 00:02:50.210
+The replica set has
+now been initiated.
+
+68
+00:02:50.210 --> 00:02:53.190
+But if we try to add members to
+our replica set, we will fail.
+
+69
+00:02:53.190 --> 00:02:55.860
+And this is because internal
+authentication automatically
+
+70
+00:02:55.860 --> 00:02:58.780
+enables client authorization.
+
+71
+00:02:58.780 --> 00:03:01.020
+So let's go ahead and
+use the locals exception
+
+72
+00:03:01.020 --> 00:03:03.360
+to create our first user
+and then authenticate
+
+73
+00:03:03.360 --> 00:03:04.780
+against that user.
+
+74
+00:03:04.780 --> 00:03:07.990
+So we need to switch
+the admin database.
+
+75
+00:03:07.990 --> 00:03:10.580
+And then we can go ahead
+and create our user.
+
+76
+00:03:10.580 --> 00:03:13.900
+I'm creating a user called Kirby
+whose password is password.
+
+77
+00:03:13.900 --> 00:03:15.730
+With a root roll.
+
+78
+00:03:15.730 --> 00:03:17.280
+It was successfully added.
+
+79
+00:03:17.280 --> 00:03:19.950
+And now can go ahead and
+authenticate against Kirby.
+
+80
+00:03:19.950 --> 00:03:21.200
+Here we go.
+
+81
+00:03:21.200 --> 00:03:22.750
+I'm going to use db.auth.
+
+82
+00:03:22.750 --> 00:03:26.080
+[? pass the end ?]
+Kirby, and password.
+
+83
+00:03:26.080 --> 00:03:28.440
+And you can see we've
+successfully authenticated.
+
+84
+00:03:28.440 --> 00:03:32.300
+And now we can go ahead and add
+the members of our replica set.
+
+85
+00:03:32.300 --> 00:03:35.080
+So here I'm using
+replica set add
+
+86
+00:03:35.080 --> 00:03:38.180
+specifying the
+host of my machine
+
+87
+00:03:38.180 --> 00:03:43.550
+and the port of our second
+member which is 27 0 18.
+
+88
+00:03:43.550 --> 00:03:45.850
+You can see that it
+was successfully added.
+
+89
+00:03:45.850 --> 00:03:49.139
+I can just go ahead and add
+the third member of our replica
+
+90
+00:03:49.139 --> 00:03:51.020
+set.
+
+91
+00:03:51.020 --> 00:03:52.752
+Awesome.
+
+92
+00:03:52.752 --> 00:03:54.460
+So now all the members
+of our replica set
+
+93
+00:03:54.460 --> 00:03:57.350
+are using a shared key
+file for authentication.
+
+94
+00:03:57.350 --> 00:03:59.580
+And we can verify
+that everything
+
+95
+00:03:59.580 --> 00:04:02.590
+is good by running rs status.
+
+96
+00:04:02.590 --> 00:04:03.260
+Here we go.
+
+97
+00:04:03.260 --> 00:04:05.530
+Here are all the different
+members of our replica set.
+
+98
+00:04:05.530 --> 00:04:07.440
+There is number
+one, the primary,
+
+99
+00:04:07.440 --> 00:04:09.620
+and we have our two secondaries.

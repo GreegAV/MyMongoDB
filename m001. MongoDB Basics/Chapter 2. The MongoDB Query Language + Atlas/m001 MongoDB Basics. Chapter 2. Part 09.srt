@@ -1,0 +1,644 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:02,580
+In many cases, we have
+multiple documents
+
+3
+00:00:02,580 --> 00:00:05,250
+that we would like to insert
+at once in some sort of batch
+
+4
+00:00:05,250 --> 00:00:07,110
+operation.
+
+5
+00:00:07,110 --> 00:00:09,150
+The MongoDB query
+language has a method
+
+6
+00:00:09,150 --> 00:00:11,940
+for this called Insert Many.
+
+7
+00:00:11,940 --> 00:00:14,430
+Let's take a look at an
+example of this command.
+
+8
+00:00:14,430 --> 00:00:16,770
+I have it here in a text editor.
+
+9
+00:00:16,770 --> 00:00:18,570
+I'm going to insert
+a few documents
+
+10
+00:00:18,570 --> 00:00:22,650
+into videos dot movies scratch.
+
+11
+00:00:22,650 --> 00:00:26,010
+This is just so I can easily
+do a little bit of noodling
+
+12
+00:00:26,010 --> 00:00:29,070
+around here demonstrating
+this command,
+
+13
+00:00:29,070 --> 00:00:31,290
+and then just get rid
+of this collection
+
+14
+00:00:31,290 --> 00:00:35,340
+without corrupting any data that
+I actually want to maintain,
+
+15
+00:00:35,340 --> 00:00:36,750
+with regard to movies.
+
+16
+00:00:36,750 --> 00:00:38,790
+See the handouts for
+this lesson to download
+
+17
+00:00:38,790 --> 00:00:42,550
+the examples here so that you
+can try them for yourself.
+
+18
+00:00:42,550 --> 00:00:47,460
+Now instead of passing a single
+document as the first argument,
+
+19
+00:00:47,460 --> 00:00:52,050
+as we did to Insert One, with
+Insert Many, we pass an array.
+
+20
+00:00:52,050 --> 00:00:55,800
+In this example, the array
+begins here and ends here.
+
+21
+00:00:55,800 --> 00:00:59,520
+And you can see that
+the elements are each
+
+22
+00:00:59,520 --> 00:01:04,250
+a document that we would like
+to insert into this collection.
+
+23
+00:01:04,250 --> 00:01:06,780
+Now there are additional
+options for Insert Many.
+
+24
+00:01:06,780 --> 00:01:09,580
+And we'll take a look at
+those a little bit later on.
+
+25
+00:01:09,580 --> 00:01:11,760
+For now, let's run this command.
+
+26
+00:01:11,760 --> 00:01:14,860
+I'm just going to copy and
+paste it into our shell.
+
+27
+00:01:14,860 --> 00:01:19,540
+In this shell, I'm connected
+to my Sandbox Atlas cluster.
+
+28
+00:01:19,540 --> 00:01:23,020
+And we can see what happens here
+is about what you would expect,
+
+29
+00:01:23,020 --> 00:01:25,210
+given our understanding
+of how inserting documents
+
+30
+00:01:25,210 --> 00:01:26,440
+into MongoDB works.
+
+31
+00:01:26,440 --> 00:01:28,900
+Let's take a closer
+look at this operation.
+
+32
+00:01:28,900 --> 00:01:30,640
+So our command is Insert Many.
+
+33
+00:01:30,640 --> 00:01:35,850
+And we have 1, 2,
+3, 4, 5 documents
+
+34
+00:01:35,850 --> 00:01:37,330
+we're attempting to insert.
+
+35
+00:01:37,330 --> 00:01:40,840
+Note, however, that these
+two documents are identical.
+
+36
+00:01:40,840 --> 00:01:42,880
+With a bulk insert,
+it's possible
+
+37
+00:01:42,880 --> 00:01:45,970
+that there will be an error
+or an exception thrown
+
+38
+00:01:45,970 --> 00:01:49,510
+for one of the documents that
+you're inserting, especially
+
+39
+00:01:49,510 --> 00:01:52,630
+if we're doing something like
+a data cleaning operation
+
+40
+00:01:52,630 --> 00:01:57,940
+where there is lots of noise in
+the data or errors of some kind
+
+41
+00:01:57,940 --> 00:01:59,050
+in our data set.
+
+42
+00:01:59,050 --> 00:02:00,490
+To handle these
+issues gracefully,
+
+43
+00:02:00,490 --> 00:02:02,920
+there are a couple of different
+options for Insert Many
+
+44
+00:02:02,920 --> 00:02:04,300
+that you should know about.
+
+45
+00:02:04,300 --> 00:02:05,980
+You can choose to
+do either ordered
+
+46
+00:02:05,980 --> 00:02:08,680
+inserts or unordered inserts.
+
+47
+00:02:08,680 --> 00:02:11,140
+The default is ordered inserts.
+
+48
+00:02:11,140 --> 00:02:13,660
+This provides a good
+example, in that
+
+49
+00:02:13,660 --> 00:02:21,250
+we're using IMDB values as our
+underscore ID for each document
+
+50
+00:02:21,250 --> 00:02:24,870
+in this Insert Many call.
+
+51
+00:02:24,870 --> 00:02:27,310
+Again, these two
+documents are identical.
+
+52
+00:02:27,310 --> 00:02:32,590
+But most importantly, it is
+their underscore ID values
+
+53
+00:02:32,590 --> 00:02:33,790
+that are identical.
+
+54
+00:02:33,790 --> 00:02:37,270
+And we know that in an
+individual collection,
+
+55
+00:02:37,270 --> 00:02:40,815
+the underscore ID values
+must all be unique.
+
+56
+00:02:40,815 --> 00:02:42,190
+So if we scroll
+down and see what
+
+57
+00:02:42,190 --> 00:02:44,350
+happened with this
+command, we can
+
+58
+00:02:44,350 --> 00:02:47,200
+see that we've got a
+duplicate key error.
+
+59
+00:02:47,200 --> 00:02:51,082
+And the error is on the
+Wrath of Khan movie.
+
+60
+00:02:51,082 --> 00:02:53,290
+We can also see, if we look
+a little bit further down
+
+61
+00:02:53,290 --> 00:02:56,830
+in the output, that the number
+of documents inserted was two,
+
+62
+00:02:56,830 --> 00:02:59,890
+even though we have five
+documents in this Insert
+
+63
+00:02:59,890 --> 00:03:02,440
+Many call.
+
+64
+00:03:02,440 --> 00:03:07,240
+And if we go over to
+Compass and refresh,
+
+65
+00:03:07,240 --> 00:03:10,720
+we see that there's one
+Star Trek movie and one
+
+66
+00:03:10,720 --> 00:03:12,490
+Wrath of Khan movie
+in this collection.
+
+67
+00:03:12,490 --> 00:03:16,330
+So indeed, just two documents
+got inserted out of the five
+
+68
+00:03:16,330 --> 00:03:17,920
+that we attempted to insert.
+
+69
+00:03:17,920 --> 00:03:19,750
+Now let's go back to our shell.
+
+70
+00:03:19,750 --> 00:03:23,800
+As I mentioned, Insert Many
+does an ordered insert,
+
+71
+00:03:23,800 --> 00:03:27,160
+meaning that as soon as
+it encounters an error,
+
+72
+00:03:27,160 --> 00:03:29,620
+it will stop
+inserting documents.
+
+73
+00:03:29,620 --> 00:03:32,290
+Because it encountered
+an error here,
+
+74
+00:03:32,290 --> 00:03:36,270
+only these two documents were
+inserted into this collection
+
+75
+00:03:36,270 --> 00:03:38,650
+with this call.
+
+76
+00:03:38,650 --> 00:03:40,500
+Now in many applications,
+we might simply
+
+77
+00:03:40,500 --> 00:03:42,600
+want our app to keep
+going if it encounters
+
+78
+00:03:42,600 --> 00:03:45,480
+an error, because either we're
+fine with the documents that
+
+79
+00:03:45,480 --> 00:03:48,960
+errored out not
+being inserted, or we
+
+80
+00:03:48,960 --> 00:03:51,180
+have a separate process
+for dealing with them
+
+81
+00:03:51,180 --> 00:03:52,950
+some other way.
+
+82
+00:03:52,950 --> 00:03:56,250
+To support this use case, we
+can specify a second argument
+
+83
+00:03:56,250 --> 00:03:58,230
+to our Insert Many method.
+
+84
+00:03:58,230 --> 00:04:00,980
+So returning to our
+text editor, the array
+
+85
+00:04:00,980 --> 00:04:03,840
+is the first argument
+to Insert Many.
+
+86
+00:04:03,840 --> 00:04:06,780
+As a second argument,
+I can supply
+
+87
+00:04:06,780 --> 00:04:12,960
+a document that specifies
+a value of False
+
+88
+00:04:12,960 --> 00:04:14,940
+for the key ordered.
+
+89
+00:04:14,940 --> 00:04:19,420
+This Options document allows us
+to change the default behavior.
+
+90
+00:04:19,420 --> 00:04:21,990
+And in this case, rather
+than doing an ordered insert,
+
+91
+00:04:21,990 --> 00:04:25,170
+I'm going to do an
+unordered insert.
+
+92
+00:04:25,170 --> 00:04:27,590
+Let's go ahead and run this now.
+
+93
+00:04:27,590 --> 00:04:32,150
+Now here, we actually
+see three write errors.
+
+94
+00:04:32,150 --> 00:04:35,040
+There are three
+duplicate key errors--
+
+95
+00:04:35,040 --> 00:04:37,880
+one for the Wrath of
+Khan, one for Star Trek,
+
+96
+00:04:37,880 --> 00:04:40,430
+and another for
+the Wrath of Khan.
+
+97
+00:04:40,430 --> 00:04:42,350
+Let's take a look
+at our query again.
+
+98
+00:04:42,350 --> 00:04:47,850
+So these three insertions
+caused a duplicate key error.
+
+99
+00:04:47,850 --> 00:04:49,022
+Why is that?
+
+100
+00:04:49,022 --> 00:04:50,480
+Well, if you'll
+remember, these two
+
+101
+00:04:50,480 --> 00:04:53,630
+were already in the collection
+from our previous attempt
+
+102
+00:04:53,630 --> 00:04:55,750
+to use Insert Many.
+
+103
+00:04:55,750 --> 00:04:59,690
+So an attempt to insert
+this one and this one again
+
+104
+00:04:59,690 --> 00:05:03,440
+got duplicate key errors because
+of that previous insertion.
+
+105
+00:05:03,440 --> 00:05:05,600
+This one, of course, has
+exactly the same idea
+
+106
+00:05:05,600 --> 00:05:11,980
+as this, so fails for the same
+reason that this document did.
+
+107
+00:05:11,980 --> 00:05:15,520
+What's interesting here is
+that rather than just error
+
+108
+00:05:15,520 --> 00:05:20,260
+out and stop executing
+inserts, Insert Many continued
+
+109
+00:05:20,260 --> 00:05:22,510
+and inserted these
+two documents--
+
+110
+00:05:22,510 --> 00:05:25,660
+Star Trek Into Darkness and
+Star Trek First Contact.
+
+111
+00:05:25,660 --> 00:05:28,897
+If we go to Compass and
+refresh our collection view,
+
+112
+00:05:28,897 --> 00:05:30,730
+we can see that now
+there are four documents
+
+113
+00:05:30,730 --> 00:05:32,110
+in this collection--
+
+114
+00:05:32,110 --> 00:05:35,290
+Wrath of Khan, Star Trek,
+Star Trek into Darkness,
+
+115
+00:05:35,290 --> 00:05:37,570
+and Star Trek First Contact.
+
+116
+00:05:37,570 --> 00:05:40,300
+So by specifying Ordered
+False, even though there
+
+117
+00:05:40,300 --> 00:05:44,410
+were, in this case, three
+duplicate key errors,
+
+118
+00:05:44,410 --> 00:05:47,080
+Insert Many continued
+inserting documents.
+
+119
+00:05:47,080 --> 00:05:49,990
+And ended up inserting
+those last two
+
+120
+00:05:49,990 --> 00:05:55,590
+in our list of documents that
+we passed to Insert Many.
+
+121
+00:05:55,590 --> 00:05:59,790
+In this lesson, we looked at
+Insert Many and the ordered
+
+122
+00:05:59,790 --> 00:06:03,540
+and unordered versions of
+an Insert Many operation.
+
+123
+00:06:03,540 --> 00:06:06,930
+Insert One and Insert Many
+are two primary ways in which
+
+124
+00:06:06,930 --> 00:06:08,402
+we can create documents.
+
+125
+00:06:08,402 --> 00:06:10,110
+There are a couple of
+other ways in which
+
+126
+00:06:10,110 --> 00:06:15,000
+we can create documents through
+the use of update operations.
+
+127
+00:06:15,000 --> 00:06:18,030
+Update commands can result
+in documents being inserted.
+
+128
+00:06:18,030 --> 00:06:20,670
+We call these
+operations Upserts.
+
+129
+00:06:20,670 --> 00:06:23,824
+We discuss Upserts in
+detail in another lesson.
+
+130
+00:06:23,824 --> 00:06:25,740
+So with this, we've
+discussed, in some detail,
+
+131
+00:06:25,740 --> 00:06:28,670
+the primary ways in which we
+create documents in MongoDB
+
+132
+00:06:28,670 --> 00:06:31,230
+and hinted at the third way
+in which data can be inserted
+
+133
+00:06:31,230 --> 00:06:33,330
+into a MongoDB collection.
+
+134
+00:06:33,330 --> 00:06:36,120
+And with that, we've
+addressed the Create portion
+
+135
+00:06:36,120 --> 00:00:00,000
+of our CRUD operations.
+

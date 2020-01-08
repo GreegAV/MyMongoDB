@@ -1,0 +1,53 @@
+Hi I'm Kirby.
+
+Welcome to M 2 0 1 MongoDB performance.
+
+Highly performant database architectures are a key condition of mission critical software infrastructure.
+
+Throughout this course we're going to discuss performance in the context of MongoDB.
+
+This course is five chapters long, with each chapter there will be a new set of lesson videos.
+
+After most of these videos there'll be a quiz to assess your learning of the material.
+
+At the end of each chapter, there will also be a set of related lab exercises.
+
+Let's go over a few logistics of this course.
+
+Target audience.
+
+This is an intermediate course suitable for people on both the development and operations teams.
+
+It is expected that you have some basic understanding of databases.
+
+How does grading work?
+
+Well, there are quizzes, labs, and a final exam as deliverables on your part of the course.
+
+Quizzes are ungraded and exist to make sure you're understanding the content.
+
+Your grade in the class, however, will be based on how well you do on the labs and on the final exam.
+
+Each of these being worth about 50% of your final grade.
+
+Students who receive a 65% or greater will receive a passing grade and will receive a certificate of course completion.
+
+Finally I'd highly encourage you to participate in our discussion forum.
+
+We have knowledgeable teaching assistants who are there to help answer your questions.
+
+And you also have your fellow classmates who can aid in answering your questions and are often very knowledgeable and helpful resources.
+
+Based on our experience, we've seen that students who perform best in the course are often those who are very active in the discussion forum.
+
+This course will be divided into five main chapters.
+
+There's the Overview chapter, Indexes Index Operations, CRUD Optimization, and Distributed Systems.
+
+Each of these topics will take a deep dive into one or more performance related aspects concerning MongoDB.
+
+By the end of this course, you should be familiar with the different techniques used to increase the performance of your MongoDB servers.
+
+And you should be capable of analyzing the different trade offs that are commonly encountered in different performance scenarios.
+
+With all that being said, we're super excited to have you in this course and wish you the best of luck.

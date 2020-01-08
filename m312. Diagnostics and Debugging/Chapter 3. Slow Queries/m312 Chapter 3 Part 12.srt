@@ -1,0 +1,178 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.660
+Let's go back into our VM.
+
+3
+00:00:02.660 --> 00:00:06.620
+And let's look at our
+last tool, mlogvis.
+
+4
+00:00:06.620 --> 00:00:09.320
+This tool is very
+similar to mplotqueries.
+
+5
+00:00:09.320 --> 00:00:11.420
+But the tool was created
+later and doesn't
+
+6
+00:00:11.420 --> 00:00:14.600
+require the graphical
+libraries used by mplotqueries.
+
+7
+00:00:14.600 --> 00:00:17.930
+Instead, it produces an HTML
+file in your local directory
+
+8
+00:00:17.930 --> 00:00:19.710
+and points your browser to it.
+
+9
+00:00:19.710 --> 00:00:21.530
+If the tool is unable
+to open the default
+
+10
+00:00:21.530 --> 00:00:24.050
+browser in your system, you
+can open the file yourself
+
+11
+00:00:24.050 --> 00:00:25.340
+from the browser.
+
+12
+00:00:25.340 --> 00:00:27.000
+I'm in the VM in
+the shared folder.
+
+13
+00:00:27.000 --> 00:00:29.030
+So I can switch out
+of the VM and open it
+
+14
+00:00:29.030 --> 00:00:31.760
+on my desktop machine if I like.
+
+15
+00:00:31.760 --> 00:00:33.200
+The nice thing
+about this behavior
+
+16
+00:00:33.200 --> 00:00:35.960
+is that you can create the
+output file from one system
+
+17
+00:00:35.960 --> 00:00:37.970
+with the minus minus
+no-browser option
+
+18
+00:00:37.970 --> 00:00:40.040
+and move it to another
+one for analysis
+
+19
+00:00:40.040 --> 00:00:42.530
+or send it to someone who
+doesn't have mtools installed
+
+20
+00:00:42.530 --> 00:00:45.710
+at all because this HTML file
+doesn't require anything, just
+
+21
+00:00:45.710 --> 00:00:46.976
+a browser.
+
+22
+00:00:46.976 --> 00:00:48.350
+Similar to the
+other tools, we'll
+
+23
+00:00:48.350 --> 00:00:53.040
+simply call mlogvis by passing
+it our mongod.log file.
+
+24
+00:00:53.040 --> 00:00:57.020
+And now I've got this HTML file.
+
+25
+00:00:57.020 --> 00:01:01.550
+I'll go to this on my host
+machine and open it up.
+
+26
+00:01:01.550 --> 00:01:05.430
+Just like before, we can
+zoom in on the graph.
+
+27
+00:01:05.430 --> 00:01:07.670
+First, we select Zoom
+and then draw a rectangle
+
+28
+00:01:07.670 --> 00:01:10.040
+on the area of interest.
+
+29
+00:01:10.040 --> 00:01:11.810
+And like our
+previous tool, I can
+
+30
+00:01:11.810 --> 00:01:14.930
+toggle the collections
+I'm looking at
+
+31
+00:01:14.930 --> 00:01:16.700
+and look at individual
+slow queries
+
+32
+00:01:16.700 --> 00:01:19.940
+by clicking on the event.
+
+33
+00:01:19.940 --> 00:01:22.430
+When you do so, you can
+see the corresponding query
+
+34
+00:01:22.430 --> 00:01:23.990
+in the status box at the bottom.
+
+35
+00:01:23.990 --> 00:01:25.850
+The UI is simple and intuitive.
+
+36
+00:01:25.850 --> 00:01:28.010
+So feel free to play with it.
+
+37
+00:01:28.010 --> 00:01:30.080
+In summary, these
+tools are particularly
+
+38
+00:01:30.080 --> 00:01:33.940
+helpful for identifying and
+visualizing slow queries.

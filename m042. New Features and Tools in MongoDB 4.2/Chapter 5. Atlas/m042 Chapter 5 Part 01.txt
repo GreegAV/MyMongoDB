@@ -1,0 +1,61 @@
+In this lesson, we're going to discuss a new feature in Atlas called the Sample Data Set.
+
+Atlas now exposes some sample data that you can load directly into Atlas for users who want to explore data immediately after creating their cluster.
+
+Some users create Atlas clusters for production use, and they know exactly what data they want to work with.
+
+Those users might already have their data in a bsondump or a JSON file.
+
+So they can use the command-line tools mongorestore and mongoimport to load that data into Atlas.
+
+And until this release, those command-line tools were the only means of getting data into Atlas.
+
+But this requires users to leave the Atlas site, open a terminal window or command prompt, and then use a command-line tool, which can be time consuming.
+
+Another caveat of using the command-line tools is that you already have some sample data that you want to import.
+
+Finding good sample data, the kind that facilitates exploration, can be difficult.
+
+And we want to make sure users can explore data right off the bat.
+
+So we've released a new feature that allows users to load a sample data set into Atlas directly from the Atlas UI.
+
+This sample data set was curated internally, and it's intended to give users a decently large-sized data set to play around with.
+
+So we can load the sample data set as soon as we've created a cluster.
+
+If we navigate to the Collections tab, Atlas will notice that there's no data in here, and it'll give us two options.
+
+The first is to load the sample data set into our cluster, and the other option will allow us to manually create data using the Atlas Data Explorer.
+
+Choosing to load the sample data set shows us this modal, which has a link to the docs page explaining the different collections in the sample data set.
+
+And this docs page is very detailed with respect to sample documents from the collection, the indexes in each collection.
+
+If we look in the Airbnb listings, we can see the indexes that have already been created on this data set as well as a sample document from the collection.
+
+So we can actually learn a bit about this data before we even import it.
+
+But we're just doing some exploration on free tier so we can load this without actually worrying.
+
+So here, I'm just going to click the option to load the sample data set.
+
+It should take a minute.
+
+So after loading the data set, we can immediately explore the data using the Atlas Data Explorer, which is very similar to the interface provided by Compass.
+
+One of the reasons this is so powerful is because it allows us to start exploring data in MongoDB without ever leaving the Atlas site.
+
+And if we get the motivation to write some application backed by this Atlas cluster, we'll already know a bit about this data.
+
+This data set contains a diverse set of data spanning a few different industries, including movies in the mflix data set, weather in the weatherdata data set, and housing data in the Airbnb data set.
+
+The collections contain a few different document shapes with varying degrees of complexity and just about every data type that we allow in MongoDB.
+
+This data set is intended to be a playground for newcomers or really anyone interested in exploring data on MongoDB.
+
+We hope that it will cultivate the kind of exploration that excites users about MongoDB without ever leaving their web browser.
+
+So just to recap, this new sample data set can be loaded directly from the Atlas website, mitigating the need for a command-line tool.
+
+The data set is intended to facilitate data explorations, so it contains a few different collections that vary in industry, data types, as well as document shapes.

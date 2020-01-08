@@ -1,0 +1,121 @@
+Asserts is a document that reports the number of assertion errors raised since the server process started.
+
+Asserts are relatively rare, and for that reason, we want to keep an eye on these counters.
+
+Because when they start going up, they're signaling that something has gone wrong.
+
+The server is counting both internal asserts and user asserts.
+
+We have three internal asserts-- regular, warning, and msg, or message, all of which are internal to the server process.
+
+Operations that can raise asserts like these are insert conflicts and back-off operations.
+
+All of these assert operations get noted in the server logs as well.
+
+User asserts are the ones that we'll be focusing on in more detail.
+
+These asserts are caused by a system configuration or application-driven operation.
+
+This can capture a lot.
+
+If we try to insert a document with a duplicate key and a unique index, it goes up by one.
+
+If the instance runs out of disk space, It also goes up by one.
+
+In this example, if we try to insert two different documents with the same underscore ID, we get a duplicate key error.
+
+As you can see, the server increments the user asserts counter.
+
+These counters will be important when we want to analyze provisioning and configuration issues of both the application and your MongoDB cluster.
+
+Locks is a relatively large document, although not too large.
+
+It shows the different locks on the database.
+
+Now, there are a few different granularities for the locks-- global, database, collection, metadata, and oplog.
+
+And these logs can be of different types.
+
+Big R and big W are for shared lock and exclusive lock, respectively, while little r and little w are intent shared lock and intent exclusive lock, respectively.
+
+The r and w come from the days before WiredTiger when we didn't have the currency protocols at all.
+
+Right locks were exclusive, while read locks were shared, hence the r and w notations.
+
+If all of this is new to you, don't worry.
+
+We'll dive into more detail on the impact and causes for locks later on.
+
+Server status also provides the operation counters.
+
+Up counters gives us the information regarding the number of inserts, queries, updates, deletes, getMores, and commands acknowledged by the instance.
+
+Opcounters.repl will give us the same types of counters, but as a result of the replication process.
+
+Op latencies provide information on operation latencies for the instance globally in microseconds.
+
+So once you hit seven digits, that's one second total.
+
+The WiredTiger information is a huge document.
+
+Most of these statistics are only relevant for MongoDB internal utilization of the storage engine, so we don't care about most of them.
+
+But there are a few interesting ones worth mentioning.
+
+Scrolling through, we have this cache field, and within that, maximum bytes configured.
+
+This is a value that indicates the size of the WiredTiger cache.
+
+"Bytes currently in the cache" is an interesting one that tracks what we've got in the cache currently.
+
+Cache.EvectionCallsToGetaPage and cache.EvictionCa llsToGetaPageFoundQueueEmpty are an interesting pair.
+
+These give us an idea of how much work WiredTiger is doing to find pages, and to find pages to evict from the cache.
+
+I just restarted this server, so the numbers are zero currently.
+
+When these numbers start going up fast, you know that your working set is outgrowing your cache.
+
+It might be time to look at optimizing your schema, scaling up, or possibly scaling out.
+
+I haven't been hammering this server very hard, so they're still at zero.
+
+The memory section, mem, allows us to understand what the current memory utilization of the server is.
+
+We'll get information on the bit architecture, the amount of allocated, resident, and virtual memory, and in the case of using mmapv1, will get the amount of mapped and mapped with journal memory.
+
+These don't apply if you're using the default storage engine, so they'll stay at zero on this server.
+
+Metrics is another big one.
+
+It gives us a lot of statistics that'll tell us relevant information for debugging.
+
+One interesting field it has is the breakdown of the types of commands received by the instance, such as cursors and document counters.
+
+Here we can see the number of finds, getLog, getMore, et cetera.
+
+Here we have metrics.documents and op counters.
+
+Let's talk about what they mean, and what the difference between them is.
+
+Opcounters accounts for the number of operations, regardless of the number of documents affected, but metrics.documents keeps track of the actual documents affected by those operations.
+
+A simple example would be an update of many documents.
+
+This will be counted as a single update operation, but the number of documents updated would be the number of affected documents.
+
+When I insert documents, my opcounters' insert counter goes up by one per document.
+
+I inserted five documents, it went up by five.
+
+Metrics.document.inserted Inserted went up by five.
+
+This is because each insert is one command.
+
+On the other hand, when it comes to updates, opcounters only go up one per update command, while the metrics.document.updated goes up by one per document affected.
+
+OK, so that's a quick overview of server status.
+
+We'll be making use of all of this information going forward.
+
+But for now, you should have a sense of the range of what's available, and how to find it.

@@ -1,0 +1,159 @@
+In this lesson, I want to further discuss about querying with compound indexes.
+
+And specifically, I want to talk about index prefixes and how they're used when we query.
+
+By the end of this lesson, you should be able to-- for a query that has multiple fields that overlap with an index-- you should be able to identify which fields the query can use the index for.
+
+The way you're going to learn how to do that is through index prefixes.
+
+An index prefix is a continuous subset of our compound index that starts to the left.
+
+The easiest way to illustrate it is to look at examples.
+
+So here's our compound index.
+
+We have a compound index on item, location and stock, and they're all ascending.
+
+And so our index prefixes for this compound index would be the following-- item, or item location, because we always start on the left-hand side and it has to be continuous.
+
+We couldn't have an index prefix of location stock, or just stock by itself, or location by itself.
+
+And obviously we can't have anything out of order, like stock item, or even item stock.
+
+It's always from the left and continuous.
+
+So the only two prefixes for this compound index would be item and item location, both ascending.
+
+And so just like with the phone book, I can use an index prefix just like a regular index.
+
+The query planner will ignore the other parts of the index, and will use the prefix to find your documents that you care about.
+
+Let's look at a simple case.
+
+So we already have this compound index of last name, first name.
+
+And so an index prefix for this would be last name.
+
+So if I have a query where I query on last name-- last name is a index prefix for our compound index-- when we run this query, we get our 22 documents.
+
+And if we look at the explain output, and so we can see that we only had to exam 22 documents, which is really good because we ended up returning 22 documents.
+
+So again, a very good ratio.
+
+A ratio of 1.
+
+And we also had to look at 22 index keys, which is also very, very good.
+
+We didn't have to look at any superfluous index keys, and as such, we have a execution time of 0 milliseconds.
+
+But what if we were to query on first name instead of last name?
+
+Well then, we would still get our eight documents that we wanted.
+
+But now when we look at the explain, you'll see that we had to examine 50,000 documents, whereas only eight were returned, and we didn't look at any index keys at all.
+
+So this is a terrible ratio.
+
+We looked at no index keys, and it took a long time.
+
+And that's because if we look at the explain output, we can see that we had to do a collection scan.
+
+And that's because we weren't able to use an index for this query, and that's because we didn't use an index prefix.
+
+So it's really helpful to remember this image.
+
+As you can see, the first names can be anywhere in the index, whereas the last names have an ordering.
+
+And the first names have an ordering relative to the last name.
+
+But the first name by itself, if that's what we're querying on, they could be anywhere.
+
+So the index is really no use to us.
+
+We're just going to have to go through and look at every single document.
+
+We're going to have to do a collection scan.
+
+And so this is one of the interesting features of compound indexes.
+
+If we have a compound index, it can serve as query use for both the compound and any of its prefixes, but it won't use an index when we're not querying on a prefix.
+
+So this is something you should consider when building your indexes.
+
+If your application has two queries and one uses fields that are a subset of the other, you should build an index where one query uses the index prefix and the other uses all fields of the index.
+
+There's no point in building two indexes when you can have everything with just one index.
+
+Let's look at a better example of this.
+
+Let's go ahead and delete this compound index that we have right now, and we'll create a new, larger index.
+
+So here is our new, larger index.
+
+We're going to call it job, employer, last name, first name.
+
+And naturally, those are the same fields that we'll have.
+
+And here's the name of our index-- it's job, employer, last name, first name.
+
+And our indexes are going to be job, employer, last name, first name, all ascending.
+
+And go ahead and create it.
+
+And now it's been created.
+
+Let's go ahead and run a query.
+
+You can see here, our query reported on both job and employer, and these make up an index prefix.
+
+So when we run the query, we get our five documents.
+
+And when we look at explain, we can see that we only had to examine five documents, which were the five that were returned.
+
+So again a very good ratio.
+
+We only had to examine five keys, and we had great execution time.
+
+And you can see that we're able to use the index.
+
+So if we look at this, we can see that we are able to do an index scan using our compound index, which is larger than our query parameters, but our query parameters are an index prefix for our given index.
+
+What if we were to also filter on last name?
+
+We know that one of our documents is for Sara Cook, and so we can just add this last name predicate for Cook.
+
+So when we run this, we find our Sara Cook document.
+
+And when we look at explain, you can see that we only had to examine one document for the exact one document that we returned, and we only had to look at that one index key.
+
+So of course, it was really, really fast, because we were doing an index scan, because again, we're using the index prefix.
+
+Let's do the same thing again, but this time, instead of querying on last name, we'll query on first name.
+
+So we'll use Sara's first name.
+
+And when we run the query, we get the document that we would expect.
+
+But when we looked at explain, you can see that even though we only had to look at one document, which was the same one that we returned, we still had to look at six index keys.
+
+So we had to look at basically five unnecessary index keys.
+
+So even though our query was very fast, and we were able to use an index scan, we still had to spend some time looking at keys that we really didn't need to.
+
+So we were still able to use an index prefix of job and employer, but we weren't able to use an index prefix that had three fields.
+
+We were only able to use two of the four fields that make up our compound index.
+
+We can take this a step further by looking at job, first name and last name.
+
+We still get the one document that we wanted, but now we're examining way more keys than what we were before.
+
+So we still only have to look at one document, the same one that we returned, but now we're looking at a bunch of keys that we don't need to.
+
+Just to be clear, there are some performance considerations that we'll be getting into in other lessons.
+
+We haven't yet dealt with sorting with compound indexes, but these are the basics.
+
+And everything that we talked about in single key indexes also still apply to compound indexes.
+
+So now you know how to use index prefixes to determine for a given query that overlaps the index which fields in the query will actually be able to use the index.

@@ -1,0 +1,214 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:05,360
+Now let's connect Compass to
+your Atlas sandbox cluster.
+
+3
+00:00:05,360 --> 00:00:08,600
+In order to do this, you'll
+want to look at the cluster
+
+4
+00:00:08,600 --> 00:00:11,180
+view for your sandbox cluster.
+
+5
+00:00:11,180 --> 00:00:14,300
+And click through the
+cluster name here.
+
+6
+00:00:14,300 --> 00:00:16,350
+You might have named your
+cluster something else,
+
+7
+00:00:16,350 --> 00:00:18,590
+but this is where you find
+the name of your cluster.
+
+8
+00:00:18,590 --> 00:00:19,910
+Click through it.
+
+9
+00:00:19,910 --> 00:00:23,180
+And then what we're looking
+for here is the primary.
+
+10
+00:00:23,180 --> 00:00:28,130
+Compass currently only allows
+us to specify a single hostname
+
+11
+00:00:28,130 --> 00:00:29,390
+in the Form field.
+
+12
+00:00:29,390 --> 00:00:31,730
+It does a little
+bit to help us out
+
+13
+00:00:31,730 --> 00:00:34,820
+if we have a connection URI.
+
+14
+00:00:34,820 --> 00:00:36,380
+For our purposes,
+it's going to be
+
+15
+00:00:36,380 --> 00:00:39,860
+simplest to simply
+identify the primary,
+
+16
+00:00:39,860 --> 00:00:42,410
+and then click through to it.
+
+17
+00:00:42,410 --> 00:00:44,720
+This is the hostname we want.
+
+18
+00:00:44,720 --> 00:00:46,850
+Your hostname will be
+different because you
+
+19
+00:00:46,850 --> 00:00:48,890
+have your own sandbox cluster.
+
+20
+00:00:48,890 --> 00:00:51,140
+But for mine, this
+is the hostname.
+
+21
+00:00:51,140 --> 00:00:55,160
+You can find yours in exactly
+the same place in the Compass
+
+22
+00:00:55,160 --> 00:00:56,450
+UI.
+
+23
+00:00:56,450 --> 00:00:57,360
+Copy it.
+
+24
+00:00:57,360 --> 00:01:01,430
+Go back into Compass, and
+paste it into the Hostname box.
+
+25
+00:01:01,430 --> 00:01:04,340
+The port is already
+provided for us by default.
+
+26
+00:01:04,340 --> 00:01:08,030
+So at this point,
+what we'll need to do
+
+27
+00:01:08,030 --> 00:01:11,010
+is simply specify the
+username and password.
+
+28
+00:01:11,010 --> 00:01:13,520
+Now if you followed the
+instructions for setting up
+
+29
+00:01:13,520 --> 00:01:18,260
+your sandbox cluster, to
+create an administrative user
+
+30
+00:01:18,260 --> 00:01:22,460
+with the requested username
+and password, then here
+
+31
+00:01:22,460 --> 00:01:27,860
+you should enter, for
+username, m001-students,
+
+32
+00:01:27,860 --> 00:01:30,230
+and for password
+m001-mongodb-basics.
+
+33
+00:01:30,230 --> 00:01:34,670
+
+
+34
+00:01:34,670 --> 00:01:38,770
+The rest of the
+defaults should be fine.
+
+35
+00:01:38,770 --> 00:01:42,690
+But you probably want
+to create a favorite.
+
+36
+00:01:42,690 --> 00:01:44,160
+Then we can click Connect.
+
+37
+00:01:44,160 --> 00:01:48,000
+And here we see that as
+we saw with show DBs,
+
+38
+00:01:48,000 --> 00:01:49,770
+we have three databases.
+
+39
+00:01:49,770 --> 00:01:52,320
+The one of interest
+is the video database.
+
+40
+00:01:52,320 --> 00:01:55,080
+And in the video database,
+you should see a movie details
+
+41
+00:01:55,080 --> 00:01:59,040
+collection with 2,295 documents.
+
+42
+00:01:59,040 --> 00:02:01,620
+We can click through
+to that and look
+
+43
+00:02:01,620 --> 00:02:04,470
+at documents in the same
+way we could and can
+
+44
+00:02:04,470 --> 00:02:06,870
+with the class Atlas cluster.
+
+45
+00:02:06,870 --> 00:02:09,840
+So that is how you
+connect Compass
+
+46
+00:02:09,840 --> 00:00:00,000
+to your Atlas sandbox cluster.
+

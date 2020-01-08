@@ -1,0 +1,446 @@
+
+1
+00:00:00.000 --> 00:00:00.580
+
+
+2
+00:00:00.580 --> 00:00:03.490
+Let's get started with
+this real world example.
+
+3
+00:00:03.490 --> 00:00:05.620
+We'll start by connecting
+to our cluster.
+
+4
+00:00:05.620 --> 00:00:07.270
+And by using the
+localhost exception
+
+5
+00:00:07.270 --> 00:00:09.420
+we can create our first user.
+
+6
+00:00:09.420 --> 00:00:12.590
+Now this first user should be
+a user who has the capability
+
+7
+00:00:12.590 --> 00:00:15.170
+to create other users.
+
+8
+00:00:15.170 --> 00:00:17.900
+This means we're going to start
+by creating a user for Alice,
+
+9
+00:00:17.900 --> 00:00:20.340
+and that's because she's
+our security officer.
+
+10
+00:00:20.340 --> 00:00:21.860
+This means it's
+her responsibility
+
+11
+00:00:21.860 --> 00:00:25.210
+to create users that will
+interact with our database.
+
+12
+00:00:25.210 --> 00:00:26.960
+It also means that
+she's going to need
+
+13
+00:00:26.960 --> 00:00:30.480
+to be able to create and
+drop users in our database,
+
+14
+00:00:30.480 --> 00:00:33.980
+grant and revoke roles,
+and also be able to create,
+
+15
+00:00:33.980 --> 00:00:35.980
+update, and delete roles.
+
+16
+00:00:35.980 --> 00:00:38.100
+However, this means
+she does not need
+
+17
+00:00:38.100 --> 00:00:41.600
+to see any collection data,
+query or drop any database
+
+18
+00:00:41.600 --> 00:00:46.770
+or collection, or perform backup
+or restoration operations.
+
+19
+00:00:46.770 --> 00:00:49.430
+I've already set up a
+replica set on this machine
+
+20
+00:00:49.430 --> 00:00:51.610
+with authorization enabled.
+
+21
+00:00:51.610 --> 00:00:54.340
+We can take a quick peek at
+the commands I used to do this,
+
+22
+00:00:54.340 --> 00:00:56.160
+but you should already
+be familiar with how
+
+23
+00:00:56.160 --> 00:00:59.140
+to do this because we've
+covered it in a previous video.
+
+24
+00:00:59.140 --> 00:01:02.730
+As you can see, we have a pretty
+standard 3 node replica set,
+
+25
+00:01:02.730 --> 00:01:05.510
+where I'm running the same
+command again and again
+
+26
+00:01:05.510 --> 00:01:08.410
+for each member, with
+slight variations for the db
+
+27
+00:01:08.410 --> 00:01:11.390
+path, log path, and port.
+
+28
+00:01:11.390 --> 00:01:13.940
+I'm using a key file
+for authentication
+
+29
+00:01:13.940 --> 00:01:16.270
+between the members
+of our replica set.
+
+30
+00:01:16.270 --> 00:01:18.200
+Let's go ahead and
+connect to our replica set
+
+31
+00:01:18.200 --> 00:01:19.980
+and create a user for Alice.
+
+32
+00:01:19.980 --> 00:01:22.430
+Now that I'm connected I
+can go ahead and switch
+
+33
+00:01:22.430 --> 00:01:23.820
+to the admin database.
+
+34
+00:01:23.820 --> 00:01:26.360
+And from here I
+can run Create User
+
+35
+00:01:26.360 --> 00:01:28.130
+and create a user for Alice.
+
+36
+00:01:28.130 --> 00:01:30.650
+And as you can see, we
+created a user name alice
+
+37
+00:01:30.650 --> 00:01:33.030
+with the password
+sharppencil and she
+
+38
+00:01:33.030 --> 00:01:35.540
+has a role of
+userAdminAnyDatabase
+
+39
+00:01:35.540 --> 00:01:36.980
+on the admin database.
+
+40
+00:01:36.980 --> 00:01:40.690
+Now we already know that the
+userAdminAnyDatabase role will
+
+41
+00:01:40.690 --> 00:01:46.660
+allow us to administer our
+users on well any database,
+
+42
+00:01:46.660 --> 00:01:50.290
+but we can go ahead
+and use db dot get role
+
+43
+00:01:50.290 --> 00:01:51.890
+to look a little
+bit more closely
+
+44
+00:01:51.890 --> 00:01:53.727
+at how this world works.
+
+45
+00:01:53.727 --> 00:01:56.310
+In order to do this, we're going
+to need to first authenticate
+
+46
+00:01:56.310 --> 00:01:57.910
+against the database.
+
+47
+00:01:57.910 --> 00:02:00.510
+Let's go ahead and log in
+with Alice's credentials.
+
+48
+00:02:00.510 --> 00:02:03.015
+We're now logged in and
+we can run get role.
+
+49
+00:02:03.015 --> 00:02:05.140
+Here I'm saying I want to
+find out more information
+
+50
+00:02:05.140 --> 00:02:07.640
+about the user
+admin database role,
+
+51
+00:02:07.640 --> 00:02:10.237
+and I'm saying I want to
+show all the privileges.
+
+52
+00:02:10.237 --> 00:02:12.070
+Let's go ahead and
+assign this to a variable
+
+53
+00:02:12.070 --> 00:02:14.040
+to make it a little
+bit more readable.
+
+54
+00:02:14.040 --> 00:02:18.730
+Now as you can see, here is
+the role, it's quite long.
+
+55
+00:02:18.730 --> 00:02:22.600
+But let's go into the top here
+and look at the main stuff.
+
+56
+00:02:22.600 --> 00:02:23.892
+So here's what we would expect.
+
+57
+00:02:23.892 --> 00:02:25.891
+Let's go ahead and take
+a little bit closer look
+
+58
+00:02:25.891 --> 00:02:26.720
+at the privileges.
+
+59
+00:02:26.720 --> 00:02:28.550
+And this is why we
+made it a variable.
+
+60
+00:02:28.550 --> 00:02:30.100
+So we have eight privileges.
+
+61
+00:02:30.100 --> 00:02:31.760
+Let's go through
+these one by one.
+
+62
+00:02:31.760 --> 00:02:34.090
+And this first privilege
+makes a lot of sense.
+
+63
+00:02:34.090 --> 00:02:36.080
+We have a resource
+that would allow
+
+64
+00:02:36.080 --> 00:02:40.700
+us to perform an action on any
+collection on any database.
+
+65
+00:02:40.700 --> 00:02:42.075
+And here are the
+actions that can
+
+66
+00:02:42.075 --> 00:02:44.560
+be performed on any collection.
+
+67
+00:02:44.560 --> 00:02:46.820
+The ability to change
+someone's custom data,
+
+68
+00:02:46.820 --> 00:02:51.340
+change their password, create a
+role, create a user, et cetera.
+
+69
+00:02:51.340 --> 00:02:53.300
+All the things a
+user admin, or in
+
+70
+00:02:53.300 --> 00:02:55.750
+this case a security
+officer, would need to do.
+
+71
+00:02:55.750 --> 00:02:57.620
+Let's look at the
+next privilege.
+
+72
+00:02:57.620 --> 00:03:00.280
+Here's our second privilege,
+and this makes sense.
+
+73
+00:03:00.280 --> 00:03:02.360
+These are cluster
+wide user roles.
+
+74
+00:03:02.360 --> 00:03:05.980
+The ability to list databases,
+invalidate the user cache,
+
+75
+00:03:05.980 --> 00:03:09.720
+authSchemsUpgrade, these are
+all pretty user related roles.
+
+76
+00:03:09.720 --> 00:03:10.630
+Here's the next one.
+
+77
+00:03:10.630 --> 00:03:12.060
+Again, we can see
+that we're interacting
+
+78
+00:03:12.060 --> 00:03:13.434
+with the special
+system dot users
+
+79
+00:03:13.434 --> 00:03:15.390
+collection, which
+makes sense since Alice
+
+80
+00:03:15.390 --> 00:03:19.700
+is going to have to be able
+to do user related task.
+
+81
+00:03:19.700 --> 00:03:22.010
+Here's system dot users
+on the admin database.
+
+82
+00:03:22.010 --> 00:03:25.360
+Again, basically the ability
+to do basic interactions
+
+83
+00:03:25.360 --> 00:03:26.970
+with system dot users.
+
+84
+00:03:26.970 --> 00:03:30.310
+Again roles, also makes
+sense for a user admin.
+
+85
+00:03:30.310 --> 00:03:32.820
+System dot version
+also makes sense.
+
+86
+00:03:32.820 --> 00:03:36.480
+More user admin stuff,
+and more user admin stuff.
+
+87
+00:03:36.480 --> 00:03:39.080
+All this looks nice and dandy.
+
+88
+00:03:39.080 --> 00:03:41.760
+And now that we've looked
+at all of Alice's privileges
+
+89
+00:03:41.760 --> 00:03:44.270
+for her
+userAdminAnyDatabase role,
+
+90
+00:03:44.270 --> 00:03:47.630
+we now know that she can
+do these three things
+
+91
+00:03:47.630 --> 00:03:50.230
+and she can't do any
+of these three things.
+
+92
+00:03:50.230 --> 00:03:53.320
+So we have confidence that
+Alice has all the actions
+
+93
+00:03:53.320 --> 00:03:57.320
+and privileges needed
+to do her job correctly.

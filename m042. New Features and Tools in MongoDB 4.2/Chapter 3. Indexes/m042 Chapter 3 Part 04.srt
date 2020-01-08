@@ -1,0 +1,155 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:05,400
+Currently MongoDB enforces
+and 1,024 byte index key size
+
+3
+00:00:05,400 --> 00:00:07,980
+limit on all indexes created.
+
+4
+00:00:07,980 --> 00:00:12,120
+That is to say that if any
+value for a key in the index
+
+5
+00:00:12,120 --> 00:00:15,210
+exceeds this limit the
+index build would fail.
+
+6
+00:00:15,210 --> 00:00:17,250
+In other words,
+you could not index
+
+7
+00:00:17,250 --> 00:00:20,370
+on fields whose values
+exceeded this size limit.
+
+8
+00:00:20,370 --> 00:00:22,680
+This limit also applies
+to a combination
+
+9
+00:00:22,680 --> 00:00:24,660
+of fields in a compound index.
+
+10
+00:00:24,660 --> 00:00:26,730
+That is to say that
+if the combined
+
+11
+00:00:26,730 --> 00:00:29,190
+values of the fields
+in a compound index
+
+12
+00:00:29,190 --> 00:00:33,780
+exceed 1,024 bytes the
+index build will fail.
+
+13
+00:00:33,780 --> 00:00:36,840
+You may be happy to hear that
+this limitation is going away
+
+14
+00:00:36,840 --> 00:00:39,000
+in version 4.2.
+
+15
+00:00:39,000 --> 00:00:41,160
+Our motivation for
+this change are
+
+16
+00:00:41,160 --> 00:00:44,340
+that there are certain use cases
+where having fields exceeding
+
+17
+00:00:44,340 --> 00:00:46,590
+this limit are a requirement.
+
+18
+00:00:46,590 --> 00:00:50,730
+Up until now it has not been
+possible to create indexes
+
+19
+00:00:50,730 --> 00:00:52,710
+on any field that
+contain the value that
+
+20
+00:00:52,710 --> 00:00:55,110
+exceeded 1,024 bytes.
+
+21
+00:00:55,110 --> 00:00:57,210
+This could be problematic
+for data sets which
+
+22
+00:00:57,210 --> 00:00:59,200
+have long string values.
+
+23
+00:00:59,200 --> 00:01:01,320
+Another reason
+for this change is
+
+24
+00:01:01,320 --> 00:01:03,840
+to facilitate a new index type.
+
+25
+00:01:03,840 --> 00:01:06,210
+This index type,
+named Wild Card,
+
+26
+00:01:06,210 --> 00:01:10,350
+allows you to easily index
+all fields in a document.
+
+27
+00:01:10,350 --> 00:01:12,720
+To use this new index
+we needed to be sure
+
+28
+00:01:12,720 --> 00:01:15,420
+that users would not have
+to worry about a field
+
+29
+00:01:15,420 --> 00:01:19,150
+hitting this limit and making
+their index build fail.
+
+30
+00:01:19,150 --> 00:01:23,520
+So in summary, MongoDB 4.2
+removes the index key size
+
+31
+00:01:23,520 --> 00:01:24,270
+limit.
+
+32
+00:01:24,270 --> 00:01:27,420
+You can now index on any
+key, regardless of the size
+
+33
+00:01:27,420 --> 00:00:00,000
+of the values it contains.
+

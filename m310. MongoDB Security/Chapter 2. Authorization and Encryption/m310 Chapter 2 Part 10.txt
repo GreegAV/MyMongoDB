@@ -1,0 +1,69 @@
+Now that we have our sysadmin Ben all set up, it's time for us to try and see if this role authorization model is actually working properly.
+
+Let's go ahead and authenticate with Ben's user.
+
+First we'll need to switch to the admin database and log in with Ben's credentials.
+
+Great.
+
+Now we're authenticated.
+
+Let's try to create one of our remaining users.
+
+There's still Carol, our superstar DBA that introduced us to the magical world of MongoDB.
+
+Let's create an account for her.
+
+Carol's our DBA, so it makes sense for us to give her the dbAdmin role.
+
+And as you can see, our role based authorization model is working as expected.
+
+Could not add user.
+
+Not authorized on admin to execute command create user.
+
+Now in the example, we specified a document that said w majority and w timeout 300.
+
+These are here to define the write concern that we're applying to execute this command.
+
+In particular, we want to make sure that this is a state change that is propagated across all members, or in this case the majority of the members in our replica set.
+
+And we also don't want to wait longer than 300 milliseconds to obtain a response.
+
+Now, it's important that Ben leave operations like this to Alice, who is after all responsible for these sorts of tasks.
+
+Let's go ahead and authenticate with Alice and create this user.
+
+Great.
+
+Now we want to make sure that we understand what Carol needs to be able to do and what she shouldn't be able to do.
+
+As a DBA, it's important that Carol can check the database statistics, kill long running operations with kill op, and then be able to also create collections, indexes, et cetera.
+
+However, we don't want Carol to be able to write any data to any collection, manager the cluster in any way, or to be able to create any new users.
+
+As you saw when Ben tried to run this command, we gave Carol the dbAdmin role, which makes the most sense for the reasons we just discussed.
+
+Let's go ahead and create this user.
+
+Awesome.
+
+It successfully added Carol.
+
+Let's go ahead and authenticate with Carol and make sure she can do the things she needs to be able to.
+
+We should be able to list the admin database collections.
+
+Awesome.
+
+And we can see this special system dot users and system dot version collections.
+
+But if we try to list all the databases we'll get in error.
+
+What?
+
+How does Carol not have the privilege to list all the databases?
+
+Well, this happens because we didn't create Carol as a global database administrator.
+
+We only gave Carol the ability to dbAdmin on the admin database.

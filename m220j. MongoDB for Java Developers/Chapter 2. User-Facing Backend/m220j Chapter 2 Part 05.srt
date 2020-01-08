@@ -1,0 +1,456 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.630
+In this lesson, we are
+going to look into writing
+
+3
+00:00:02.630 --> 00:00:04.760
+new data into a collection.
+
+4
+00:00:04.760 --> 00:00:07.830
+Specifically, we are going
+to review the insertOne,
+
+5
+00:00:07.830 --> 00:00:12.350
+insertMany, and update methods
+with upsert true options
+
+6
+00:00:12.350 --> 00:00:15.560
+in the Java driver.
+
+7
+00:00:15.560 --> 00:00:17.690
+We are going to start
+by instantiating
+
+8
+00:00:17.690 --> 00:00:22.350
+a collection called videoGames
+from our test database.
+
+9
+00:00:22.350 --> 00:00:24.500
+Once we have a
+collection to write to,
+
+10
+00:00:24.500 --> 00:00:26.930
+let's create a Document
+object instance that
+
+11
+00:00:26.930 --> 00:00:28.590
+will hold some information.
+
+12
+00:00:28.590 --> 00:00:30.860
+In this case, we will
+be having documents
+
+13
+00:00:30.860 --> 00:00:32.970
+that represents a video game.
+
+14
+00:00:32.970 --> 00:00:35.870
+We can start by setting up the
+first key of that video game
+
+15
+00:00:35.870 --> 00:00:38.240
+right from the constructor.
+
+16
+00:00:38.240 --> 00:00:41.210
+And then we can add a new
+set of document fields,
+
+17
+00:00:41.210 --> 00:00:43.070
+like year of the
+launch of the game,
+
+18
+00:00:43.070 --> 00:00:47.570
+by appending a new key-value
+pair using the .append method
+
+19
+00:00:47.570 --> 00:00:49.220
+of the document.
+
+20
+00:00:49.220 --> 00:00:54.050
+And another one using the
+put method by putting label
+
+21
+00:00:54.050 --> 00:00:55.850
+equals Epic Games.
+
+22
+00:00:55.850 --> 00:00:57.260
+Now, these are
+two different ways
+
+23
+00:00:57.260 --> 00:00:58.980
+of constructing our documents.
+
+24
+00:00:58.980 --> 00:01:01.790
+One is appending, which
+sets a specific order
+
+25
+00:01:01.790 --> 00:01:02.840
+in our documents.
+
+26
+00:01:02.840 --> 00:01:06.310
+And the put will just replace
+values if they already exist,
+
+27
+00:01:06.310 --> 00:01:08.720
+but keeping the order
+of the original setting
+
+28
+00:01:08.720 --> 00:01:11.150
+of the document mapping.
+
+29
+00:01:11.150 --> 00:01:12.824
+Not really relevant
+right now, but just
+
+30
+00:01:12.824 --> 00:01:14.240
+something to keep
+in mind that you
+
+31
+00:01:14.240 --> 00:01:17.570
+can use both methods
+to append or put values
+
+32
+00:01:17.570 --> 00:01:19.220
+into the document.
+
+33
+00:01:19.220 --> 00:01:21.680
+Then we can insert this document
+by calling the collection
+
+34
+00:01:21.680 --> 00:01:23.720
+insertOne method.
+
+35
+00:01:23.720 --> 00:01:28.400
+As you probably noticed, the
+insertOne method returns void.
+
+36
+00:01:28.400 --> 00:01:30.230
+So how do we know
+if the document
+
+37
+00:01:30.230 --> 00:01:31.970
+has been correctly inserted?
+
+38
+00:01:31.970 --> 00:01:35.300
+If an error occurs during the
+insert of a given document,
+
+39
+00:01:35.300 --> 00:01:38.930
+a MongoDB write exception will
+be thrown, stating the origin
+
+40
+00:01:38.930 --> 00:01:40.880
+and cause of the error.
+
+41
+00:01:40.880 --> 00:01:44.250
+In later lessons, we'll look
+into which kind of exceptions
+
+42
+00:01:44.250 --> 00:01:46.430
+we should be prepared
+to handle and what
+
+43
+00:01:46.430 --> 00:01:48.440
+causes such exceptions.
+
+44
+00:01:48.440 --> 00:01:50.420
+Otherwise, everything
+gets correctly written
+
+45
+00:01:50.420 --> 00:01:52.940
+and the document is
+stored in the database.
+
+46
+00:01:52.940 --> 00:01:56.750
+However, the avid MongoDB
+expert in you is wondering,
+
+47
+00:01:56.750 --> 00:02:00.300
+where can we see the _id
+fields, our primary key.
+
+48
+00:02:00.300 --> 00:02:04.430
+We did not set one, so surely
+it would still need to be set.
+
+49
+00:02:04.430 --> 00:02:06.830
+And you are right.
+
+50
+00:02:06.830 --> 00:02:10.669
+On insert, the driver will set
+the _id field if it is not set
+
+51
+00:02:10.669 --> 00:02:14.600
+by the application, with the
+default data type of ObjectId.
+
+52
+00:02:14.600 --> 00:02:19.580
+Then we can assert here that
+it's not null after the insert.
+
+53
+00:02:19.580 --> 00:02:22.370
+This basically means that if
+we try to recover the document
+
+54
+00:02:22.370 --> 00:02:26.240
+back from the database using the
+_id value that not now we have,
+
+55
+00:02:26.240 --> 00:02:28.970
+we will get exactly the
+same documents back from
+
+56
+00:02:28.970 --> 00:02:30.350
+the database.
+
+57
+00:02:30.350 --> 00:02:33.650
+By asserting that here
+and running this query,
+
+58
+00:02:33.650 --> 00:02:37.700
+expressing the equality filter
+_id with the document ObjectId
+
+59
+00:02:37.700 --> 00:02:41.180
+field, we can assert
+that it is true.
+
+60
+00:02:41.180 --> 00:02:43.260
+So let's do that.
+
+61
+00:02:43.260 --> 00:02:45.690
+By running a test, we
+can see that everything
+
+62
+00:02:45.690 --> 00:02:48.840
+passes with flying colors.
+
+63
+00:02:48.840 --> 00:02:51.630
+Another option to insert
+new data into a collection
+
+64
+00:02:51.630 --> 00:02:54.300
+is to insert it in
+bulk, or better saying
+
+65
+00:02:54.300 --> 00:02:56.830
+several documents at once.
+
+66
+00:02:56.830 --> 00:03:00.730
+In this case, I'm going to set
+up a list of two documents.
+
+67
+00:03:00.730 --> 00:03:02.640
+This list is called
+someGames and will
+
+68
+00:03:02.640 --> 00:03:05.190
+have two of those documents.
+
+69
+00:03:05.190 --> 00:03:09.330
+Here, I'm going to construct the
+Hitman object of the video game
+
+70
+00:03:09.330 --> 00:03:12.150
+by just using the put
+and the constructor.
+
+71
+00:03:12.150 --> 00:03:14.820
+And this one, I'm going to
+use something a little bit
+
+72
+00:03:14.820 --> 00:03:17.580
+more elaborate by using
+an HashMap, by setting all
+
+73
+00:03:17.580 --> 00:03:19.710
+the key-value pairs,
+and then putting them
+
+74
+00:03:19.710 --> 00:03:24.510
+all into the second
+doc2 document object.
+
+75
+00:03:24.510 --> 00:03:28.800
+All different ways of achieving
+exactly the same result.
+
+76
+00:03:28.800 --> 00:03:30.240
+Once we have the
+two documents, we
+
+77
+00:03:30.240 --> 00:03:33.630
+can add them to the list
+of documents, someGames,
+
+78
+00:03:33.630 --> 00:03:36.480
+and, finally, insert all
+of these documents using
+
+79
+00:03:36.480 --> 00:03:38.520
+insertMany.
+
+80
+00:03:38.520 --> 00:03:41.100
+The same logic
+applies as in insert.
+
+81
+00:03:41.100 --> 00:03:43.620
+If an error occurs that prevents
+documents to be inserted,
+
+82
+00:03:43.620 --> 00:03:46.750
+you will need to capture
+the runtime exception.
+
+83
+00:03:46.750 --> 00:03:48.750
+If we look back into
+the object references,
+
+84
+00:03:48.750 --> 00:03:52.770
+we can see that _id
+fields are correctly set.
+
+85
+00:03:52.770 --> 00:03:54.570
+If we assert for
+them for not null,
+
+86
+00:03:54.570 --> 00:03:57.900
+we will get those values
+correctly asserted.
+
+87
+00:03:57.900 --> 00:03:59.880
+So let's go ahead
+and list them here
+
+88
+00:03:59.880 --> 00:04:03.150
+into this list of
+ObjectId fields.
+
+89
+00:04:03.150 --> 00:04:05.900
+If you want to guarantee
+that those ObjectId fields,
+
+90
+00:04:05.900 --> 00:04:08.880
+those documents are
+really in the database,
+
+91
+00:04:08.880 --> 00:04:12.030
+we can still search for
+them by counting the number
+
+92
+00:04:12.030 --> 00:04:15.900
+of documents that match the
+filter in condition of _id,
+
+93
+00:04:15.900 --> 00:04:20.670
+passing back those
+list of _id fields.
+
+94
+00:04:20.670 --> 00:04:23.100
+And the expected
+count should be 2.
+
+95
+00:04:23.100 --> 00:04:25.650
+After running the tests,
+we can see that everything
+
+96
+00:04:25.650 --> 00:04:28.100
+is correctly asserted.

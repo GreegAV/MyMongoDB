@@ -1,0 +1,193 @@
+1
+00:00:00,000 --> 00:00:00,499
+
+
+2
+00:00:00,499 --> 00:00:04,050
+In addition to nested
+documents, MongoDB also
+
+3
+00:00:04,050 --> 00:00:07,170
+supports array
+values for fields.
+
+4
+00:00:07,170 --> 00:00:10,200
+In this data set, we can
+see an example of array
+
+5
+00:00:10,200 --> 00:00:11,334
+in the section's field.
+
+6
+00:00:11,334 --> 00:00:12,750
+For this example,
+it's going to be
+
+7
+00:00:12,750 --> 00:00:15,360
+best if we look at the
+Documents tab, in Compass.
+
+8
+00:00:15,360 --> 00:00:18,510
+In this tab, we see
+not just a summary
+
+9
+00:00:18,510 --> 00:00:21,040
+view of the schema for
+documents in a collection,
+
+10
+00:00:21,040 --> 00:00:24,780
+but we can look at the actual
+documents our 100 Year Weather
+
+11
+00:00:24,780 --> 00:00:27,080
+collection contains.
+
+12
+00:00:27,080 --> 00:00:28,790
+Documents in this
+data set contain
+
+13
+00:00:28,790 --> 00:00:33,450
+measurements for a consistent
+set of meteorological readings.
+
+14
+00:00:33,450 --> 00:00:38,450
+These include air temperature,
+pressure, wind, etc.
+
+15
+00:00:38,450 --> 00:00:41,840
+But there are more
+than 100 other readings
+
+16
+00:00:41,840 --> 00:00:44,960
+that might be available as
+well, depending on the weather
+
+17
+00:00:44,960 --> 00:00:45,980
+station.
+
+18
+00:00:45,980 --> 00:00:48,560
+Supplementary values,
+such as these,
+
+19
+00:00:48,560 --> 00:00:50,540
+are labeled using
+a three to four
+
+20
+00:00:50,540 --> 00:00:53,030
+character code following
+a standard established
+
+21
+00:00:53,030 --> 00:00:54,830
+for meteorological data.
+
+22
+00:00:54,830 --> 00:00:57,380
+Because MongoDB has a
+flexible data model,
+
+23
+00:00:57,380 --> 00:00:59,840
+all documents don't
+have to contain
+
+24
+00:00:59,840 --> 00:01:02,130
+exactly the same fields.
+
+25
+00:01:02,130 --> 00:01:04,590
+So in this data set, the
+supplementary readings
+
+26
+00:01:04,590 --> 00:01:07,460
+available in a
+specific document are
+
+27
+00:01:07,460 --> 00:01:11,210
+stored in the section's
+field in this data set.
+
+28
+00:01:11,210 --> 00:01:13,580
+Since the available readings
+will vary from one document
+
+29
+00:01:13,580 --> 00:01:15,830
+to the next, it makes
+sense to provide a summary
+
+30
+00:01:15,830 --> 00:01:17,660
+list of what
+supplemental readings are
+
+31
+00:01:17,660 --> 00:01:20,930
+available in a given document.
+
+32
+00:01:20,930 --> 00:01:24,080
+An array is a good choice
+for this in MongoDB.
+
+33
+00:01:24,080 --> 00:01:25,730
+The MongoDB query
+language supports
+
+34
+00:01:25,730 --> 00:01:27,890
+queries on array
+fields that make
+
+35
+00:01:27,890 --> 00:01:30,200
+it easy for us to
+filter documents
+
+36
+00:01:30,200 --> 00:01:33,740
+containing a particular set
+of supplementary fields.
+
+37
+00:01:33,740 --> 00:01:37,700
+And the advantage of noting
+the supplementary data this way
+
+38
+00:01:37,700 --> 00:01:41,090
+is that we simply need to
+build an index on sections,
+
+39
+00:01:41,090 --> 00:01:43,190
+and can then very
+quickly look up
+
+40
+00:01:43,190 --> 00:00:00,000
+documents containing a specific
+set of supplementary data.
+

@@ -1,0 +1,633 @@
+
+1
+00:00:00.000 --> 00:00:00.447
+
+
+2
+00:00:00.447 --> 00:00:02.780
+In this video we're going to
+talk about Kerberos and how
+
+3
+00:00:02.780 --> 00:00:05.740
+to configure MongoDB to
+enable Kerberos authentication
+
+4
+00:00:05.740 --> 00:00:06.890
+support.
+
+5
+00:00:06.890 --> 00:00:09.260
+As we said before,
+Kerberos is an industry
+
+6
+00:00:09.260 --> 00:00:11.330
+standard authentication
+protocol.
+
+7
+00:00:11.330 --> 00:00:13.940
+Before talking about
+how Kerberos works,
+
+8
+00:00:13.940 --> 00:00:18.350
+I want to mention that Kerberos
+calls users principles,
+
+9
+00:00:18.350 --> 00:00:20.780
+and this is because
+a Kerberos principal
+
+10
+00:00:20.780 --> 00:00:24.747
+is a unique identity to which
+Kerberos can assign tickets.
+
+11
+00:00:24.747 --> 00:00:27.080
+So when I say principal in
+the context of authenticating
+
+12
+00:00:27.080 --> 00:00:30.230
+to MongoDB, think user.
+
+13
+00:00:30.230 --> 00:00:32.299
+Kerberos authentication
+support works
+
+14
+00:00:32.299 --> 00:00:35.180
+by creating a service
+principle for MongoDB
+
+15
+00:00:35.180 --> 00:00:38.300
+inside of the Kerberos KDC.
+
+16
+00:00:38.300 --> 00:00:40.310
+This enables among
+MongoDB driver
+
+17
+00:00:40.310 --> 00:00:44.030
+to request tickets from the
+Kerberos KDC's ticket grading
+
+18
+00:00:44.030 --> 00:00:47.150
+service, and then once the
+driver has that ticket,
+
+19
+00:00:47.150 --> 00:00:51.019
+it can then use that ticket
+to authenticate to MongoDB.
+
+20
+00:00:51.019 --> 00:00:53.060
+Let's go ahead and look
+at how to enable Kerberos
+
+21
+00:00:53.060 --> 00:00:54.950
+authentication support.
+
+22
+00:00:54.950 --> 00:00:56.630
+Here I'm running
+a VM that already
+
+23
+00:00:56.630 --> 00:00:59.930
+has Kerberos installed on it.
+
+24
+00:00:59.930 --> 00:01:02.180
+I've already created
+a user on the KDC.
+
+25
+00:01:02.180 --> 00:01:03.860
+Let's go ahead,
+and check it out.
+
+26
+00:01:03.860 --> 00:01:07.040
+Here I'm running the
+tool kadmin.local.
+
+27
+00:01:07.040 --> 00:01:09.140
+This allows us to
+directly modify
+
+28
+00:01:09.140 --> 00:01:11.500
+the Kerberos KDC's database.
+
+29
+00:01:11.500 --> 00:01:14.390
+Now here we can go ahead
+and list all the principles
+
+30
+00:01:14.390 --> 00:01:16.010
+on this machine.
+
+31
+00:01:16.010 --> 00:01:19.010
+Here's the command to
+do so-- listprincs,
+
+32
+00:01:19.010 --> 00:01:21.470
+which is short for principles.
+
+33
+00:01:21.470 --> 00:01:23.720
+And as you can see, I've
+already created a principal
+
+34
+00:01:23.720 --> 00:01:26.790
+for kirby-- kirby@MONGODB.COM.
+
+35
+00:01:26.790 --> 00:01:30.230
+Now we need to go ahead and
+add a principal for MongoDB so
+
+36
+00:01:30.230 --> 00:01:32.300
+that we can issue
+tickets to our users,
+
+37
+00:01:32.300 --> 00:01:35.210
+so they can authenticate
+with MongoDB.
+
+38
+00:01:35.210 --> 00:01:36.720
+And here's the command to do so.
+
+39
+00:01:36.720 --> 00:01:38.960
+I'm going to go ahead
+and add a principal.
+
+40
+00:01:38.960 --> 00:01:42.140
+I'm going to generate a
+random key for this principle.
+
+41
+00:01:42.140 --> 00:01:45.510
+And the naming here of the
+principle is very important.
+
+42
+00:01:45.510 --> 00:01:48.770
+The first is the name of
+the service-- in this case,
+
+43
+00:01:48.770 --> 00:01:52.610
+MongoDB-- followed by a slash,
+and then after the slash,
+
+44
+00:01:52.610 --> 00:01:54.980
+we have the host name
+of the server that
+
+45
+00:01:54.980 --> 00:01:57.080
+is running our database.
+
+46
+00:01:57.080 --> 00:01:59.600
+Now that we have our
+principal created for MongoDB,
+
+47
+00:01:59.600 --> 00:02:02.180
+we can generate a key
+tab, which is a file that
+
+48
+00:02:02.180 --> 00:02:04.420
+will contain our shared secret.
+
+49
+00:02:04.420 --> 00:02:06.780
+We'll eventually put this
+on our database server
+
+50
+00:02:06.780 --> 00:02:11.160
+so that MongoDB and Kerberos
+can share the secret.
+
+51
+00:02:11.160 --> 00:02:13.520
+Here's the command to
+generate the key tab-- key
+
+52
+00:02:13.520 --> 00:02:16.760
+tab add dash k, the
+name of the key tab
+
+53
+00:02:16.760 --> 00:02:19.250
+file-- in this case, the
+MongoDB dot key tab-- and then
+
+54
+00:02:19.250 --> 00:02:21.230
+the name of our principal.
+
+55
+00:02:21.230 --> 00:02:24.200
+Now we can go and
+close kadmin.local,
+
+56
+00:02:24.200 --> 00:02:26.300
+and you can see our file.
+
+57
+00:02:26.300 --> 00:02:29.570
+And here is our key tab, and I'm
+going to go ahead and copy this
+
+58
+00:02:29.570 --> 00:02:31.920
+over to our database server.
+
+59
+00:02:31.920 --> 00:02:34.850
+I'm now on our database
+server, and here's my key tab
+
+60
+00:02:34.850 --> 00:02:38.870
+that we just generated
+on the other server.
+
+61
+00:02:38.870 --> 00:02:40.490
+I'm now going to
+store its location
+
+62
+00:02:40.490 --> 00:02:45.860
+in an environmental
+variable called KRB5_KTNAME,
+
+63
+00:02:45.860 --> 00:02:47.750
+and this is so that
+MongoDB actually
+
+64
+00:02:47.750 --> 00:02:49.900
+knows where this file is.
+
+65
+00:02:49.900 --> 00:02:52.940
+Great, now the last thing
+we do before starting
+
+66
+00:02:52.940 --> 00:02:58.234
+MongoDB is just to configure
+this server to talk to our KDC.
+
+67
+00:02:58.234 --> 00:02:59.900
+I've already installed
+the basic program
+
+68
+00:02:59.900 --> 00:03:02.420
+to authenticate to
+Kerberos with apt-get.
+
+69
+00:03:02.420 --> 00:03:05.270
+We just need to modify
+the configuration file.
+
+70
+00:03:05.270 --> 00:03:06.980
+And here's the
+location of the file.
+
+71
+00:03:06.980 --> 00:03:09.790
+Etc krb5.conf.
+
+72
+00:03:09.790 --> 00:03:12.980
+I'm going to use them to edit
+it and run sudo because we're
+
+73
+00:03:12.980 --> 00:03:15.280
+operating with a NetC file.
+
+74
+00:03:15.280 --> 00:03:17.140
+And there's a lot of
+stuff going on in here,
+
+75
+00:03:17.140 --> 00:03:20.690
+but we only need to modify
+three places-- libdefaults,
+
+76
+00:03:20.690 --> 00:03:23.095
+where we want to change our
+default realm to MONGODB.COM.
+
+77
+00:03:23.095 --> 00:03:23.595
+Awesome.
+
+78
+00:03:23.595 --> 00:03:26.560
+
+
+79
+00:03:26.560 --> 00:03:28.250
+The second place
+is under realms.
+
+80
+00:03:28.250 --> 00:03:31.640
+Here we want to go ahead and add
+the information for our MongoDB
+
+81
+00:03:31.640 --> 00:03:32.990
+realm.
+
+82
+00:03:32.990 --> 00:03:35.420
+Great, and here's
+this information.
+
+83
+00:03:35.420 --> 00:03:37.910
+We have the KDC, the
+host name of our KDC,
+
+84
+00:03:37.910 --> 00:03:39.618
+which is in this case
+is infrastructure.m
+
+85
+00:03:39.618 --> 00:03:43.190
+310.university.mongodb.com
+This is the server
+
+86
+00:03:43.190 --> 00:03:45.440
+that we just ran
+the other commands
+
+87
+00:03:45.440 --> 00:03:47.810
+to generate our key tab file.
+
+88
+00:03:47.810 --> 00:03:49.710
+And then obviously
+the admin server,
+
+89
+00:03:49.710 --> 00:03:52.110
+which again is on
+the same machine.
+
+90
+00:03:52.110 --> 00:03:56.300
+And the last bit that we need
+to add is the domain realm.
+
+91
+00:03:56.300 --> 00:04:00.800
+And here we specify .mongodb.com
+is equal to MONGODB.COM,
+
+92
+00:04:00.800 --> 00:04:04.540
+and mongodb.com
+equals MONGODB.COM.
+
+93
+00:04:04.540 --> 00:04:07.740
+All of this stuff is case
+sensitive, by the way.
+
+94
+00:04:07.740 --> 00:04:09.710
+Let's go ahead and
+save this file.
+
+95
+00:04:09.710 --> 00:04:12.519
+Now he can go ahead and
+enable Kerberos authentication
+
+96
+00:04:12.519 --> 00:04:13.060
+with MongoDB.
+
+97
+00:04:13.060 --> 00:04:15.980
+And here's the command to do so.
+
+98
+00:04:15.980 --> 00:04:18.980
+We're going to go ahead
+and enable authentication,
+
+99
+00:04:18.980 --> 00:04:20.990
+and then we're going to
+set the authentication
+
+100
+00:04:20.990 --> 00:04:22.670
+mechanism to GSSAPI.
+
+101
+00:04:22.670 --> 00:04:26.630
+API And this is the mechanism
+that is used by Kerberos.
+
+102
+00:04:26.630 --> 00:04:28.060
+Our server is now
+up and running,
+
+103
+00:04:28.060 --> 00:04:30.310
+and we can go ahead and
+connect with the MongoDB shell
+
+104
+00:04:30.310 --> 00:04:32.510
+and create our Kerberos
+principal user.
+
+105
+00:04:32.510 --> 00:04:34.767
+First we want to switch
+to the external database,
+
+106
+00:04:34.767 --> 00:04:36.600
+and now that we're on
+the external database,
+
+107
+00:04:36.600 --> 00:04:38.510
+we can go ahead and
+create our user.
+
+108
+00:04:38.510 --> 00:04:41.910
+And here's the command
+to do so-- db.createUser.
+
+109
+00:04:41.910 --> 00:04:46.430
+I pass in kirby@MONGODB.COM,
+our principal user as our user.
+
+110
+00:04:46.430 --> 00:04:49.414
+I do not specify a password,
+and then I give them
+
+111
+00:04:49.414 --> 00:04:50.330
+whatever rules I want.
+
+112
+00:04:50.330 --> 00:04:53.410
+In this case,
+userAdminAnyDatabase.
+
+113
+00:04:53.410 --> 00:04:54.260
+Awesome.
+
+114
+00:04:54.260 --> 00:04:56.850
+Our user has now been
+successfully added.
+
+115
+00:04:56.850 --> 00:04:59.840
+Now if I go ahead and
+try to run db.auth,
+
+116
+00:04:59.840 --> 00:05:03.650
+specifying the GSSAPI mechanism
+with my principal name,
+
+117
+00:05:03.650 --> 00:05:06.650
+you'll see that this failed.
+
+118
+00:05:06.650 --> 00:05:09.350
+And this is because we haven't
+yet authenticated to Kerberos.
+
+119
+00:05:09.350 --> 00:05:11.270
+So let's go ahead and
+exit out of the shell
+
+120
+00:05:11.270 --> 00:05:13.480
+and authenticate to Kerberos.
+
+121
+00:05:13.480 --> 00:05:16.550
+We authenticate
+Kerberos with kinit
+
+122
+00:05:16.550 --> 00:05:19.904
+and then my principal
+name, which is just kirby.
+
+123
+00:05:19.904 --> 00:05:23.370
+And it'll now asked me
+for kirby's password,
+
+124
+00:05:23.370 --> 00:05:27.470
+which I happen to know because
+I created it on the KDC.
+
+125
+00:05:27.470 --> 00:05:29.510
+I've now authenticated
+it with Kerberos,
+
+126
+00:05:29.510 --> 00:05:31.640
+and we can now go
+ahead and try again
+
+127
+00:05:31.640 --> 00:05:36.080
+to authenticate to MongoDB
+using my Kerberos credentials.
+
+128
+00:05:36.080 --> 00:05:38.660
+Again, we'll have to switch
+the external database,
+
+129
+00:05:38.660 --> 00:05:41.090
+and again we can
+try to run db.auth
+
+130
+00:05:41.090 --> 00:05:44.840
+with the GSSAPI mechanism
+with my principal name.
+
+131
+00:05:44.840 --> 00:05:45.860
+And there we go.
+
+132
+00:05:45.860 --> 00:05:48.500
+We have now successfully
+authenticated to MongoDB
+
+133
+00:05:48.500 --> 00:05:50.740
+using our Kerberos credentials.

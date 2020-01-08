@@ -1,0 +1,296 @@
+
+1
+00:00:00.000 --> 00:00:00.790
+
+
+2
+00:00:00.790 --> 00:00:02.830
+By now you should have
+a pretty good high level
+
+3
+00:00:02.830 --> 00:00:06.504
+understanding of how transport
+encryption works in MongoDB.
+
+4
+00:00:06.504 --> 00:00:08.670
+We're now ready to look at
+a concrete example of how
+
+5
+00:00:08.670 --> 00:00:14.220
+to enable TLS/SSL between
+a client and a server.
+
+6
+00:00:14.220 --> 00:00:15.980
+The best part
+about this exercise
+
+7
+00:00:15.980 --> 00:00:18.190
+is that you've already
+done it before.
+
+8
+00:00:18.190 --> 00:00:21.370
+If you recall from when
+we used X509 certificates
+
+9
+00:00:21.370 --> 00:00:25.070
+for authentication with
+MongoDB that it requires an SSL
+
+10
+00:00:25.070 --> 00:00:26.900
+connection.
+
+11
+00:00:26.900 --> 00:00:28.630
+So this is a very
+similar command
+
+12
+00:00:28.630 --> 00:00:29.990
+to what we've run before.
+
+13
+00:00:29.990 --> 00:00:31.400
+You'll see some similar things.
+
+14
+00:00:31.400 --> 00:00:33.050
+We're requiring SSL.
+
+15
+00:00:33.050 --> 00:00:35.700
+And then we're providing
+a server certificate
+
+16
+00:00:35.700 --> 00:00:37.960
+for SSL connections.
+
+17
+00:00:37.960 --> 00:00:42.285
+So this command will force all
+clients to connect via TLS/SSL,
+
+18
+00:00:42.285 --> 00:00:44.660
+meaning that connection between
+the client and the server
+
+19
+00:00:44.660 --> 00:00:46.290
+is completely encrypted.
+
+20
+00:00:46.290 --> 00:00:47.240
+Awesome.
+
+21
+00:00:47.240 --> 00:00:48.230
+Transfer encryption.
+
+22
+00:00:48.230 --> 00:00:49.560
+We've done it.
+
+23
+00:00:49.560 --> 00:00:50.375
+But wait a second.
+
+24
+00:00:50.375 --> 00:00:52.000
+If you take another
+look, you'll notice
+
+25
+00:00:52.000 --> 00:00:54.460
+that it differs slightly
+from similar commands
+
+26
+00:00:54.460 --> 00:00:56.280
+that we've issued before.
+
+27
+00:00:56.280 --> 00:00:58.580
+Take a look at this command.
+
+28
+00:00:58.580 --> 00:01:00.530
+This is even more
+similar to what we
+
+29
+00:01:00.530 --> 00:01:02.660
+used for X509 authentication.
+
+30
+00:01:02.660 --> 00:01:05.580
+The difference between this
+command and this command,
+
+31
+00:01:05.580 --> 00:01:09.420
+obviously, is the
+dash dash sslCAFile
+
+32
+00:01:09.420 --> 00:01:11.770
+and the passing of the
+certificate authorities
+
+33
+00:01:11.770 --> 00:01:13.650
+certificate.
+
+34
+00:01:13.650 --> 00:01:15.910
+So what is the difference
+between these two commands?
+
+35
+00:01:15.910 --> 00:01:18.640
+Well, both commands will enable
+encryption between the client
+
+36
+00:01:18.640 --> 00:01:21.010
+and server, meaning that
+the attacker can't simply
+
+37
+00:01:21.010 --> 00:01:23.370
+sniff the traffic in between.
+
+38
+00:01:23.370 --> 00:01:25.130
+The second command,
+however, will
+
+39
+00:01:25.130 --> 00:01:28.272
+verify the identity of clients
+connecting to the server,
+
+40
+00:01:28.272 --> 00:01:30.730
+and make sure that they are
+connecting with the certificate
+
+41
+00:01:30.730 --> 00:01:33.872
+signed by the same CA.
+
+42
+00:01:33.872 --> 00:01:37.959
+This command is not checking
+the client's identity,
+
+43
+00:01:37.959 --> 00:01:40.250
+which means that clients
+connecting to our server would
+
+44
+00:01:40.250 --> 00:01:43.000
+be susceptible to a
+man-in-the-middle attack.
+
+45
+00:01:43.000 --> 00:01:45.920
+An attacker could act
+like a MongoDB client
+
+46
+00:01:45.920 --> 00:01:47.910
+and connect to the server.
+
+47
+00:01:47.910 --> 00:01:50.890
+If we don't provide
+the SSL CA file,
+
+48
+00:01:50.890 --> 00:01:53.100
+the certificate
+authorities certificate,
+
+49
+00:01:53.100 --> 00:01:55.750
+that means that
+would be susceptible
+
+50
+00:01:55.750 --> 00:01:58.470
+to a man-in-the-middle attack,
+which means an attacker can sit
+
+51
+00:01:58.470 --> 00:02:01.840
+right here in between the
+client and the server,
+
+52
+00:02:01.840 --> 00:02:04.420
+acting like a server
+to the client,
+
+53
+00:02:04.420 --> 00:02:06.940
+and acting like a
+client to the server,
+
+54
+00:02:06.940 --> 00:02:11.720
+and therefore intercepting all
+the traffic in between the two.
+
+55
+00:02:11.720 --> 00:02:14.880
+So while the connection
+will be encrypted
+
+56
+00:02:14.880 --> 00:02:18.156
+between the client and
+the man in the middle,
+
+57
+00:02:18.156 --> 00:02:19.530
+and the traffic
+will be encrypted
+
+58
+00:02:19.530 --> 00:02:22.980
+between the man in the
+middle and the server,
+
+59
+00:02:22.980 --> 00:02:25.380
+the man in the middle can
+look at all the traffic
+
+60
+00:02:25.380 --> 00:02:29.140
+in plaintext, because it's
+using the man in the middle's
+
+61
+00:02:29.140 --> 00:02:31.590
+private key and
+public key to encrypt
+
+62
+00:02:31.590 --> 00:02:33.515
+all the traffic in
+between the client
+
+63
+00:02:33.515 --> 00:02:35.850
+and in between the server.

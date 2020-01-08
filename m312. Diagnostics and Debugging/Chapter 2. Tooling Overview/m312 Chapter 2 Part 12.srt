@@ -1,0 +1,256 @@
+
+1
+00:00:00.000 --> 00:00:00.670
+
+
+2
+00:00:00.670 --> 00:00:03.310
+Now, the nice thing about
+index stats is that it's free.
+
+3
+00:00:03.310 --> 00:00:04.930
+It's done by the
+server automatically,
+
+4
+00:00:04.930 --> 00:00:07.388
+and it includes a surprising
+amount of data about my access
+
+5
+00:00:07.388 --> 00:00:09.400
+patterns.
+
+6
+00:00:09.400 --> 00:00:12.790
+Let's look at that full
+index stats document again.
+
+7
+00:00:12.790 --> 00:00:18.484
+We'll eliminate our project
+stage, and there we go.
+
+8
+00:00:18.484 --> 00:00:19.900
+So one of the
+things you'll notice
+
+9
+00:00:19.900 --> 00:00:22.930
+is that we have this
+host field here,
+
+10
+00:00:22.930 --> 00:00:26.770
+seems to be the same for
+all three of my indexes.
+
+11
+00:00:26.770 --> 00:00:30.550
+Why are we putting that
+in every single document?
+
+12
+00:00:30.550 --> 00:00:33.520
+Well, the problem is that I
+might have servers go down,
+
+13
+00:00:33.520 --> 00:00:35.950
+and a secondary
+will become primary.
+
+14
+00:00:35.950 --> 00:00:38.980
+Suddenly, all of our counters
+start out at some other number,
+
+15
+00:00:38.980 --> 00:00:42.820
+because each server looks
+at its own ops independently
+
+16
+00:00:42.820 --> 00:00:44.569
+and counts them up.
+
+17
+00:00:44.569 --> 00:00:45.610
+Let's see this in action.
+
+18
+00:00:45.610 --> 00:00:49.120
+
+
+19
+00:00:49.120 --> 00:00:53.620
+OK, my primary is
+now a secondary.
+
+20
+00:00:53.620 --> 00:00:58.360
+I happen to know that
+the server on port 30001
+
+21
+00:00:58.360 --> 00:01:01.390
+will be stepping up.
+
+22
+00:01:01.390 --> 00:01:04.480
+And sure enough,
+it's now primary.
+
+23
+00:01:04.480 --> 00:01:09.040
+And I'll look at those index
+stats, and what do you know,
+
+24
+00:01:09.040 --> 00:01:13.900
+the ops are 0 for each
+of my three indexes.
+
+25
+00:01:13.900 --> 00:01:16.270
+That's because I haven't
+performed any queries
+
+26
+00:01:16.270 --> 00:01:21.550
+on this server on port 30001.
+
+27
+00:01:21.550 --> 00:01:24.100
+All right, so that's bad
+enough for a replica set,
+
+28
+00:01:24.100 --> 00:01:26.170
+but things get really
+interesting when we're
+
+29
+00:01:26.170 --> 00:01:28.010
+dealing with a sharded cluster.
+
+30
+00:01:28.010 --> 00:01:30.580
+Now that you're familiar with
+the basics of index stats,
+
+31
+00:01:30.580 --> 00:01:32.810
+let's make it even
+more interesting.
+
+32
+00:01:32.810 --> 00:01:35.800
+We've stopped our set.
+
+33
+00:01:35.800 --> 00:01:38.950
+Let's blow away
+our data, and let's
+
+34
+00:01:38.950 --> 00:01:41.650
+create a sharded cluster
+with four shards, each
+
+35
+00:01:41.650 --> 00:01:42.850
+with three replica sets.
+
+36
+00:01:42.850 --> 00:01:47.540
+
+
+37
+00:01:47.540 --> 00:01:51.470
+We'll connect to our
+MongoS, and let's do
+
+38
+00:01:51.470 --> 00:01:52.940
+some interesting stuff.
+
+39
+00:01:52.940 --> 00:01:54.992
+We're going to use mgenerate
+to create some data,
+
+40
+00:01:54.992 --> 00:01:56.450
+and this might take
+a little while.
+
+41
+00:01:56.450 --> 00:01:57.950
+It's not terribly efficient.
+
+42
+00:01:57.950 --> 00:02:01.130
+I don't want a bunch of chunks
+moving around on their own
+
+43
+00:02:01.130 --> 00:02:04.160
+very slowly, so let's start
+by sharding our collection
+
+44
+00:02:04.160 --> 00:02:05.930
+and pre-splitting
+some of the chunks.
+
+45
+00:02:05.930 --> 00:02:08.729
+
+
+46
+00:02:08.729 --> 00:02:13.070
+We'll create an index and
+shard that collection.
+
+47
+00:02:13.070 --> 00:02:18.560
+Create the index,
+shard the collection.
+
+48
+00:02:18.560 --> 00:02:22.560
+And I'm going to write a little
+script to pre-split my data.
+
+49
+00:02:22.560 --> 00:02:29.000
+To find a variable I'm going
+to use, pre-split my data,
+
+50
+00:02:29.000 --> 00:02:31.160
+and when I look at
+sh.status status,
+
+51
+00:02:31.160 --> 00:02:34.640
+initially, all of my
+chunks are on one shard.
+
+52
+00:02:34.640 --> 00:02:38.720
+And a few moments later,
+it started to move around.
+
+53
+00:02:38.720 --> 00:02:42.680
+Several seconds later,
+they're evenly distributed.
+
+54
+00:02:42.680 --> 00:02:46.750
+Great, let's disconnect
+and create some data.

@@ -1,0 +1,207 @@
+In this lesson, we will learn how to identify the workload for a given application.
+
+To help us in this quest, we are going to use an Internet of Things use case.
+
+The organization has 100 million water sensors deployed around the world.
+
+The requirement is to collect this data and make it available to a team of 10 data scientists.
+
+Going back to our methodology, we start with the first phase, identifying, quantifying, and qualifying the workload.
+
+Here's the information we have to begin with.
+
+We don't have production logs and stats.
+
+However, we do have a prototype.
+
+We can't rely on the business domain expert.
+
+However, there is only a handful of things to understand.
+
+So I think we'll be able to do it by ourselves.
+
+As for the data modeling expert, we have a MongoDB certified developer in our team.
+
+As noted earlier, our previous team has written a prototype that captures the data we see under the collection data in the database, sample_weatherdata.
+
+You can explore this data set on Atlas with Compass.
+
+A unique string identifies each device using the device position in the field.
+
+Additional fields store metrics like air temperature, dew point, pressure, wind, for a given measure.
+
+A numeric value and the relative quality on the scale of 1 to 9 describe these metrics.
+
+Note that a metric like the wind may be represented by sub-metrics.
+
+The prototype was useful to see which queries our meteorologists wanted to run.
+
+Now it is our job to scale up the prototype to collecting data from a few million devices in the field.
+
+So far, we know the following.
+
+10 million devices are collecting data.
+
+Data can be collected every minute and sent every minute.
+
+Any trend calculated with the granularity of one hour is nearly as precise as the ones calculated with data for each minute, except for periods of special events like tornadoes and hurricanes.
+
+We need to keep the data for at least 10 years.
+
+This period may be extended for irregularity or expanded use cases.
+
+However, the changing requirements may have a massive impact on your design, so ensure you take the appropriate time and effort to validate them if needed.
+
+The ops team needs to be able to identify faulty and non-transmitting devices.
+
+We also need to run some script to aggregate data, to make the data simpler to analyze.
+
+Our goal for data scientists is to analyze the data to find trends.
+
+Maybe some queries are fixed, while the other ones are exploratory ones, meaning they are difficult to predict in advance.
+
+Translating what we just said in these statements, these are the scenarios we want to capture and support with our application.
+
+Now that we know for how long we need to hold data, what's the frequency by which data is transmitted to the system and the number of devices that are going to be sending data?
+
+Let's make a list of the CRUD operations, specifically the read and write operations, the system needs to handle.
+
+Each actor produces one or more operations, which translates to entities and field, and we need to identify each operation as a read or a write operation.
+
+In a more complex model, you could have more queries, and you would expand on the type and the fields that are used by the operations.
+
+We have attached the lecture notes for this lesson as a spreadsheet that helps with this workload calculation.
+
+In the context of this calculation, we need to identify the most critical operation.
+
+Most of the time, there is only one query that stands out.
+
+In this case, writing the data sent by the device dwarfs the other operation.
+
+So this suggests that the system should be sized and optimized for incoming writes from our data sensors.
+
+Let's look closer at this operation.
+
+The workload comes from the sensors, sending weather data to our system.
+
+They are mostly write operations of new documents.
+
+The operation carries a device ID, a time stamp, and a device matrix.
+
+The data is sent every minute by 100 million devices, or translate to 1.6 million writes per second.
+
+Each write is about 1,000 bytes.
+
+So this is the size we observe for the document in a prototype.
+
+It is a requirement to keep each piece of data for 10 years.
+
+In the case of these write operations, we don't need to wait for a majority of nodes to acknowledge the write operation.
+
+What do we mean by this?
+
+Each sensor reading sent to the system gets replicated to other hosts.
+
+However, we are not going to wait for the replication process to complete.
+
+It is sufficient for an application to know that the primary has received the data.
+
+Each single minute reading is not a crucial piece of information, mainly because we aggregate the data over time.
+
+In the event of issues with the network or the host, because we did not wait for a majority of nodes writing the data, it could result in a piece of data missing on the newly elected primary.
+
+Typically for IoT projects, entering a single write as on the primary node is sufficient.
+
+Lowering data durability requirements is in contrast to writing a crucial piece of information, like an operation involving money, updates to user account, or anything that you don't want to lose.
+
+For this type of data, you want to confirm that it is written to a majority of nodes before the cluster acknowledges your write operation back to the application.
+
+On the other hand, some data aggregated or refreshed frequently may not need the same care in terms of data durability.
+
+Understanding your data and being able to make this compromise early has a considerable impact on the performance of your system.
+
+Did we say 1.6 million operations per second?
+
+Hosts with many cores in [?
+
+fastest ?] can sustain around 100,000 writes per second.
+
+To satisfy this order of operation, you could estimate a cluster with a data-partition in 10 to 20 shards to handle this kind of workload.
+
+Now that you know what's the estimated workload and requirements, you can start budgeting your hardware needs.
+
+Alternatively to provisioning a cluster to support all this data, you may want to ask if you absolutely need to record all the data.
+
+Understanding what data drop rate is acceptable is an important strategy that needs to be used by systems that collect data from many devices.
+
+You should ask yourself these interesting questions as early as possible.
+
+In this use case, the system presents a workload where writes correspond to 99% of all database operations.
+
+Optimizing for writes has a lot to do with the hardware.
+
+However, on the data modeling side, we want to look into patterns or techniques that allow for reducing the number of individual writes or grouping information in individual data structures.
+
+Reads are also essentials, perhaps not based on the quantity of these operations, but on the user experience that they represent.
+
+Let's look at the most crucial read operation, which are performed by our data scientists.
+
+The data scientists run this read operation.
+
+It is a read operation on the metrics of the device.
+
+Working with the data scientist and asking more questions, let us understand that most of the queries are on temperature data.
+
+Each data scientist runs about 10 queries per hour.
+
+So we do get 100 of these analytic queries run every hour.
+
+The surface area of these queries tend to span the whole data set.
+
+That said, the analytic queries do not have to run on the data collected in the last few minutes.
+
+Any data newer than the last hour is good enough for those queries.
+
+There is a bunch of interesting information here.
+
+Collection scan on data that is one hour old, for these type of queries, using nodes dedicated to data analytics this is a viable solution.
+
+Our primary node is likely to be very busy processing writes.
+
+So we may want to dedicate a node to process the reads and isolate all the collection scans they may require from other nodes.
+
+Collection scans are usually pretty bad news for the primary.
+
+We could also consider other strategies, such as providing the data scientist with a staging environment so they can prepare the analytic queries on the smaller data set.
+
+Or we could also consider pre-aggregating the data.
+
+We talk more about this kind of optimization in the chapter on patterns.
+
+Putting everything together results in the following.
+
+Use the attached handout for full review.
+
+Note the section assumption.
+
+When you make one assumption to the analysis of a requirement, ensure you capture it.
+
+Changing assumptions or even invalidating them may have a considerable impact on your design.
+
+To summarize the findings we have on this project so far, the workload is mostly composed of writes, so we need to optimize for writes, first by ensuring proper write distribution, but also by applying techniques and patterns that can reduce the number of write operations.
+
+As for the read operation, even if we execute them less often than the write operations, they may still require a considerable amount of data.
+
+So we need to map out the most common queries to shape the documents accordingly.
+
+We cover more on this optimization when we discuss, again, schema design patterns.
+
+In summary, give a try at estimating the numbers for your system.
+
+Try to quantify and quantify the queries as much as you can.
+
+Once you collect the real metrics on your operational system, contrast these with your initial assumption.
+
+These differences you observe are needed to adapt the schema design.
+
+Moreover, it is likely that a few CRUD operations will drive your design.

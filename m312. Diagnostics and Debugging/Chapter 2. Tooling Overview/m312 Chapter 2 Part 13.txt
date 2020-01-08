@@ -1,0 +1,51 @@
+OK, this mgenerate_userdata.json is going to be passed to mgenerate, and it's going to create some user data based on this document here.
+
+Let's make it happen.
+
+And wait a few minutes for it to finish.
+
+That only took a few seconds.
+
+OK, let's connect.
+
+OK, I'm in the right database.
+
+Let's look at our index stats before we do anything.
+
+OK, so this is a lot of information.
+
+We have four shards, and each index is represented on each shard.
+
+So even though we only have two indexes on _ID and user.name.last, it's giving us eight documents-- one per index on each server.
+
+And we haven't done any queries yet, so the ops field is 0 for each of these 0, 0, 0, 0, 0, 0, 0, 0.
+
+Good, let's run a query.
+
+We'll find a document using the shard key.
+
+OK, and we'll look at the index stats.
+
+OK, so the ops remain 0 for the _id field and 0 for most of the servers.
+
+But this server on port 30001 has run the query and touched that index.
+
+That was an exact match query, and it hit only one chunk.
+
+And my router knows it's only on one server and routed to the appropriate server, but that won't always be the case.
+
+Let's do a range query.
+
+User.name.last is less than or equal to d.
+
+Get my results, and we will look at index stats.
+
+Once again, our _id ops are still 0 but 1111 for this user.name.last.
+
+What happened was this query actually touched the other three shards that hadn't seen the first query.
+
+That's just a coincidence.
+
+The important thing is that three servers had chunks that match the query, and all three of those servers incremented their ops counter for that index.
+
+A range query like this can touch one, some, or all of your servers depending on what the chunk ranges are.

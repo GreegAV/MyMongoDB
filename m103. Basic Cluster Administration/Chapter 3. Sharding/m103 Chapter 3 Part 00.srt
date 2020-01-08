@@ -1,0 +1,354 @@
+1
+00:00:00,000 --> 00:00:00,930
+
+
+2
+00:00:00,930 --> 00:00:02,820
+So until this
+point, we've learned
+
+3
+00:00:02,820 --> 00:00:06,420
+about MongoDB deployments
+of small and average sizes.
+
+4
+00:00:06,420 --> 00:00:09,920
+So it's feasible to store an
+entire data set on one server.
+
+5
+00:00:09,920 --> 00:00:12,120
+In a replica set, we
+have more than one server
+
+6
+00:00:12,120 --> 00:00:13,200
+in our database.
+
+7
+00:00:13,200 --> 00:00:16,480
+But each server still has to
+contain the entire dataset.
+
+8
+00:00:16,480 --> 00:00:17,886
+As our dataset
+grows to the point
+
+9
+00:00:17,886 --> 00:00:19,260
+where our machines
+can't properly
+
+10
+00:00:19,260 --> 00:00:22,110
+service client applications,
+one of our options
+
+11
+00:00:22,110 --> 00:00:24,240
+is just to make the
+machines better.
+
+12
+00:00:24,240 --> 00:00:26,910
+We could increase the capacity
+of individual machines
+
+13
+00:00:26,910 --> 00:00:29,250
+so they have more
+RAM, or disk space,
+
+14
+00:00:29,250 --> 00:00:31,530
+or maybe a more powerful CPU.
+
+15
+00:00:31,530 --> 00:00:34,040
+This is referred to
+as vertical scaling.
+
+16
+00:00:34,040 --> 00:00:36,270
+But this could potentially
+become very expensive.
+
+17
+00:00:36,270 --> 00:00:38,400
+And besides,
+cloud-based providers
+
+18
+00:00:38,400 --> 00:00:40,650
+aren't going to let us
+scale vertically forever.
+
+19
+00:00:40,650 --> 00:00:42,941
+They'll eventually put a
+limit on the possible hardware
+
+20
+00:00:42,941 --> 00:00:45,000
+configurations, which
+would effectively
+
+21
+00:00:45,000 --> 00:00:47,180
+limit our storage layer.
+
+22
+00:00:47,180 --> 00:00:50,610
+In MongoDB, scaling
+is done horizontally,
+
+23
+00:00:50,610 --> 00:00:53,330
+which means instead of making
+the individual machines better,
+
+24
+00:00:53,330 --> 00:00:56,390
+we just add more machines and
+then distribute the dataset
+
+25
+00:00:56,390 --> 00:00:58,590
+among those machines.
+
+26
+00:00:58,590 --> 00:01:02,640
+The way we distribute data in
+MongoDB is called Sharding.
+
+27
+00:01:02,640 --> 00:01:04,724
+And Sharding allows
+us to grow our dataset
+
+28
+00:01:04,724 --> 00:01:06,600
+without worrying about
+being able to store it
+
+29
+00:01:06,600 --> 00:01:08,720
+all on one server.
+
+30
+00:01:08,720 --> 00:01:11,144
+Instead, we divide the
+dataset into pieces
+
+31
+00:01:11,144 --> 00:01:13,310
+and then distribute the
+pieces across as many shards
+
+32
+00:01:13,310 --> 00:01:14,690
+as we want.
+
+33
+00:01:14,690 --> 00:01:18,800
+Together, the shards make
+up a Sharded Cluster.
+
+34
+00:01:18,800 --> 00:01:20,700
+In order to guarantee
+high availability
+
+35
+00:01:20,700 --> 00:01:22,610
+in our Sharded
+Cluster, we deploy
+
+36
+00:01:22,610 --> 00:01:24,650
+each shard as a replica set.
+
+37
+00:01:24,650 --> 00:01:26,930
+This way, we can ensure a
+level of fault tolerance
+
+38
+00:01:26,930 --> 00:01:29,540
+against each piece of data
+regardless of which shard
+
+39
+00:01:29,540 --> 00:01:31,790
+actually contains that data.
+
+40
+00:01:31,790 --> 00:01:34,420
+So with our data distributed
+across several servers,
+
+41
+00:01:34,420 --> 00:01:36,950
+queries may become
+a little tricky.
+
+42
+00:01:36,950 --> 00:01:40,300
+We query our database looking
+for a specific document.
+
+43
+00:01:40,300 --> 00:01:43,210
+It's not obvious at first
+where to look for it.
+
+44
+00:01:43,210 --> 00:01:45,640
+So in between a Sharded
+Cluster and its clients,
+
+45
+00:01:45,640 --> 00:01:47,470
+we set up a kind
+of router process
+
+46
+00:01:47,470 --> 00:01:50,170
+that accepts queries from
+clients and then figures
+
+47
+00:01:50,170 --> 00:01:53,130
+out which shard should
+receive that query.
+
+48
+00:01:53,130 --> 00:01:55,690
+That router process
+is called the Mongos.
+
+49
+00:01:55,690 --> 00:01:57,940
+And clients connect to Mongos
+us instead of connecting
+
+50
+00:01:57,940 --> 00:01:59,780
+to each shard individually.
+
+51
+00:01:59,780 --> 00:02:03,220
+And we have any number
+of Mongos processes
+
+52
+00:02:03,220 --> 00:02:06,190
+so we can service many different
+applications or requests
+
+53
+00:02:06,190 --> 00:02:08,660
+to the same Sharded Cluster.
+
+54
+00:02:08,660 --> 00:02:10,440
+So Mongos must be
+pretty small, right,
+
+55
+00:02:10,440 --> 00:02:13,610
+to know where each piece of data
+is at any given point in time
+
+56
+00:02:13,610 --> 00:02:15,490
+in a massive Sharded Cluster?
+
+57
+00:02:15,490 --> 00:02:18,320
+But actually, Mongos
+doesn't know anything.
+
+58
+00:02:18,320 --> 00:02:20,300
+It uses the metadata
+about which data
+
+59
+00:02:20,300 --> 00:02:21,680
+is contained on each shard.
+
+60
+00:02:21,680 --> 00:02:24,784
+And that metadata is stored
+on the Config Servers.
+
+61
+00:02:24,784 --> 00:02:26,200
+But the data on
+the Config Servers
+
+62
+00:02:26,200 --> 00:02:28,330
+is used very often by Mongos.
+
+63
+00:02:28,330 --> 00:02:30,919
+So we need to make sure that
+data stays highly available.
+
+64
+00:02:30,919 --> 00:02:33,460
+And you can probably guess how
+we guarantee high availability
+
+65
+00:02:33,460 --> 00:02:34,900
+here.
+
+66
+00:02:34,900 --> 00:02:37,090
+Yes, we use replication.
+
+67
+00:02:37,090 --> 00:02:39,530
+We replicate the data
+on the Config Servers.
+
+68
+00:02:39,530 --> 00:02:41,800
+So instead of a
+single Config Server,
+
+69
+00:02:41,800 --> 00:02:46,510
+we deploy a Config
+Server Replica Set.
+
+70
+00:02:46,510 --> 00:02:49,590
+So that's a high level overview
+of Sharding in MongoDB--
+
+71
+00:02:49,590 --> 00:02:52,430
+the Sharded Cluster contains
+the shards where the data lives;
+
+72
+00:02:52,430 --> 00:02:53,970
+the Config Servers,
+which contain
+
+73
+00:02:53,970 --> 00:02:56,910
+the metadata of each
+shard; and the Mongos,
+
+74
+00:02:56,910 --> 00:00:00,000
+which routes the queries
+to the correct shards.
+

@@ -1,0 +1,69 @@
+In this lesson, we're going to be talking about replicas set nodes with different indexes.
+
+Now I need to know right from the start that an architecture that relies on secondary nodes with specific indexes is not very usual, and is only useful for a handful of use cases, things like specific analytics on secondary nodes, or reporting on delayed consistency data, or even text search.
+
+Those are a few of the examples of use cases that will benefit from having specific indexes on secondary nodes alone.
+
+But again, this should not be a common practice.
+
+Once you have identified a favorable scenario, you also need to consider the requirements for this setup.
+
+These nodes should not be allowed to become primary nodes.
+
+So we should configure them either with priority 0, becoming hidden nodes, or pure simply delayed secondary nodes.
+
+This is because if a primary were to step down, then your main application could then begin communicating with replica set members whose indexes are not designed to serve its queries.
+
+This will be a very bad performance scenario for your application.
+
+Let's see this in practice using an example.
+
+Let's start by creating a replica set.
+
+I'm going to start by creating the folders or DB paths for each one of my replicas set members.
+
+I'm going to have our data r 0, 1, and 2.
+
+With the handouts for this lesson, you'll find a set of configuration files that I'll be using to launch my replica set.
+
+As you can see here, there are three different files, r0, r1, and r2, one for each of the instances of my replica set.
+
+The next step is to launch all of these instances.
+
+But before that, let's see in on which ports are we running this particular set of instances.
+
+So my r0 will be listening on port 27000, r1 on 27001, and r2 on 27002.
+
+So now that we've seen on which ports my instances are going to be listening on, I can go ahead and launch them all.
+
+So I'm going to launch my r0, my r1, and obviously my r2.
+
+If I look for the grep of all [?
+
+MongoD's ?] running, I can see that all my instances are up and running and very well, thank you so much.
+
+The configured replica set is called M201 very originally.
+
+Once all instances up and running, we can go ahead and configure this particular replica set.
+
+We are going to have one primary and two secondaries.
+
+One of the secondaries will be configured with priority 0, preventing it from becoming a primary node.
+
+So it can then select them to create a specific index that is going to be only accessible if we run queries through this particular node.
+
+So let's go ahead and connect to one of the members.
+
+In this case, I'm going to use 27000.
+
+And I'm going to set this particular configuration.
+
+The ID [INAUDIBLE] the replica set name, M201.
+
+And here on hots 2, or ID 2, and running on port 27002, I will set this member as priority 0.
+
+This will be the selected node to hold those specific indexes that will be different from the remaining nodes of my replica set.
+
+Once I have the configuration in place, I can now go ahead and initiate it.
+
+Once the configuration is up and running, I'll see that I will have my hosts and one passive node, here my priority 0 node.

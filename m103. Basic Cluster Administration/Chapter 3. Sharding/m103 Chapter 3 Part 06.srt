@@ -1,0 +1,819 @@
+1
+00:00:00,000 --> 00:00:01,070
+
+
+2
+00:00:01,070 --> 00:00:02,600
+In the previous
+lesson, we talked
+
+3
+00:00:02,600 --> 00:00:04,520
+about what a shard key is.
+
+4
+00:00:04,520 --> 00:00:08,270
+Now, we're going to talk about
+what makes a good shard key.
+
+5
+00:00:08,270 --> 00:00:09,470
+First, let's recap.
+
+6
+00:00:09,470 --> 00:00:11,910
+You enable sharding
+at the database level.
+
+7
+00:00:11,910 --> 00:00:14,100
+You shard collections.
+
+8
+00:00:14,100 --> 00:00:16,550
+Enabling sharding on a
+database does not automatically
+
+9
+00:00:16,550 --> 00:00:19,850
+shard the collections
+in that database.
+
+10
+00:00:19,850 --> 00:00:22,400
+And, you can have both sharded
+and unsharded collections
+
+11
+00:00:22,400 --> 00:00:23,960
+in the same database.
+
+12
+00:00:23,960 --> 00:00:26,540
+Not all collections
+need to be equal.
+
+13
+00:00:26,540 --> 00:00:28,970
+First, let's talk about using
+a shard key that provides
+
+14
+00:00:28,970 --> 00:00:31,310
+good right distribution.
+
+15
+00:00:31,310 --> 00:00:33,710
+These are the three
+basic properties, here.
+
+16
+00:00:33,710 --> 00:00:36,140
+The cardinality of
+the shard key values,
+
+17
+00:00:36,140 --> 00:00:39,380
+the frequency of the shard key
+values, and whether or not the
+
+18
+00:00:39,380 --> 00:00:42,590
+shard key increases or
+decreases monotonically.
+
+19
+00:00:42,590 --> 00:00:45,870
+We're going to go over
+each of these one by one.
+
+20
+00:00:45,870 --> 00:00:48,260
+The first, is that
+the chosen shard key
+
+21
+00:00:48,260 --> 00:00:50,660
+should have high cardinality.
+
+22
+00:00:50,660 --> 00:00:53,930
+Cardinality is the measure
+of the number of elements
+
+23
+00:00:53,930 --> 00:00:55,850
+within a set of values.
+
+24
+00:00:55,850 --> 00:00:57,500
+In context of the
+shard key, it is
+
+25
+00:00:57,500 --> 00:01:01,850
+the number of unique
+possible shard key values.
+
+26
+00:01:01,850 --> 00:01:03,960
+This is important
+for two reasons.
+
+27
+00:01:03,960 --> 00:01:05,930
+The first is that if
+your shard key supports
+
+28
+00:01:05,930 --> 00:01:08,330
+a small number of unique
+possible values, then
+
+29
+00:01:08,330 --> 00:01:09,860
+that constrains the
+number of shards
+
+30
+00:01:09,860 --> 00:01:11,720
+you can have in your cluster.
+
+31
+00:01:11,720 --> 00:01:13,280
+Remember, chunks
+define boundaries
+
+32
+00:01:13,280 --> 00:01:15,590
+based on shard key
+values, and a unique value
+
+33
+00:01:15,590 --> 00:01:18,290
+can only exist on one chunk.
+
+34
+00:01:18,290 --> 00:01:20,090
+Let's say we shard
+on a field whose
+
+35
+00:01:20,090 --> 00:01:22,370
+values are the number of
+states in the United States
+
+36
+00:01:22,370 --> 00:01:23,300
+of America.
+
+37
+00:01:23,300 --> 00:01:26,090
+That's 50 states, so
+50 possible values
+
+38
+00:01:26,090 --> 00:01:28,100
+and an upper limit of 50 chunks.
+
+39
+00:01:28,100 --> 00:01:31,250
+And, therefore, 50 shards.
+
+40
+00:01:31,250 --> 00:01:34,040
+That's quite good, but imagine
+if we, instead, sharded
+
+41
+00:01:34,040 --> 00:01:35,660
+on the days of the week.
+
+42
+00:01:35,660 --> 00:01:37,880
+Now we're down to 7 shards.
+
+43
+00:01:37,880 --> 00:01:40,670
+What if we happen to pick a
+shard key that was a boolean?
+
+44
+00:01:40,670 --> 00:01:42,840
+Now we're down to two shards.
+
+45
+00:01:42,840 --> 00:01:45,410
+Having a higher cardinality
+gives you more chunks,
+
+46
+00:01:45,410 --> 00:01:48,800
+and with more chunks the
+number of shards can also grow,
+
+47
+00:01:48,800 --> 00:01:51,650
+not restraining your
+ability to grow the cluster.
+
+48
+00:01:51,650 --> 00:01:54,210
+I mentioned two reasons earlier.
+
+49
+00:01:54,210 --> 00:01:58,850
+The second reason is actually
+related to our next property.
+
+50
+00:01:58,850 --> 00:02:00,710
+The frequency of a
+shard key represents
+
+51
+00:02:00,710 --> 00:02:04,940
+how often a unique value
+occurs in the data.
+
+52
+00:02:04,940 --> 00:02:06,380
+Going back to our
+states example,
+
+53
+00:02:06,380 --> 00:02:09,410
+imagine if we have a workload
+where 90% of the time
+
+54
+00:02:09,410 --> 00:02:12,320
+we're inserting documents
+where the state is New York.
+
+55
+00:02:12,320 --> 00:02:14,150
+That means 90% of
+our data is going
+
+56
+00:02:14,150 --> 00:02:17,630
+to end up in the chunk whose
+range include New York.
+
+57
+00:02:17,630 --> 00:02:19,070
+That's not good.
+
+58
+00:02:19,070 --> 00:02:21,090
+Remember that a chunk
+lives in a single shard.
+
+59
+00:02:21,090 --> 00:02:23,480
+So now 90% of our writes
+are going to this one
+
+60
+00:02:23,480 --> 00:02:25,490
+shard that has that one chunk.
+
+61
+00:02:25,490 --> 00:02:27,080
+That's pretty
+severe hot spotting,
+
+62
+00:02:27,080 --> 00:02:28,850
+and that's not what we want.
+
+63
+00:02:28,850 --> 00:02:30,770
+Remember the
+cardinality property?
+
+64
+00:02:30,770 --> 00:02:32,810
+Even though the values
+for possible states
+
+65
+00:02:32,810 --> 00:02:34,790
+had high cardinality,
+our workload
+
+66
+00:02:34,790 --> 00:02:38,270
+has high frequency,
+leading to bad performance.
+
+67
+00:02:38,270 --> 00:02:39,920
+If our workload
+has a low frequency
+
+68
+00:02:39,920 --> 00:02:41,580
+of the possible
+shard key values,
+
+69
+00:02:41,580 --> 00:02:45,110
+then the overall distribution
+is going to be more even.
+
+70
+00:02:45,110 --> 00:02:47,810
+Now, if I have a very
+low frequency shard key
+
+71
+00:02:47,810 --> 00:02:50,060
+combined with very
+low cardinality,
+
+72
+00:02:50,060 --> 00:02:52,460
+like days of the week, I'm
+still potentially going
+
+73
+00:02:52,460 --> 00:02:53,520
+to have problems.
+
+74
+00:02:53,520 --> 00:02:57,140
+So the two of these properties
+work very closely together.
+
+75
+00:02:57,140 --> 00:02:59,510
+Finally, we have to
+consider whether or not
+
+76
+00:02:59,510 --> 00:03:02,180
+the shard is
+monotonically changing.
+
+77
+00:03:02,180 --> 00:03:03,770
+Monotonically
+changing here means
+
+78
+00:03:03,770 --> 00:03:06,680
+that the possible shard key
+values for a new document
+
+79
+00:03:06,680 --> 00:03:09,710
+changes at a steady
+and predictable rate.
+
+80
+00:03:09,710 --> 00:03:12,050
+Think of a field that
+has numeric progression.
+
+81
+00:03:12,050 --> 00:03:14,460
+Time stamps or
+dates, for example,
+
+82
+00:03:14,460 --> 00:03:16,640
+are monotonically increasing.
+
+83
+00:03:16,640 --> 00:03:19,850
+Similarly, a stopwatch timer
+is a monotonically decreasing
+
+84
+00:03:19,850 --> 00:03:20,940
+value.
+
+85
+00:03:20,940 --> 00:03:23,130
+Why is this a problem?
+
+86
+00:03:23,130 --> 00:03:25,640
+Remember that MongoDB splits
+your documents into chunks
+
+87
+00:03:25,640 --> 00:03:28,550
+of data, each chunk having
+an inclusive lower bound,
+
+88
+00:03:28,550 --> 00:03:31,700
+and then exclusive upper
+bound to shard key values.
+
+89
+00:03:31,700 --> 00:03:33,830
+All documents that fall
+into the range of a chunk
+
+90
+00:03:33,830 --> 00:03:35,150
+are stored in that chunk.
+
+91
+00:03:35,150 --> 00:03:37,700
+If all of your new documents
+have a higher shard key value
+
+92
+00:03:37,700 --> 00:03:39,260
+than the previous
+one, then they're
+
+93
+00:03:39,260 --> 00:03:41,330
+all going to end up
+in that one chunk that
+
+94
+00:03:41,330 --> 00:03:45,420
+contains the upper boundary of
+your possible shard key values.
+
+95
+00:03:45,420 --> 00:03:48,200
+So, even though timestamps
+are technically very high
+
+96
+00:03:48,200 --> 00:03:50,570
+cardinality, lots
+of unique values,
+
+97
+00:03:50,570 --> 00:03:53,510
+and very low frequency,
+nearly no repetition
+
+98
+00:03:53,510 --> 00:03:55,250
+of those unique
+values, it ends up
+
+99
+00:03:55,250 --> 00:03:57,170
+being a pretty bad shard key.
+
+100
+00:03:57,170 --> 00:04:00,140
+Fun fact, the
+object ID data type
+
+101
+00:04:00,140 --> 00:04:03,230
+is actually
+monotonically increasing.
+
+102
+00:04:03,230 --> 00:04:06,420
+That's why sharding on the
+ID field isn't a good idea.
+
+103
+00:04:06,420 --> 00:04:08,960
+There are some tricks for
+achieving even distribution
+
+104
+00:04:08,960 --> 00:04:11,840
+of monotonically changing
+shard key's, and we're
+
+105
+00:04:11,840 --> 00:04:15,170
+going to talk about
+that in a later lesson.
+
+106
+00:04:15,170 --> 00:04:17,870
+The ideal shard key
+provides good distribution
+
+107
+00:04:17,870 --> 00:04:21,500
+of its possible values,
+have high cardinality,
+
+108
+00:04:21,500 --> 00:04:24,290
+low frequency, and
+change non monotonically.
+
+109
+00:04:24,290 --> 00:04:26,870
+A shard key that can
+fulfill those properties
+
+110
+00:04:26,870 --> 00:04:29,750
+is more likely to result in an
+even distribution of written
+
+111
+00:04:29,750 --> 00:04:30,800
+data.
+
+112
+00:04:30,800 --> 00:04:32,480
+Having a shard key
+that doesn't quite
+
+113
+00:04:32,480 --> 00:04:34,040
+fulfill one of these
+property doesn't
+
+114
+00:04:34,040 --> 00:04:36,220
+guarantee bad
+distribution of data,
+
+115
+00:04:36,220 --> 00:04:38,799
+but it's not going to help.
+
+116
+00:04:38,799 --> 00:04:40,340
+So far, we've talked
+about properties
+
+117
+00:04:40,340 --> 00:04:42,170
+that allow for good
+right distribution,
+
+118
+00:04:42,170 --> 00:04:45,910
+but there is one other thing
+to consider-- read isolation.
+
+119
+00:04:45,910 --> 00:04:49,010
+MongoDB can route queries
+that include the shard key
+
+120
+00:04:49,010 --> 00:04:51,500
+to specific chunks,
+whose range contains
+
+121
+00:04:51,500 --> 00:04:53,690
+the specified shard key values.
+
+122
+00:04:53,690 --> 00:04:55,950
+Going back to the
+states example,
+
+123
+00:04:55,950 --> 00:04:59,350
+if my query includes
+state New York,
+
+124
+00:04:59,350 --> 00:05:02,040
+MongoDB can direct
+my read to the shard
+
+125
+00:05:02,040 --> 00:05:03,720
+that contains my data.
+
+126
+00:05:03,720 --> 00:05:07,230
+These targeted queries are
+very fast because MongoDB only
+
+127
+00:05:07,230 --> 00:05:10,879
+needs to check in with a single
+shard before returning results.
+
+128
+00:05:10,879 --> 00:05:12,420
+When choosing a
+shard key, you should
+
+129
+00:05:12,420 --> 00:05:14,370
+consider whether
+your choice supports
+
+130
+00:05:14,370 --> 00:05:16,860
+the queries you run most often.
+
+131
+00:05:16,860 --> 00:05:18,900
+Now, it's possible that
+the fields you query on
+
+132
+00:05:18,900 --> 00:05:21,150
+make for pretty bad shard keys.
+
+133
+00:05:21,150 --> 00:05:24,150
+In that case, consider
+specifying a compound index
+
+134
+00:05:24,150 --> 00:05:26,400
+as the underlying index
+for the shard key, where
+
+135
+00:05:26,400 --> 00:05:28,370
+the extra field
+or fields provide
+
+136
+00:05:28,370 --> 00:05:31,440
+high cardinality, low
+frequency, or are themselves
+
+137
+00:05:31,440 --> 00:05:34,507
+non monotonically changing.
+
+138
+00:05:34,507 --> 00:05:36,090
+So, without the shard
+key to guide it,
+
+139
+00:05:36,090 --> 00:05:39,150
+MongoDB has to ask
+every single shard
+
+140
+00:05:39,150 --> 00:05:42,490
+to check if it has the data
+that we're looking for.
+
+141
+00:05:42,490 --> 00:05:45,210
+These broadcast operations
+are scatter gather operations
+
+142
+00:05:45,210 --> 00:05:48,036
+and can be pretty slow.
+
+143
+00:05:48,036 --> 00:05:49,410
+Let's go over some
+considerations
+
+144
+00:05:49,410 --> 00:05:50,655
+of choosing a shard key.
+
+145
+00:05:50,655 --> 00:05:52,030
+We've already
+talked about these,
+
+146
+00:05:52,030 --> 00:05:53,820
+but I want to emphasize them.
+
+147
+00:05:53,820 --> 00:05:56,940
+You cannot unshard a
+collection once sharded.
+
+148
+00:05:56,940 --> 00:05:59,430
+You cannot update a shard
+key once you have sharded
+
+149
+00:05:59,430 --> 00:06:00,870
+a collection.
+
+150
+00:06:00,870 --> 00:06:04,170
+You cannot update the values for
+that shard key for any document
+
+151
+00:06:04,170 --> 00:06:05,950
+in the collection.
+
+152
+00:06:05,950 --> 00:06:08,520
+What that basically means is
+that your choice of shard key
+
+153
+00:06:08,520 --> 00:06:09,810
+is final.
+
+154
+00:06:09,810 --> 00:06:12,480
+Whenever possible, try to test
+your shard keys in a staging
+
+155
+00:06:12,480 --> 00:06:14,310
+environment first,
+before sharding
+
+156
+00:06:14,310 --> 00:06:16,230
+in production environments.
+
+157
+00:06:16,230 --> 00:06:18,600
+If you use the Mongo dump
+and Mongo restore utilities,
+
+158
+00:06:18,600 --> 00:06:21,540
+you can dump, drop, and
+restore the collection.
+
+159
+00:06:21,540 --> 00:06:23,340
+But that's non-trivial.
+
+160
+00:06:23,340 --> 00:06:25,380
+So again, whenever
+possible, you really
+
+161
+00:06:25,380 --> 00:06:27,270
+want to test in a
+staging environment
+
+162
+00:06:27,270 --> 00:06:28,890
+where you can safely
+drop and restore
+
+163
+00:06:28,890 --> 00:06:32,310
+the collection without
+impacting production workloads.
+
+164
+00:06:32,310 --> 00:06:33,720
+Let's recap.
+
+165
+00:06:33,720 --> 00:06:36,420
+Good shard keys provide
+even right distribution
+
+166
+00:06:36,420 --> 00:06:38,700
+and, where possible,
+read isolation
+
+167
+00:06:38,700 --> 00:06:40,860
+by supporting targeted queries.
+
+168
+00:06:40,860 --> 00:06:43,440
+You want to consider the
+cardinality and frequency
+
+169
+00:06:43,440 --> 00:06:46,590
+of the shard keys, and
+avoid monotonically changing
+
+170
+00:06:46,590 --> 00:06:48,230
+shard keys.
+
+171
+00:06:48,230 --> 00:06:50,720
+Finally, really
+remember, unsharding
+
+172
+00:06:50,720 --> 00:06:52,200
+a collection is hard.
+
+173
+00:06:52,200 --> 00:00:00,000
+You really want to avoid it.
+

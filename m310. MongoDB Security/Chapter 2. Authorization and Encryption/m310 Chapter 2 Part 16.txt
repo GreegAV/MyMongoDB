@@ -1,0 +1,19 @@
+So let's say our intern now needs to log all of his operations that he is running into one specific collection, but independent of the database that collection is on.
+
+Well, we can update his role to do just that.
+
+Here I'm going to run the db.grantPrivilegesToRole command where I'm gonna specify that I want on the intern role I want to add this array of privileges.
+
+In this case it's just one privileged document where I'm saying any database that has the intern log collection, I want this role to be able to insert and update on this collection.
+
+And it looks like it ran successfully.
+
+And here I can go ahead and run db.getRole.
+
+And I can specify the intern role.
+
+And I say I want to show all the privileges.
+
+And as you can see, here are the privileges that we saw before-- the ability to update the meteorites collection on the NASA database.
+
+We now also have a new privilege, which is the ability to insert or update a collection on any database.

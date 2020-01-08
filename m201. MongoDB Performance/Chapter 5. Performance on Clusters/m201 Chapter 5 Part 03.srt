@@ -1,0 +1,558 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.629
+Next, let's talk
+about frequency.
+
+3
+00:00:02.629 --> 00:00:04.170
+Not only is it
+important that we have
+
+4
+00:00:04.170 --> 00:00:07.131
+a large number of different
+values for our shard key,
+
+5
+00:00:07.131 --> 00:00:08.880
+but we also want to
+make sure that there's
+
+6
+00:00:08.880 --> 00:00:12.030
+an even distribution
+for each value.
+
+7
+00:00:12.030 --> 00:00:15.710
+If certain values come into our
+system more often than others,
+
+8
+00:00:15.710 --> 00:00:17.940
+then we won't have an
+even amount of load
+
+9
+00:00:17.940 --> 00:00:19.410
+across our cluster.
+
+10
+00:00:19.410 --> 00:00:21.450
+This limits the
+effectiveness of our ability
+
+11
+00:00:21.450 --> 00:00:24.950
+to scale the handling of
+incoming reads and writes.
+
+12
+00:00:24.950 --> 00:00:27.150
+If for example, we
+built an application
+
+13
+00:00:27.150 --> 00:00:29.010
+where the majority of
+the people using it
+
+14
+00:00:29.010 --> 00:00:31.350
+had the last name Brown,
+then the throughput
+
+15
+00:00:31.350 --> 00:00:34.350
+of our application would
+be constrained by the shard
+
+16
+00:00:34.350 --> 00:00:36.270
+containing those values.
+
+17
+00:00:36.270 --> 00:00:38.570
+We define this as a hot shard.
+
+18
+00:00:38.570 --> 00:00:40.380
+Furthermore, the
+chunks containing our
+
+19
+00:00:40.380 --> 00:00:44.100
+frequently appearing values
+would grow larger and larger.
+
+20
+00:00:44.100 --> 00:00:47.190
+Typically, when a chunk gets
+close to its maximum size,
+
+21
+00:00:47.190 --> 00:00:50.100
+MongoDB will then split
+it into two chunks.
+
+22
+00:00:50.100 --> 00:00:51.930
+However, if a chunk
+is created where
+
+23
+00:00:51.930 --> 00:00:54.310
+the lower and upper
+bounds are the same,
+
+24
+00:00:54.310 --> 00:00:57.310
+then that chunk is no longer
+eligible for splitting.
+
+25
+00:00:57.310 --> 00:00:59.710
+We call these jumbo chunks.
+
+26
+00:00:59.710 --> 00:01:02.650
+These reduce the effectiveness
+of horizontal scaling,
+
+27
+00:01:02.650 --> 00:01:06.176
+because we won't be able to move
+these chunks between shards.
+
+28
+00:01:06.176 --> 00:01:07.550
+The issue of uneven
+frequency can
+
+29
+00:01:07.550 --> 00:01:10.609
+be mitigated if we create
+a good compound shard key.
+
+30
+00:01:10.609 --> 00:01:12.150
+You want to make
+sure that the fields
+
+31
+00:01:12.150 --> 00:01:13.700
+at the beginning
+of your shard key
+
+32
+00:01:13.700 --> 00:01:15.950
+still have high cardinality.
+
+33
+00:01:15.950 --> 00:01:17.510
+But by compounding
+the key, we're
+
+34
+00:01:17.510 --> 00:01:19.400
+able to effectively
+distribute the frequency
+
+35
+00:01:19.400 --> 00:01:21.420
+of popular values.
+
+36
+00:01:21.420 --> 00:01:22.982
+And finally, we
+have rate of change.
+
+37
+00:01:22.982 --> 00:01:24.440
+Here, we're going
+to talk about how
+
+38
+00:01:24.440 --> 00:01:27.530
+our values change over time.
+
+39
+00:01:27.530 --> 00:01:30.850
+The key here is that we want to
+avoid monotonically increasing
+
+40
+00:01:30.850 --> 00:01:34.120
+or decreasing values
+in our shard key.
+
+41
+00:01:34.120 --> 00:01:37.210
+Monotonically means in a
+way that either is always
+
+42
+00:01:37.210 --> 00:01:40.270
+increasing or always decreasing.
+
+43
+00:01:40.270 --> 00:01:43.840
+The classic example
+of this is obectID.
+
+44
+00:01:43.840 --> 00:01:46.300
+Because of the way that
+objectID is designed,
+
+45
+00:01:46.300 --> 00:01:49.000
+new object IDs will
+always increase in value.
+
+46
+00:01:49.000 --> 00:01:50.440
+Keep this in mind
+if you're using
+
+47
+00:01:50.440 --> 00:01:53.970
+underscore IDs default
+data type, objectID,
+
+48
+00:01:53.970 --> 00:01:55.450
+as your shard key.
+
+49
+00:01:55.450 --> 00:01:57.820
+As you can see, when we have
+a monotonically increasing
+
+50
+00:01:57.820 --> 00:01:59.860
+shard key, all of
+our writes are going
+
+51
+00:01:59.860 --> 00:02:02.950
+to the same shard, the shard
+that contains the chunk where
+
+52
+00:02:02.950 --> 00:02:05.290
+the upper bound is max key.
+
+53
+00:02:05.290 --> 00:02:07.750
+As you can see, when we have
+a monotonically increasing
+
+54
+00:02:07.750 --> 00:02:11.710
+shard key, all of our writes
+are going to the same shard.
+
+55
+00:02:11.710 --> 00:02:14.200
+This is the shard that
+contains the upper bound
+
+56
+00:02:14.200 --> 00:02:18.846
+of max key, which is often
+referred to as the last shard.
+
+57
+00:02:18.846 --> 00:02:20.720
+If we were to have a
+monotonically decreasing
+
+58
+00:02:20.720 --> 00:02:22.970
+value, then all of
+our writes would
+
+59
+00:02:22.970 --> 00:02:24.560
+be coming in to this
+shard, the shard
+
+60
+00:02:24.560 --> 00:02:28.280
+where the lower bound is set
+to min key, our first shard.
+
+61
+00:02:28.280 --> 00:02:30.110
+Now, its OK to have
+a monotonically
+
+62
+00:02:30.110 --> 00:02:32.810
+increasing value in your
+shard key, as long as it's
+
+63
+00:02:32.810 --> 00:02:34.610
+not the first field.
+
+64
+00:02:34.610 --> 00:02:36.240
+Adding a monotonically
+increasing value
+
+65
+00:02:36.240 --> 00:02:39.020
+to the end of our shard key
+actually is a great idea,
+
+66
+00:02:39.020 --> 00:02:42.110
+because it increases the total
+cardinality of our shard key
+
+67
+00:02:42.110 --> 00:02:44.807
+since it's guaranteed
+to always be unique.
+
+68
+00:02:44.807 --> 00:02:46.640
+Now let's spend some
+time talking about bulk
+
+69
+00:02:46.640 --> 00:02:48.380
+writes in a shard cluster.
+
+70
+00:02:48.380 --> 00:02:50.292
+When we make bulk
+writes into MongoDB,
+
+71
+00:02:50.292 --> 00:02:52.250
+we have to specify whether
+we want those writes
+
+72
+00:02:52.250 --> 00:02:54.350
+to be ordered or unordered.
+
+73
+00:02:54.350 --> 00:02:56.460
+With an ordered bulk
+write, the server
+
+74
+00:02:56.460 --> 00:02:59.720
+is going to execute these
+operations one after another,
+
+75
+00:02:59.720 --> 00:03:01.850
+waiting for the last
+response to succeed
+
+76
+00:03:01.850 --> 00:03:04.130
+before executing the next.
+
+77
+00:03:04.130 --> 00:03:06.080
+If an operation
+fails, we immediately
+
+78
+00:03:06.080 --> 00:03:09.394
+stop the bulk insertion and
+report back to the client.
+
+79
+00:03:09.394 --> 00:03:11.060
+With an unordered
+bulk write, the server
+
+80
+00:03:11.060 --> 00:03:13.860
+can execute all these
+operations in parallel.
+
+81
+00:03:13.860 --> 00:03:15.959
+Now, with a sharded
+cluster, ordered
+
+82
+00:03:15.959 --> 00:03:17.750
+bulk writes can be an
+issue because we have
+
+83
+00:03:17.750 --> 00:03:20.000
+to wait for the last
+operation to complete
+
+84
+00:03:20.000 --> 00:03:23.800
+before we can execute the next.
+
+85
+00:03:23.800 --> 00:03:25.270
+While both replica
+sets and sharded
+
+86
+00:03:25.270 --> 00:03:27.790
+clusters would both
+work in this way,
+
+87
+00:03:27.790 --> 00:03:30.670
+the difference between the
+two is that in a replica set,
+
+88
+00:03:30.670 --> 00:03:32.920
+these operations will
+be processed entirely
+
+89
+00:03:32.920 --> 00:03:35.590
+in one machine, the primary.
+
+90
+00:03:35.590 --> 00:03:37.180
+While in a sharded
+cluster, we are
+
+91
+00:03:37.180 --> 00:03:40.490
+bound to the response
+time of each shard.
+
+92
+00:03:40.490 --> 00:03:42.190
+So with a sharded
+cluster, the latency
+
+93
+00:03:42.190 --> 00:03:45.610
+in between executing an
+operation and it's response
+
+94
+00:03:45.610 --> 00:03:47.950
+is increased, since the
+write is being performed
+
+95
+00:03:47.950 --> 00:03:49.570
+on a different machine.
+
+96
+00:03:49.570 --> 00:03:52.150
+On the other hand, with
+an unordered bulk write,
+
+97
+00:03:52.150 --> 00:03:53.890
+we can execute all
+of our operations
+
+98
+00:03:53.890 --> 00:03:56.470
+in parallel, maintaining
+the distributed benefits
+
+99
+00:03:56.470 --> 00:03:58.810
+that we get with
+a sharded cluster.
+
+100
+00:03:58.810 --> 00:04:00.880
+It's important to note
+that with a bulk write
+
+101
+00:04:00.880 --> 00:04:03.040
+in a sharded cluster,
+the Mongos is
+
+102
+00:04:03.040 --> 00:04:06.040
+going to need to deserialize
+these write operations
+
+103
+00:04:06.040 --> 00:04:07.960
+into the corresponding nodes.
+
+104
+00:04:07.960 --> 00:04:09.460
+This means that the
+mongos will have
+
+105
+00:04:09.460 --> 00:04:13.271
+to send each write operation
+to each individual shard.
+
+106
+00:04:13.271 --> 00:04:15.520
+And that should give you a
+good overview of increasing
+
+107
+00:04:15.520 --> 00:04:17.320
+your performance with sharding.
+
+108
+00:04:17.320 --> 00:04:19.285
+Let's recap what we've learned.
+
+109
+00:04:19.285 --> 00:04:21.910
+We talked about the differences
+between horizontal and vertical
+
+110
+00:04:21.910 --> 00:04:23.200
+scaling.
+
+111
+00:04:23.200 --> 00:04:24.850
+We also discussed
+some important rules
+
+112
+00:04:24.850 --> 00:04:27.140
+to keep in mind when you're
+designing a shard key,
+
+113
+00:04:27.140 --> 00:04:30.040
+as it's the most important
+part of sharding.
+
+114
+00:04:30.040 --> 00:04:32.650
+And then finally, we discussed
+bulk inserts and some
+
+115
+00:04:32.650 --> 00:04:34.120
+of the differences
+that you'll see
+
+116
+00:04:34.120 --> 00:04:37.080
+when doing bulk inserts
+on a sharded cluster.

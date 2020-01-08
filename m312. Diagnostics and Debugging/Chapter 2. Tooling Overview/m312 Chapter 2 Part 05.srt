@@ -1,0 +1,583 @@
+
+1
+00:00:00.000 --> 00:00:00.120
+
+
+2
+00:00:00.120 --> 00:00:01.650
+Asserts is a
+document that reports
+
+3
+00:00:01.650 --> 00:00:03.960
+the number of assertion
+errors raised since the server
+
+4
+00:00:03.960 --> 00:00:06.290
+process started.
+
+5
+00:00:06.290 --> 00:00:08.332
+Asserts are relatively
+rare, and for that reason,
+
+6
+00:00:08.332 --> 00:00:10.040
+we want to keep an
+eye on these counters.
+
+7
+00:00:10.040 --> 00:00:11.540
+Because when they
+start going up,
+
+8
+00:00:11.540 --> 00:00:14.690
+they're signaling that
+something has gone wrong.
+
+9
+00:00:14.690 --> 00:00:16.850
+The server is counting
+both internal asserts
+
+10
+00:00:16.850 --> 00:00:18.080
+and user asserts.
+
+11
+00:00:18.080 --> 00:00:20.150
+We have three internal asserts--
+
+12
+00:00:20.150 --> 00:00:23.660
+regular, warning, and msg,
+or message, all of which
+
+13
+00:00:23.660 --> 00:00:26.870
+are internal to
+the server process.
+
+14
+00:00:26.870 --> 00:00:28.820
+Operations that
+can raise asserts
+
+15
+00:00:28.820 --> 00:00:32.630
+like these are insert conflicts
+and back-off operations.
+
+16
+00:00:32.630 --> 00:00:35.120
+All of these assert operations
+get noted in the server
+
+17
+00:00:35.120 --> 00:00:36.980
+logs as well.
+
+18
+00:00:36.980 --> 00:00:39.020
+User asserts are
+the ones that we'll
+
+19
+00:00:39.020 --> 00:00:41.070
+be focusing on in more detail.
+
+20
+00:00:41.070 --> 00:00:44.000
+These asserts are caused
+by a system configuration
+
+21
+00:00:44.000 --> 00:00:47.350
+or application-driven operation.
+
+22
+00:00:47.350 --> 00:00:48.760
+This can capture a lot.
+
+23
+00:00:48.760 --> 00:00:51.310
+If we try to insert a
+document with a duplicate key
+
+24
+00:00:51.310 --> 00:00:53.740
+and a unique index,
+it goes up by one.
+
+25
+00:00:53.740 --> 00:00:59.520
+If the instance runs out of disk
+space, It also goes up by one.
+
+26
+00:00:59.520 --> 00:01:02.580
+In this example, if we try to
+insert two different documents
+
+27
+00:01:02.580 --> 00:01:06.420
+with the same underscore ID,
+we get a duplicate key error.
+
+28
+00:01:06.420 --> 00:01:08.490
+As you can see, the
+server increments
+
+29
+00:01:08.490 --> 00:01:10.819
+the user asserts counter.
+
+30
+00:01:10.819 --> 00:01:12.360
+These counters will
+be important when
+
+31
+00:01:12.360 --> 00:01:14.520
+we want to analyze
+provisioning and configuration
+
+32
+00:01:14.520 --> 00:01:19.590
+issues of both the application
+and your MongoDB cluster.
+
+33
+00:01:19.590 --> 00:01:22.380
+Locks is a relatively
+large document,
+
+34
+00:01:22.380 --> 00:01:24.730
+although not too large.
+
+35
+00:01:24.730 --> 00:01:27.170
+It shows the different
+locks on the database.
+
+36
+00:01:27.170 --> 00:01:30.040
+Now, there are a few different
+granularities for the locks--
+
+37
+00:01:30.040 --> 00:01:34.360
+global, database, collection,
+metadata, and oplog.
+
+38
+00:01:34.360 --> 00:01:37.150
+And these logs can be
+of different types.
+
+39
+00:01:37.150 --> 00:01:41.860
+Big R and big W are for shared
+lock and exclusive lock,
+
+40
+00:01:41.860 --> 00:01:45.660
+respectively, while
+little r and little w
+
+41
+00:01:45.660 --> 00:01:49.530
+are intent shared lock
+and intent exclusive lock,
+
+42
+00:01:49.530 --> 00:01:51.310
+respectively.
+
+43
+00:01:51.310 --> 00:01:53.890
+The r and w come from the
+days before WiredTiger
+
+44
+00:01:53.890 --> 00:01:57.430
+when we didn't have the
+currency protocols at all.
+
+45
+00:01:57.430 --> 00:02:00.490
+Right locks were exclusive,
+while read locks were shared,
+
+46
+00:02:00.490 --> 00:02:03.190
+hence the r and w notations.
+
+47
+00:02:03.190 --> 00:02:05.140
+If all of this is new
+to you, don't worry.
+
+48
+00:02:05.140 --> 00:02:08.050
+We'll dive into more detail on
+the impact and causes for locks
+
+49
+00:02:08.050 --> 00:02:09.530
+later on.
+
+50
+00:02:09.530 --> 00:02:12.560
+Server status also provides
+the operation counters.
+
+51
+00:02:12.560 --> 00:02:14.660
+Up counters gives us the
+information regarding
+
+52
+00:02:14.660 --> 00:02:17.420
+the number of inserts, queries,
+updates, deletes, getMores,
+
+53
+00:02:17.420 --> 00:02:19.780
+and commands acknowledged
+by the instance.
+
+54
+00:02:19.780 --> 00:02:22.580
+Opcounters.repl will give us
+the same types of counters,
+
+55
+00:02:22.580 --> 00:02:25.720
+but as a result of the
+replication process.
+
+56
+00:02:25.720 --> 00:02:29.450
+Op latencies provide information
+on operation latencies
+
+57
+00:02:29.450 --> 00:02:31.910
+for the instance
+globally in microseconds.
+
+58
+00:02:31.910 --> 00:02:35.660
+So once you hit seven digits,
+that's one second total.
+
+59
+00:02:35.660 --> 00:02:40.490
+The WiredTiger information
+is a huge document.
+
+60
+00:02:40.490 --> 00:02:42.290
+Most of these
+statistics are only
+
+61
+00:02:42.290 --> 00:02:45.020
+relevant for MongoDB internal
+utilization of the storage
+
+62
+00:02:45.020 --> 00:02:48.060
+engine, so we don't
+care about most of them.
+
+63
+00:02:48.060 --> 00:02:51.080
+But there are a few interesting
+ones worth mentioning.
+
+64
+00:02:51.080 --> 00:02:53.510
+Scrolling through, we
+have this cache field,
+
+65
+00:02:53.510 --> 00:02:56.870
+and within that, maximum
+bytes configured.
+
+66
+00:02:56.870 --> 00:02:59.780
+This is a value that indicates
+the size of the WiredTiger
+
+67
+00:02:59.780 --> 00:03:01.474
+cache.
+
+68
+00:03:01.474 --> 00:03:03.640
+"Bytes currently in the
+cache" is an interesting one
+
+69
+00:03:03.640 --> 00:03:08.050
+that tracks what we've got
+in the cache currently.
+
+70
+00:03:08.050 --> 00:03:11.865
+Cache.EvectionCallsToGetaPage
+and cache.EvictionCa
+
+71
+00:03:11.865 --> 00:03:14.780
+llsToGetaPageFoundQueueEmpty
+are an interesting pair.
+
+72
+00:03:14.780 --> 00:03:17.600
+These give us an idea of
+how much work WiredTiger is
+
+73
+00:03:17.600 --> 00:03:22.010
+doing to find pages, and to find
+pages to evict from the cache.
+
+74
+00:03:22.010 --> 00:03:25.250
+I just restarted this server, so
+the numbers are zero currently.
+
+75
+00:03:25.250 --> 00:03:26.960
+When these numbers
+start going up fast,
+
+76
+00:03:26.960 --> 00:03:29.510
+you know that your working
+set is outgrowing your cache.
+
+77
+00:03:29.510 --> 00:03:31.820
+It might be time to look
+at optimizing your schema,
+
+78
+00:03:31.820 --> 00:03:34.310
+scaling up, or
+possibly scaling out.
+
+79
+00:03:34.310 --> 00:03:36.380
+I haven't been hammering
+this server very hard,
+
+80
+00:03:36.380 --> 00:03:38.000
+so they're still at zero.
+
+81
+00:03:38.000 --> 00:03:39.759
+The memory section,
+mem, allows us
+
+82
+00:03:39.759 --> 00:03:41.300
+to understand what
+the current memory
+
+83
+00:03:41.300 --> 00:03:43.635
+utilization of the server is.
+
+84
+00:03:43.635 --> 00:03:46.010
+We'll get information on the
+bit architecture, the amount
+
+85
+00:03:46.010 --> 00:03:48.380
+of allocated, resident,
+and virtual memory,
+
+86
+00:03:48.380 --> 00:03:52.070
+and in the case of using mmapv1,
+will get the amount of mapped
+
+87
+00:03:52.070 --> 00:03:53.852
+and mapped with journal memory.
+
+88
+00:03:53.852 --> 00:03:56.060
+These don't apply if you're
+using the default storage
+
+89
+00:03:56.060 --> 00:04:00.100
+engine, so they'll stay
+at zero on this server.
+
+90
+00:04:00.100 --> 00:04:01.506
+Metrics is another big one.
+
+91
+00:04:01.506 --> 00:04:03.130
+It gives us a lot of
+statistics that'll
+
+92
+00:04:03.130 --> 00:04:06.320
+tell us relevant
+information for debugging.
+
+93
+00:04:06.320 --> 00:04:08.530
+One interesting field
+it has is the breakdown
+
+94
+00:04:08.530 --> 00:04:10.630
+of the types of commands
+received by the instance,
+
+95
+00:04:10.630 --> 00:04:13.450
+such as cursors and
+document counters.
+
+96
+00:04:13.450 --> 00:04:16.300
+Here we can see the number
+of finds, getLog, getMore, et
+
+97
+00:04:16.300 --> 00:04:17.589
+cetera.
+
+98
+00:04:17.589 --> 00:04:20.712
+Here we have metrics.documents
+and op counters.
+
+99
+00:04:20.712 --> 00:04:22.420
+Let's talk about what
+they mean, and what
+
+100
+00:04:22.420 --> 00:04:24.190
+the difference between them is.
+
+101
+00:04:24.190 --> 00:04:27.400
+Opcounters accounts for
+the number of operations,
+
+102
+00:04:27.400 --> 00:04:29.760
+regardless of the number
+of documents affected,
+
+103
+00:04:29.760 --> 00:04:33.520
+but metrics.documents keeps
+track of the actual documents
+
+104
+00:04:33.520 --> 00:04:35.800
+affected by those operations.
+
+105
+00:04:35.800 --> 00:04:40.040
+A simple example would be
+an update of many documents.
+
+106
+00:04:40.040 --> 00:04:42.290
+This will be counted as a
+single update operation,
+
+107
+00:04:42.290 --> 00:04:43.850
+but the number of
+documents updated
+
+108
+00:04:43.850 --> 00:04:47.100
+would be the number
+of affected documents.
+
+109
+00:04:47.100 --> 00:04:51.540
+When I insert documents, my
+opcounters' insert counter
+
+110
+00:04:51.540 --> 00:04:53.040
+goes up by one per document.
+
+111
+00:04:53.040 --> 00:04:56.160
+I inserted five documents,
+it went up by five.
+
+112
+00:04:56.160 --> 00:04:59.400
+Metrics.document.inserted
+Inserted went up by five.
+
+113
+00:04:59.400 --> 00:05:02.880
+This is because each
+insert is one command.
+
+114
+00:05:02.880 --> 00:05:05.490
+On the other hand, when
+it comes to updates,
+
+115
+00:05:05.490 --> 00:05:09.630
+opcounters only go up
+one per update command,
+
+116
+00:05:09.630 --> 00:05:12.660
+while the
+metrics.document.updated
+
+117
+00:05:12.660 --> 00:05:16.200
+goes up by one per
+document affected.
+
+118
+00:05:16.200 --> 00:05:18.930
+OK, so that's a quick
+overview of server status.
+
+119
+00:05:18.930 --> 00:05:21.490
+We'll be making use of all of
+this information going forward.
+
+120
+00:05:21.490 --> 00:05:22.990
+But for now, you
+should have a sense
+
+121
+00:05:22.990 --> 00:05:26.330
+of the range of what's
+available, and how to find it.

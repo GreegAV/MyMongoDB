@@ -1,0 +1,161 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.724
+Hello and welcome to Chapter 2
+of the M220 Developer Course.
+
+3
+00:00:03.724 --> 00:00:05.640
+I hope you've had success
+developing the mflix
+
+4
+00:00:05.640 --> 00:00:07.824
+application into a
+MongoDB database client.
+
+5
+00:00:07.824 --> 00:00:09.240
+Setting up the
+driver to read data
+
+6
+00:00:09.240 --> 00:00:11.370
+from Mongo into your
+application is fundamental.
+
+7
+00:00:11.370 --> 00:00:13.578
+And I hope you've enjoyed
+building that crucial piece
+
+8
+00:00:13.578 --> 00:00:14.670
+of infrastructure.
+
+9
+00:00:14.670 --> 00:00:16.920
+Now that we do have a
+connection from mflix to Mongo,
+
+10
+00:00:16.920 --> 00:00:18.628
+we can start really
+leveraging the driver
+
+11
+00:00:18.628 --> 00:00:20.805
+to create a more functional
+and durable backend.
+
+12
+00:00:20.805 --> 00:00:23.580
+In this chapter, we'll learn
+why some complex queries are not
+
+13
+00:00:23.580 --> 00:00:25.620
+possible with the
+query language alone
+
+14
+00:00:25.620 --> 00:00:27.780
+and how the aggregation
+framework can actually
+
+15
+00:00:27.780 --> 00:00:29.760
+help us build these queries.
+
+16
+00:00:29.760 --> 00:00:32.189
+We'll start using the driver
+to write data to MongoDB.
+
+17
+00:00:32.189 --> 00:00:34.026
+But not all those writes
+are created equal.
+
+18
+00:00:34.026 --> 00:00:35.400
+We'll explore the
+nature of these
+
+19
+00:00:35.400 --> 00:00:37.900
+writes to determine which are
+critical to our application
+
+20
+00:00:37.900 --> 00:00:39.358
+and then use the
+driver to increase
+
+21
+00:00:39.358 --> 00:00:41.200
+the durability of those writes.
+
+22
+00:00:41.200 --> 00:00:44.040
+As far as mflix is concerned,
+the application's functionality
+
+23
+00:00:44.040 --> 00:00:46.050
+will grow immensely
+in this chapter.
+
+24
+00:00:46.050 --> 00:00:47.910
+New users will be
+able to join the site,
+
+25
+00:00:47.910 --> 00:00:49.770
+update their preferences,
+and leave reviews
+
+26
+00:00:49.770 --> 00:00:51.590
+on the movies they
+feel strongly about.
+
+27
+00:00:51.590 --> 00:00:54.230
+We'll even allow users to edit
+or remove their own reviews,
+
+28
+00:00:54.230 --> 00:00:56.550
+but make sure they can't
+mess with anyone else's.
+
+29
+00:00:56.550 --> 00:00:58.500
+All told, this is
+a dynamite chapter
+
+30
+00:00:58.500 --> 00:01:01.657
+designed to make you comfortable
+writing mflix data to Mongo.
+
+31
+00:01:01.657 --> 00:01:03.240
+At the end of the
+chapter, mflix users
+
+32
+00:01:03.240 --> 00:01:05.950
+should be able to not only read
+about their favorite movies,
+
+33
+00:01:05.950 --> 00:01:08.720
+but actually create a
+community on the site.

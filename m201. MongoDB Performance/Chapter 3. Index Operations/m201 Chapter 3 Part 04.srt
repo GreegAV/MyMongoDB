@@ -1,0 +1,210 @@
+
+1
+00:00:00.000 --> 00:00:00.550
+
+
+2
+00:00:00.550 --> 00:00:03.080
+In this lesson, we're going
+to discuss how we can force
+
+3
+00:00:03.080 --> 00:00:05.164
+indexes using the hint method.
+
+4
+00:00:05.164 --> 00:00:06.830
+And specifically,
+we're going to discuss
+
+5
+00:00:06.830 --> 00:00:11.040
+how we can force a query
+to use a particular index,
+
+6
+00:00:11.040 --> 00:00:14.180
+therefore overriding MongoDB's
+default index selection
+
+7
+00:00:14.180 --> 00:00:16.309
+by using the hint method.
+
+8
+00:00:16.309 --> 00:00:18.020
+Throughout this
+course, we spent a lot
+
+9
+00:00:18.020 --> 00:00:22.250
+of time discussing how to design
+the optimal index for a given
+
+10
+00:00:22.250 --> 00:00:23.870
+query.
+
+11
+00:00:23.870 --> 00:00:26.070
+Unfortunately, for
+one reason or another,
+
+12
+00:00:26.070 --> 00:00:28.130
+the query optimizer
+might not always
+
+13
+00:00:28.130 --> 00:00:33.110
+choose the index that we'd like
+to be chosen for a given query.
+
+14
+00:00:33.110 --> 00:00:38.450
+In this case, maybe this
+query uses the name age index
+
+15
+00:00:38.450 --> 00:00:40.580
+instead of the name
+zip code index,
+
+16
+00:00:40.580 --> 00:00:43.190
+like we would like it to.
+
+17
+00:00:43.190 --> 00:00:45.410
+Fortunately for
+us though, MongoDB
+
+18
+00:00:45.410 --> 00:00:48.420
+provides an easy way to
+override the query optimizer's
+
+19
+00:00:48.420 --> 00:00:49.530
+selection.
+
+20
+00:00:49.530 --> 00:00:52.470
+And this of course,
+is done with hint.
+
+21
+00:00:52.470 --> 00:00:55.830
+In this example, I'm appending
+the hint method to my query,
+
+22
+00:00:55.830 --> 00:00:58.250
+so that we're forcing
+the usage of name
+
+23
+00:00:58.250 --> 00:01:00.470
+ascending zip code ascending.
+
+24
+00:01:00.470 --> 00:01:02.810
+And here, I am using
+the indexes shape
+
+25
+00:01:02.810 --> 00:01:05.750
+to tell hint what
+index we want to use.
+
+26
+00:01:05.750 --> 00:01:08.060
+Other than using the
+shape, we can also
+
+27
+00:01:08.060 --> 00:01:11.360
+just pass the actual
+name of the index
+
+28
+00:01:11.360 --> 00:01:14.900
+to hint, to let it know
+what index we want to use.
+
+29
+00:01:14.900 --> 00:01:16.760
+And that's pretty
+much how hint works.
+
+30
+00:01:16.760 --> 00:01:20.120
+I do want to point out that you
+should use hint with caution.
+
+31
+00:01:20.120 --> 00:01:22.250
+MongoDB's query
+optimizer generally
+
+32
+00:01:22.250 --> 00:01:25.940
+does a pretty good job of
+selecting the correct index
+
+33
+00:01:25.940 --> 00:01:27.620
+for a given query.
+
+34
+00:01:27.620 --> 00:01:29.630
+The times when it does
+fail to select the best
+
+35
+00:01:29.630 --> 00:01:31.850
+index for a given
+query is generally
+
+36
+00:01:31.850 --> 00:01:34.580
+when there are a lot of
+indexes on your collection.
+
+37
+00:01:34.580 --> 00:01:37.010
+And in those cases,
+it's probably better
+
+38
+00:01:37.010 --> 00:01:39.560
+to look at index
+utilization and determine
+
+39
+00:01:39.560 --> 00:01:43.160
+if you have superfluous indexes
+that can be removed rather
+
+40
+00:01:43.160 --> 00:01:44.720
+than using the hint method.
+
+41
+00:01:44.720 --> 00:01:46.970
+So to quickly recap what
+we learned in this lesson,
+
+42
+00:01:46.970 --> 00:01:49.310
+we discussed how we
+can use the hint method
+
+43
+00:01:49.310 --> 00:01:51.260
+to override MongoDB's
+default index
+
+44
+00:01:51.260 --> 00:01:53.560
+selection for our queries.

@@ -1,0 +1,71 @@
+Collations allow users to specify language specific rules for string comparison, such as rules for letter, case, and accent marks.
+
+A collation is defined in MongoDB by the following options.
+
+Locale determines the ICU supported locale for such a collation.
+
+And then we have caseLevel, caseFirst, strength, numericOrdering, alternate, maxVariable, and backwards.
+
+These specific options and what they represent are out of scope.
+
+However, you should be aware that there are multiple different settings that collations allow.
+
+Now, collations can be defined at several different levels.
+
+We can define a collation for a collection, which means that all queries and indexes created in such collection will be using that particular collation.
+
+In this case, we have a collation for the Portuguese language on foreign_text collection.
+
+I'm going to insert this documents on my recently created collection using the Portuguese collation for that effect.
+
+Once I insert the document, I can [INAUDIBLE] find on that particular collection.
+
+After it executes the explain plan on this query, I can see that the collation used for this particular query will be the Portuguese collation.
+
+We'll have a winningPlan, where we will use a indexed query using that collation for the results.
+
+We can use collations for specific requests, like queries and aggregations, for example, where we're defining a different collation than the one used and defined for the particular collection that supports those find requests or aggregates.
+
+That is totally possible, and we can even specify different collations for our indexes.
+
+This way, we can create an index or name that overrides the default collation or any collection level defined collations.
+
+So in this case, we have foreign_text being defined as the collation of Portuguese, but we are creating the index using a collation using the Italian language.
+
+If we execute a query using that particular field, you might expect that we'll be using this particular index here.
+
+Now, there's a small caveat.
+
+First, we enable the use of this index on this particular query.
+
+So we have an index on name, and we are querying on that same field.
+
+First, to use that index, the query must match the collation of the index, which in this case is Italian.
+
+That means that if we run this query without specifying or overriding the underlying defined collection collation, we will not be using this index, because it will not match the required collation.
+
+If you run this query, we will see that, first of all, we are using a collection scan, meaning that we are not using the index that we recently created.
+
+And the collation used to satisfy this query is the underlying collation of our collection.
+
+First, to use that index, our query should specify the matching collation for that index.
+
+If we do so, once we run the query, we can see that we are, in fact, having an index scan that matches the index pattern that we want using the index that we specified, since the collation matches the index collation.
+
+Being able to correctly match and sort text space on a given locale is mandatory for many use cases.
+
+So collations allow that correctness in terms of sorting and matching on different locales.
+
+Now, we're testing collations offer a marginal performance impact and should most definitely be used for correctness.
+
+Another benefit of introducing collations is the ability to support case insensitive indexes.
+
+To enable these, we can simply define a collection with a given locale on our collation and setting the strength of that collation to 1, which offers primary level of comparison, ignoring case and diacritics.
+
+If we do so, and if we insert a few documents that only vary on the case, for example, if we express a sort query, ascending on name, we will see that we have a particular ordering.
+
+If we execute the same query but by changing the order of our sort, now descending, we will get the exact same set of results.
+
+This means that regardless of the accent, case, or even diacritics, this particular collation defined for this collection will allow us to have case insensitive queries, and therefore, indexes as well.
+
+And that's how collations work in MongoDB.

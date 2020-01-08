@@ -1,0 +1,546 @@
+
+1
+00:00:00.000 --> 00:00:00.910
+
+
+2
+00:00:00.910 --> 00:00:02.020
+Hello.
+
+3
+00:00:02.020 --> 00:00:03.430
+I'm [? Astiya ?] Comski.
+
+4
+00:00:03.430 --> 00:00:06.760
+I'm going to talk about
+updates using aggregation
+
+5
+00:00:06.760 --> 00:00:09.460
+pipeline, which is new in 4.2.
+
+6
+00:00:09.460 --> 00:00:11.830
+MongoDB 4.2 added
+a powerful ability
+
+7
+00:00:11.830 --> 00:00:14.380
+to use aggregation
+pipeline in both update
+
+8
+00:00:14.380 --> 00:00:17.510
+and find and modify commands.
+
+9
+00:00:17.510 --> 00:00:21.050
+Let's quickly review what
+an update statement is.
+
+10
+00:00:21.050 --> 00:00:23.470
+And update operation
+identifies the document
+
+11
+00:00:23.470 --> 00:00:26.560
+that should be modified and
+specifies the modification
+
+12
+00:00:26.560 --> 00:00:28.600
+to be performed on it.
+
+13
+00:00:28.600 --> 00:00:31.720
+The filter or query
+is the part that
+
+14
+00:00:31.720 --> 00:00:34.960
+specifies which document
+should be updated.
+
+15
+00:00:34.960 --> 00:00:39.210
+This update portion
+specifies how the documents
+
+16
+00:00:39.210 --> 00:00:40.772
+should be transformed.
+
+17
+00:00:40.772 --> 00:00:42.730
+And then you have access
+to a number of options
+
+18
+00:00:42.730 --> 00:00:46.210
+to specify whether an
+upsert should be performed
+
+19
+00:00:46.210 --> 00:00:49.480
+or whether it should be a
+multi-update, et cetera.
+
+20
+00:00:49.480 --> 00:00:52.720
+The big change in 4.2 is
+just to the update section.
+
+21
+00:00:52.720 --> 00:00:56.650
+So query and options
+are unchanged.
+
+22
+00:00:56.650 --> 00:00:59.710
+Now, remember, update takes
+the form of a document,
+
+23
+00:00:59.710 --> 00:01:02.660
+and you can have
+two different types.
+
+24
+00:01:02.660 --> 00:01:06.820
+One is where the top level
+fields are modifiers.
+
+25
+00:01:06.820 --> 00:01:10.870
+Those can be things like
+set, ink, unset, push, add
+
+26
+00:01:10.870 --> 00:01:13.090
+to set, et cetera.
+
+27
+00:01:13.090 --> 00:01:15.490
+Those indicate
+which fields should
+
+28
+00:01:15.490 --> 00:01:18.310
+be transformed in what ways.
+
+29
+00:01:18.310 --> 00:01:21.010
+A second type of
+update is one where
+
+30
+00:01:21.010 --> 00:01:23.350
+you specify the
+full document that's
+
+31
+00:01:23.350 --> 00:01:25.990
+going to replace the
+existing document,
+
+32
+00:01:25.990 --> 00:01:29.640
+and that's called the
+replacement type update.
+
+33
+00:01:29.640 --> 00:01:32.740
+One of the shortcomings
+is that there is no way
+
+34
+00:01:32.740 --> 00:01:36.250
+to reference fields that
+are currently available
+
+35
+00:01:36.250 --> 00:01:39.580
+in the existing document,
+other than in a limited way
+
+36
+00:01:39.580 --> 00:01:43.600
+such as ink, which lets you
+increment an existing value
+
+37
+00:01:43.600 --> 00:01:45.700
+and you get to
+specify by how much
+
+38
+00:01:45.700 --> 00:01:49.030
+or push to an existing
+array, et cetera.
+
+39
+00:01:49.030 --> 00:01:54.220
+The big change in 4.2 is now you
+will be able to specify either
+
+40
+00:01:54.220 --> 00:01:58.250
+a document for the update
+portion, in which case,
+
+41
+00:01:58.250 --> 00:02:03.340
+the behavior will be completely
+unchanged from 4.0 or earlier,
+
+42
+00:02:03.340 --> 00:02:07.210
+or you can specify an array.
+
+43
+00:02:07.210 --> 00:02:08.710
+And that's new.
+
+44
+00:02:08.710 --> 00:02:12.190
+The aggregation pipeline will
+specify what transformation
+
+45
+00:02:12.190 --> 00:02:14.380
+should be applied to the
+existing document that's
+
+46
+00:02:14.380 --> 00:02:16.030
+being updated.
+
+47
+00:02:16.030 --> 00:02:17.830
+This means that you
+will have full access
+
+48
+00:02:17.830 --> 00:02:21.130
+to the current values of all
+the fields in the document,
+
+49
+00:02:21.130 --> 00:02:24.550
+and to all aggregation
+expressions and operators
+
+50
+00:02:24.550 --> 00:02:28.630
+to manipulate the document
+into the result you want.
+
+51
+00:02:28.630 --> 00:02:31.270
+Now, I said you can only
+apply transformations
+
+52
+00:02:31.270 --> 00:02:34.060
+to the document being updated,
+so you don't have access
+
+53
+00:02:34.060 --> 00:02:37.720
+to all of the aggregation
+stages, only the ones that
+
+54
+00:02:37.720 --> 00:02:41.980
+take as input a single document
+and output a single document.
+
+55
+00:02:41.980 --> 00:02:44.500
+So that would be
+$addFields, which
+
+56
+00:02:44.500 --> 00:02:47.800
+adds new fields to
+the existing document,
+
+57
+00:02:47.800 --> 00:02:50.390
+or if you specify a field
+name that already exists,
+
+58
+00:02:50.390 --> 00:02:52.390
+it will overwrite
+that one field.
+
+59
+00:02:52.390 --> 00:02:55.450
+Project an exclusion
+mode, right?
+
+60
+00:02:55.450 --> 00:02:59.890
+Project will take the names
+of fields followed by zero
+
+61
+00:02:59.890 --> 00:03:05.440
+or false to exclude, or unset,
+from a current document,
+
+62
+00:03:05.440 --> 00:03:07.870
+and replace route,
+which takes new route in
+
+63
+00:03:07.870 --> 00:03:11.440
+and then a specification
+for the new full document.
+
+64
+00:03:11.440 --> 00:03:14.860
+We created aliases for these
+three, which functionally
+
+65
+00:03:14.860 --> 00:03:18.760
+are exactly the same, but maybe
+seem more similar to operations
+
+66
+00:03:18.760 --> 00:03:21.130
+that already exist in update.
+
+67
+00:03:21.130 --> 00:03:24.490
+$set is just like
+$addFields, unset
+
+68
+00:03:24.490 --> 00:03:27.700
+takes an array of fields
+you want to unset,
+
+69
+00:03:27.700 --> 00:03:30.310
+that's just like
+exclusion project,
+
+70
+00:03:30.310 --> 00:03:32.470
+and $replaceWith
+takes the document
+
+71
+00:03:32.470 --> 00:03:35.050
+that will be the
+replacement document,
+
+72
+00:03:35.050 --> 00:03:39.320
+the complete specification
+of it, for the new update.
+
+73
+00:03:39.320 --> 00:03:41.530
+Let's look at a
+specific example.
+
+74
+00:03:41.530 --> 00:03:43.900
+First, let's consider
+how an example we already
+
+75
+00:03:43.900 --> 00:03:46.060
+performed in
+regular syntax might
+
+76
+00:03:46.060 --> 00:03:49.600
+look like when we switch
+to new pipeline syntax.
+
+77
+00:03:49.600 --> 00:03:50.800
+Here, we have an update.
+
+78
+00:03:50.800 --> 00:03:54.520
+We're specifying
+document with _id:1.
+
+79
+00:03:54.520 --> 00:03:58.280
+We're specifying that we
+should increment field a by 1,
+
+80
+00:03:58.280 --> 00:04:00.010
+then we're specifying
+upsert true, which
+
+81
+00:04:00.010 --> 00:04:03.820
+means if the document doesn't
+exist, it will be created.
+
+82
+00:04:03.820 --> 00:04:06.940
+Let's see what effect that
+has on some basic document
+
+83
+00:04:06.940 --> 00:04:08.680
+examples.
+
+84
+00:04:08.680 --> 00:04:11.500
+If the document exist
+without field a,
+
+85
+00:04:11.500 --> 00:04:16.329
+a will be set to 1 as if
+it existed would value 0.
+
+86
+00:04:16.329 --> 00:04:21.399
+If it was some number like 10
+becomes 11, 100 becomes 101.
+
+87
+00:04:21.399 --> 00:04:26.200
+If the document didn't exist,
+it will get created with _id:1
+
+88
+00:04:26.200 --> 00:04:29.050
+and a will be set to 1, just
+like in the example where
+
+89
+00:04:29.050 --> 00:04:30.490
+a didn't exist.
+
+90
+00:04:30.490 --> 00:04:34.000
+And if the document exists,
+but a is not a number,
+
+91
+00:04:34.000 --> 00:04:36.790
+you will get an error
+because we cannot increment
+
+92
+00:04:36.790 --> 00:04:39.950
+the non-numeric
+value by a number.
+
+93
+00:04:39.950 --> 00:04:43.180
+Now, let's write this using
+the aggregation pipeline.
+
+94
+00:04:43.180 --> 00:04:46.120
+Most importantly, you can
+see that these brackets
+
+95
+00:04:46.120 --> 00:04:48.520
+in the second argument
+indicate that this
+
+96
+00:04:48.520 --> 00:04:51.500
+is an array,
+therefore, a pipeline.
+
+97
+00:04:51.500 --> 00:04:55.720
+And now we do a $set, which
+is, remember, just $addFields.
+
+98
+00:04:55.720 --> 00:05:00.380
+We said a to be the sum of
+current value of a and 1.
+
+99
+00:05:00.380 --> 00:05:02.930
+The upsert option is still that.
+
+100
+00:05:02.930 --> 00:05:05.870
+We now expect to see
+pretty much the same thing.
+
+101
+00:05:05.870 --> 00:05:10.790
+This is because sum, if a field
+doesn't exist, just ignores it.
+
+102
+00:05:10.790 --> 00:05:14.780
+If it was 10 then we
+get 11, 100 we get 101.
+
+103
+00:05:14.780 --> 00:05:17.570
+If the document didn't exist,
+again, it's just like a being
+
+104
+00:05:17.570 --> 00:05:19.230
+missing.
+
+105
+00:05:19.230 --> 00:05:20.960
+The only difference
+is when a was not
+
+106
+00:05:20.960 --> 00:05:23.450
+a number, because
+in aggregation $sum
+
+107
+00:05:23.450 --> 00:05:28.130
+ignores non-numeric fields,
+we will actually get a 1 here.
+
+108
+00:05:28.130 --> 00:05:30.380
+If we wanted to use
+aggregation, but preserved
+
+109
+00:05:30.380 --> 00:05:34.580
+the behavior of non-numeric
+fields giving an error,
+
+110
+00:05:34.580 --> 00:05:38.390
+we would use add instead
+of sum, and then we'll
+
+111
+00:05:38.390 --> 00:05:41.720
+get an error that says that $add
+only supports numeric things
+
+112
+00:05:41.720 --> 00:05:42.440
+or date types.
+
+113
+00:05:42.440 --> 00:05:45.730
+Things that can be
+added, not strings.

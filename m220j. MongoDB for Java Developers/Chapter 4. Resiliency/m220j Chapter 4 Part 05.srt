@@ -1,0 +1,437 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.900
+In this lesson, we will cover
+change streams, a process that
+
+3
+00:00:03.900 --> 00:00:06.720
+allows applications to
+access real-time data
+
+4
+00:00:06.720 --> 00:00:10.510
+changes without the complexity
+and risk of tailing the oplog.
+
+5
+00:00:10.510 --> 00:00:13.860
+With change streams, you can
+watch all the write operations,
+
+6
+00:00:13.860 --> 00:00:16.050
+or select a more
+precise set of changes
+
+7
+00:00:16.050 --> 00:00:19.110
+that you're looking to
+track in your database.
+
+8
+00:00:19.110 --> 00:00:21.450
+For this lesson, we're
+going to make changes
+
+9
+00:00:21.450 --> 00:00:23.190
+to the comments collection.
+
+10
+00:00:23.190 --> 00:00:25.860
+Before we start watching
+changes in our namespaces,
+
+11
+00:00:25.860 --> 00:00:27.920
+we're going to set up
+a thread that writes
+
+12
+00:00:27.920 --> 00:00:30.540
+some data into our database.
+
+13
+00:00:30.540 --> 00:00:33.150
+First, if we want to
+track the write changes
+
+14
+00:00:33.150 --> 00:00:36.370
+to the collection, we
+can use a watch method.
+
+15
+00:00:36.370 --> 00:00:38.850
+This method activates a
+change stream response,
+
+16
+00:00:38.850 --> 00:00:40.950
+which has the following
+fields in it--
+
+17
+00:00:40.950 --> 00:00:44.220
+operation type that can have
+any of the write operation
+
+18
+00:00:44.220 --> 00:00:49.410
+values, which includes insert,
+update, delete, and replace.
+
+19
+00:00:49.410 --> 00:00:52.650
+Then the document that this
+operation is affecting,
+
+20
+00:00:52.650 --> 00:00:57.300
+and the namespace that the
+document is in, and so on.
+
+21
+00:00:57.300 --> 00:00:59.280
+We rarely want to
+track all of the writes
+
+22
+00:00:59.280 --> 00:01:00.630
+to a given namespace.
+
+23
+00:01:00.630 --> 00:01:04.590
+So in our first example, we will
+track all the insert operations
+
+24
+00:01:04.590 --> 00:01:06.130
+to our collection.
+
+25
+00:01:06.130 --> 00:01:08.970
+Change streams allow us
+to express filters using
+
+26
+00:01:08.970 --> 00:01:10.650
+the aggregation framework.
+
+27
+00:01:10.650 --> 00:01:13.590
+Given so, we will create
+an insert filter that
+
+28
+00:01:13.590 --> 00:01:16.260
+extracts the insert operation
+type from the change
+
+29
+00:01:16.260 --> 00:01:19.500
+streams document, which is
+created for each write event
+
+30
+00:01:19.500 --> 00:01:22.380
+that happens in the collection.
+
+31
+00:01:22.380 --> 00:01:25.440
+We will populate an array
+of change stream documents
+
+32
+00:01:25.440 --> 00:01:27.960
+in order to verify that
+the changes that we're
+
+33
+00:01:27.960 --> 00:01:30.450
+inflicting onto our
+collection are correctly
+
+34
+00:01:30.450 --> 00:01:33.250
+tracked in the thread.
+
+35
+00:01:33.250 --> 00:01:35.580
+Our print statement
+prints the documents
+
+36
+00:01:35.580 --> 00:01:37.120
+that the change
+stream has picked up
+
+37
+00:01:37.120 --> 00:01:39.050
+while running the
+insert process.
+
+38
+00:01:39.050 --> 00:01:41.620
+It looks like it picked up
+all the documents that it was
+
+39
+00:01:41.620 --> 00:01:44.160
+supposed to, which is great.
+
+40
+00:01:44.160 --> 00:01:47.020
+Since change streams utilizes
+the aggregation pipeline
+
+41
+00:01:47.020 --> 00:01:50.530
+framework, it allows us to
+access very precise information
+
+42
+00:01:50.530 --> 00:01:51.970
+using that framework.
+
+43
+00:01:51.970 --> 00:01:54.640
+In this case, we want to track
+only the documents in which
+
+44
+00:01:54.640 --> 00:01:57.790
+the even field value is 1.
+
+45
+00:01:57.790 --> 00:01:59.950
+For that, we need to
+create a criteria that
+
+46
+00:01:59.950 --> 00:02:02.200
+matches a few fields
+in the change event
+
+47
+00:02:02.200 --> 00:02:04.420
+so that we create a change
+stream document only
+
+48
+00:02:04.420 --> 00:02:07.300
+for those select events.
+
+49
+00:02:07.300 --> 00:02:11.140
+Here we add a match stage to
+the aggregation pipeline, which
+
+50
+00:02:11.140 --> 00:02:13.690
+now says that we are
+interested in a document
+
+51
+00:02:13.690 --> 00:02:18.190
+if the operation type is insert,
+and the document inserted
+
+52
+00:02:18.190 --> 00:02:22.690
+contains a field called
+even with a value of 1.
+
+53
+00:02:22.690 --> 00:02:24.190
+Notice that, in
+this case, we are
+
+54
+00:02:24.190 --> 00:02:27.550
+accessing the inserted document
+both in the aggregation
+
+55
+00:02:27.550 --> 00:02:31.030
+pipeline and in the
+print statement.
+
+56
+00:02:31.030 --> 00:02:34.150
+For that, we can use the
+get full document method
+
+57
+00:02:34.150 --> 00:02:35.860
+on a change streams
+object, which
+
+58
+00:02:35.860 --> 00:02:39.200
+is what we did in this
+and previous test case.
+
+59
+00:02:39.200 --> 00:02:41.950
+We were expecting five even
+documents to be inserted,
+
+60
+00:02:41.950 --> 00:02:44.210
+and our expectations were met.
+
+61
+00:02:44.210 --> 00:02:46.300
+This time, I want
+to track updates.
+
+62
+00:02:46.300 --> 00:02:47.800
+How do we do that?
+
+63
+00:02:47.800 --> 00:02:51.430
+First, change the filter from
+tracking insert operations
+
+64
+00:02:51.430 --> 00:02:52.660
+to update ones.
+
+65
+00:02:52.660 --> 00:02:57.190
+And to change it up, we now
+want to only see the odd ones.
+
+66
+00:02:57.190 --> 00:02:59.530
+Then specify that you
+are doing an update
+
+67
+00:02:59.530 --> 00:03:03.970
+lookup with full document
+method in addition to watching.
+
+68
+00:03:03.970 --> 00:03:06.640
+If we don't specify that
+we want the full document,
+
+69
+00:03:06.640 --> 00:03:10.630
+then the change event will
+only contain the update object.
+
+70
+00:03:10.630 --> 00:03:13.720
+The question now is, do we
+really need the whole updated
+
+71
+00:03:13.720 --> 00:03:14.620
+document?
+
+72
+00:03:14.620 --> 00:03:18.970
+After all, we're only updating
+the value of one field.
+
+73
+00:03:18.970 --> 00:03:21.640
+In this test case, we will
+print out only the information
+
+74
+00:03:21.640 --> 00:03:23.920
+that tells us about the
+updates that occurred
+
+75
+00:03:23.920 --> 00:03:26.470
+in the updated document, a.k.a.
+
+76
+00:03:26.470 --> 00:03:28.690
+the update object
+that we were avoiding
+
+77
+00:03:28.690 --> 00:03:30.070
+in the previous example.
+
+78
+00:03:30.070 --> 00:03:33.280
+To implement this, use
+the get update description
+
+79
+00:03:33.280 --> 00:03:36.820
+in conjunction with the
+change streams document.
+
+80
+00:03:36.820 --> 00:03:37.360
+Excellent.
+
+81
+00:03:37.360 --> 00:03:39.610
+We see that no
+fields were removed,
+
+82
+00:03:39.610 --> 00:03:44.320
+and the i field was updated
+with the value printed.
+
+83
+00:03:44.320 --> 00:03:48.430
+In this case, we were also
+watching only the odd updates.
+
+84
+00:03:48.430 --> 00:03:51.400
+But we can change that filter
+by modifying the aggregation
+
+85
+00:03:51.400 --> 00:03:53.600
+pipeline that we use.
+
+86
+00:03:53.600 --> 00:03:55.630
+These are some of the
+applications of the change
+
+87
+00:03:55.630 --> 00:03:57.100
+streams functionality.
+
+88
+00:03:57.100 --> 00:03:59.230
+Use this newfound
+knowledge responsibly.
+
+89
+00:03:59.230 --> 00:04:01.120
+And if you watched
+the lectures in order,
+
+90
+00:04:01.120 --> 00:04:03.340
+congratulations on being
+done with the lessons
+
+91
+00:04:03.340 --> 00:04:04.430
+in this course.
+
+92
+00:04:04.430 --> 00:04:06.690
+We hope you enjoyed it.

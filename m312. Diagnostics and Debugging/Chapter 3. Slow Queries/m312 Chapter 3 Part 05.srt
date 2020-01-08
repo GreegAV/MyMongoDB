@@ -1,0 +1,137 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.650
+Now at the other extreme,
+the opposite event
+
+3
+00:00:02.650 --> 00:00:06.771
+can also cause sudden problems,
+an unexpected index build.
+
+4
+00:00:06.771 --> 00:00:08.770
+If you're building an
+index, your storage engine
+
+5
+00:00:08.770 --> 00:00:11.590
+needs to create a
+lot of index entries.
+
+6
+00:00:11.590 --> 00:00:13.150
+This will be a
+blocking operation.
+
+7
+00:00:13.150 --> 00:00:16.016
+And depending on the size of
+the index, it could take time.
+
+8
+00:00:16.016 --> 00:00:17.890
+Your server won't take
+rights while the index
+
+9
+00:00:17.890 --> 00:00:28.499
+is getting built.
+
+10
+00:00:28.499 --> 00:00:29.415
+We'll create an index.
+
+11
+00:00:29.415 --> 00:00:31.869
+
+
+12
+00:00:31.869 --> 00:00:32.910
+Then we'll go to the log.
+
+13
+00:00:32.910 --> 00:00:38.050
+
+
+14
+00:00:38.050 --> 00:00:40.207
+Here you can see
+the index build.
+
+15
+00:00:40.207 --> 00:00:42.040
+And if you look at the
+start and stop times,
+
+16
+00:00:42.040 --> 00:00:43.810
+you can figure out
+how long it took.
+
+17
+00:00:43.810 --> 00:00:45.310
+Obviously, it didn't
+take long here,
+
+18
+00:00:45.310 --> 00:00:48.730
+since I just spun up my replica
+set and everything was empty.
+
+19
+00:00:48.730 --> 00:00:50.500
+If you can catch an
+index build in action,
+
+20
+00:00:50.500 --> 00:00:53.500
+you can also find it
+with db.currentOp.
+
+21
+00:00:53.500 --> 00:00:55.600
+But once an index
+build is in progress,
+
+22
+00:00:55.600 --> 00:00:56.890
+you've already got a problem.
+
+23
+00:00:56.890 --> 00:00:58.264
+And by the time
+you connect, it's
+
+24
+00:00:58.264 --> 00:01:00.100
+probably going to be done with.
+
+25
+00:01:00.100 --> 00:01:02.170
+But maybe you really
+need to build an index.
+
+26
+00:01:02.170 --> 00:01:04.780
+And maybe you can't afford
+to take the performance hit
+
+27
+00:01:04.780 --> 00:01:08.140
+while an index is getting built.
+What are your alternatives?
+
+28
+00:01:08.140 --> 00:01:10.400
+They basically all
+come down to planning.
+
+29
+00:01:10.400 --> 00:01:14.070
+We'll cover this in detail in
+our lesson on building indexes.

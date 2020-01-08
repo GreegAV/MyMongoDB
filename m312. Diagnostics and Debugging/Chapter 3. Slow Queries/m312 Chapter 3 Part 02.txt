@@ -1,0 +1,131 @@
+Our queries taking longer as data set grows.
+
+And obviously, this is the read response time that gets affected.
+
+And we need to understand why if our data set grows-- why does our queries take longer?
+
+Now, just to be clear, all queries are like that.
+
+But we should not have a response time that is linear.
+
+When this occurs, we're going to have a situation where we have big O notation of N, which basically means that as your data size grows, so does grow the response time in terms of milliseconds of any query that you do to the database.
+
+And now that's pretty bad because it will mean that as more successful you are in terms of the data you are including into your database, the longer it will take for you to query on that data.
+
+And that just means that there's no benefit in actually growing the data size.
+
+And as we all know, that's not particularly right.
+
+What we are mostly looking for is something like big O notation of logarithm of N, log of N.
+
+And this is a much more saner situation, where as your data size grows, your response time doesn't grow that much.
+
+It keeps it in a very consistent, stable way in terms of what you can expect.
+
+No matter how much data you get, you're always going to get a good response time.
+
+This only happens if you have in place the proper indexes to respond to your queries.
+
+And this situation over here, where you have big O notation of N, you will get this when you do not have indexes that support your queries.
+
+Let's see this in action.
+
+I'm going to simulate the constant growth of data by importing a slightly larger set and running the same query after each import.
+
+Now, the first data set that I'm going to import is into our MondoDB database m312, and the one that we've been using for this course, a collection called norberto_friends.
+
+I have a lot of friends.
+
+But let's start with my 10 first friends.
+
+Once my 10 friends are imported, I can go and have a look to those friends.
+
+In this friends data set, if I use my m312 database and if I show my collections here, I'll see my norberto_friends there.
+
+I can query that to see what kind of friends do I have-- all good friends, I can assure you.
+
+But this is the information I can get-- an ID, a name, a created at, a city-- my lovely city of Porto-- an ID which is incremental, an email, age, phone number, and so on.
+
+For me to show you that sometimes we [INAUDIBLE] some parts of our development phase, let's say that I want to find all my friends that I made-- let's say a city like Barcelona.
+
+If you never visit Barcelona, you are missing out.
+
+So if I run this query, easily I can get immediately all the results corresponding to all my friends which live in Barcelona.
+
+If we want to understand while in development phase how well does this query perform, we can enable the profiler and test execution of this query.
+
+Here I'm going to set the profiler to 2, which means it captures every single operation in the system, and setting the threshold of my slow operations milliseconds value to 0.
+
+Anything that is higher than 0 will be captured in the profiler collection.
+
+So let's do just that.
+
+Once we have that done, let's run again our query, exactly the same query.
+
+And let's look into our profiler and look for that query.
+
+Now, some of the queries, since we are capturing everything, will be collected here.
+
+But the important thing that we are collecting is this one here, where we are querying on this namespace, m312.norberto_friends.
+
+This is the filter-- and tells me how many keys examine, how many docsExamined, and some other information, like the amount of time it took, which in this case is 0 milliseconds.
+
+Now, doing a naive interpretation of this data, we might be bound to say that this data is looking pretty good.
+
+It's not going through a lot of data.
+
+It actually returns in less than 0 milliseconds.
+
+So we can't go faster than that, right?
+
+Well, let's see how this story develops when we add more data to the data set.
+
+Let's get out of the shell.
+
+And let's import now instead of 10 friends-- since I'm very popular, I have lots and lots of friends-- let's import my 1,000 friends data set.
+
+So import that.
+
+This is pretty quick.
+
+MondoDB is pretty awesome on this.
+
+So let's go and connect again.
+
+Now let's go and jump directly to our m312 database.
+
+Once we are in, we can run the same query again.
+
+If we run the same query, will we-- having grown our data set-- so the number of results that we get.
+
+But also, that will be reflected on the total time taken by the application to actual return the result set.
+
+So let's do that.
+
+As we can see, we get more results.
+
+That's fine.
+
+But if we go to our system profile again, we can see that some things have changed.
+
+Now, this query, the same query as before with a different cursor ID, obviously, has examined 629 documents.
+
+This is because we didn't fully iterate it for the full amount of documents.
+
+But it did reply in a very small amount of time, 0 milliseconds.
+
+So again, if we are looking into this data crudely without analyzing the planSummary or execution stats, we might be led into error to think that this is pretty good.
+
+This is pretty, pretty awesome.
+
+We taking 0 seconds to reply.
+
+This is fantastic.
+
+Well, not so fast, young grasshopper, because there's more to this story.
+
+To show you exactly that, let's import a little bit more of data-- instead of 1,000, a million of my friends.
+
+I can guarantee you I am a very popular person.
+
+So once all this data is back into our mongod, and obviously, a million is quite larger amount of information than 1,000-- once this is done, we will be looking into running the exact same query again and see how does this translate in terms of the response time-- can go back.

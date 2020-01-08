@@ -1,0 +1,63 @@
+Let's connect to the Atlas Cluster for this class, the one that we've all been using together.
+
+I'll show you how to do that here, but please see the lecture notes for the exact connection string and other parameters you should pass to Mongo in order to connect to our Atlas Cluster.
+
+We might need to change this information from time to time as we make updates.
+
+The lecture notes will be updated as well so that you have the necessary details to connect to this cluster from the Mongo Shell.
+
+I'll paste those details here, and then let's talk about this command a little bit.
+
+I want to point out a couple of things here.
+
+The first is that because we're connecting to a cluster, we wanted to give the Mongo Shell the name of all the servers in this cluster.
+
+Those are listed here through here.
+
+MongoDB is designed to provide high availability access to your data.
+
+It does this by enabling you to maintain redundant copies of your data in a cluster called a replica set.
+
+We configured our Atlas Cluster to be a three-server replica set in order to help ensure you will always have access to the data.
+
+There are thousands of students taking this class.
+
+In the event that the primary server goes down due to a software or hardware failure, one of the other servers will step in to continue serving data to clients.
+
+If you'd like to know more about how replica sets work, please see the MongoDB documentation.
+
+One other thing I'd like to point out about this command is that at the very end here, we can see the word test immediately following this slash.
+
+That indicates that we're going to connect to this cluster and we're going to connect it to a database called test.
+
+Now if we would prefer to connect to a different database, we can change this to one of the databases we know is available in our Atlas Cluster.
+
+Let's do the 100-year weather database.
+
+And if you'll remember, that database has a collection in it called data where all of the weather readings are found.
+
+Finally, the last thing I'd like to point out about this command is the fact that we're making a secure connection to this cluster.
+
+As we did when connecting with Compass, we're using an encrypted connection via SSL and supplying the same username and password we did to connect with Compass.
+
+So let's go ahead and connect to our Atlas Cluster with the Mongo Shell.
+
+We'll see a prompt that indicates that we're connected to the primary for this cluster.
+
+The shell will always connect to the primary for a cluster as specified here, because it's the primary to which most reads are typically directed and to which all writes for a MongoDB cluster must be directed.
+
+Only primaries in a cluster can accept writes and for any cluster, there is one and only one primary.
+
+Now remember, we connected to the 100-year weather database.
+
+If we type show collections, sure enough, we see the data collection, because we have connected to this particular database.
+
+If instead we'd prefer to access the video collection, we can use the use command and use video.
+
+And then, if we show collections here, we'll see our movies collection.
+
+Now I'm going to show you just one more command, and that is just so we can see the documents that are in this movies collection.
+
+OK?
+
+And here, these should look familiar to you given that we've already looked at a lot of this data in Compass.

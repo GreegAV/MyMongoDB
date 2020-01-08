@@ -1,0 +1,113 @@
+Hi there, and welcome back.
+
+We've made some improvements to the backup architecture in Ops Manager 4.2 for backing up MongoDB 4.2.
+
+Before we get into what these improvements are, let's have a look at what we had in previous versions of Ops Manager, and talk about our motivation for these changes.
+
+So with previous versions of Ops Manager, we maintained a copy of the data for the replica set in the form of the head db.
+
+The head db standalone MongoD which has started to apply oplogs that were sent from the backup agent.
+
+So this meant that during the initial sync phase of the backup process, we couldn't generate any snapshots until the head db had caught up with the node from which oplog was being sent from.
+
+So the steps in the process were as follows.
+
+So the backup agent would open up a tailable cursor on the replica set member which it was syncing from.
+
+And then it would begin to stream oplog entries and documents, referred to as oplog slices and sync slices to the oplog store and the sync store.
+
+Once there was enough oplog and sync slices transferred, the head db would start and begin to replay oplog operations to get the snapshot consistent to a point in time.
+
+So the head db is then stopped.
+
+And a snapshot is persisted to the blockstore or file system store.
+
+This process meant that if your backups required a resync, you would have to wait for the initial sync process to complete before you could start taking snapshots again.
+
+So in Ops Manager 4.2, we've changed the backup architecture to make use of WiredTiger checkpoints and remove the need for a head db and its associated initial sync process.
+
+This only works for MongoDB 4.2 being backed up with Ops Manager 4.2.
+
+All older versions of MongoDB still use the old architecture for backups.
+
+While outside the scope of this lesson, it's important to note that we enhanced the checkpoint ability in the WiredTiger storage engine to implement this new backup flow.
+
+The new feature is called the Backup Cursor.
+
+WiredTiger uses multi-version concurrency control, or MVCC, as it's referred to.
+
+At the start of an operation, WiredTiger provides a point in time checkpoint of the data to that operation.
+
+A checkpoint presents a consistent view of the database at a point in time.
+
+When writing to disk, WiredTiger writes all the data in a checkpoint to disk in a consistent way across all data files.
+
+The now durable data acts as a checkpoint in the data files.
+
+The checkpoint ensures that the data files are consistent up to and including the last checkpoint, i.e.
+
+checkpoints can act as recovery points.
+
+Let's have a look at the changes in how Ops Manager does backups.
+
+So now, when a backup job is initiated, the backup agent will pick a node to take a snapshot from.
+
+And this is based on numerous factors, such as the priority of the node, as we'd ideally like to take a snapshot from a node that won't become primary.
+
+We need to know if a node is primary or secondary.
+
+We always prefer to take a snapshot from a secondary node, so as not to put additional load on the primary.
+
+And then we need to know where the previous snapshot location was, so which node did we take the last snapshot from?
+
+A node is then selected in order of preference.
+
+And the preference is as follows.
+
+Hidden secondary, a secondary we have previously taken a snapshot from, any secondary, and then, as a last resort, we'll take a snapshot from the primary.
+
+So once we've decided which node we want to take a snapshot from, the backup agent will open up a Backup Cursor on that note.
+
+This is a new aggregation pipeline command that's used by the agent for the backup process only.
+
+The Backup Cursor command will return a cursor to a list of files that need to be copied.
+
+It's important to note that this functionality is only available for MongoDB 4.2 Enterprise.
+
+So the Backup Cursor will preserve the state of the data at that point in time in the data directory using WiredTiger checkpoint.
+
+This operation does not block read or write operations on the database.
+
+So the agent will then collect all of those files and transfer them to the daemon machine, and then to the snapshot store you choose.
+
+A checkpoint can be written out either as blocks to a MongoDB blockstore or as blocks to an S3 Bucket in AWS, or any other S3 compatible storage device.
+
+The metadata for those blocks is written to the MongoDB database on the Ops Manager server.
+
+There are some restrictions for this first iteration of the new backup flow functionality.
+
+The first being that we can't back up sharded clusters.
+
+This is coming in a future release.
+
+But at the moment, we can only backup replica sets.
+
+There is also no point in time restore functionality.
+
+Again, this will be coming in a future release.
+
+And queryable restores do not work with the new backup flow at this time.
+
+And finally, we can only backup MongoDB 4.2 with the new backup flow.
+
+Any other releases of MongoDB can still be backed up using a standard backup flow in Ops Manager 4.2.
+
+Remember, these limitations are only for the initial GA release.
+
+We'll be incrementally rolling layout improvements to new backup flow on a monthly basis.
+
+So let's recap.
+
+We've updated the backup flow and Ops Manager 4.2 remove the need for the head db.
+
+The agent now uses WiredTiger snapshots and pushes those snapshots directly to the daemon machine, eliminating the need for you to wait for the traditional initial sync process.

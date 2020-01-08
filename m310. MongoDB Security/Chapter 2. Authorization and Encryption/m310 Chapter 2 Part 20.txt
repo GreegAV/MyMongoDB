@@ -1,0 +1,27 @@
+When using TLS there are several connection modes that can be passed to MongoD.
+
+Here's an example command to start a MongoDB server.
+
+We've seen commands like this before when setting up x.509 authentication.
+
+Here we're saying MongoDB passing in the dash dash SSL mode option, which takes the argument of what kind of connection mode we're going to have.
+
+In this case-- and as we've seen before-- we're using requireSSL.
+
+And then of course, since we're requiring SSL, we need to pass in the KeyFile for this SSL connection.
+
+There actually exists four different SSL modes when using SSL with MongoDB.
+
+There is disabled, where the server does not use TLS at all.
+
+And this is the default mode when you don't pass an option to MongoD.
+
+There's allowSSL, which means that connections between the server do not have to use TLS.
+
+But if there is an incoming connection that uses TLS, the server will then accept it.
+
+There is preferredSSL, which means connections in between members of a replica set or sharded cluster will use TLS.
+
+But for incoming connections, the server will accept both TLS connections and non-TLS connections.
+
+And then there's requireSSL, which means that all connections to the server, whether between members of a replica set or sharded cluster, or between the server and client, all connections will be required to use SSL.

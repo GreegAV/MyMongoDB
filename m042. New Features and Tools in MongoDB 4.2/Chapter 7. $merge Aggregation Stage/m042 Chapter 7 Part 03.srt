@@ -1,0 +1,167 @@
+
+1
+00:00:00.000 --> 00:00:00.630
+
+
+2
+00:00:00.630 --> 00:00:03.120
+Now let's look at a
+completely different use case
+
+3
+00:00:03.120 --> 00:00:06.180
+where you want to append
+from a temporary collection
+
+4
+00:00:06.180 --> 00:00:08.640
+into some permanent collection.
+
+5
+00:00:08.640 --> 00:00:13.230
+This might be a use case where
+you have a data collection,
+
+6
+00:00:13.230 --> 00:00:15.300
+and periodically
+you get a new load
+
+7
+00:00:15.300 --> 00:00:17.040
+of a subset of
+data, which you load
+
+8
+00:00:17.040 --> 00:00:19.770
+into this collection
+called temp.
+
+9
+00:00:19.770 --> 00:00:23.280
+You will now do some kind
+of cleansing and analyzing
+
+10
+00:00:23.280 --> 00:00:28.200
+the records to make sure they're
+valid before appending them
+
+11
+00:00:28.200 --> 00:00:32.200
+to the existing data collection.
+
+12
+00:00:32.200 --> 00:00:34.050
+So your pipeline
+would be whatever
+
+13
+00:00:34.050 --> 00:00:37.620
+it is that you do to validate
+that this data in temp
+
+14
+00:00:37.620 --> 00:00:41.790
+collection is of the right
+format, and the right type,
+
+15
+00:00:41.790 --> 00:00:44.820
+and the right whatever
+else you need to verify,
+
+16
+00:00:44.820 --> 00:00:46.790
+which you will now
+append into data.
+
+17
+00:00:46.790 --> 00:00:51.970
+Now, append here means
+that when there's no match,
+
+18
+00:00:51.970 --> 00:00:53.160
+it will insert.
+
+19
+00:00:53.160 --> 00:00:55.320
+And I've specified that
+when there is match,
+
+20
+00:00:55.320 --> 00:00:58.620
+I want it to fail, because
+I don't expect ever
+
+21
+00:00:58.620 --> 00:01:00.660
+to find a match here.
+
+22
+00:01:00.660 --> 00:01:04.140
+The reason is that I would only
+find a match if I'd already
+
+23
+00:01:04.140 --> 00:01:05.280
+loaded this data.
+
+24
+00:01:05.280 --> 00:01:09.430
+And I don't really expect
+to ever run a job twice.
+
+25
+00:01:09.430 --> 00:01:12.630
+So this is an example of
+having the pipeline raise
+
+26
+00:01:12.630 --> 00:01:16.120
+an error if an
+unexpected event happens,
+
+27
+00:01:16.120 --> 00:01:19.770
+such as finding that there's
+already a record that newly
+
+28
+00:01:19.770 --> 00:01:22.050
+arriving data would
+match up to, which
+
+29
+00:01:22.050 --> 00:01:24.480
+means something has gone
+wrong or not according
+
+30
+00:01:24.480 --> 00:01:26.220
+my expectation.
+
+31
+00:01:26.220 --> 00:01:30.630
+This is similar, if you're
+familiar with SQL, to SQL's
+
+32
+00:01:30.630 --> 00:01:35.340
+INSERT INTO table 1
+SELECT * from table 2.
+
+33
+00:01:35.340 --> 00:01:39.547
+And it just says insert
+into this existing table.
+
+34
+00:01:39.547 --> 00:01:41.130
+Now, if the table
+doesn't exist, it'll
+
+35
+00:01:41.130 --> 00:01:44.000
+just insert into a new table.

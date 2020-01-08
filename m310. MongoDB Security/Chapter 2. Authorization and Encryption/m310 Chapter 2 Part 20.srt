@@ -1,0 +1,152 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.110
+When using TLS there are
+several connection modes
+
+3
+00:00:03.110 --> 00:00:05.460
+that can be passed to MongoD.
+
+4
+00:00:05.460 --> 00:00:08.880
+Here's an example command
+to start a MongoDB server.
+
+5
+00:00:08.880 --> 00:00:11.550
+We've seen commands like
+this before when setting up
+
+6
+00:00:11.550 --> 00:00:13.700
+x.509 authentication.
+
+7
+00:00:13.700 --> 00:00:17.690
+Here we're saying MongoDB
+passing in the dash dash SSL
+
+8
+00:00:17.690 --> 00:00:21.420
+mode option, which takes
+the argument of what
+
+9
+00:00:21.420 --> 00:00:23.750
+kind of connection mode
+we're going to have.
+
+10
+00:00:23.750 --> 00:00:25.740
+In this case-- and as
+we've seen before-- we're
+
+11
+00:00:25.740 --> 00:00:27.520
+using requireSSL.
+
+12
+00:00:27.520 --> 00:00:29.860
+And then of course, since
+we're requiring SSL,
+
+13
+00:00:29.860 --> 00:00:34.290
+we need to pass in the KeyFile
+for this SSL connection.
+
+14
+00:00:34.290 --> 00:00:37.490
+There actually exists
+four different SSL modes
+
+15
+00:00:37.490 --> 00:00:39.890
+when using SSL with MongoDB.
+
+16
+00:00:39.890 --> 00:00:43.950
+There is disabled, where the
+server does not use TLS at all.
+
+17
+00:00:43.950 --> 00:00:45.950
+And this is the
+default mode when you
+
+18
+00:00:45.950 --> 00:00:48.760
+don't pass an option to MongoD.
+
+19
+00:00:48.760 --> 00:00:51.090
+There's allowSSL, which
+means that connections
+
+20
+00:00:51.090 --> 00:00:54.010
+between the server do
+not have to use TLS.
+
+21
+00:00:54.010 --> 00:00:56.870
+But if there is an incoming
+connection that uses TLS,
+
+22
+00:00:56.870 --> 00:00:59.010
+the server will then accept it.
+
+23
+00:00:59.010 --> 00:01:01.800
+There is preferredSSL,
+which means connections
+
+24
+00:01:01.800 --> 00:01:04.120
+in between members
+of a replica set
+
+25
+00:01:04.120 --> 00:01:06.524
+or sharded cluster will use TLS.
+
+26
+00:01:06.524 --> 00:01:08.190
+But for incoming
+connections, the server
+
+27
+00:01:08.190 --> 00:01:12.360
+will accept both TLS connections
+and non-TLS connections.
+
+28
+00:01:12.360 --> 00:01:14.250
+And then there's
+requireSSL, which
+
+29
+00:01:14.250 --> 00:01:15.960
+means that all
+connections to the server,
+
+30
+00:01:15.960 --> 00:01:19.110
+whether between members of a
+replica set or sharded cluster,
+
+31
+00:01:19.110 --> 00:01:21.220
+or between the
+server and client,
+
+32
+00:01:21.220 --> 00:01:25.690
+all connections will
+be required to use SSL.

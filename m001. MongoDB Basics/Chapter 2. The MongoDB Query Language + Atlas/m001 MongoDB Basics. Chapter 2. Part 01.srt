@@ -1,0 +1,1177 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:04,180
+Compass doesn't yet fully
+support the entire MongoDB
+
+3
+00:00:04,180 --> 00:00:05,570
+query language.
+
+4
+00:00:05,570 --> 00:00:09,220
+So in order to do some of
+the lessons in this course,
+
+5
+00:00:09,220 --> 00:00:12,250
+we're going to need to
+use the mongo shell.
+
+6
+00:00:12,250 --> 00:00:14,290
+The mongo shell is
+a text-based client
+
+7
+00:00:14,290 --> 00:00:17,490
+that fully supports all
+MongoDB CRUD operations.
+
+8
+00:00:17,490 --> 00:00:19,300
+In this lesson, I'm
+going to walk you
+
+9
+00:00:19,300 --> 00:00:23,390
+through installing the mongo
+shell on a Windows machine.
+
+10
+00:00:23,390 --> 00:00:26,060
+Here we have a Windows
+10 environment.
+
+11
+00:00:26,060 --> 00:00:28,240
+I'll also show you some
+of the subtle differences
+
+12
+00:00:28,240 --> 00:00:31,300
+you'll encounter when
+installing on Windows 7.
+
+13
+00:00:31,300 --> 00:00:34,120
+There aren't many and you
+should be fine on Windows 10
+
+14
+00:00:34,120 --> 00:00:36,960
+or on older versions of
+Windows, provided they
+
+15
+00:00:36,960 --> 00:00:39,250
+are 64-bit versions of Windows.
+
+16
+00:00:39,250 --> 00:00:41,410
+Now to install the
+mongo shell, we're
+
+17
+00:00:41,410 --> 00:00:43,930
+actually going to
+install MongoDB itself.
+
+18
+00:00:43,930 --> 00:00:46,450
+We're going to install
+the enterprise server.
+
+19
+00:00:46,450 --> 00:00:49,030
+The shell comes
+packaged with the server
+
+20
+00:00:49,030 --> 00:00:52,270
+as part of the download from
+the MongoDB Download Center.
+
+21
+00:00:52,270 --> 00:00:54,760
+So please navigate to
+the Download Center.
+
+22
+00:00:54,760 --> 00:00:57,890
+And then instead of
+Community Server,
+
+23
+00:00:57,890 --> 00:01:00,760
+let's click the
+Enterprise Server tab,
+
+24
+00:01:00,760 --> 00:01:04,519
+and I will select Windows.
+
+25
+00:01:04,519 --> 00:01:06,380
+Now this is very important.
+
+26
+00:01:06,380 --> 00:01:09,770
+Even if you already
+have MongoDB installed,
+
+27
+00:01:09,770 --> 00:01:12,350
+please go through these steps.
+
+28
+00:01:12,350 --> 00:01:15,500
+Earlier versions of
+MongoDB in the shell
+
+29
+00:01:15,500 --> 00:01:18,320
+did not provide support
+for SSL, and we're
+
+30
+00:01:18,320 --> 00:01:23,810
+going to need SSL support in
+order to connect to our Atlas
+
+31
+00:01:23,810 --> 00:01:24,920
+cluster.
+
+32
+00:01:24,920 --> 00:01:28,580
+So select Windows 64
+and then Download.
+
+33
+00:01:28,580 --> 00:01:31,700
+Now if you haven't previously
+accessed the Download Center,
+
+34
+00:01:31,700 --> 00:01:35,010
+you'll be asked to
+complete a download form.
+
+35
+00:01:35,010 --> 00:01:37,970
+Please just enter your details
+there and then move through
+
+36
+00:01:37,970 --> 00:01:40,430
+to downloading the Windows MSI.
+
+37
+00:01:40,430 --> 00:01:41,930
+Now we're presented
+with two options
+
+38
+00:01:41,930 --> 00:01:44,330
+here, either archive or MSI.
+
+39
+00:01:44,330 --> 00:01:46,070
+Please select MSI.
+
+40
+00:01:46,070 --> 00:01:51,700
+And again, it's Enterprise
+Server, Windows 64, and then
+
+41
+00:01:51,700 --> 00:01:53,450
+MSI.
+
+42
+00:01:53,450 --> 00:01:55,720
+And we'll just wait
+for that to download.
+
+43
+00:01:55,720 --> 00:01:58,460
+And once it does,
+we can install.
+
+44
+00:01:58,460 --> 00:02:03,740
+And once the MSI downloads,
+we can click it, and then
+
+45
+00:02:03,740 --> 00:02:07,100
+use the installation
+wizard to install MongoDB.
+
+46
+00:02:07,100 --> 00:02:10,639
+Select Complete
+and then Install.
+
+47
+00:02:10,639 --> 00:02:15,070
+Allow the app to make changes to
+our device, and then we finish.
+
+48
+00:02:15,070 --> 00:02:17,740
+Now it's important that you
+understand where MongoDB
+
+49
+00:02:17,740 --> 00:02:20,030
+was installed on your computer.
+
+50
+00:02:20,030 --> 00:02:24,100
+So if you click Windows
+Explorer and then scroll down
+
+51
+00:02:24,100 --> 00:02:28,956
+to Local Disk, on your
+machine the download location
+
+52
+00:02:28,956 --> 00:02:30,580
+should be something
+like the following.
+
+53
+00:02:30,580 --> 00:02:39,180
+C:, Program Files,
+MongoDB, Server, 3.4.
+
+54
+00:02:39,180 --> 00:02:42,360
+And then if we click
+the 3.4 directory,
+
+55
+00:02:42,360 --> 00:02:44,490
+we'll see that there's
+some license information,
+
+56
+00:02:44,490 --> 00:02:47,910
+but most importantly
+is this bin directory.
+
+57
+00:02:47,910 --> 00:02:50,910
+The bin directory contains
+all of the executables
+
+58
+00:02:50,910 --> 00:02:53,910
+that are distributed
+with MongoDB server.
+
+59
+00:02:53,910 --> 00:02:57,240
+The one we're
+interested in is mongo.
+
+60
+00:02:57,240 --> 00:02:59,520
+Now note that it's very
+similar in name to mongo
+
+61
+00:02:59,520 --> 00:03:04,110
+d, which is the executable
+for the MongoDB server.
+
+62
+00:03:04,110 --> 00:03:08,490
+For this course, we will be
+using the mongo shell, which is
+
+63
+00:03:08,490 --> 00:03:11,910
+run from the mongo executable.
+
+64
+00:03:11,910 --> 00:03:14,790
+OK, before we can
+run mongo, we're
+
+65
+00:03:14,790 --> 00:03:17,610
+going to need to
+open a command shell.
+
+66
+00:03:17,610 --> 00:03:21,030
+Now regardless of whether
+you're working on a Windows 10
+
+67
+00:03:21,030 --> 00:03:24,150
+machine or an older
+version of Windows,
+
+68
+00:03:24,150 --> 00:03:26,100
+you have a text box
+you can type in.
+
+69
+00:03:26,100 --> 00:03:28,650
+And if you type cmd, you'll
+note that the command
+
+70
+00:03:28,650 --> 00:03:30,720
+prompt is suggested for us.
+
+71
+00:03:30,720 --> 00:03:34,350
+If we hit Enter,
+then what pops up
+
+72
+00:03:34,350 --> 00:03:37,770
+is a command line
+interface from which we
+
+73
+00:03:37,770 --> 00:03:39,060
+will execute the mongo shell.
+
+74
+00:03:39,060 --> 00:03:42,700
+Again, the mongo shell is
+a text-based environment.
+
+75
+00:03:42,700 --> 00:03:45,340
+I can do something very
+similar on Windows 7
+
+76
+00:03:45,340 --> 00:03:49,670
+by clicking the start button and
+then in the search box typing
+
+77
+00:03:49,670 --> 00:03:52,150
+cmd and hitting Enter.
+
+78
+00:03:52,150 --> 00:03:54,880
+And again, I get a command
+shell that pops up.
+
+79
+00:03:54,880 --> 00:03:57,220
+Switching back to
+Windows 10, everything I
+
+80
+00:03:57,220 --> 00:04:01,150
+do here you can also do on
+earlier versions of Windows,
+
+81
+00:04:01,150 --> 00:04:02,780
+such as Windows 7.
+
+82
+00:04:02,780 --> 00:04:04,870
+The command shell
+is largely the same
+
+83
+00:04:04,870 --> 00:04:07,520
+in most versions of the
+Windows operating system.
+
+84
+00:04:07,520 --> 00:04:10,240
+At least it's the same for
+our purposes in the ways
+
+85
+00:04:10,240 --> 00:04:12,050
+that we will be using it.
+
+86
+00:04:12,050 --> 00:04:14,620
+So if you take a look at what's
+been printed in the shell,
+
+87
+00:04:14,620 --> 00:04:18,610
+you'll see it says C: backslash
+Users backslash shannon.
+
+88
+00:04:18,610 --> 00:04:21,550
+This is simply a folder in
+the file system for my Windows
+
+89
+00:04:21,550 --> 00:04:25,390
+machine, and I can find
+that folder if I look
+
+90
+00:04:25,390 --> 00:04:29,800
+in C:, Users, shannon.
+
+91
+00:04:29,800 --> 00:04:34,390
+So C:, Users, shannon
+is exactly this folder.
+
+92
+00:04:34,390 --> 00:04:38,670
+C:, Users, shannon.
+
+93
+00:04:38,670 --> 00:04:41,970
+Now if I want to
+run the mongo shell
+
+94
+00:04:41,970 --> 00:04:46,290
+on many versions of Windows, I
+need to do one additional step,
+
+95
+00:04:46,290 --> 00:04:49,800
+and that is I need
+to set up my path.
+
+96
+00:04:49,800 --> 00:04:51,300
+If you've never
+done this before,
+
+97
+00:04:51,300 --> 00:04:52,480
+don't be worried about it.
+
+98
+00:04:52,480 --> 00:04:54,480
+It's a pretty
+straightforward process.
+
+99
+00:04:54,480 --> 00:04:56,500
+But it is down in the
+weeds a little bit.
+
+100
+00:04:56,500 --> 00:04:59,020
+So we'll take it
+one step at a time.
+
+101
+00:04:59,020 --> 00:05:05,790
+So to do this, I can
+type system environment,
+
+102
+00:05:05,790 --> 00:05:08,070
+and just to be
+complete, variables.
+
+103
+00:05:08,070 --> 00:05:10,410
+And long before
+that, Windows will
+
+104
+00:05:10,410 --> 00:05:12,840
+have suggested this operation,
+Edit the system environment
+
+105
+00:05:12,840 --> 00:05:13,840
+variables.
+
+106
+00:05:13,840 --> 00:05:15,900
+If I click on
+that, what I'll see
+
+107
+00:05:15,900 --> 00:05:18,600
+is a window that pops up
+for System Properties,
+
+108
+00:05:18,600 --> 00:05:21,660
+and the Advanced tab
+is already selected.
+
+109
+00:05:21,660 --> 00:05:24,450
+If I click
+Environment Variables,
+
+110
+00:05:24,450 --> 00:05:27,240
+then you'll see that I
+have user environment
+
+111
+00:05:27,240 --> 00:05:31,080
+variables for shannon, and
+system environment variables.
+
+112
+00:05:31,080 --> 00:05:34,510
+The one we're interested
+in is this one, Path.
+
+113
+00:05:34,510 --> 00:05:37,890
+And if we select
+Path and click Edit,
+
+114
+00:05:37,890 --> 00:05:41,130
+we'll see a list of folders.
+
+115
+00:05:41,130 --> 00:05:45,750
+These folders contain
+executable files or programs
+
+116
+00:05:45,750 --> 00:05:49,380
+that can be run on
+this Windows machine.
+
+117
+00:05:49,380 --> 00:05:53,340
+Now on Windows 10, it's
+probably not strictly necessary
+
+118
+00:05:53,340 --> 00:05:55,410
+that we update the
+environment variables.
+
+119
+00:05:55,410 --> 00:05:58,140
+But on many versions of
+Windows, it is necessary.
+
+120
+00:05:58,140 --> 00:06:00,720
+So I'm going to show
+you how to do it here.
+
+121
+00:06:00,720 --> 00:06:04,575
+Now as we said previously,
+MongoDB is installed in C:,
+
+122
+00:06:04,575 --> 00:06:10,459
+Program Files, MongoDB, Server,
+3.4, and all of the executables
+
+123
+00:06:10,459 --> 00:06:11,500
+are in the bin directory.
+
+124
+00:06:11,500 --> 00:06:18,030
+So again, that's C:, Program
+Files, MongoDB, Server, 3.4,
+
+125
+00:06:18,030 --> 00:06:18,780
+bin.
+
+126
+00:06:18,780 --> 00:06:20,640
+The way that that
+folder structure
+
+127
+00:06:20,640 --> 00:06:25,950
+is represented in our path is
+by separating each component
+
+128
+00:06:25,950 --> 00:06:29,460
+of the path with a backslash.
+
+129
+00:06:29,460 --> 00:06:33,960
+So for our path,
+that looks like this.
+
+130
+00:06:33,960 --> 00:06:38,290
+C: backslash Program Files
+backslash MongoDB backslash
+
+131
+00:06:38,290 --> 00:06:43,150
+Server backslash
+3.4 backslash bin.
+
+132
+00:06:43,150 --> 00:06:45,760
+Finally, what I'd like to
+do before we finish editing
+
+133
+00:06:45,760 --> 00:06:50,260
+this environment variable
+is move this to the top.
+
+134
+00:06:50,260 --> 00:06:52,670
+In order to understand
+why I wanted to do that,
+
+135
+00:06:52,670 --> 00:06:55,900
+let's talk a little bit
+about how the path is used.
+
+136
+00:06:55,900 --> 00:06:59,380
+When I'm in the shell and I type
+a command, like mongo-- again,
+
+137
+00:06:59,380 --> 00:07:03,640
+remember, mongo is the name of
+the mongo shell executable--
+
+138
+00:07:03,640 --> 00:07:07,430
+Windows will look for
+programs with that name
+
+139
+00:07:07,430 --> 00:07:10,490
+in each one of the
+folders listed here.
+
+140
+00:07:10,490 --> 00:07:12,010
+And it does so in order.
+
+141
+00:07:12,010 --> 00:07:15,610
+So it will first check this
+path to see if there are
+
+142
+00:07:15,610 --> 00:07:17,680
+any executables located there.
+
+143
+00:07:17,680 --> 00:07:21,250
+In this case, it will find one
+called mongo and execute it.
+
+144
+00:07:21,250 --> 00:07:24,910
+The reason why I wanted to
+place the MongoDB installation
+
+145
+00:07:24,910 --> 00:07:27,520
+directory first is
+just in case you
+
+146
+00:07:27,520 --> 00:07:30,700
+have an older version
+of MongoDB installed
+
+147
+00:07:30,700 --> 00:07:33,160
+because if you have an older
+version of MongoDB installed,
+
+148
+00:07:33,160 --> 00:07:36,490
+chances are it's in your path
+and you might accidentally
+
+149
+00:07:36,490 --> 00:07:40,420
+end up running that version
+of the mongo shell instead.
+
+150
+00:07:40,420 --> 00:07:42,310
+Again, earlier versions
+of the mongo shell
+
+151
+00:07:42,310 --> 00:07:45,300
+did not include support for
+SSL, and we need that here.
+
+152
+00:07:45,300 --> 00:07:47,050
+So we really need to
+be running the latest
+
+153
+00:07:47,050 --> 00:07:49,420
+version of the mongo shell,
+which you can download
+
+154
+00:07:49,420 --> 00:07:52,600
+from the MongoDB Download
+Center as part of the MongoDB
+
+155
+00:07:52,600 --> 00:07:54,220
+Enterprise Package.
+
+156
+00:07:54,220 --> 00:07:56,780
+So we can click OK here.
+
+157
+00:07:56,780 --> 00:07:59,110
+And now you'll note
+that our path has
+
+158
+00:07:59,110 --> 00:08:04,080
+been updated to include
+that individual path
+
+159
+00:08:04,080 --> 00:08:06,480
+that we just added, and
+it's added at the front.
+
+160
+00:08:06,480 --> 00:08:11,220
+And note that it's separated
+from the next item in the path
+
+161
+00:08:11,220 --> 00:08:13,800
+by a semicolon here.
+
+162
+00:08:13,800 --> 00:08:17,610
+This is one of those difference
+points from Windows 7.
+
+163
+00:08:17,610 --> 00:08:22,800
+And by that I mean in
+editing a path in Windows 10
+
+164
+00:08:22,800 --> 00:08:26,310
+you have this nice list
+of items in your path.
+
+165
+00:08:26,310 --> 00:08:29,820
+In Windows 7, it's a
+little bit more arcane,
+
+166
+00:08:29,820 --> 00:08:32,159
+for lack of a better
+word, because in order
+
+167
+00:08:32,159 --> 00:08:34,380
+to change the
+environment variable,
+
+168
+00:08:34,380 --> 00:08:37,950
+we actually need to
+edit a string that
+
+169
+00:08:37,950 --> 00:08:42,490
+includes all of the components
+of a path in one line.
+
+170
+00:08:42,490 --> 00:08:45,220
+So here I can do exactly
+the same thing, system,
+
+171
+00:08:45,220 --> 00:08:47,400
+environment, and before
+I'm even finished
+
+172
+00:08:47,400 --> 00:08:50,520
+typing Windows is suggesting
+the right thing to me.
+
+173
+00:08:50,520 --> 00:08:52,149
+I click on it.
+
+174
+00:08:52,149 --> 00:08:53,940
+Again, it's System
+Properties, Advanced tab
+
+175
+00:08:53,940 --> 00:08:57,690
+selected, I click on
+Environment Variables.
+
+176
+00:08:57,690 --> 00:09:03,410
+And then if I scroll down here,
+I can open my Path and Edit.
+
+177
+00:09:03,410 --> 00:09:04,920
+And see here, this
+is what I mean.
+
+178
+00:09:04,920 --> 00:09:07,750
+We just have one line of text.
+
+179
+00:09:07,750 --> 00:09:10,470
+These are all of the same
+elements of the path that we
+
+180
+00:09:10,470 --> 00:09:12,940
+saw in Windows 10.
+
+181
+00:09:12,940 --> 00:09:14,670
+But rather than being
+on separate lines,
+
+182
+00:09:14,670 --> 00:09:16,230
+they're all in one line.
+
+183
+00:09:16,230 --> 00:09:20,295
+In order to update a
+path using this older UI,
+
+184
+00:09:20,295 --> 00:09:26,910
+I can copy in my C: Program
+Files MongoDB Server 3.4 bin
+
+185
+00:09:26,910 --> 00:09:29,850
+path, and then
+type a semicolon so
+
+186
+00:09:29,850 --> 00:09:35,250
+that it is separated from
+the next item in my path.
+
+187
+00:09:35,250 --> 00:09:39,390
+With that, I can
+click OK, OK, OK.
+
+188
+00:09:39,390 --> 00:09:43,740
+And then I've updated
+my path on Windows 7.
+
+189
+00:09:43,740 --> 00:09:48,180
+Returning to Windows 10, I
+want to do the same thing.
+
+190
+00:09:48,180 --> 00:09:49,620
+Click OK.
+
+191
+00:09:49,620 --> 00:09:53,190
+And then what I want to
+do is restart the Command
+
+192
+00:09:53,190 --> 00:09:56,520
+prompt because on many
+versions of Windows,
+
+193
+00:09:56,520 --> 00:09:59,040
+it's only after I restart
+the Command prompt
+
+194
+00:09:59,040 --> 00:10:02,340
+that those changes I made to
+the path environment variable
+
+195
+00:10:02,340 --> 00:10:04,010
+will be reflected.
+
+196
+00:10:04,010 --> 00:10:05,450
+So I'm going to close that.
+
+197
+00:10:05,450 --> 00:10:07,950
+And I'll just start it the same
+way, typing command and then
+
+198
+00:10:07,950 --> 00:10:09,060
+hitting Enter.
+
+199
+00:10:09,060 --> 00:10:13,820
+And now I'll be able to
+execute the mongo shell.
+
+200
+00:10:13,820 --> 00:10:16,130
+So to verify that we've
+installed it correctly
+
+201
+00:10:16,130 --> 00:10:19,290
+and that we've set up our path
+correctly, what I'm going to do
+
+202
+00:10:19,290 --> 00:10:22,650
+is type mongo dash dash no db.
+
+203
+00:10:22,650 --> 00:10:26,160
+Now dash dash no db simply means
+that we're just starting up
+
+204
+00:10:26,160 --> 00:10:28,800
+the mongo shell without
+attempting to connect
+
+205
+00:10:28,800 --> 00:10:31,860
+to any MongoDB database.
+
+206
+00:10:31,860 --> 00:10:33,360
+We're doing this
+simply as a means
+
+207
+00:10:33,360 --> 00:10:35,610
+of verifying that we've
+installed the mongo
+
+208
+00:10:35,610 --> 00:10:40,230
+shell correctly and that we've
+setup our path correctly.
+
+209
+00:10:40,230 --> 00:10:42,560
+And if you see a
+message, such as this,
+
+210
+00:10:42,560 --> 00:10:45,480
+MongoDB shell version 3.4.6--
+
+211
+00:10:45,480 --> 00:10:48,750
+or later, depending on
+when you're actually doing
+
+212
+00:10:48,750 --> 00:10:49,830
+this install.
+
+213
+00:10:49,830 --> 00:10:52,650
+As we roll out the
+next version of MongoDB
+
+214
+00:10:52,650 --> 00:10:55,140
+your version number may change.
+
+215
+00:10:55,140 --> 00:10:57,970
+But you should see a message
+very similar to this.
+
+216
+00:10:57,970 --> 00:11:00,060
+You have successfully
+installed the mongo shell
+
+217
+00:11:00,060 --> 00:11:02,280
+and launched it correctly.
+
+218
+00:11:02,280 --> 00:11:04,470
+To quit the mongo shell
+you can simply type, quit.
+
+219
+00:11:04,470 --> 00:11:06,540
+You can run the function Quit.
+
+220
+00:11:06,540 --> 00:11:10,020
+And that's it for
+installing the mongo shell
+
+221
+00:11:10,020 --> 00:11:14,040
+and getting setup to do a number
+of different CRUD operations
+
+222
+00:11:14,040 --> 00:11:15,144
+in the mongo shell.
+
+223
+00:11:15,144 --> 00:11:16,560
+For the sake of
+completeness, I'll
+
+224
+00:11:16,560 --> 00:11:18,520
+do the same thing in Windows 7.
+
+225
+00:11:18,520 --> 00:11:23,130
+So I close the Command
+prompt, launch it again,
+
+226
+00:11:23,130 --> 00:11:25,569
+and run mongo dash dash no db.
+
+227
+00:11:25,569 --> 00:11:28,110
+And here we can see that we have
+a slightly different startup
+
+228
+00:11:28,110 --> 00:11:28,980
+message.
+
+229
+00:11:28,980 --> 00:11:31,290
+This is pointing
+you to documentation
+
+230
+00:11:31,290 --> 00:11:35,700
+and to Google Groups where
+you can ask questions.
+
+231
+00:11:35,700 --> 00:11:37,740
+For this class,
+please make sure you
+
+232
+00:11:37,740 --> 00:11:41,070
+direct your questions to the
+MongoDB discussion forum.
+
+233
+00:11:41,070 --> 00:11:43,950
+If you post in Google Groups,
+we will just direct you
+
+234
+00:11:43,950 --> 00:11:46,110
+to the discussion forum anyway.
+
+235
+00:11:46,110 --> 00:11:49,110
+Before we close out, I
+want to say one last thing.
+
+236
+00:11:49,110 --> 00:11:54,970
+If for any reason you have
+trouble installing MongoDB,
+
+237
+00:11:54,970 --> 00:11:58,210
+please visit the
+MongoDB documentation
+
+238
+00:11:58,210 --> 00:12:02,020
+for installing MongoDB
+Enterprise on Windows.
+
+239
+00:12:02,020 --> 00:12:04,800
+This is a simple
+Google query away,
+
+240
+00:12:04,800 --> 00:12:07,180
+and there is extensive
+documentation for how
+
+241
+00:12:07,180 --> 00:12:10,900
+to install MongoDB on Windows.
+
+242
+00:12:10,900 --> 00:12:15,281
+You can, of course, also ask for
+help in the discussion forum.
+
+243
+00:12:15,281 --> 00:12:16,780
+But before posting,
+please make sure
+
+244
+00:12:16,780 --> 00:12:18,315
+you do a search in
+the forum to see
+
+245
+00:12:18,315 --> 00:12:19,690
+whether your
+question has already
+
+246
+00:12:19,690 --> 00:00:00,000
+been asked and answered.
+

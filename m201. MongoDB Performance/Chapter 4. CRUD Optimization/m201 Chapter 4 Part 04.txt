@@ -1,0 +1,69 @@
+In this lesson, we're going to be talking about data type implications, [INAUDIBLE] different data types across same fields, across the documents of a given collection.
+
+We will look into the implications of data types for flexible schema trade-offs, the data consistency implications, and the query correctness that you should be aware of once dealing with MongoDB.
+
+One of the advantages of working with documents rather than browsing a relational system is the ability to have a very natural representation to work with data.
+
+The other obvious one is the ability to have a very flexible model for our data representation.
+
+So let's say that we have this collection, shapes, where we insert this document, which has a type, single length type, base, and height.
+
+We can insert that document no problem.
+
+But if we want to use a slightly different document-- let's say that we still have our type and it still has a string as a value, we're still going to have a side_length_type, which is great.
+
+But now our base field, instead of integer 64, is going to be a NumberDecimal.
+
+And we are not going to have an i-th, but we are going to have a side_length field.
+
+If we insert this, no problem.
+
+MongoDB kind of likes it.
+
+And our variations can continue, to have more simplified documents with more or less variations.
+
+Now, while it is possible to have same field with different data types, there are implications for the application that you should consider, like for example on query matching.
+
+Now let's say that I'm going to be looking for a document where base equals 2.8, 84, 42, 71, and so forth.
+
+A filter matching a field with an integer or floating point value is not the same as a filter matching a value that is represented by a string or decimal type.
+
+If we try to look for this floating value, we cannot find it.
+
+There's no such thing as a document where base equals this floating point value.
+
+On the other hand, if we try to find a shapes document where the base equals a string value of the same floating point, obviously it still doesn't find it.
+
+But if we do express our query with the correct NumberDecimal type, where there is a document for it, we will most definitely find it.
+
+So the fact that we have different data types and for correctness does not mean that by expressing a different data type, even though the representation is pretty simple for you to find the correct document, you have to provide a query where the data type matches the documents on the collection with exact data type.
+
+Sorting will also be affected by different documents having for the same field different data types.
+
+In this example, we are using numerical data types, int64 and decimal data types.
+
+So this ordering of the results becomes very, very easy to perform.
+
+If I'm looking for all documents and just projecting base and not even underscore ID, and I'm sorting based on base ascending, we will get the correct comparison order by all of the different data types that currently have in our shapes collection.
+
+It's going to have int64.
+
+Then we're going to have a NumberDecimal and then another int64 and another int64.
+
+However, what if we set the field base with non-numerical data type?
+
+What happens then?
+
+I'm going to go ahead and insert these two different documents.
+
+These two documents have very similar shapes, where the base value is represented by a string, in this case 3.
+
+And in the second document, we just changed the base from string 3 to string 14, so very similar documents.
+
+If we apply the same sorting into this collection, we will have first all numerical values represented, and then string values represented as well.
+
+This means that in these cases, MongoDB will be grouping documents and comparing their fields based on the different BSON types using a specific comparison order.
+
+We will start by MinKey, then null or non-existent field documents, numerical, symbol or string, object, array, and all the way down to MaxKey, so that basically that means that we will group documents that are represented by MinKey or null or numbers, like ints, longs, doubles decimals.
+
+Then we will group and compare between them symbols and strings, then objects, and so forth.

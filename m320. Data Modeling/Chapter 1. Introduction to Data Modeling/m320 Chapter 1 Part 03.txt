@@ -1,0 +1,65 @@
+In this lesson, we're going to cover the MongoDB document model.
+
+Data in MongoDB stored in a hierarchical structure where the database are at the top level where each MongoDB deployment can have many databases.
+
+Then there are one or more collections in the database.
+
+And finally, there are documents which are kept at the collection level.
+
+In MongoDB, data is stored as BSON documents that are composed of field value pairs, where BSON is a binary representation of JSON documents.
+
+Since BSON is not human-readable, we will stick with JSON in our examples throughout this course.
+
+So how does a document like that look?
+
+Keeping with the standard JSON notation, we have an open curly bracket indicating the beginning of a document, followed by several field value pairs separated by commas.
+
+Each value can be of any BSON data type, which in this case are a string, an integer, another string, and an array.
+
+With MongoDB, a document is a collection of attributes for an object.
+
+If you're coming from SQL, a document is like a row in the table that has been joined with other relevant rows from other tables.
+
+You have a field and its assigned value, just like each column in a row has a value.
+
+In this example, we're looking at a variety of field types which are all supported by MongoDB.
+
+Here we have a string, an integer, an array, a document, and an array of documents, which make up a single document.
+
+This is a powerful feature of MongoDB.
+
+Instead of having to query multiple tables of related data and assembling it all together, you can keep your related data in a single document and pull it all down using a single query.
+
+If you're familiar with computer programming languages, then you could consider a MongoDB document as being similar to a dictionary or a map or an associative array-- an object that has a number of key value pairs.
+
+Since MongoDB documents support a flexible structure, you can use a document to represent an entire object rather than having to break up the data across multiple records as you would have to do with the relational database.
+
+The exact structure of a document-- all the fields, values, and embedded documents-- represent the schema of a document.
+
+You've probably heard the term flexible schema thrown around in relation to MongoDB.
+
+Well, let's just clarify this term.
+
+MongoDB documents have a flexible schema in that you're not required to make complicated changes to a collection's metadata to add or remove the fields in a documents.
+
+Documents in the same collection don't need to have the exact same list of fields.
+
+Furthermore, the data type in any given field can vary across documents.
+
+You do not have to make changes at the cluster level to support this.
+
+Another way to view this is that you can have multiple versions of your schema as your application develops over time and all the schema versions can coexist in the same collection.
+
+Compare this to database solutions where adding of removing columns or fields or changing the data type of that column or field can be a complicated process.
+
+That said, chances are that the documents in a given collection will have a common structure between them.
+
+MongoDB supports enforcing the schema shape from no rules, rules in a few fields, to rules on all the fields of the documents.
+
+Let's recap.
+
+MongoDB stores data as documents.
+
+Document fields can be values, embedded documents, or arrays of values and documents.
+
+MongoDB is a flexible schema database.

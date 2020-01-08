@@ -1,0 +1,95 @@
+
+1
+00:00:00.000 --> 00:00:00.750
+
+
+2
+00:00:00.750 --> 00:00:05.270
+Let's answer some concerns the
+usage of patterns may arise.
+
+3
+00:00:05.270 --> 00:00:08.340
+Patterns are a way to get the
+best out of your data model.
+
+4
+00:00:08.340 --> 00:00:10.500
+Often, the main goal is
+to optimize your schema
+
+5
+00:00:10.500 --> 00:00:13.020
+to respond to some
+performance operation
+
+6
+00:00:13.020 --> 00:00:16.840
+or optimize it for a given
+use case or access pattern.
+
+7
+00:00:16.840 --> 00:00:18.630
+Although like many
+things in life,
+
+8
+00:00:18.630 --> 00:00:20.970
+good things come at a cost.
+
+9
+00:00:20.970 --> 00:00:23.220
+Many patterns lead
+to some situations
+
+10
+00:00:23.220 --> 00:00:26.080
+that would require some
+additional actions.
+
+11
+00:00:26.080 --> 00:00:31.360
+For example, duplicating data
+across documents, accepting
+
+12
+00:00:31.360 --> 00:00:34.530
+staleness in some
+pieces of data,
+
+13
+00:00:34.530 --> 00:00:36.660
+writing extra
+application side logic
+
+14
+00:00:36.660 --> 00:00:39.360
+to ensure referential integrity.
+
+15
+00:00:39.360 --> 00:00:41.460
+Choosing a pattern to be
+applied to your schema
+
+16
+00:00:41.460 --> 00:00:44.670
+requires taking into account
+these three concerns.
+
+17
+00:00:44.670 --> 00:00:46.320
+If these concerns
+are more important
+
+18
+00:00:46.320 --> 00:00:49.500
+than the potential simplicity
+of performance gains provided
+
+19
+00:00:49.500 --> 00:00:52.579
+by the pattern, you should
+not use the pattern.
+
+20
+00:00:52.579 --> 00:00:53.079

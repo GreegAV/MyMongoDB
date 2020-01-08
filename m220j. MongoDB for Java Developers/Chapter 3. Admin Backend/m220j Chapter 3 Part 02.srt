@@ -1,0 +1,670 @@
+
+1
+00:00:00.000 --> 00:00:00.180
+
+
+2
+00:00:00.180 --> 00:00:02.200
+So in this lesson we're going
+to discuss bulk writes, which
+
+3
+00:00:02.200 --> 00:00:03.590
+is a different kind
+of write in MongoDB,
+
+4
+00:00:03.590 --> 00:00:05.964
+and we're going to talk about
+the performance application
+
+5
+00:00:05.964 --> 00:00:07.470
+of these kinds of writes.
+
+6
+00:00:07.470 --> 00:00:09.360
+So oftentimes our
+applications will
+
+7
+00:00:09.360 --> 00:00:10.890
+encounter situations
+in which they
+
+8
+00:00:10.890 --> 00:00:13.480
+need to perform a series
+of writes at once.
+
+9
+00:00:13.480 --> 00:00:15.120
+And in some cases,
+these writes have
+
+10
+00:00:15.120 --> 00:00:16.890
+a causal effect on one another.
+
+11
+00:00:16.890 --> 00:00:18.450
+One of them failing
+or succeeding
+
+12
+00:00:18.450 --> 00:00:20.650
+may affect the
+application logic.
+
+13
+00:00:20.650 --> 00:00:23.580
+So in this case, a customer is
+on our supermarket application
+
+14
+00:00:23.580 --> 00:00:26.020
+and they're purchasing
+items from the store.
+
+15
+00:00:26.020 --> 00:00:27.900
+We want to update the
+database to reflect
+
+16
+00:00:27.900 --> 00:00:30.569
+the new quantities of that
+food that we have in stock.
+
+17
+00:00:30.569 --> 00:00:32.610
+So they bought two apples,
+so we want to decrease
+
+18
+00:00:32.610 --> 00:00:34.314
+the total quantity by two.
+
+19
+00:00:34.314 --> 00:00:35.730
+They bought four
+sticks of butter,
+
+20
+00:00:35.730 --> 00:00:37.610
+one slice of bread, et cetera.
+
+21
+00:00:37.610 --> 00:00:41.020
+When our application received
+these writes, one option it has
+
+22
+00:00:41.020 --> 00:00:44.050
+is to send each of them to
+the database one at a time.
+
+23
+00:00:44.050 --> 00:00:45.750
+So it would send
+the first write,
+
+24
+00:00:45.750 --> 00:00:48.540
+and then some time later, it
+will receive an acknowledgment
+
+25
+00:00:48.540 --> 00:00:49.650
+back from the database.
+
+26
+00:00:49.650 --> 00:00:50.270
+Nice.
+
+27
+00:00:50.270 --> 00:00:52.010
+Now we'll see the
+next write over.
+
+28
+00:00:52.010 --> 00:00:55.260
+So we send the next write,
+wait for acknowledgment.
+
+29
+00:00:55.260 --> 00:00:57.360
+So we just performed
+two write operations,
+
+30
+00:00:57.360 --> 00:00:59.375
+and it required two round
+trips to the database.
+
+31
+00:00:59.375 --> 00:01:01.860
+We need to send the
+operation, and then
+
+32
+00:01:01.860 --> 00:01:04.319
+receive an acknowledgment
+back from the database.
+
+33
+00:01:04.319 --> 00:01:07.380
+That's round trip to the
+database for each operation.
+
+34
+00:01:07.380 --> 00:01:10.330
+But if we already knew all the
+writes we wanted to perform,
+
+35
+00:01:10.330 --> 00:01:12.490
+why is our client sending
+them each one at a time?
+
+36
+00:01:12.490 --> 00:01:14.323
+So you can probably see
+where this is going.
+
+37
+00:01:14.323 --> 00:01:17.610
+So what we can do instead is
+batch these writes together
+
+38
+00:01:17.610 --> 00:01:19.230
+and then send them in bulk.
+
+39
+00:01:19.230 --> 00:01:20.970
+The exact method of
+grouping documents
+
+40
+00:01:20.970 --> 00:01:23.212
+together is implemented
+differently in each driver,
+
+41
+00:01:23.212 --> 00:01:25.170
+just because the data
+structures are different.
+
+42
+00:01:25.170 --> 00:01:27.090
+But the general
+idea is the same.
+
+43
+00:01:27.090 --> 00:01:28.890
+Package a bunch of
+writes into a batch,
+
+44
+00:01:28.890 --> 00:01:30.810
+usually a list or an
+array-- but again,
+
+45
+00:01:30.810 --> 00:01:33.390
+the implementation is
+different in every language--
+
+46
+00:01:33.390 --> 00:01:35.490
+and then send that
+whole batch to MongoDB
+
+47
+00:01:35.490 --> 00:01:37.620
+and get one acknowledgment
+back from the server.
+
+48
+00:01:37.620 --> 00:01:39.090
+This is an
+implementation of bulk
+
+49
+00:01:39.090 --> 00:01:40.950
+writes in the Mongols
+shell, and you
+
+50
+00:01:40.950 --> 00:01:43.327
+can copy this from the handout
+if you want to try it out.
+
+51
+00:01:43.327 --> 00:01:45.660
+But this will look different
+and your chosen programming
+
+52
+00:01:45.660 --> 00:01:47.400
+language, so just
+bear that in mind.
+
+53
+00:01:47.400 --> 00:01:48.930
+When a client
+sends a bulk write,
+
+54
+00:01:48.930 --> 00:01:50.971
+it gets one acknowledgment
+back from the database
+
+55
+00:01:50.971 --> 00:01:51.955
+for the whole batch.
+
+56
+00:01:51.955 --> 00:01:54.510
+And this is a benefit to our
+application's performance
+
+57
+00:01:54.510 --> 00:01:56.310
+because it limits
+the effect of latency
+
+58
+00:01:56.310 --> 00:01:58.230
+on the overall speed
+of the operation.
+
+59
+00:01:58.230 --> 00:02:00.240
+If it takes one second
+for each round trip,
+
+60
+00:02:00.240 --> 00:02:03.690
+then setting each write one at
+a time takes four total seconds.
+
+61
+00:02:03.690 --> 00:02:06.240
+But if we can send all
+four writes in one trip,
+
+62
+00:02:06.240 --> 00:02:08.610
+then sending four writes
+only takes one second.
+
+63
+00:02:08.610 --> 00:02:10.229
+Now the default
+behavior of a bulk
+
+64
+00:02:10.229 --> 00:02:13.710
+write in Mongo is an ordered
+execution of these writes.
+
+65
+00:02:13.710 --> 00:02:15.690
+In the order bulk
+write, any failure
+
+66
+00:02:15.690 --> 00:02:18.240
+will stop the execution
+of the rest of the batch.
+
+67
+00:02:18.240 --> 00:02:20.580
+This benefits us in this case
+because these writes might
+
+68
+00:02:20.580 --> 00:02:22.830
+be causally related, like
+if two different update
+
+69
+00:02:22.830 --> 00:02:25.560
+operations want to buy sticks
+of butter but there's only one
+
+70
+00:02:25.560 --> 00:02:26.420
+left.
+
+71
+00:02:26.420 --> 00:02:28.950
+In that situation, the
+first operation in the batch
+
+72
+00:02:28.950 --> 00:02:30.440
+you get the last
+stick of butter,
+
+73
+00:02:30.440 --> 00:02:32.580
+and the second operation
+should error out.
+
+74
+00:02:32.580 --> 00:02:34.497
+That's why we need
+these executed in order.
+
+75
+00:02:34.497 --> 00:02:36.330
+The bulk rate would
+throw some sort of error
+
+76
+00:02:36.330 --> 00:02:37.719
+on the update
+statement, and then
+
+77
+00:02:37.719 --> 00:02:39.510
+return an acknowledgment
+back to the client
+
+78
+00:02:39.510 --> 00:02:41.697
+before trying to
+purchase any more items.
+
+79
+00:02:41.697 --> 00:02:43.530
+The acknowledgment we
+get back would tell us
+
+80
+00:02:43.530 --> 00:02:44.940
+if something errored out.
+
+81
+00:02:44.940 --> 00:02:47.892
+So bulk writes in MongoDB
+will be ordered by default.
+
+82
+00:02:47.892 --> 00:02:49.350
+That means that
+even though we sent
+
+83
+00:02:49.350 --> 00:02:52.350
+all the writes at the same time,
+the replica set will apply them
+
+84
+00:02:52.350 --> 00:02:53.940
+in the order that
+they were sent.
+
+85
+00:02:53.940 --> 00:02:55.830
+Sending an ordered
+bulk write implies
+
+86
+00:02:55.830 --> 00:02:58.260
+that each write in the batch
+depends on all the writes
+
+87
+00:02:58.260 --> 00:02:59.670
+that occurred before it.
+
+88
+00:02:59.670 --> 00:03:02.010
+So if a write operation
+results in error,
+
+89
+00:03:02.010 --> 00:03:03.660
+all subsequent
+writes will not be
+
+90
+00:03:03.660 --> 00:03:06.000
+executed, because Mongo
+assumes that those
+
+91
+00:03:06.000 --> 00:03:08.670
+writes were expecting the
+ones before to succeed.
+
+92
+00:03:08.670 --> 00:03:10.740
+But there's a chance that
+the writes in our batch
+
+93
+00:03:10.740 --> 00:03:12.564
+are not dependent on each other.
+
+94
+00:03:12.564 --> 00:03:14.730
+In this case, we've just
+received a shipment of food
+
+95
+00:03:14.730 --> 00:03:17.250
+to the warehouse and we
+want to update the new food
+
+96
+00:03:17.250 --> 00:03:18.600
+quantities in stock.
+
+97
+00:03:18.600 --> 00:03:20.910
+Because all these
+operations are additive,
+
+98
+00:03:20.910 --> 00:03:23.460
+we don't need them to
+be executed in order.
+
+99
+00:03:23.460 --> 00:03:25.710
+So I passed this order
+of false flag to the bulk
+
+100
+00:03:25.710 --> 00:03:28.200
+write command which will
+execute them in parallel.
+
+101
+00:03:28.200 --> 00:03:30.300
+If some of them fail
+for whatever reason,
+
+102
+00:03:30.300 --> 00:03:32.100
+we can still continue
+on with the execution
+
+103
+00:03:32.100 --> 00:03:34.207
+of the other operations
+in the batch.
+
+104
+00:03:34.207 --> 00:03:35.790
+And when we get an
+acknowledgment back
+
+105
+00:03:35.790 --> 00:03:38.340
+from the server, it'll let us
+know if any of the operations
+
+106
+00:03:38.340 --> 00:03:39.282
+fail.
+
+107
+00:03:39.282 --> 00:03:40.740
+So if the writes
+in our batch don't
+
+108
+00:03:40.740 --> 00:03:42.319
+have any sort of
+causal relationship,
+
+109
+00:03:42.319 --> 00:03:44.610
+then the client can send them
+over in an unordered bulk
+
+110
+00:03:44.610 --> 00:03:45.690
+write.
+
+111
+00:03:45.690 --> 00:03:47.920
+This will execute the write
+operations in parallel
+
+112
+00:03:47.920 --> 00:03:49.440
+so the writes are non-blocking.
+
+113
+00:03:49.440 --> 00:03:51.270
+And as a result,
+a single failure
+
+114
+00:03:51.270 --> 00:03:53.850
+won't prevent any of the
+other writes from succeeding.
+
+115
+00:03:53.850 --> 00:03:55.770
+Now those writes might
+fail on their own,
+
+116
+00:03:55.770 --> 00:03:58.140
+but their execution is
+not tied to the success
+
+117
+00:03:58.140 --> 00:03:59.940
+of any of the other writes.
+
+118
+00:03:59.940 --> 00:04:01.620
+So in conclusion,
+bulk writes make
+
+119
+00:04:01.620 --> 00:04:03.710
+it more efficient
+to update or insert
+
+120
+00:04:03.710 --> 00:04:06.990
+in many documents in a database
+by setting them all in batches.
+
+121
+00:04:06.990 --> 00:04:09.295
+These bulk writes can be
+ordered, which means writes
+
+122
+00:04:09.295 --> 00:04:10.920
+are executed in the
+order in which they
+
+123
+00:04:10.920 --> 00:04:12.750
+were sent to the
+database and any errors
+
+124
+00:04:12.750 --> 00:04:15.570
+will prevent subsequent
+writes from executing.
+
+125
+00:04:15.570 --> 00:04:16.950
+They can also be
+unordered, which
+
+126
+00:04:16.950 --> 00:04:18.899
+means the writes are
+executed in parallel,
+
+127
+00:04:18.899 --> 00:04:21.930
+and errors don't affect the
+execution of other writes.
+
+128
+00:04:21.930 --> 00:04:23.280
+Now one small thing to note.
+
+129
+00:04:23.280 --> 00:04:25.440
+In a shorted collection,
+ordered bulk rates
+
+130
+00:04:25.440 --> 00:04:26.970
+are expected to
+take a little longer
+
+131
+00:04:26.970 --> 00:04:29.470
+because write operations need
+to be routed to the designated
+
+132
+00:04:29.470 --> 00:04:30.360
+shards.
+
+133
+00:04:30.360 --> 00:04:33.660
+And unordered bulk write might
+reach the mongos in one batch,
+
+134
+00:04:33.660 --> 00:04:37.200
+but then it has to be serialized
+across each designated shard.
+
+135
+00:04:37.200 --> 00:04:39.060
+Regardless of the
+designated shard,
+
+136
+00:04:39.060 --> 00:04:40.980
+the write operation
+needs to be evaluated
+
+137
+00:04:40.980 --> 00:04:42.720
+to see if we should
+continue or exit
+
+138
+00:04:42.720 --> 00:04:45.650
+the execution of the
+rest of the batch.

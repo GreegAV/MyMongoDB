@@ -1,0 +1,49 @@
+In this chapter, we will cover auto express relationships with MongoDB.
+
+even if MongoDB is classified as a document database, the pieces of information stored in the database still have relationships between them.
+
+Old style databases are often referred to as relational databases.
+
+However, NoSQL databases are also relational, so a better name for those legacy databases is Tabular, which highlights a notion of columns and tables.
+
+Understanding how to represent relationships, and deciding between embedding and linking relationship information, is crucial.
+
+We have seen customers embedding large arrays where they should not have.
+
+Other customers creating too many collections or too few collections.
+
+Many of these customers with subpar designs ended up having huge performance issues.
+
+As we said in the introduction of this course, having a good model is the single most important thing you can do to ensure you get good performance.
+
+The face of identifying and modeling relationships correctly is a step that is not optional in the methodology.
+
+This chapter will give you the knowledge you need to do it right.
+
+What are relationships in the data model?
+
+If you look at any schema implementation in MongoDB, or any other database, you can observe objects, referred to as entities.
+
+The relationships represent all the entities and the other piece of information are related to each other.
+
+For example, a customer name and its customer ID have a one to one relationship.
+
+We often group this type of relationship in a single entity.
+
+The relationship between a customer and the invoice sent to them is a one to many relationship, as one customer has many invoice, but each invoice only belong to one customer.
+
+And the invoices and their products have a many to many relationship, as the invoice referred to many products, and a product is likely listed in many invoices.
+
+If any of this is confusing, don't worry.
+
+We'll cover it all in great detail in the following lessons.
+
+In this chapter, we will go over these different type of relationships and their implementation in MongoDB.
+
+We will start with the different types and cardinalities that describe our relationships, then we will answer one of the essential question when modeling unit of information for MongoDB.
+
+Should the information be embedded or referenced?
+
+If you are still feeling a little uncomfortable with some of the terminology and parallels we make between tabular databases and MongoDB, it is a great time to review the lists of prerequisites and references we presented at the beginning of this course.
+
+By the end of this chapter, you will have all the knowledge necessary to design basic MongoDB models, and you should understand why people say that MongoDB is the best database for representing relationships between units of information.

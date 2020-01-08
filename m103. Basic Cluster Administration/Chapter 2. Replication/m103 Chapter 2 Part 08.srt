@@ -1,0 +1,484 @@
+1
+00:00:00,000 --> 00:00:00,200
+
+
+2
+00:00:00,200 --> 00:00:02,866
+So in this lesson we're going to
+take a look at reads and writes
+
+3
+00:00:02,866 --> 00:00:05,210
+in a replica set just to get
+a sense of how the MongoDB
+
+4
+00:00:05,210 --> 00:00:07,119
+replication mechanism works.
+
+5
+00:00:07,119 --> 00:00:08,660
+So I'm just going
+to use this command
+
+6
+00:00:08,660 --> 00:00:10,159
+to connect to our
+three node replica
+
+7
+00:00:10,159 --> 00:00:12,190
+set called m103-example.
+
+8
+00:00:12,190 --> 00:00:14,750
+And to figure out which node
+in this set is currently
+
+9
+00:00:14,750 --> 00:00:18,610
+the primary, I'm going to run
+this command rs.isMaster().
+
+10
+00:00:18,610 --> 00:00:21,142
+And this output actually
+gives us a lot of information.
+
+11
+00:00:21,142 --> 00:00:22,850
+It gives us the current
+primary, which is
+
+12
+00:00:22,850 --> 00:00:24,277
+the node running on port 27011.
+
+13
+00:00:24,277 --> 00:00:26,360
+And it also gives us the
+node that we're currently
+
+14
+00:00:26,360 --> 00:00:27,959
+connected to, me.
+
+15
+00:00:27,959 --> 00:00:29,750
+In this case, it's the
+same as the primary,
+
+16
+00:00:29,750 --> 00:00:32,290
+because we're connected to the
+replica set through the shell.
+
+17
+00:00:32,290 --> 00:00:35,692
+It also gives us the other
+nodes in this replica set.
+
+18
+00:00:35,692 --> 00:00:39,570
+So I'm just going to create a
+new database here called newDB.
+
+19
+00:00:39,570 --> 00:00:41,860
+And insert a new document
+into a new collection
+
+20
+00:00:41,860 --> 00:00:43,897
+called new collection in newDB.
+
+21
+00:00:43,897 --> 00:00:45,730
+And I'm just going to
+connect to a secondary
+
+22
+00:00:45,730 --> 00:00:48,760
+to make sure they receive
+the write as well.
+
+23
+00:00:48,760 --> 00:00:51,220
+We can scroll up to
+the rs.isMaster output
+
+24
+00:00:51,220 --> 00:00:54,220
+to figure out which of
+these nodes is a secondary.
+
+25
+00:00:54,220 --> 00:00:56,320
+And we know this is
+the primary, so we just
+
+26
+00:00:56,320 --> 00:00:58,504
+have to connect to one
+of these two nodes.
+
+27
+00:00:58,504 --> 00:00:59,920
+So this is the
+command we're going
+
+28
+00:00:59,920 --> 00:01:02,530
+to use to connect directly to
+a secondary node in our replica
+
+29
+00:01:02,530 --> 00:01:03,540
+set.
+
+30
+00:01:03,540 --> 00:01:06,400
+Notice that we've changed
+the node port that we've
+
+31
+00:01:06,400 --> 00:01:07,990
+selected in our host name.
+
+32
+00:01:07,990 --> 00:01:10,840
+And we also haven't specified
+the name of the replica set.
+
+33
+00:01:10,840 --> 00:01:13,450
+Because if we were to specify
+the name of the replica set,
+
+34
+00:01:13,450 --> 00:01:15,760
+the shell would automatically
+direct us to the primary.
+
+35
+00:01:15,760 --> 00:01:18,009
+And in this case, we actually
+want to connect directly
+
+36
+00:01:18,009 --> 00:01:19,030
+to a secondary.
+
+37
+00:01:19,030 --> 00:01:20,620
+And as we can see,
+the shell prompt
+
+38
+00:01:20,620 --> 00:01:22,120
+is changed to reflect
+that we're now
+
+39
+00:01:22,120 --> 00:01:23,534
+connected to a secondary node.
+
+40
+00:01:23,534 --> 00:01:26,200
+So we can to start running shell
+commands on the secondary note,
+
+41
+00:01:26,200 --> 00:01:27,250
+right?
+
+42
+00:01:27,250 --> 00:01:28,840
+No, actually we can't.
+
+43
+00:01:28,840 --> 00:01:30,880
+When we're connected
+to a secondary node,
+
+44
+00:01:30,880 --> 00:01:33,220
+we can only run read commands
+after telling MongoDB
+
+45
+00:01:33,220 --> 00:01:35,620
+that we're sure that's
+what we want to do.
+
+46
+00:01:35,620 --> 00:01:38,250
+This is because MongoDB errs
+on the side of consistency.
+
+47
+00:01:38,250 --> 00:01:40,000
+Given that we want to
+make sure you always
+
+48
+00:01:40,000 --> 00:01:41,680
+have a consistent
+view of your data,
+
+49
+00:01:41,680 --> 00:01:43,180
+you need to explicitly
+say otherwise
+
+50
+00:01:43,180 --> 00:01:45,244
+if you want to read
+from the secondaries.
+
+51
+00:01:45,244 --> 00:01:46,660
+So this is the
+command we're going
+
+52
+00:01:46,660 --> 00:01:49,480
+to run in order to
+enable read operations
+
+53
+00:01:49,480 --> 00:01:51,120
+on the secondary node.
+
+54
+00:01:51,120 --> 00:01:54,430
+And now, our show DBs
+command should actually work.
+
+55
+00:01:54,430 --> 00:01:55,910
+And it does.
+
+56
+00:01:55,910 --> 00:01:58,800
+And we can see that the
+write command was replicated
+
+57
+00:01:58,800 --> 00:02:01,840
+to the secondary node.
+
+58
+00:02:01,840 --> 00:02:05,690
+So here I've tried to insert a
+document into a secondary node.
+
+59
+00:02:05,690 --> 00:02:08,440
+And as expected, we can only
+enable reads on this secondary.
+
+60
+00:02:08,440 --> 00:02:10,750
+We'll never be able to
+write to a secondary node.
+
+61
+00:02:10,750 --> 00:02:13,000
+The purpose of this is to
+enforce strong consistency
+
+62
+00:02:13,000 --> 00:02:14,440
+on our cluster.
+
+63
+00:02:14,440 --> 00:02:16,480
+The Mongo shell
+lets us know that we
+
+64
+00:02:16,480 --> 00:02:18,422
+can't write to the secondary.
+
+65
+00:02:18,422 --> 00:02:20,130
+So far we've covered
+how reads and writes
+
+66
+00:02:20,130 --> 00:02:22,270
+work in a replica set
+when it's healthy.
+
+67
+00:02:22,270 --> 00:02:24,880
+In the interest of learning
+how replica sets handle crisis,
+
+68
+00:02:24,880 --> 00:02:26,390
+we're going to
+break a few things.
+
+69
+00:02:26,390 --> 00:02:28,690
+First, we're going to
+shut this node off.
+
+70
+00:02:28,690 --> 00:02:31,310
+Now when we connect
+back to the replica set,
+
+71
+00:02:31,310 --> 00:02:35,160
+we run rs.status() we can see
+that the node we shut down is
+
+72
+00:02:35,160 --> 00:02:37,820
+no longer reachable
+from the primary.
+
+73
+00:02:37,820 --> 00:02:40,789
+Now I'm just going to shut
+down this other node here.
+
+74
+00:02:40,789 --> 00:02:42,580
+So now that we've shut
+off two of the nodes
+
+75
+00:02:42,580 --> 00:02:44,840
+in our replica set,
+there's only one left.
+
+76
+00:02:44,840 --> 00:02:47,199
+And one out of three
+does not form a majority.
+
+77
+00:02:47,199 --> 00:02:49,490
+So we actually won't be able
+to connect to the primary,
+
+78
+00:02:49,490 --> 00:02:52,580
+because the current primary,
+which was running on this node,
+
+79
+00:02:52,580 --> 00:02:54,267
+has stepped down to
+become a secondary.
+
+80
+00:02:54,267 --> 00:02:56,600
+So here I haven't specified
+the name of the replica set,
+
+81
+00:02:56,600 --> 00:02:59,440
+because I want to connect
+directly to this node.
+
+82
+00:02:59,440 --> 00:03:01,480
+And as we can see, that
+node has stepped down
+
+83
+00:03:01,480 --> 00:03:02,680
+to be the secondary.
+
+84
+00:03:02,680 --> 00:03:05,742
+We can verify that by
+running rs.isMaster().
+
+85
+00:03:05,742 --> 00:03:07,950
+So as we can see, we're
+still connected the same node
+
+86
+00:03:07,950 --> 00:03:08,890
+as before.
+
+87
+00:03:08,890 --> 00:03:11,576
+But that node is now
+a secondary node.
+
+88
+00:03:11,576 --> 00:03:13,450
+Even though the primary
+node never went down,
+
+89
+00:03:13,450 --> 00:03:16,300
+we lost the last secondary
+that gave us a majority.
+
+90
+00:03:16,300 --> 00:03:19,210
+If the replica set can no longer
+reach a majority of the nodes,
+
+91
+00:03:19,210 --> 00:03:23,062
+all the remaining nodes in
+the set become secondaries.
+
+92
+00:03:23,062 --> 00:03:24,520
+And because they're
+secondaries, we
+
+93
+00:03:24,520 --> 00:03:26,186
+can't write anything
+to the replica set,
+
+94
+00:03:26,186 --> 00:03:27,910
+because there is no primary.
+
+95
+00:03:27,910 --> 00:03:29,680
+This is just another
+safe mechanism
+
+96
+00:03:29,680 --> 00:03:34,130
+used by the MongoDB replica
+set to ensure data consistency.
+
+97
+00:03:34,130 --> 00:03:35,360
+So just to recap.
+
+98
+00:03:35,360 --> 00:03:38,250
+In this lesson, we covered
+data being replicated
+
+99
+00:03:38,250 --> 00:03:42,920
+to a secondary, how reading
+from secondary nodes works,
+
+100
+00:03:42,920 --> 00:03:45,020
+and how writing to a
+replica set when a majority
+
+101
+00:03:45,020 --> 00:00:00,000
+isn't available-- which
+is to say, we can't.
+

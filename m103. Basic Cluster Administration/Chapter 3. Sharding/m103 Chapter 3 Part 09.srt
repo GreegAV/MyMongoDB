@@ -1,0 +1,385 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,099
+So we've been talking sharded
+charted clusters for a bit now.
+
+3
+00:00:03,099 --> 00:00:04,640
+And you've heard at
+least a few times
+
+4
+00:00:04,640 --> 00:00:07,700
+about this concept of
+even distribution of data.
+
+5
+00:00:07,700 --> 00:00:09,830
+We know that a good shard
+key should contribute
+
+6
+00:00:09,830 --> 00:00:11,780
+to how evenly MongoDB
+can distribute
+
+7
+00:00:11,780 --> 00:00:14,300
+your data across the
+shards in your cluster.
+
+8
+00:00:14,300 --> 00:00:19,310
+But how exactly does MongoDB
+perform that data distribution?
+
+9
+00:00:19,310 --> 00:00:21,140
+Recall that with
+sharding, MongoDB
+
+10
+00:00:21,140 --> 00:00:25,460
+splits your sharded collections
+into chunks of data.
+
+11
+00:00:25,460 --> 00:00:27,305
+As you insert data
+into the collection,
+
+12
+00:00:27,305 --> 00:00:31,410
+the number of chunks on
+any given shard will grow.
+
+13
+00:00:31,410 --> 00:00:34,330
+The MongoDB balancer
+identifies which
+
+14
+00:00:34,330 --> 00:00:38,010
+shards have too many
+chunks and automatically
+
+15
+00:00:38,010 --> 00:00:41,850
+move chunks across shards in the
+sharded cluster in an attempt
+
+16
+00:00:41,850 --> 00:00:45,270
+to achieve even
+data distribution.
+
+17
+00:00:45,270 --> 00:00:47,280
+Currently, the
+balancer process runs
+
+18
+00:00:47,280 --> 00:00:50,700
+on the primary member of the
+config server replica set.
+
+19
+00:00:50,700 --> 00:00:52,620
+In prior versions
+the Mongo ES was
+
+20
+00:00:52,620 --> 00:00:55,560
+responsible for running
+the balancer process.
+
+21
+00:00:55,560 --> 00:00:58,290
+The balancer process checks the
+chunked distribution of data
+
+22
+00:00:58,290 --> 00:01:01,260
+across the sharded cluster and
+looks for certain migration
+
+23
+00:01:01,260 --> 00:01:03,361
+thresholds.
+
+24
+00:01:03,361 --> 00:01:05,069
+If it detects that
+there is an imbalance,
+
+25
+00:01:05,069 --> 00:01:07,500
+it starts a balancer round.
+
+26
+00:01:07,500 --> 00:01:09,960
+The balancer can migrate
+chunks in parallel.
+
+27
+00:01:09,960 --> 00:01:13,290
+A given shard cannot participate
+in more than one migration
+
+28
+00:01:13,290 --> 00:01:14,380
+at a time.
+
+29
+00:01:14,380 --> 00:01:17,310
+So take the floor of
+n divided by 2, where
+
+30
+00:01:17,310 --> 00:01:18,960
+n is the number
+of shards, and you
+
+31
+00:01:18,960 --> 00:01:21,930
+have the number of chunks that
+can be migrated in a balancer
+
+32
+00:01:21,930 --> 00:01:23,080
+round.
+
+33
+00:01:23,080 --> 00:01:24,990
+With this cluster,
+I've got three shards,
+
+34
+00:01:24,990 --> 00:01:27,862
+so I can migrate-- at
+most-- one chunk at a time.
+
+35
+00:01:27,862 --> 00:01:29,320
+If we had four
+shards, the balancer
+
+36
+00:01:29,320 --> 00:01:32,080
+could migrate up to
+two chunks at a time.
+
+37
+00:01:32,080 --> 00:01:34,950
+So we're going to need a second
+round to completely balance
+
+38
+00:01:34,950 --> 00:01:36,330
+this cluster.
+
+39
+00:01:36,330 --> 00:01:38,160
+These rounds happen
+consecutively
+
+40
+00:01:38,160 --> 00:01:40,950
+until the balancer process
+detects that the cluster is as
+
+41
+00:01:40,950 --> 00:01:44,560
+evenly distributed as possible.
+
+42
+00:01:44,560 --> 00:01:47,730
+Typically, the Mongo ES handles
+initiating a chunk split.
+
+43
+00:01:47,730 --> 00:01:51,010
+But the balancer is fully
+capable of performing splits.
+
+44
+00:01:51,010 --> 00:01:53,890
+It will do so if it detects
+chunks that need to be split
+
+45
+00:01:53,890 --> 00:01:58,187
+or as a part of defining chunk
+ranges for zone sharding.
+
+46
+00:01:58,187 --> 00:02:00,020
+Now, zones are out of
+scope for this lesson.
+
+47
+00:02:00,020 --> 00:02:02,500
+So just remember that the
+balancer can split chunks
+
+48
+00:02:02,500 --> 00:02:03,950
+if needed.
+
+49
+00:02:03,950 --> 00:02:06,820
+Now, there is a performance
+impact of migrating chunks.
+
+50
+00:02:06,820 --> 00:02:09,160
+The balancer already
+has behavior built in
+
+51
+00:02:09,160 --> 00:02:11,755
+to minimize workload
+disruption, such as the one
+
+52
+00:02:11,755 --> 00:02:14,410
+chunk per shard limitation.
+
+53
+00:02:14,410 --> 00:02:16,810
+To that end, MongoDB
+surfaces a number
+
+54
+00:02:16,810 --> 00:02:20,620
+of methods for controlling
+the behavior of the balancer.
+
+55
+00:02:20,620 --> 00:02:25,180
+You can start or stop
+the balancer at any time.
+
+56
+00:02:25,180 --> 00:02:27,970
+If you stop the balancer
+in the middle of a round,
+
+57
+00:02:27,970 --> 00:02:30,310
+then the balancer stops only
+after that balancing round
+
+58
+00:02:30,310 --> 00:02:31,740
+completes.
+
+59
+00:02:31,740 --> 00:02:34,180
+sh.startBalancer
+and stopBalancer
+
+60
+00:02:34,180 --> 00:02:36,070
+allow you to set a
+time limit timeout
+
+61
+00:02:36,070 --> 00:02:41,350
+value for how long to wait to
+stop or start the balancer.
+
+62
+00:02:41,350 --> 00:02:43,480
+The interval defines
+how long the client
+
+63
+00:02:43,480 --> 00:02:46,750
+should wait before checking
+the balancer status again.
+
+64
+00:02:46,750 --> 00:02:48,820
+Set balancer state
+just takes a boolean
+
+65
+00:02:48,820 --> 00:02:51,370
+and is either on or off.
+
+66
+00:02:51,370 --> 00:02:53,020
+There is also a
+process for scheduling
+
+67
+00:02:53,020 --> 00:02:54,940
+a time window for when
+this sharded cluster
+
+68
+00:02:54,940 --> 00:02:56,680
+balancer can run.
+
+69
+00:02:56,680 --> 00:02:59,350
+It does require modifying
+the config database, which is
+
+70
+00:02:59,350 --> 00:03:01,210
+out of scope for this course.
+
+71
+00:03:01,210 --> 00:03:03,580
+But we'll link to the
+tutorial below if you'd like
+
+72
+00:03:03,580 --> 00:03:06,740
+to read up on it for yourself.
+
+73
+00:03:06,740 --> 00:03:08,830
+To summarize, the
+sharded cluster balancer
+
+74
+00:03:08,830 --> 00:03:11,430
+is responsible for evenly
+distributing chunks of data
+
+75
+00:03:11,430 --> 00:03:13,590
+across your sharded cluster.
+
+76
+00:03:13,590 --> 00:03:15,930
+Starting with MongoDB
+3.4, the balancer
+
+77
+00:03:15,930 --> 00:03:19,980
+runs on the Primary member of
+the config server replica set.
+
+78
+00:03:19,980 --> 00:03:22,560
+And the balancer process
+is completely automated
+
+79
+00:03:22,560 --> 00:03:25,230
+and requires minimal
+user input or guidance.
+
+80
+00:03:25,230 --> 00:00:00,000
+There are methods for
+controlling it, however.
+

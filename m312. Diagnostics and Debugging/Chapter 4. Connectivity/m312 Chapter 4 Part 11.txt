@@ -1,0 +1,71 @@
+MongoDB runs on a distributed cluster.
+
+A replica set is composed by different hosts, and inside those hosts we're going to have instances of mongod that belong to a replica set.
+
+The same applies to sharded cluster which also can be composed of different nodes.
+
+Now any of these hosts might have different ways by which you can reach them.
+
+They can have different NICs, network interface controllers, or network interface cards.
+
+They can have different DNS names provided by a DNS server inside of your network.
+
+Or it also can have different established, fully qualified domain names also established by your DNS, or even just configured on your host files, a manual to find list of addresses that will contain which IP address complies with each machine name.
+
+Now once we have a configuration of a replica set where one of the hosts is a primary and then the following ones are secondaries, if we don't configure things well given this set of different names by which we can reach the machines and the different interface cards that we might have in our different hosts, things can get a little messy.
+
+And in this lesson, we will be looking to how to get us out of a messy situation, and how to identify clusters which are poorly configured given the different ways that we have to reach to those machines.
+
+To help us out here with the handouts of this lesson, you will find this nodes vagrant environment.
+
+So go ahead.
+
+I generally put it on some folder like this, where I have my home folder, university, the course I'm in, and obviously all the handouts and material that were made available.
+
+So in this environment, what I'm going to have is three different machines, three different virtual machines, each one of them having a mongod in them, and they all belong to the same replica set.
+
+If I connect one of the machines and ask for the replica set status, I can see the fully configured three-node configuration of that replica set.
+
+There will be a secondary, a primary, and finally another secondary.
+
+Now the way that I'm connecting to this machine is by simply knowing an IP address of one of the hosts and connecting to the default port.
+
+Here we'll just ask for the rs.status, and that will give me the status of the nodes that belong to the replica set, which include this particular machine that I know of.
+
+But I also know that this particular node belongs to M312, the name of the replica set.
+
+So a good way of connecting to this machine, or a proper way to connect to this machine, is by appending the name of the replica set.
+
+Therefore I will have the list of different nodes that belong to the replica set, and I'll be able to connect directly to the primary machine of that particular set.
+
+So if I do so, I end up in a bad state.
+
+Here my local machine, my local laptop, is trying to connect to a virtual machine that basically doesn't know who it is.
+
+I am able to connect to one of the members by a [?
+
+cell's ?] direct connection.
+
+But once I want to connect using the replicas set, since I do not know or I cannot reach by the name defined in the replica set, the primary node, I cannot establish it during connection.
+
+If I look into the replica set status again, and if I look for the configuration of my primary, I will see that my primary node is configured using m2.university.mongodb at port 27017.
+
+For me to understand if I can reach this machine or not, by simply pinging the box I would be able to check that I do not in fact know who this node is.
+
+And that will bring us to the important question here.
+
+How well should my local machine be connected to that replica set in place?
+
+Do I need just one node or should I know all of the nodes of the replica set in its own?
+
+Because if I connect directly to the node that I know of, which in my case is my m1 box, and if I tried to connect to my replica set, I'm able to connect with no frills.
+
+System connects, all things worked well.
+
+If I use the machine itself, my m1 itself, I'm still able to be correctly redirected to the primary, which in this case is my m2 university.mongodb.
+
+If I want one application to be able to connect correctly to this replica set in place, it should be able to connect to all configured nodes of the replica set itself, which in this particular case are configured by their simple name, m3, by their fully qualified name, m2 university mongodb, and even by their own IP address, in this case will be m1.
+
+Now as you can see here, these three different ways which this host can be reached can cause problems for your applications to connect to.
+
+Because if one of the nodes would eventually be primary and I would not know how to reach them, my application will not be able to connect to him while a failover is taking place or a new election is taking place.

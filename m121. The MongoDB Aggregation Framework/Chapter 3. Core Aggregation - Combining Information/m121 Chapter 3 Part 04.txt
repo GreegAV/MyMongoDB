@@ -1,0 +1,53 @@
+By now, you probably already realize that MongoDB offers a flexible data model.
+
+Documents can be of different shapes and forms, and organized in such a way that it reflects both applications dynamic data structures and scalability requirements.
+
+We can have very flat, root level only fields in our documents, are quite complex and deeply nested schemas that reflect obligation needs for fast operations and business logic.
+
+A common set of data structures that require both complex nesting levels and flexible storage layer tends to be graph, or tree hierarchy use cases.
+
+Data sets can be as simple as a reporting chain HR datastore, or complex data structures that map airport traveling routes or even social networks.
+
+Telco switch, disease taxonomy, and fraud detection are among several different use cases where graph queryability and flexible data representation go hand in hand.
+
+Unlike graph specific databases, MongoDB is designed to be a general purpose database, meaning that we want to provide a very good infrastructure to support operational and analytical use cases.
+
+With MongoDB 3.4, we are extending furthermore the query capabilities of MongoDB by offering dollar graph lookup.
+
+Graph lookup allows developers to combine their flexible data sets with graph or graph-like operations.
+
+This enables all of those complex data sets to be processed, analyzed, and transformed using a single data source.
+
+When designing and implementing graph relationships and designing its queries, we generally need to think about transitive relationships.
+
+If a reports to b, and b reports to c, then a indirectly reports to c.
+
+In standard SQL, such hierarchical queries are implemented by way of recursive common table expressions.
+
+In relational algebra, this is called transitive closure.
+
+Graph lookup allows looking up recursively a set of documents with a defined relationship to a starting document.
+
+Graph lookup is very similar to our dollar lookup operator.
+
+It's another lookup with a few important variations.
+
+We will have from field that specifies a collection that this stage retrieves results from, a startWith field that specifies the connectToField value or values that we should start our recursive search with.
+
+We have a connectFromField that determines a field in each document in the from collection that is used to perform the next recursive query.
+
+And we have the connect to field that sets the field in each document in the from collection that is queried against each recursive query.
+
+As specifies a field in the output document that will be assigned the array of results of that graph lookup.
+
+maxDepth-- this is an optional field that specifies the maximum number of recursive depth for the graph lookup.
+
+depthField, also optional, specifies the field name in which the result document will be set to the recursive depth at which the document was retrieved.
+
+This will be 0 for the first lookup.
+
+And we also have restrictSearchWithMatch, another optional field that specifies a filter to apply when doing the lookup in the from collection.
+
+Looks right, doesn't it?
+
+In the following lesson, we are going to get ourselves busy and start experimenting with this new feature, looking to a new set of different examples.

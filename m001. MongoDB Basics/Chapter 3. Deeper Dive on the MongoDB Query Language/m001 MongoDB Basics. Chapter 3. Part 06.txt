@@ -1,0 +1,99 @@
+One of the more powerful query operators for a raise is $elemMatch.
+
+To consider an example of $elemMatch, we'll need to do just a little bit of head scratching.
+
+For this I'd like you to imagine that we've added one more field to our movie details data set.
+
+Now we haven't really done this, but suppose we did.
+
+This field, called boxOffice, reflects the box office revenue for all countries in which a movie was released.
+
+Imagine that every document in our movie details collection contained such a key, and suppose that the value for this key is an array with embedded documents as entries.
+
+Each array element for boxOffice, lists the country and revenue in millions for each of those countries.
+
+Now suppose that we'd like to match all documents where the revenue for the country Germany is greater than 17 million.
+
+Note that a movie details document with the box office revenues listed here would not match this query because the revenue listed for Germany here is 16.2 million, which is obviously less than 17 million.
+
+We might think a query that satisfies this objective would be something like this.
+
+Where we simply specify boxOffice.country as Germany and boxOffice.revenue as greater than 17.
+
+Again, given the way we've set boxOffice, this is actually 17 million.
+
+Now this filter will retrieve documents that match both of these selectors.
+
+However, the selectors do not need to match in the same array element.
+
+So a document having this array as its value for boxOffice would match because there is an element for which the country is Germany here, and another element for which revenue is greater than 17.
+
+And in fact, every other element in this array has a value that's greater than 17.
+
+Let's look at an example.
+
+I'm going to create a single document in our movie details collection with a boxOffice field.
+
+Going to our mongo shell, and here I'm connected to my Atlas sandbox cluster.
+
+I'm going to use the video database.
+
+Then again, remember that the shell is a JavaScript interpreter.
+
+I'm going to use findOne to locate the movie, The Martian, and I'm going to assign that document to this variable, martian.
+
+So my query was successful.
+
+And if I simply type martian, the interpreter will display the value for this variable, which is in fact this movie.
+
+So now in the shell in memory, I have an object that reflects the movie, The Martian, from our movie details collection, and a reference to that object in my variable martian.
+
+Now this document contains an _id.
+
+What I'm going to do eventually is insert a version of this document that contains the boxOffice field.
+
+And I don't want to get a duplicate _id error, so I'm going to delete that field from my martian object.
+
+Now if I look at this document again, I can see that the _id field has in fact been removed.
+
+Now what I'd like to do is add a boxOffice field to the subject by simply setting boxOffice equal to this array, and note that this array is the same one we've been looking at throughout this example.
+
+Now if I look at my martian document again, I can see that it does in fact have a boxOffice field with each of the elements we've been looking at.
+
+So now we've updated this object in memory to contain the boxOffice field.
+
+Let's insert this into our movie details collection.
+
+For this we're going to use the insertOne method, and we can see from the response that our insert was successful.
+
+And here's the ObjectId of the newly inserted document.
+
+We can double check this, and doing a quick search for the movie, The Martian.
+
+Here we can see that we've got two documents returned, and that the second of these does contain our boxOffice array.
+
+Now if we try our query that doesn't use $elemMatch, we can see that it does match our newly created document.
+
+In fact, it will even match this query because there is one entry in the boxOffice array, the one for USA, that is greater than 228.
+
+This demonstrates that we do need to use $elemMatch in order to perform this type of filter correctly.
+
+Here's how we do that.
+
+So note that when I issue this query, no results are returned.
+
+Let's talk about it a little bit.
+
+This query doesn't return any results because it's doing the right thing.
+
+It is filtering for documents that have a single element in the boxOffice array that lists the value Germany for country, and a value for revenue that is greater than 17.
+
+And again, that's 17 million.
+
+So the syntax here is specify the field you want to filter on.
+
+$elemMatch expects a document as its value, and within that document you specify selectors that will then be used to identify at least one element in this array that matches all of these criteria.
+
+Now we'll find the martian if we change our query to look for German box office revenue greater than 16 million because there is one element in the boxOffice array where country is Germany, and revenue is greater than 16.
+
+So that is the $elemMatch operator.

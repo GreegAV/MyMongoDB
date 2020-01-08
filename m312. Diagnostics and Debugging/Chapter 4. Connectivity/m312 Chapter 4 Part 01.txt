@@ -1,0 +1,43 @@
+Timeouts are one of those things that sometimes are just neglected, either because we believe that they are mythical creatures that don't exist, or because we don't think they are very important.
+
+But I can assure you, that they are very, very real, and very important.
+
+Timeouts are not a bad thing, per se.
+
+They are actually a guarantee that a given operation does not take forever.
+
+Either the communication between one node and another for the network, or an operation going on, or even just a process calling a task, like an IO task or a network task, or just calling some other process to do something that it needs.
+
+In either case, timeouts are not the problem, they are guarantees.
+
+However, when they do happen, that means that something in our system is not responding, or taking longer than expected, or longer than acceptable.
+
+In a MongoDB cluster, there are a few timeouts that can occur, and they are reported in the form of timeout errors.
+
+We're going to have Server Selection Timeout, which can occur on our client side, where no MongoDB server is available after connection.
+
+So if we have an established connection to a MongoDB, and we write, or do an insert operation, but in the meantime that node became idle or not present, or the network was simply gone, we will get back a MongoDB Server Selection Timeout error.
+
+WTimeout is a flag of our write concern that applications can set to acknowledge writes.
+
+We can use it to specify that, given an insert or write operation, if we require that operation to be confirmed by all nodes involved in the W node flag, if they do not comply within the specified wTimeout, a wTimeout error is sent back within the response saying well, you know what, we tried, but we could not comply with the timeout for that write acknowledge across, in this case, all three nodes within two milliseconds.
+
+Now that does not necessarily mean that our write operation did not complete it.
+
+We will see about the details in a few seconds.
+
+Another time out that we can set from the application side is max timeout in milliseconds parameter for a given cursor operation.
+
+While wTimeout is related with write concern, max time milliseconds is a cursor operations parameter, which means that if we extend a given operation more than the specified max time ms, we are going to get back an execution timeout.
+
+Our operation could not complete on the expected maximum time for it to be accomplished.
+
+So if we have a connection, percent in operation, and if it doesn't complete by then, we will get a timeout.
+
+And finally, we have a network timeout, which occurs while a connection, or even an instruction, takes longer than the admissible expected time to complete at network level.
+
+It can be related with socket timeouts, networks, impairments, some wobbly switches not deciding in due time what to connect and when to connect to.
+
+Those are generally out of control of MongoDB, they are mostly related with network configuration itself.
+
+But now let's see some of these, especially wTimeout and execution timeout in action.

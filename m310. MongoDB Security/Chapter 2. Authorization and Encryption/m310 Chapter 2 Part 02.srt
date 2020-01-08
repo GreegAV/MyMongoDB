@@ -1,0 +1,763 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.070
+Now that we know what roles
+are, let's talk about some
+
+3
+00:00:03.070 --> 00:00:06.780
+of the built in roles that
+come prepackaged with MongoDB.
+
+4
+00:00:06.780 --> 00:00:11.000
+MongoDB comes with a set of
+general purpose built in roles.
+
+5
+00:00:11.000 --> 00:00:12.450
+Roles that we know
+from experience
+
+6
+00:00:12.450 --> 00:00:15.120
+are generally required
+by different individuals
+
+7
+00:00:15.120 --> 00:00:16.810
+and therefore different
+responsibilities
+
+8
+00:00:16.810 --> 00:00:18.270
+within an organization.
+
+9
+00:00:18.270 --> 00:00:21.010
+These roles can be divided
+into the following categories.
+
+10
+00:00:21.010 --> 00:00:23.350
+First we have
+database user roles.
+
+11
+00:00:23.350 --> 00:00:25.040
+There are only
+two roles in here,
+
+12
+00:00:25.040 --> 00:00:28.570
+but these are two of the
+most commonly used roles.
+
+13
+00:00:28.570 --> 00:00:30.990
+First we have the read role,
+which grants the following
+
+14
+00:00:30.990 --> 00:00:31.950
+privileges.
+
+15
+00:00:31.950 --> 00:00:35.036
+And these privileges make sense
+based on the name of the role.
+
+16
+00:00:35.036 --> 00:00:37.660
+We would expect that if we were
+granted the read role that we'd
+
+17
+00:00:37.660 --> 00:00:44.290
+be able to run find, dbHash,
+listIndexes, listCollections,
+
+18
+00:00:44.290 --> 00:00:45.470
+et cetera.
+
+19
+00:00:45.470 --> 00:00:47.620
+Next we have the readWrite role.
+
+20
+00:00:47.620 --> 00:00:50.950
+This role grants us all the
+privileges of the read role,
+
+21
+00:00:50.950 --> 00:00:54.100
+in addition to the
+following privileges.
+
+22
+00:00:54.100 --> 00:00:56.100
+Now this demonstrates
+a powerful feature
+
+23
+00:00:56.100 --> 00:00:58.830
+of the role based access
+control authorization
+
+24
+00:00:58.830 --> 00:01:01.270
+system that MongoDB brings.
+
+25
+00:01:01.270 --> 00:01:03.070
+Role inheritance.
+
+26
+00:01:03.070 --> 00:01:07.050
+We have the ability to inherit
+the privileges of other roles
+
+27
+00:01:07.050 --> 00:01:08.900
+for a given role.
+
+28
+00:01:08.900 --> 00:01:10.340
+We'll talk more
+about this later,
+
+29
+00:01:10.340 --> 00:01:12.089
+but I wanted to bring
+it to your attention
+
+30
+00:01:12.089 --> 00:01:14.940
+while we discuss all these
+different built-in roles.
+
+31
+00:01:14.940 --> 00:01:17.430
+After database user
+roles we can next
+
+32
+00:01:17.430 --> 00:01:19.197
+talk about database admin roles.
+
+33
+00:01:19.197 --> 00:01:20.780
+The first role I'm
+going to talk about
+
+34
+00:01:20.780 --> 00:01:24.700
+is the dbAdmin role, a role
+that grants us these following
+
+35
+00:01:24.700 --> 00:01:25.840
+privileges.
+
+36
+00:01:25.840 --> 00:01:28.110
+And again, this makes sense.
+
+37
+00:01:28.110 --> 00:01:30.490
+Imagine if we had a
+database administrator,
+
+38
+00:01:30.490 --> 00:01:34.280
+they'd need to be able to create
+collections for developers,
+
+39
+00:01:34.280 --> 00:01:36.960
+create indexes for
+developers, maybe go
+
+40
+00:01:36.960 --> 00:01:38.360
+through old parts
+of the database
+
+41
+00:01:38.360 --> 00:01:40.270
+by dropping some
+old collections,
+
+42
+00:01:40.270 --> 00:01:42.460
+or dropping that
+old test database
+
+43
+00:01:42.460 --> 00:01:44.170
+that the developers were using.
+
+44
+00:01:44.170 --> 00:01:47.280
+All of these
+privileges make sense
+
+45
+00:01:47.280 --> 00:01:49.640
+for a database administrator.
+
+46
+00:01:49.640 --> 00:01:52.440
+The userAdmin role is
+exactly what it sounds like,
+
+47
+00:01:52.440 --> 00:01:56.530
+is the ability to administrate
+users within our database.
+
+48
+00:01:56.530 --> 00:02:00.480
+Things like changing a user's
+password, creating a new user,
+
+49
+00:02:00.480 --> 00:02:03.560
+creating a new role,
+granting a role to a user,
+
+50
+00:02:03.560 --> 00:02:06.490
+dropping a role, viewing
+a user, et cetera.
+
+51
+00:02:06.490 --> 00:02:08.990
+Anything that involves
+user management or user
+
+52
+00:02:08.990 --> 00:02:12.090
+administration is going
+to be the userAdmin role.
+
+53
+00:02:12.090 --> 00:02:14.010
+And finally, we have
+the dbOwner role,
+
+54
+00:02:14.010 --> 00:02:17.350
+which inherits the privileges
+of readWrite, dbAdmin,
+
+55
+00:02:17.350 --> 00:02:18.350
+and the userAdmin roles.
+
+56
+00:02:18.350 --> 00:02:21.010
+After the database
+administration roles,
+
+57
+00:02:21.010 --> 00:02:23.990
+we can now talk about
+the all database roles.
+
+58
+00:02:23.990 --> 00:02:26.590
+Now, these roles are
+going to sound familiar,
+
+59
+00:02:26.590 --> 00:02:29.380
+and that's because they're the
+same roles that we just talked
+
+60
+00:02:29.380 --> 00:02:33.130
+about, but with privileges
+on different resources.
+
+61
+00:02:33.130 --> 00:02:35.780
+In this case, any database.
+
+62
+00:02:35.780 --> 00:02:38.870
+So for example, the
+readAnyDatabase role
+
+63
+00:02:38.870 --> 00:02:41.560
+inherits the privileges
+of the read role,
+
+64
+00:02:41.560 --> 00:02:44.420
+but for any database.
+
+65
+00:02:44.420 --> 00:02:48.000
+Similarly, the read
+write, user admin, and db
+
+66
+00:02:48.000 --> 00:02:53.430
+admin roles all have the same
+privileges as their first part
+
+67
+00:02:53.430 --> 00:02:56.820
+of their name, except
+these roles now get
+
+68
+00:02:56.820 --> 00:02:59.300
+privileges for any database.
+
+69
+00:02:59.300 --> 00:03:01.370
+After the all
+database category we
+
+70
+00:03:01.370 --> 00:03:04.260
+can move on to the
+cluster admin category.
+
+71
+00:03:04.260 --> 00:03:06.680
+Now here, we expect
+to find roles
+
+72
+00:03:06.680 --> 00:03:10.250
+that allow us to perform actions
+across an entire cluster.
+
+73
+00:03:10.250 --> 00:03:14.340
+And by cluster I mean a replica
+set or a sharded cluster.
+
+74
+00:03:14.340 --> 00:03:16.110
+And that's exactly what we find.
+
+75
+00:03:16.110 --> 00:03:19.430
+First we have the clusterManager
+role, which gives us
+
+76
+00:03:19.430 --> 00:03:21.850
+the following privileges.
+
+77
+00:03:21.850 --> 00:03:23.980
+A Cluster Manager, it
+would make sense for them
+
+78
+00:03:23.980 --> 00:03:27.660
+to be able to add shards,
+cleanup orphans, list shards,
+
+79
+00:03:27.660 --> 00:03:31.830
+remove shards, set up replica
+sets, or resync a member.
+
+80
+00:03:31.830 --> 00:03:34.560
+Next, we have the clusterMonitor
+role, which gives us
+
+81
+00:03:34.560 --> 00:03:35.960
+the following privileges.
+
+82
+00:03:35.960 --> 00:03:37.930
+Here we're going to
+see a lot of stat
+
+83
+00:03:37.930 --> 00:03:42.180
+reading privileges like
+connection pool stats,
+
+84
+00:03:42.180 --> 00:03:46.570
+getting server parameters,
+getting host info,
+
+85
+00:03:46.570 --> 00:03:48.870
+getting server
+status, et cetera.
+
+86
+00:03:48.870 --> 00:03:50.900
+Now, the hostManager
+role is very
+
+87
+00:03:50.900 --> 00:03:53.150
+similar to the
+clusterManager role,
+
+88
+00:03:53.150 --> 00:03:55.570
+except you'll see that
+we now have privileges
+
+89
+00:03:55.570 --> 00:03:57.880
+like the ability to
+do things specifically
+
+90
+00:03:57.880 --> 00:04:01.820
+on a host like running
+the CPU profiler,
+
+91
+00:04:01.820 --> 00:04:04.410
+or ordering a forced
+sync, or killing
+
+92
+00:04:04.410 --> 00:04:07.540
+an operation on a member,
+or resyncing a member,
+
+93
+00:04:07.540 --> 00:04:09.190
+or shutting down a member.
+
+94
+00:04:09.190 --> 00:04:11.650
+It's somewhat similar to
+the clusterManager role
+
+95
+00:04:11.650 --> 00:04:13.870
+but with regards to
+an individual host
+
+96
+00:04:13.870 --> 00:04:16.300
+or an individual member
+within our cluster.
+
+97
+00:04:16.300 --> 00:04:18.410
+And finally, we have
+the clusterAdmin role,
+
+98
+00:04:18.410 --> 00:04:22.520
+which inherits the privileges
+of all three of the other roles.
+
+99
+00:04:22.520 --> 00:04:25.420
+After clusterAdmin roles,
+we can talk about the backup
+
+100
+00:04:25.420 --> 00:04:26.570
+and restore roles.
+
+101
+00:04:26.570 --> 00:04:28.820
+This group is pretty
+straightforward.
+
+102
+00:04:28.820 --> 00:04:31.680
+First, we have the backup
+role, which as you would expect
+
+103
+00:04:31.680 --> 00:04:34.220
+allows us to do everything
+that we need in order
+
+104
+00:04:34.220 --> 00:04:36.280
+to back up our database.
+
+105
+00:04:36.280 --> 00:04:39.100
+And similarly, we
+have the restore role,
+
+106
+00:04:39.100 --> 00:04:41.880
+which allows us to do
+everything we need to restore
+
+107
+00:04:41.880 --> 00:04:44.110
+our database from a backup.
+
+108
+00:04:44.110 --> 00:04:48.410
+Moving on, we can talk about
+two special categories.
+
+109
+00:04:48.410 --> 00:04:51.710
+First, we're going to talk
+about the superuser category.
+
+110
+00:04:51.710 --> 00:04:53.600
+Now these first
+three roles, you've
+
+111
+00:04:53.600 --> 00:04:55.040
+already seen these before.
+
+112
+00:04:55.040 --> 00:04:57.960
+But we're bringing them up again
+because we consider these roles
+
+113
+00:04:57.960 --> 00:05:00.330
+to be superuser rules.
+
+114
+00:05:00.330 --> 00:05:02.210
+And that's because
+these roles allow
+
+115
+00:05:02.210 --> 00:05:05.850
+a user to assign themselves
+any role that they want.
+
+116
+00:05:05.850 --> 00:05:08.670
+So for example, when
+the dbOwner role
+
+117
+00:05:08.670 --> 00:05:11.470
+is assigned to the
+admin database,
+
+118
+00:05:11.470 --> 00:05:14.150
+a user can then assign
+themselves any role
+
+119
+00:05:14.150 --> 00:05:16.990
+they want on any database.
+
+120
+00:05:16.990 --> 00:05:21.020
+Similarly, the userAdmin
+role allows us to do this.
+
+121
+00:05:21.020 --> 00:05:23.240
+Actually, the dbOwner
+role can do this
+
+122
+00:05:23.240 --> 00:05:26.000
+because it inherits
+the userAdmin role.
+
+123
+00:05:26.000 --> 00:05:29.630
+And then similarly, the
+userAdminAnyDatabase role
+
+124
+00:05:29.630 --> 00:05:33.626
+would include the userAdmin role
+on the admin database, which
+
+125
+00:05:33.626 --> 00:05:35.250
+would then allow us
+to assign ourselves
+
+126
+00:05:35.250 --> 00:05:37.190
+a role on any database.
+
+127
+00:05:37.190 --> 00:05:40.430
+And finally, we can
+talk about root role.
+
+128
+00:05:40.430 --> 00:05:43.970
+And now, you've seen me use this
+role before in other videos.
+
+129
+00:05:43.970 --> 00:05:46.940
+And while I might use it
+a lot for convenience,
+
+130
+00:05:46.940 --> 00:05:49.020
+please be very careful
+when assigning this role
+
+131
+00:05:49.020 --> 00:05:50.352
+to an individual.
+
+132
+00:05:50.352 --> 00:05:52.060
+And that's because
+the root role inherits
+
+133
+00:05:52.060 --> 00:05:55.450
+all of these privileges,
+the readWriteAnyDatabase,
+
+134
+00:05:55.450 --> 00:05:59.120
+dbAdminAnyDatabase,
+userAdminAnyDatabase,
+
+135
+00:05:59.120 --> 00:06:01.670
+the clusterAdmin role,
+and the restore role.
+
+136
+00:06:01.670 --> 00:06:04.230
+All of these roles and all
+the privileges associated
+
+137
+00:06:04.230 --> 00:06:07.020
+with all these roles are
+all inherited by this one
+
+138
+00:06:07.020 --> 00:06:09.020
+role, the root role.
+
+139
+00:06:09.020 --> 00:06:10.690
+So needless to
+say, the root role
+
+140
+00:06:10.690 --> 00:06:12.960
+can pretty much do
+anything it wants.
+
+141
+00:06:12.960 --> 00:06:16.440
+So the super user
+category was the first
+
+142
+00:06:16.440 --> 00:06:18.540
+of two special categories.
+
+143
+00:06:18.540 --> 00:06:21.110
+The second being the
+internal category.
+
+144
+00:06:21.110 --> 00:06:24.480
+And the internal category
+only has one role,
+
+145
+00:06:24.480 --> 00:06:26.970
+and that is the underscore
+underscore system role.
+
+146
+00:06:26.970 --> 00:06:28.720
+And the underscore
+underscores system
+
+147
+00:06:28.720 --> 00:06:33.520
+allows you to take any
+action on any resource.
+
+148
+00:06:33.520 --> 00:06:36.920
+So this is a very,
+very internal role
+
+149
+00:06:36.920 --> 00:06:39.180
+that is only used
+by the server itself
+
+150
+00:06:39.180 --> 00:06:41.710
+for very special
+internal operations.
+
+151
+00:06:41.710 --> 00:06:43.560
+And because of this,
+you should never
+
+152
+00:06:43.560 --> 00:06:45.650
+ever grant this role to a user.
+
+153
+00:06:45.650 --> 00:06:48.960
+You might see this in like logs
+or somewhere in the database,
+
+154
+00:06:48.960 --> 00:06:51.520
+and so I wanted to bring it up
+so you know what was going on,
+
+155
+00:06:51.520 --> 00:06:53.270
+but I also wanted to
+give you this warning
+
+156
+00:06:53.270 --> 00:06:56.290
+and tell you that you
+should not use this role
+
+157
+00:06:56.290 --> 00:06:59.290
+or assign this role
+to any of your users
+
+158
+00:06:59.290 --> 00:07:02.100
+unless you really,
+really, really have to.
+
+159
+00:07:02.100 --> 00:07:05.110
+And those are the built-in
+roles that come with MongoDB.

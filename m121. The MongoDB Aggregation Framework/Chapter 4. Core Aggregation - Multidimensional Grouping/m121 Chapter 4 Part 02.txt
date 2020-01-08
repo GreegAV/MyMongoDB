@@ -1,0 +1,115 @@
+Let's learn about some other powerful data analysis and groupings stages within the aggregation framework.
+
+In this lesson, we'll learn about bucket, bucketAuto, and sortByCount.
+
+We'll discuss bucket first.
+
+bucket has the following form.
+
+And as we can see, it takes a few different arguments.
+
+So let's go over each one.
+
+As we go along and cover each field, let's also incrementally build a real aggregation.
+
+groupBy groups documents on evaluated expression, just like the _ID argument to the group stage.
+
+One catch-- we can only specify one value to match on.
+
+We could use an expression that evaluates two field paths, but it must ultimately resolve to one value.
+
+Let's specify a field path to $imdb.rating, grouping documents together based on their rating.
+
+All right, boundaries-- this is where buckets begin to become very powerful.
+
+In boundaries, we specify an array of values.
+
+Each value is a lower bound of the group the documents will be placed in.
+
+And successive values are the exclusive upper bound of the previous group.
+
+A few things to be aware of about boundaries-- the values that we specify in boundaries must all be of the same type, with the exception being number values.
+
+Different types of number can be mixed.
+
+Also, we must specify at least two boundaries.
+
+Here, I'm specifying an array of 0, 5, 8, and infinity to boundaries.
+
+That means that documents with an $imdb.rating from 0 inclusive to 5 exclusive will be placed in the 0 group.
+
+Documents with an IMDB rating between 5 and 8 will be placed in the 5 group, and documents with an IMDB rating between 8 and infinity will be placed in the 8 group.
+
+We call these groups buckets, hence the name of the stage.
+
+The default field is optional but important.
+
+If we don't specify it, the expression we specified to groupBy must resolve to a value that can fall within one of the buckets specified in boundaries.
+
+Otherwise we'll get an Error The default value we specify can be of the same type as the boundary values, but it must either be less than the minimum boundary specified or greater than the maximum boundary.
+
+Since we know that not all documents have an $imdb.rating, we'll specify not rated to default.
+
+This will catch all of the documents.
+
+Before we go over the last argument, let's test out bucket to get a feel for it.
+
+Here, we're specifying the argument to groupBy, hence setting our boundaries.
+
+We know this will error because not all documents have a value for $imdb.rating.
+
+But let's run it anyway to see what that looks like.
+
+This is the error we'll get.
+
+Now that we know what it looks like, if we encounter it in the future, we'll know where to look to fix our pipeline.
+
+Let's include that default argument.
+
+Here we included the default and specified not rated.
+
+Now let's see it in action.
+
+We can see a few different things.
+
+The $bucket stage automatically gives us a count field within each bucket, counting how many documents were put into that bucket.
+
+We can see that there were 4,992 documents in the 0 to 5, 35,516 documents in the 5 to 8 bucket, and 2,284 documents in the 8 to infinity document.
+
+We can also see there were 1,705 documents that aren't rated, meaning they did not have a value that we could group on in the $imdb.rating field.
+
+This is pretty cool.
+
+We can see the vast majority of IMDB ratings fall between 5 and 8.
+
+This alone, however, may not be enough.
+
+The bucket stage fundamentally transformed the resulting documents.
+
+What if we wanted to find the average rating per bucket?
+
+This is where the last field, output, comes in.
+
+output is much like the additional fields we can specify in the group stage.
+
+We can give the fields almost any name we like and use familiar accumulator expressions to calculate their values.
+
+Let's get the average rating per bucket.
+
+Here I've specified the same arguments as before with the addition of an output field and the average per bucket key.
+
+Awesome.
+
+We can see that we get the average for documents that fall within our defined buckets.
+
+But we're missing the count field now.
+
+The reason for this is because count is the default accumulator for the bucket stage.
+
+If no output is defined, MongoDB inserts the count for us.
+
+If we specify an output and also want the count, we must specify that as well using the same method we do in the group stage.
+
+Here, everything is identical with the addition of the count field.
+
+Now we're seeing we get the same average ratings as before per bucket along with the count that we expected.

@@ -1,0 +1,87 @@
+In this lesson, we'll be talking about a set of tools that you should be aware of when debugging issues with your MongoDB deployment.
+
+The set of tools is called the Mtools package.
+
+Mtools was developed by our support team, started by our very own Thomas Ryeckstiess to analyze and debug issues with MongoDB deployments in an easy and elegant way.
+
+It's use to identify and reproduce issues that arise in customers production deployments.
+
+This set of command line tools is made available publicly, but they're not supported by MongoDB Inc.
+
+Mtools is not part of our official offering, but it is a set of tools and scripts that we maintain and develop to help individuals analyze and debug issues that they find in MongoDB deployments and it's open source.
+
+You're welcome to use them for [INAUDIBLE], generate pull requests if you make improvements to the tool kit.
+
+Mtools is written in Python, so you'll need to have Python installed on your machine to run its associated scripts.
+
+The package is available through common Python package management tools, like pip and Easy Install.
+
+The course VM will come with them already installed.
+
+The set of tools are, first, mlogfilter.
+
+This tool slices log files by time, combines them, filters for slow queries, finds table scans, shortens log lines, filters by attributes, and converts your log entries into a JSON format.
+
+Next up is mloginfo, which returns information about log files-- things like start and end times for the log, the MongoDB version, and special sections, like restarts, connections, and distinct accounts of common events found in the logs.
+
+There's also mplotqueries, queries which we can use to visualize log files with different types of plots.
+
+This tool requires that you install additional graphics libraries.
+
+These may not be trivial for your system.
+
+This is mlogvis, which creates a self-contained HTML file that shows an interactive visualization in a web browser as an alternative to mplot queries.
+
+For the course VM, you can send this to the shared folder and access the HTML file on your computer where you can then view it in a web browser.
+
+We'll see that later.
+
+One of my personal favorites is mlaunch, a script to quickly spin up test deployments on your local host, including replica sets and charted clusters.
+
+This requires PyMongo, the Python driver library for MongoDB, which I've also pre-installed on your VM.
+
+One of the really interesting ones from a testing standpoint is mgenerate, which creates data sets with random data based on a template for testing and reproducing issues.
+
+All of these tools together will help analyze, simulate, and debug issues with MongoDB deployments.
+
+We'll be using these tools throughout the course when looking at concrete use cases.
+
+In essence, you can associate each individual tool with a specific feature at a specific point in time in the creation of a scenario.
+
+Mlaunch will bring up very quickly clusters and deployments for developing and testing on your local machine.
+
+And mgenerate will allow us to produce server loads in a test environment that will mimic a production load.
+
+This will insert one document.
+
+By providing a simple JSON document, we can then generate many documents of a given shape to be inserted into a collection.
+
+The idea is to produce these data sets in a very simple one-line instruction command with an easily reproducible data set.
+
+Mlaunch and mgenerate are tools designed to either simulate or get a very close approximation of situations we might want to debug.
+
+Think of these two as our debugging tools from the package.
+
+On the other side of things, mlogfilter, mloginfo, mplotqueries, and mlogvis will help us to analyze log files.
+
+Once we've got a log file, we can filter for relevant information with mlogfilter, plot and visualize the execution of given commands and operations, and retrieve information from the logs on specific events like restarts, connections, and others.
+
+These four tools can be seen as diagnostics tools.
+
+We can get general information with mloginfo.
+
+Select only a subset of the components to analyze with mlogfilter.
+
+Notice that all of these entries now have the replication component.
+
+And we can plot and visualize the execution of operations with either mlogvis or mplotqueries.
+
+We won't bother to look at that now.
+
+I haven't done anything interesting yet with a MongoDB.
+
+Obviously, since all of these are command line tools, we can also construct pipelines to visualize filter and group outputs from the different tools.
+
+In short, the Mtools package is a great set of easy helpers that we will utilize throughout the course.
+
+You should definitely have all of them at your fingertips to analyze debug and even reproduce issues detected on your deployments.

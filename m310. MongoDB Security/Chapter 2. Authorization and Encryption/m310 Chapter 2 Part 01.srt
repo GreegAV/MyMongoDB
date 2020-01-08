@@ -1,0 +1,121 @@
+
+1
+00:00:00.000 --> 00:00:00.560
+
+
+2
+00:00:00.560 --> 00:00:06.190
+We can now discuss why MongoDB
+uses role based access control.
+
+3
+00:00:06.190 --> 00:00:10.670
+The best way to describe why
+MongoDB uses role based access
+
+4
+00:00:10.670 --> 00:00:12.990
+control is to say
+that it gives us
+
+5
+00:00:12.990 --> 00:00:16.550
+a high level of
+responsibility isolation
+
+6
+00:00:16.550 --> 00:00:18.900
+for operational tasks.
+
+7
+00:00:18.900 --> 00:00:22.360
+And what I mean by this is
+that across our organization
+
+8
+00:00:22.360 --> 00:00:24.640
+there are going to be a
+myriad of different people
+
+9
+00:00:24.640 --> 00:00:28.290
+who are going to need
+access to our database.
+
+10
+00:00:28.290 --> 00:00:31.870
+But each of these individuals
+have very different needs.
+
+11
+00:00:31.870 --> 00:00:33.920
+We might have a DBA.
+
+12
+00:00:33.920 --> 00:00:36.470
+They're going to need the
+ability to create users.
+
+13
+00:00:36.470 --> 00:00:38.660
+We might have a developer.
+
+14
+00:00:38.660 --> 00:00:41.120
+They're obviously going to
+need to be able to insert data
+
+15
+00:00:41.120 --> 00:00:42.820
+into our database.
+
+16
+00:00:42.820 --> 00:00:45.650
+But they're probably
+not going to need
+
+17
+00:00:45.650 --> 00:00:48.070
+to be able to create users.
+
+18
+00:00:48.070 --> 00:00:50.134
+We might have a data scientist.
+
+19
+00:00:50.134 --> 00:00:51.800
+They're going to need
+to be able to read
+
+20
+00:00:51.800 --> 00:00:53.270
+a bunch of data out of MongoDB.
+
+21
+00:00:53.270 --> 00:00:56.320
+But they're not
+likely going to need
+
+22
+00:00:56.320 --> 00:01:00.880
+to be able to create users or
+insert data into our database.
+
+23
+00:01:00.880 --> 00:01:04.620
+What we're basically saying here
+is that within our organization
+
+24
+00:01:04.620 --> 00:01:06.610
+there are a bunch
+of different roles.
+
+25
+00:01:06.610 --> 00:01:11.650
+And we can tightly define and
+tailor our roles in MongoDB
+
+26
+00:01:11.650 --> 00:01:14.490
+to match the needs of our users.

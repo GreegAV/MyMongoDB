@@ -1,0 +1,914 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.070
+So for this particular setup,
+what we are going to do
+
+3
+00:00:04.070 --> 00:00:07.880
+is boot up our MongoDB
+instance, our mongod,
+
+4
+00:00:07.880 --> 00:00:09.750
+in a virtual machine.
+
+5
+00:00:09.750 --> 00:00:12.330
+And I have a LDAP
+server booted up
+
+6
+00:00:12.330 --> 00:00:15.550
+in a second virtual machine
+that will be supporting
+
+7
+00:00:15.550 --> 00:00:18.430
+both authentication
+and authorization
+
+8
+00:00:18.430 --> 00:00:20.030
+that MongoDB requires.
+
+9
+00:00:20.030 --> 00:00:23.850
+So in essence, all users and
+all authentication credentials
+
+10
+00:00:23.850 --> 00:00:26.880
+will be both managed
+by LDAP server
+
+11
+00:00:26.880 --> 00:00:29.720
+and accessed by our mongod.
+
+12
+00:00:29.720 --> 00:00:32.369
+So now what we're going to do
+is set up a couple of things.
+
+13
+00:00:32.369 --> 00:00:35.250
+First I'm going to
+have my mongod running
+
+14
+00:00:35.250 --> 00:00:38.860
+on this particular machine,
+my m034 vagrant instance
+
+15
+00:00:38.860 --> 00:00:42.250
+that you have accessed through
+the handouts of this lesson.
+
+16
+00:00:42.250 --> 00:00:47.850
+And also a vagrant LDAP
+instance that basically just has
+
+17
+00:00:47.850 --> 00:00:49.830
+an LDAP configuration
+on it so you
+
+18
+00:00:49.830 --> 00:00:54.457
+can boot up a LDAP server from
+this particular setup here.
+
+19
+00:00:54.457 --> 00:00:56.040
+First thing that I'm
+going to show you
+
+20
+00:00:56.040 --> 00:01:00.250
+is what configuration am I
+going to run from my mongod.
+
+21
+00:01:00.250 --> 00:01:02.670
+Now I have this
+file here, shared
+
+22
+00:01:02.670 --> 00:01:05.850
+mongod dot cnf, which will
+hold all my configuration
+
+23
+00:01:05.850 --> 00:01:07.190
+for MongoDB.
+
+24
+00:01:07.190 --> 00:01:10.660
+What I have here is a
+simple configuration
+
+25
+00:01:10.660 --> 00:01:13.040
+with the typical
+options, like which port
+
+26
+00:01:13.040 --> 00:01:14.760
+am I going to listen it to.
+
+27
+00:01:14.760 --> 00:01:17.470
+I'm going to fork the process
+to run it on the background.
+
+28
+00:01:17.470 --> 00:01:22.040
+I'm going to have a systemLog
+defined, a storage dbPath where
+
+29
+00:01:22.040 --> 00:01:24.430
+I'm going to store
+all my data, and then
+
+30
+00:01:24.430 --> 00:01:28.810
+the particular configuration
+details of my LDAP setup.
+
+31
+00:01:28.810 --> 00:01:30.270
+So first of all,
+I'm going to say
+
+32
+00:01:30.270 --> 00:01:32.200
+that authorization is enabled.
+
+33
+00:01:32.200 --> 00:01:33.830
+I'm going to
+specify which server
+
+34
+00:01:33.830 --> 00:01:36.180
+is going to hold my
+LDAP configuration,
+
+35
+00:01:36.180 --> 00:01:39.340
+or which server will
+have the LDAP running.
+
+36
+00:01:39.340 --> 00:01:41.800
+I'm going to need to
+specify query templates.
+
+37
+00:01:41.800 --> 00:01:45.760
+And here, this is the query,
+following the LDAP query
+
+38
+00:01:45.760 --> 00:01:49.710
+syntax, that I'm going
+to use to match my users
+
+39
+00:01:49.710 --> 00:01:52.030
+and also retrieve any
+sort of attributes
+
+40
+00:01:52.030 --> 00:01:53.251
+that they are related with.
+
+41
+00:01:53.251 --> 00:01:55.250
+In this case, I'm going
+to be using the DN base,
+
+42
+00:01:55.250 --> 00:01:57.780
+so I'm going to only
+look for users which
+
+43
+00:01:57.780 --> 00:02:01.640
+match this particular
+distinguished name base, which
+
+44
+00:02:01.640 --> 00:02:05.760
+is ou users, dc mongodb, dc com.
+
+45
+00:02:05.760 --> 00:02:08.759
+I'm only going to look
+for one level down,
+
+46
+00:02:08.759 --> 00:02:14.460
+so anything that is like
+Alice, users, mongodb, and com,
+
+47
+00:02:14.460 --> 00:02:15.180
+I'll find them.
+
+48
+00:02:15.180 --> 00:02:17.600
+But anything that
+is above one level,
+
+49
+00:02:17.600 --> 00:02:20.170
+I will not be looking for those.
+
+50
+00:02:20.170 --> 00:02:22.630
+And obviously I'm going to
+be looking for anything that
+
+51
+00:02:22.630 --> 00:02:26.570
+is going to be matching
+the user keyword here,
+
+52
+00:02:26.570 --> 00:02:28.110
+or the placeholder.
+
+53
+00:02:28.110 --> 00:02:30.080
+Now this is an open LDAP server.
+
+54
+00:02:30.080 --> 00:02:32.040
+So I'll need to
+make sure that I'm
+
+55
+00:02:32.040 --> 00:02:35.330
+doing the userToDNMapping
+syntax substitution.
+
+56
+00:02:35.330 --> 00:02:39.160
+So I'm going to pass a
+username, a simple Alice user
+
+57
+00:02:39.160 --> 00:02:43.180
+name, and then I'm going to
+apply the actual open LDAP DN
+
+58
+00:02:43.180 --> 00:02:44.570
+syntax to it.
+
+59
+00:02:44.570 --> 00:02:46.770
+So basically I'm
+going to replace here
+
+60
+00:02:46.770 --> 00:02:50.330
+on the first elements of the
+substitution string whatever
+
+61
+00:02:50.330 --> 00:02:53.530
+comes from my user credentials,
+and then pass it along
+
+62
+00:02:53.530 --> 00:02:55.850
+with this queryTemplate.
+
+63
+00:02:55.850 --> 00:02:58.080
+So apart from
+that, I'm not going
+
+64
+00:02:58.080 --> 00:02:59.680
+to be using any
+security right now.
+
+65
+00:02:59.680 --> 00:03:01.190
+This is just for demo.
+
+66
+00:03:01.190 --> 00:03:04.000
+I'm not going to be using
+any binding whatsoever.
+
+67
+00:03:04.000 --> 00:03:06.410
+And my authentication
+mechanism--
+
+68
+00:03:06.410 --> 00:03:10.010
+since I'm having LDAP supporting
+both my authentication
+
+69
+00:03:10.010 --> 00:03:12.960
+and my authorization, the
+authentication mechanism
+
+70
+00:03:12.960 --> 00:03:16.020
+also needs to be set up to
+reflect that configuration.
+
+71
+00:03:16.020 --> 00:03:16.910
+Great.
+
+72
+00:03:16.910 --> 00:03:20.010
+On the other hand, I also have
+my LDAP server configuration
+
+73
+00:03:20.010 --> 00:03:23.000
+which has my base dn.
+
+74
+00:03:23.000 --> 00:03:25.530
+Again, the users, mongodb, com.
+
+75
+00:03:25.530 --> 00:03:28.140
+I also have users
+defined, like Alice,
+
+76
+00:03:28.140 --> 00:03:31.350
+and I also have a
+few other setups
+
+77
+00:03:31.350 --> 00:03:35.720
+like this particular group
+here, which Alice belongs to.
+
+78
+00:03:35.720 --> 00:03:37.940
+Now if you'll look
+closely, we will
+
+79
+00:03:37.940 --> 00:03:41.700
+need to reflect this particular
+user, and more concrete
+
+80
+00:03:41.700 --> 00:03:45.290
+its full distinguished
+name, to a particular thing
+
+81
+00:03:45.290 --> 00:03:49.610
+that now we need to set up with
+mongodb authorization on three
+
+82
+00:03:49.610 --> 00:03:50.300
+dot four.
+
+83
+00:03:50.300 --> 00:03:52.700
+So let's stay
+tuned for this one.
+
+84
+00:03:52.700 --> 00:03:55.610
+Let's go back to
+our mongod instance.
+
+85
+00:03:55.610 --> 00:03:58.500
+Now before we boot up
+our MongoDB server,
+
+86
+00:03:58.500 --> 00:04:01.780
+it is a good practice to check
+the configurations for the LDAP
+
+87
+00:04:01.780 --> 00:04:02.510
+settings.
+
+88
+00:04:02.510 --> 00:04:04.930
+So this is why we
+have mongodb LDAP,
+
+89
+00:04:04.930 --> 00:04:08.240
+or mongoldap in this case, and
+pass along the configuration
+
+90
+00:04:08.240 --> 00:04:11.270
+file that we want
+to validate against.
+
+91
+00:04:11.270 --> 00:04:14.180
+Don't forget to
+obviously pass along
+
+92
+00:04:14.180 --> 00:04:18.300
+the user that is required
+to validate against,
+
+93
+00:04:18.300 --> 00:04:20.170
+and obviously its password.
+
+94
+00:04:20.170 --> 00:04:22.680
+Otherwise, the LDAP
+server will not
+
+95
+00:04:22.680 --> 00:04:26.410
+know what to do with
+this particular set.
+
+96
+00:04:26.410 --> 00:04:29.830
+Once we run this, and
+if we have everything
+
+97
+00:04:29.830 --> 00:04:34.280
+OK and nice green lines here,
+and we can also successfully
+
+98
+00:04:34.280 --> 00:04:37.695
+acquire the following roles,
+and this is an important one, cn
+
+99
+00:04:37.695 --> 00:04:42.400
+admins, users, dc
+mongodb, dc com at admin,
+
+100
+00:04:42.400 --> 00:04:46.330
+you see here that
+the mongoldap utility
+
+101
+00:04:46.330 --> 00:04:49.860
+is expecting this role
+that doesn't exist yet
+
+102
+00:04:49.860 --> 00:04:53.385
+to be attributed and specified
+on the admin database.
+
+103
+00:04:53.385 --> 00:04:54.510
+This is an important thing.
+
+104
+00:04:54.510 --> 00:04:57.250
+Let's keep a note for
+the next set of steps
+
+105
+00:04:57.250 --> 00:04:58.300
+that we're going to do.
+
+106
+00:04:58.300 --> 00:04:58.799
+All right?
+
+107
+00:04:58.799 --> 00:05:01.780
+So now it's time for us to
+set up our MongoDB server.
+
+108
+00:05:01.780 --> 00:05:04.360
+We just need to pass along
+the configuration options,
+
+109
+00:05:04.360 --> 00:05:05.745
+and we're good to go.
+
+110
+00:05:05.745 --> 00:05:06.450
+All right.
+
+111
+00:05:06.450 --> 00:05:09.030
+Now that we have our MongoDB
+server up and running,
+
+112
+00:05:09.030 --> 00:05:11.890
+it's time for us to
+connect to the system
+
+113
+00:05:11.890 --> 00:05:14.240
+by specifying the port that
+we are going to connect
+
+114
+00:05:14.240 --> 00:05:17.600
+to and start operating with it.
+
+115
+00:05:17.600 --> 00:05:21.400
+Now right now, we have
+connected to this instance
+
+116
+00:05:21.400 --> 00:05:24.010
+without specifying any
+credentials whatsoever, which
+
+117
+00:05:24.010 --> 00:05:25.300
+is totally fine in MongoDB.
+
+118
+00:05:25.300 --> 00:05:28.432
+It just means that we
+can't do much with it.
+
+119
+00:05:28.432 --> 00:05:29.890
+The first thing
+that we need to do,
+
+120
+00:05:29.890 --> 00:05:33.330
+and since we have authentication
+supported by LDAP,
+
+121
+00:05:33.330 --> 00:05:35.400
+is authenticate against LDAP.
+
+122
+00:05:35.400 --> 00:05:37.790
+For that, we connect to
+our external database,
+
+123
+00:05:37.790 --> 00:05:38.770
+getSiblingDB.
+
+124
+00:05:38.770 --> 00:05:41.870
+The method to do that,
+passing along the credentials,
+
+125
+00:05:41.870 --> 00:05:44.150
+in this case Alice,
+the password.
+
+126
+00:05:44.150 --> 00:05:46.350
+But also don't forget
+to specify the mechanism
+
+127
+00:05:46.350 --> 00:05:48.970
+by which we are authenticating
+this particular user,
+
+128
+00:05:48.970 --> 00:05:50.680
+which in this case is PLAIN.
+
+129
+00:05:50.680 --> 00:05:51.240
+Great.
+
+130
+00:05:51.240 --> 00:05:52.080
+We got it.
+
+131
+00:05:52.080 --> 00:05:53.920
+We are authenticated.
+
+132
+00:05:53.920 --> 00:05:56.040
+Now we can't do much with it.
+
+133
+00:05:56.040 --> 00:05:58.810
+If we ask to show collections,
+for example, the system's
+
+134
+00:05:58.810 --> 00:06:01.050
+going to tell us that
+we are not authorized.
+
+135
+00:06:01.050 --> 00:06:03.560
+Now the first thing
+that comes to mind
+
+136
+00:06:03.560 --> 00:06:06.790
+is, well how is
+this even possible.
+
+137
+00:06:06.790 --> 00:06:08.770
+Because the user
+is authenticated,
+
+138
+00:06:08.770 --> 00:06:12.070
+but there's no notion of the
+user on this instance here.
+
+139
+00:06:12.070 --> 00:06:16.990
+Since we rely on LDAP to
+hold all of authentication
+
+140
+00:06:16.990 --> 00:06:19.870
+credentials, but also
+authorization credentials,
+
+141
+00:06:19.870 --> 00:06:22.730
+the definition of the
+user is actually based out
+
+142
+00:06:22.730 --> 00:06:24.370
+of LDIF configuration.
+
+143
+00:06:24.370 --> 00:06:28.300
+So we don't have the need
+to have the user created
+
+144
+00:06:28.300 --> 00:06:30.360
+on MongoDB instance.
+
+145
+00:06:30.360 --> 00:06:33.270
+So prior to three or four, the
+first thing you should be doing
+
+146
+00:06:33.270 --> 00:06:35.200
+is basically
+creating a user that
+
+147
+00:06:35.200 --> 00:06:37.330
+will have some
+privileged role that
+
+148
+00:06:37.330 --> 00:06:40.110
+will allow you to do
+the administrative roles
+
+149
+00:06:40.110 --> 00:06:43.180
+like creating users,
+creating other resources that
+
+150
+00:06:43.180 --> 00:06:44.980
+will be needed for the system.
+
+151
+00:06:44.980 --> 00:06:48.410
+This will be possible because
+we are using the local host
+
+152
+00:06:48.410 --> 00:06:49.640
+exception to do this.
+
+153
+00:06:49.640 --> 00:06:52.810
+We are connecting through our
+local instances to this mongod,
+
+154
+00:06:52.810 --> 00:06:55.250
+so we could create
+this user, no problem.
+
+155
+00:06:55.250 --> 00:06:59.510
+But now that we have everything
+defined on the LDAP server,
+
+156
+00:06:59.510 --> 00:07:02.070
+we do not need to
+create the user at all.
+
+157
+00:07:02.070 --> 00:07:04.050
+Because all the
+definition of the user
+
+158
+00:07:04.050 --> 00:07:07.270
+is actually defined in
+the LDAP configuration.
+
+159
+00:07:07.270 --> 00:07:11.830
+So after we authenticate,
+what we actually need to do
+
+160
+00:07:11.830 --> 00:07:15.380
+is create a role on
+the admin database that
+
+161
+00:07:15.380 --> 00:07:18.350
+will match the
+roles that the LDAP
+
+162
+00:07:18.350 --> 00:07:20.900
+server is expecting us to have.
+
+163
+00:07:20.900 --> 00:07:24.860
+This meaning that on
+our LDAP configuration,
+
+164
+00:07:24.860 --> 00:07:27.730
+Alice actually
+belongs to a group,
+
+165
+00:07:27.730 --> 00:07:30.390
+and MongoDB will
+interpret this group
+
+166
+00:07:30.390 --> 00:07:35.740
+as a role that expects it to be
+created on our MongoDB server.
+
+167
+00:07:35.740 --> 00:07:39.890
+Now this is only possible
+to do because the local host
+
+168
+00:07:39.890 --> 00:07:42.370
+exception on three dot
+four has been extended
+
+169
+00:07:42.370 --> 00:07:47.010
+to allow us to create a role
+that would enable the user
+
+170
+00:07:47.010 --> 00:07:51.530
+Alice, or any user that belongs
+to this particular LDAP group,
+
+171
+00:07:51.530 --> 00:07:54.720
+to actually inherit
+the role privileges
+
+172
+00:07:54.720 --> 00:07:57.150
+of userAdminAnyDatabase.
+
+173
+00:07:57.150 --> 00:07:59.310
+So in this particular
+concrete example,
+
+174
+00:07:59.310 --> 00:08:02.230
+we are going to be
+creating a role, which
+
+175
+00:08:02.230 --> 00:08:06.540
+the name of the role will be the
+matching DN name of the group
+
+176
+00:08:06.540 --> 00:08:08.250
+that Alice belongs to.
+
+177
+00:08:08.250 --> 00:08:11.360
+We will not be setting
+any specific privileges.
+
+178
+00:08:11.360 --> 00:08:12.990
+And we are going
+to be inheriting
+
+179
+00:08:12.990 --> 00:08:17.110
+the userAdminAnyDatabase
+built-in role that MongoDB
+
+180
+00:08:17.110 --> 00:08:18.430
+contains.
+
+181
+00:08:18.430 --> 00:08:21.350
+So once we have
+the role defined,
+
+182
+00:08:21.350 --> 00:08:24.080
+we can basically manage
+all the privileges
+
+183
+00:08:24.080 --> 00:08:27.640
+of admin user AnyDatabase, which
+includes, for example, granting
+
+184
+00:08:27.640 --> 00:08:29.220
+roles to other roles.
+
+185
+00:08:29.220 --> 00:08:34.185
+So if I want to extend my own
+role of cn admins, ou users, dc
+
+186
+00:08:34.185 --> 00:08:39.030
+mongodb and dc com,
+and extending the role
+
+187
+00:08:39.030 --> 00:08:41.650
+to read and write
+on database test,
+
+188
+00:08:41.650 --> 00:08:46.390
+I could obviously use test now,
+and I could just, for example,
+
+189
+00:08:46.390 --> 00:08:51.240
+insert on my collection
+notes a message
+
+190
+00:08:51.240 --> 00:08:55.030
+where I can define that
+LDAP authorization is great.
+
+191
+00:08:55.030 --> 00:08:59.130
+All of this without creating
+a single user in my MongoDB
+
+192
+00:08:59.130 --> 00:09:00.680
+instance.

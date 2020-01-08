@@ -1,0 +1,437 @@
+
+1
+00:00:00.000 --> 00:00:00.240
+
+
+2
+00:00:00.240 --> 00:00:01.980
+In this lesson, we're
+going to discuss
+
+3
+00:00:01.980 --> 00:00:05.040
+the options available to
+us when reading and parsing
+
+4
+00:00:05.040 --> 00:00:07.380
+through a document
+using the Java driver.
+
+5
+00:00:07.380 --> 00:00:09.510
+We will contrast these
+varying approaches to find
+
+6
+00:00:09.510 --> 00:00:11.670
+the one that suits us best.
+
+7
+00:00:11.670 --> 00:00:13.200
+For the purposes
+of this lesson, we
+
+8
+00:00:13.200 --> 00:00:15.630
+will create an actors
+collection that
+
+9
+00:00:15.630 --> 00:00:19.510
+contains documents
+corresponding to each actor.
+
+10
+00:00:19.510 --> 00:00:22.090
+In our first example, we
+want to create a basic case
+
+11
+00:00:22.090 --> 00:00:24.250
+where the structure
+of the actor class
+
+12
+00:00:24.250 --> 00:00:26.990
+mimics a document from
+the actors collection.
+
+13
+00:00:26.990 --> 00:00:30.340
+So we will call this
+class actor basic.
+
+14
+00:00:30.340 --> 00:00:34.720
+Notice how each property data
+type matches the document field
+
+15
+00:00:34.720 --> 00:00:36.310
+data type.
+
+16
+00:00:36.310 --> 00:00:39.580
+That is because this
+method implies a strict one
+
+17
+00:00:39.580 --> 00:00:43.810
+to one correspondence between
+document field data types
+
+18
+00:00:43.810 --> 00:00:46.870
+and the class
+properties data types.
+
+19
+00:00:46.870 --> 00:00:49.130
+This method uses pojo code.
+
+20
+00:00:49.130 --> 00:00:52.600
+The first thing that we need
+here is a pojo codec registry.
+
+21
+00:00:52.600 --> 00:00:56.860
+You can think of a registry as a
+factory of codecs, where codecs
+
+22
+00:00:56.860 --> 00:00:59.860
+are an abstraction that
+determines how Bson data is
+
+23
+00:00:59.860 --> 00:01:02.440
+converted and into what type.
+
+24
+00:01:02.440 --> 00:01:05.470
+There are default
+and custom codecs.
+
+25
+00:01:05.470 --> 00:01:07.090
+So let's start
+with a default one
+
+26
+00:01:07.090 --> 00:01:09.280
+and see what it can do for us.
+
+27
+00:01:09.280 --> 00:01:11.680
+The mechanism for
+pojo support is
+
+28
+00:01:11.680 --> 00:01:13.900
+via the pojo codec
+provider which
+
+29
+00:01:13.900 --> 00:01:16.660
+provides a builder
+for configuring how
+
+30
+00:01:16.660 --> 00:01:18.490
+and what pojo to support.
+
+31
+00:01:18.490 --> 00:01:22.360
+The builder allows registering
+of classes and packages
+
+32
+00:01:22.360 --> 00:01:24.520
+where the helpful setting
+that directs the provider
+
+33
+00:01:24.520 --> 00:01:28.960
+to automatically try and
+handle any pojo it sees.
+
+34
+00:01:28.960 --> 00:01:31.900
+Here, where instantiating
+a codec registry
+
+35
+00:01:31.900 --> 00:01:34.930
+and telling you to use
+the pojo codec provider,
+
+36
+00:01:34.930 --> 00:01:37.750
+building it with an
+automatic setting which
+
+37
+00:01:37.750 --> 00:01:39.730
+uses type introspection
+to determine
+
+38
+00:01:39.730 --> 00:01:42.370
+the properties of the
+given pojo and accurately
+
+39
+00:01:42.370 --> 00:01:44.680
+apply the default codec.
+
+40
+00:01:44.680 --> 00:01:46.150
+Let us test this.
+
+41
+00:01:46.150 --> 00:01:49.720
+The first time we run this
+test, it shouldn't work.
+
+42
+00:01:49.720 --> 00:01:50.890
+Why is that?
+
+43
+00:01:50.890 --> 00:01:54.730
+Well, our actor basic object
+is the only point of reference
+
+44
+00:01:54.730 --> 00:01:56.560
+our codec registry has.
+
+45
+00:01:56.560 --> 00:01:58.720
+And it seems to me
+that it is missing
+
+46
+00:01:58.720 --> 00:02:00.880
+some crucial information.
+
+47
+00:02:00.880 --> 00:02:05.500
+Let us add Bson annotations
+in the actor basic class.
+
+48
+00:02:05.500 --> 00:02:07.330
+These add the field
+name references
+
+49
+00:02:07.330 --> 00:02:09.460
+as part of our
+actor basic class.
+
+50
+00:02:09.460 --> 00:02:11.620
+And the codec registry
+is now able to see
+
+51
+00:02:11.620 --> 00:02:15.460
+the corresponding structure
+between the actor basic object
+
+52
+00:02:15.460 --> 00:02:17.840
+and the document fields.
+
+53
+00:02:17.840 --> 00:02:20.760
+Let's run the test again.
+
+54
+00:02:20.760 --> 00:02:21.720
+Wonderful!
+
+55
+00:02:21.720 --> 00:02:24.330
+This basic case of
+reading from the database
+
+56
+00:02:24.330 --> 00:02:27.060
+is not always close to reality.
+
+57
+00:02:27.060 --> 00:02:30.870
+As you have learned in earlier
+lessons, a field in a database
+
+58
+00:02:30.870 --> 00:02:32.730
+can have different
+data types, which
+
+59
+00:02:32.730 --> 00:02:34.410
+needs to be taken care of.
+
+60
+00:02:34.410 --> 00:02:36.750
+Additionally,
+sometimes your app uses
+
+61
+00:02:36.750 --> 00:02:38.700
+data types that are
+different from what
+
+62
+00:02:38.700 --> 00:02:40.710
+is stored in the database.
+
+63
+00:02:40.710 --> 00:02:42.630
+To demonstrate a
+case like that, we
+
+64
+00:02:42.630 --> 00:02:47.130
+will use actor with
+string ID object, which,
+
+65
+00:02:47.130 --> 00:02:49.950
+as you may have guessed,
+is an actor class where
+
+66
+00:02:49.950 --> 00:02:55.000
+the ID field is not an object
+ID, but a string instead.
+
+67
+00:02:55.000 --> 00:02:57.750
+In this case, we have
+several different ways
+
+68
+00:02:57.750 --> 00:03:00.540
+to reach the desired
+result. The first option
+
+69
+00:03:00.540 --> 00:03:04.920
+is to write a method that will
+manually map each document
+
+70
+00:03:04.920 --> 00:03:10.470
+field to the actors string ID
+properties by using set ID, set
+
+71
+00:03:10.470 --> 00:03:12.250
+name, and et cetera.
+
+72
+00:03:12.250 --> 00:03:15.490
+Our from document method
+does exactly that,
+
+73
+00:03:15.490 --> 00:03:18.510
+and returns actor
+with string ID object
+
+74
+00:03:18.510 --> 00:03:21.730
+that is filled
+with the new data.
+
+75
+00:03:21.730 --> 00:03:24.870
+Let us test if our from
+document mapper works,
+
+76
+00:03:24.870 --> 00:03:27.060
+and whether we were
+able to successfully map
+
+77
+00:03:27.060 --> 00:03:30.690
+values in each field to
+the values in the actor
+
+78
+00:03:30.690 --> 00:03:34.020
+with string ID class.
+
+79
+00:03:34.020 --> 00:03:35.350
+Reading seems to work.
+
+80
+00:03:35.350 --> 00:03:37.470
+But if we want to
+write to the database,
+
+81
+00:03:37.470 --> 00:03:38.970
+we will have to
+create a method that
+
+82
+00:03:38.970 --> 00:03:41.190
+does the reverse
+of from document,
+
+83
+00:03:41.190 --> 00:03:45.760
+and manages data insertion
+from actor class to document.
+
+84
+00:03:45.760 --> 00:03:47.940
+This process doesn't
+seem too terrible
+
+85
+00:03:47.940 --> 00:03:49.770
+because of our simple use case.
+
+86
+00:03:49.770 --> 00:03:53.580
+But as the complexity and
+size of our documents grows,
+
+87
+00:03:53.580 --> 00:03:56.370
+this can get more
+tedious than needed.
+
+88
+00:03:56.370 --> 00:03:58.920
+There are easier approaches
+to going from Bson
+
+89
+00:03:58.920 --> 00:04:00.370
+to a Java object.
+
+90
+00:04:00.370 --> 00:04:03.180
+So let's take advantage of
+the simplicity of our case
+
+91
+00:04:03.180 --> 00:04:05.700
+and see what other options
+are available to us,
+
+92
+00:04:05.700 --> 00:04:09.110
+namely, let's look
+at a custom codec.

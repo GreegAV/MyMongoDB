@@ -1,0 +1,352 @@
+
+1
+00:00:00.000 --> 00:00:00.280
+
+
+2
+00:00:00.280 --> 00:00:02.780
+In this lesson, we're going to
+be talking about replicas set
+
+3
+00:00:02.780 --> 00:00:05.280
+nodes with different indexes.
+
+4
+00:00:05.280 --> 00:00:07.950
+Now I need to know
+right from the start
+
+5
+00:00:07.950 --> 00:00:10.110
+that an architecture that
+relies on secondary nodes
+
+6
+00:00:10.110 --> 00:00:13.740
+with specific indexes
+is not very usual,
+
+7
+00:00:13.740 --> 00:00:17.760
+and is only useful for
+a handful of use cases,
+
+8
+00:00:17.760 --> 00:00:20.940
+things like specific
+analytics on secondary nodes,
+
+9
+00:00:20.940 --> 00:00:24.210
+or reporting on delayed
+consistency data, or even
+
+10
+00:00:24.210 --> 00:00:25.380
+text search.
+
+11
+00:00:25.380 --> 00:00:28.860
+Those are a few of the
+examples of use cases
+
+12
+00:00:28.860 --> 00:00:32.130
+that will benefit from
+having specific indexes
+
+13
+00:00:32.130 --> 00:00:34.260
+on secondary nodes alone.
+
+14
+00:00:34.260 --> 00:00:37.560
+But again, this should
+not be a common practice.
+
+15
+00:00:37.560 --> 00:00:40.510
+Once you have identified
+a favorable scenario,
+
+16
+00:00:40.510 --> 00:00:45.030
+you also need to consider the
+requirements for this setup.
+
+17
+00:00:45.030 --> 00:00:47.370
+These nodes should
+not be allowed
+
+18
+00:00:47.370 --> 00:00:49.470
+to become primary nodes.
+
+19
+00:00:49.470 --> 00:00:52.620
+So we should configure them
+either with priority 0,
+
+20
+00:00:52.620 --> 00:00:59.050
+becoming hidden nodes, or pure
+simply delayed secondary nodes.
+
+21
+00:00:59.050 --> 00:01:03.490
+This is because if a
+primary were to step down,
+
+22
+00:01:03.490 --> 00:01:05.489
+then your main
+application could then
+
+23
+00:01:05.489 --> 00:01:07.230
+begin communicating
+with replica set
+
+24
+00:01:07.230 --> 00:01:12.460
+members whose indexes are not
+designed to serve its queries.
+
+25
+00:01:12.460 --> 00:01:14.430
+This will be a very
+bad performance
+
+26
+00:01:14.430 --> 00:01:16.620
+scenario for your application.
+
+27
+00:01:16.620 --> 00:01:19.810
+Let's see this in
+practice using an example.
+
+28
+00:01:19.810 --> 00:01:21.580
+Let's start by
+creating a replica set.
+
+29
+00:01:21.580 --> 00:01:24.180
+I'm going to start by
+creating the folders or DB
+
+30
+00:01:24.180 --> 00:01:27.210
+paths for each one of
+my replicas set members.
+
+31
+00:01:27.210 --> 00:01:31.880
+I'm going to have our
+data r 0, 1, and 2.
+
+32
+00:01:31.880 --> 00:01:33.970
+With the handouts
+for this lesson,
+
+33
+00:01:33.970 --> 00:01:36.780
+you'll find a set of
+configuration files
+
+34
+00:01:36.780 --> 00:01:40.050
+that I'll be using to
+launch my replica set.
+
+35
+00:01:40.050 --> 00:01:42.450
+As you can see here, there
+are three different files,
+
+36
+00:01:42.450 --> 00:01:47.670
+r0, r1, and r2, one for each
+of the instances of my replica
+
+37
+00:01:47.670 --> 00:01:49.020
+set.
+
+38
+00:01:49.020 --> 00:01:51.990
+The next step is to launch
+all of these instances.
+
+39
+00:01:51.990 --> 00:01:55.830
+But before that, let's see
+in on which ports are we
+
+40
+00:01:55.830 --> 00:01:59.100
+running this particular
+set of instances.
+
+41
+00:01:59.100 --> 00:02:04.440
+So my r0 will be listening
+on port 27000, r1 on 27001,
+
+42
+00:02:04.440 --> 00:02:08.490
+and r2 on 27002.
+
+43
+00:02:08.490 --> 00:02:11.480
+So now that we've seen on
+which ports my instances
+
+44
+00:02:11.480 --> 00:02:13.650
+are going to be
+listening on, I can
+
+45
+00:02:13.650 --> 00:02:15.750
+go ahead and launch them all.
+
+46
+00:02:15.750 --> 00:02:22.000
+So I'm going to launch my r0,
+my r1, and obviously my r2.
+
+47
+00:02:22.000 --> 00:02:22.500
+If
+
+48
+00:02:22.500 --> 00:02:26.400
+I look for the grep of all
+[? MongoD's ?] running,
+
+49
+00:02:26.400 --> 00:02:29.500
+I can see that all my
+instances are up and running
+
+50
+00:02:29.500 --> 00:02:32.130
+and very well,
+thank you so much.
+
+51
+00:02:32.130 --> 00:02:37.410
+The configured replica set is
+called M201 very originally.
+
+52
+00:02:37.410 --> 00:02:40.000
+Once all instances
+up and running,
+
+53
+00:02:40.000 --> 00:02:44.250
+we can go ahead and configure
+this particular replica set.
+
+54
+00:02:44.250 --> 00:02:49.350
+We are going to have one
+primary and two secondaries.
+
+55
+00:02:49.350 --> 00:02:52.890
+One of the secondaries will
+be configured with priority 0,
+
+56
+00:02:52.890 --> 00:02:56.430
+preventing it from
+becoming a primary node.
+
+57
+00:02:56.430 --> 00:03:01.170
+So it can then select them to
+create a specific index that
+
+58
+00:03:01.170 --> 00:03:06.090
+is going to be only
+accessible if we run queries
+
+59
+00:03:06.090 --> 00:03:09.270
+through this particular node.
+
+60
+00:03:09.270 --> 00:03:11.440
+So let's go ahead and connect
+to one of the members.
+
+61
+00:03:11.440 --> 00:03:14.820
+In this case, I'm
+going to use 27000.
+
+62
+00:03:14.820 --> 00:03:17.860
+And I'm going to set this
+particular configuration.
+
+63
+00:03:17.860 --> 00:03:21.510
+The ID [INAUDIBLE] the
+replica set name, M201.
+
+64
+00:03:21.510 --> 00:03:28.230
+And here on hots 2, or ID 2,
+and running on port 27002,
+
+65
+00:03:28.230 --> 00:03:30.810
+I will set this
+member as priority 0.
+
+66
+00:03:30.810 --> 00:03:36.030
+This will be the selected node
+to hold those specific indexes
+
+67
+00:03:36.030 --> 00:03:39.640
+that will be different from the
+remaining nodes of my replica
+
+68
+00:03:39.640 --> 00:03:40.700
+set.
+
+69
+00:03:40.700 --> 00:03:43.240
+Once I have the
+configuration in place,
+
+70
+00:03:43.240 --> 00:03:46.904
+I can now go ahead
+and initiate it.
+
+71
+00:03:46.904 --> 00:03:49.860
+Once the configuration
+is up and running,
+
+72
+00:03:49.860 --> 00:03:54.920
+I'll see that I will have my
+hosts and one passive node,
+
+73
+00:03:54.920 --> 00:03:59.210
+here my priority 0 node.

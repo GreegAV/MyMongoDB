@@ -1,0 +1,111 @@
+In this video, I'd like to discuss how we can utilize indexes to sort the documents in our queries.
+
+We already know that any query can also be sorted.
+
+Now there are two ways that these documents can be sorted.
+
+They can be sorted in memory or by using an index.
+
+Let's talk about the first case, when sorting happens in memory.
+
+The documents in our collections are stored on disk in an unknown order, therefore, when we query the server our documents are going to be returned in the same order that the server finds them.
+
+If we happen to want them in the same order that the server finds them, great, but that's not very likely to happen.
+
+This means that when we add a sort, the server is going have to read the documents from disk into RAM.
+
+And then in RAM, it will perform some kind of sorting algorithm on them.
+
+Depending on how many documents you have, this might take a long time.
+
+Moreover, because sorting a large amount of documents in memory might be an expensive operation, the server is going to abort sorting in memory when 32 megabytes of memory is being used.
+
+This leads nicely in how we can sort with indexes.
+
+In an index, the keys are ordered according to the field specified during index creation.
+
+The server can take advantage of this via sort.
+
+If a query is using an index scan, the order of the documents returned is guaranteed to be sorted by the index keys.
+
+This means that there is no need to reform an explicit sort, as the documents will be fetched from the server in the sorted order.
+
+Now it's important to point out that these documents are only going to be ordered according to the fields that make up the index.
+
+If we have an ascending index on last name, then the documents will be ordered according to last name.
+
+If there's an index on first name, then the documents will be ordered according to first name.
+
+It's important to note that the query planner considers indexes that can be helpful to either the query predicate or to the requested sort.
+
+Let's dig a little bit deeper into sorting functionality with single field indexes by looking at the shell.
+
+For this lesson, we're going to continue using the people.json data set that we have been using in the previous lessons.
+
+If you haven't got it, you can go ahead and import it with Mongo import.
+
+If you can, go ahead and skip this step.
+
+Let's go ahead and find all the documents in our collection sorted by social security number.
+
+Here are the first 20 documents.
+
+You can see that we're finding everyone, and we're sorting by the social security number.
+
+Let's go ahead and create our explainable object and use it to explain our query.
+
+If we go to executionStats, you can see that we had to look at 50,000 documents to return our 50,000 documents, which makes sense.
+
+But you also notice that we used 50,000 index keys and that's because we still did an index scan.
+
+Well, why did we do an index scan if we needed to return all the documents?
+
+Well that's because the index wasn't used for filtering documents, but was rather used for sorting.
+
+If I instead sort on first name, which we don't have an index for.
+
+If we scroll up to executionStats, you'll see that we still examined 50,000 documents because we returned 50,000 documents.
+
+But this time we looked at no index keys, and that's because we did in memory SORT.
+
+So we effectively did a collection scan, read all the documents into memory, and then once they are in memory, we were able to do an in memory SORT on the unsorted documents for the first name field.
+
+In our previous index sorted example, we sorted by security number ascending.
+
+This time let's sort by it descending.
+
+And then we look at our output, you'll see that we're still doing an index scan.
+
+This is because this time we're able to walk our index backwards instead of walking it forwards.
+
+When we're sorting with a single field index, we can always do that.
+
+I can sort my documents either ascending or descending, regardless of the physical ordering of the index keys.
+
+I can both filter and sort in the same query.
+
+Here I'm finding everyone whose social security number starts with 555.
+
+And then we look at the explain output, you can see that we did an index scan.
+
+And this index scan was used both for filtering and sorting the documents because we can see that we only had to look at 49 documents, which were the same 49 that we were returned.
+
+Just to verify things, let's see what would happen if we built descending index keys.
+
+We'll first drop our old indexes.
+
+And now we'll create another index on social security number, but this time descending instead of ascending.
+
+And so now, when I search for social security numbers beginning with 555, and I sort them the descending, we're now walking the index forward because it is a descending index.
+
+Whereas before, we were walking it backwards because it was an ascending index.
+
+This may seem unimportant, but it will become more important later when we discuss compound indexes.
+
+Let's recap what we've learned.
+
+In this lesson you learned how to use indexes to sort.
+
+And how to create indexes that both match and sort on a single query.
+
+And you also learned how to create indexes that can be used for ascending and descending sort orders.

@@ -1,0 +1,275 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.190
+Hi I'm Kirby and I'll be your
+instructor for this course.
+
+3
+00:00:04.190 --> 00:00:07.280
+Security is a key aspect of any
+mission critical application
+
+4
+00:00:07.280 --> 00:00:09.320
+and enterprise environment.
+
+5
+00:00:09.320 --> 00:00:12.010
+During this course we're going
+to cover what security features
+
+6
+00:00:12.010 --> 00:00:14.660
+MongoDB has to offer,
+and the best practices
+
+7
+00:00:14.660 --> 00:00:18.110
+associated with administering
+a secure deployment.
+
+8
+00:00:18.110 --> 00:00:20.000
+This course is three weeks long.
+
+9
+00:00:20.000 --> 00:00:22.220
+Each week we'll release a
+new lesson video, typically
+
+10
+00:00:22.220 --> 00:00:25.430
+accompanied by a quiz to assess
+your learning of the material.
+
+11
+00:00:25.430 --> 00:00:26.900
+At the end of each
+week there will
+
+12
+00:00:26.900 --> 00:00:28.812
+be a set of homework exercises.
+
+13
+00:00:28.812 --> 00:00:30.770
+Let's go ahead and cover
+a few of the logistics
+
+14
+00:00:30.770 --> 00:00:32.210
+of this course.
+
+15
+00:00:32.210 --> 00:00:33.560
+Target audience.
+
+16
+00:00:33.560 --> 00:00:35.212
+This is considered
+an advanced course.
+
+17
+00:00:35.212 --> 00:00:37.670
+It's expected that you already
+have an understanding of how
+
+18
+00:00:37.670 --> 00:00:41.810
+to install and run MongoDB,
+set up a replica set or sharded
+
+19
+00:00:41.810 --> 00:00:44.360
+cluster, and have a good
+understanding of the MongoDB
+
+20
+00:00:44.360 --> 00:00:46.210
+query language.
+
+21
+00:00:46.210 --> 00:00:47.780
+How does grading work?
+
+22
+00:00:47.780 --> 00:00:50.150
+There are quizzes,
+homeworks, and a final exam
+
+23
+00:00:50.150 --> 00:00:52.730
+as deliverables on your
+part of the course.
+
+24
+00:00:52.730 --> 00:00:54.560
+Quizzes exist as a
+formative measure
+
+25
+00:00:54.560 --> 00:00:56.660
+to make sure you
+understand the content.
+
+26
+00:00:56.660 --> 00:00:58.610
+But your grade will be
+based on how well you
+
+27
+00:00:58.610 --> 00:01:01.460
+do on the homeworks and on the
+final exam, each of these being
+
+28
+00:01:01.460 --> 00:01:04.280
+worth 50% of your final grade.
+
+29
+00:01:04.280 --> 00:01:06.740
+I'd highly recommend you take
+advantage of the discussion
+
+30
+00:01:06.740 --> 00:01:07.730
+forums.
+
+31
+00:01:07.730 --> 00:01:09.860
+We have very experienced
+teaching assistants
+
+32
+00:01:09.860 --> 00:01:11.842
+who are there to help
+answer your questions.
+
+33
+00:01:11.842 --> 00:01:13.550
+And your fellow
+classmates are also there
+
+34
+00:01:13.550 --> 00:01:15.830
+to help answer your
+questions and are very often
+
+35
+00:01:15.830 --> 00:01:18.680
+helpful and
+knowledgeable resources.
+
+36
+00:01:18.680 --> 00:01:20.690
+Based on our
+experience, we've seen
+
+37
+00:01:20.690 --> 00:01:22.910
+that students who perform
+best in the course
+
+38
+00:01:22.910 --> 00:01:26.240
+are those who take advantage
+of the discussion forums.
+
+39
+00:01:26.240 --> 00:01:28.360
+As far as course
+content is concerned,
+
+40
+00:01:28.360 --> 00:01:30.800
+we'll take a deep dive into
+the different authentication
+
+41
+00:01:30.800 --> 00:01:33.090
+mechanisms that
+MongoDB provides.
+
+42
+00:01:33.090 --> 00:01:36.140
+We'll talk about MongoDB's
+different authorization models
+
+43
+00:01:36.140 --> 00:01:38.110
+and how to configure
+it to your needs.
+
+44
+00:01:38.110 --> 00:01:40.820
+We'll then cover how
+to configure and enable
+
+45
+00:01:40.820 --> 00:01:42.589
+encryption for your database.
+
+46
+00:01:42.589 --> 00:01:44.505
+After that we'll discuss
+auditing capabilities
+
+47
+00:01:44.505 --> 00:01:46.730
+that MongoDb provides.
+
+48
+00:01:46.730 --> 00:01:48.530
+And finally, we'll
+discuss some security
+
+49
+00:01:48.530 --> 00:01:51.410
+best practices that anyone
+running a production system
+
+50
+00:01:51.410 --> 00:01:52.940
+should follow.
+
+51
+00:01:52.940 --> 00:01:55.280
+By the end of this course,
+you should feel confident
+
+52
+00:01:55.280 --> 00:01:58.310
+that you can deploy a secure
+MongoDB deployment where
+
+53
+00:01:58.310 --> 00:02:00.560
+you can configure the
+role based authorization
+
+54
+00:02:00.560 --> 00:02:04.850
+model to your needs, set up
+encryption, do proper auditing,
+
+55
+00:02:04.850 --> 00:02:07.250
+and follow security
+best practices.
+
+56
+00:02:07.250 --> 00:02:09.680
+With all that being said,
+we're super excited to have you
+
+57
+00:02:09.680 --> 00:02:10.880
+as a student in this course.
+
+58
+00:02:10.880 --> 00:02:12.730
+Best of luck.

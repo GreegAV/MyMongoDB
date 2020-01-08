@@ -1,0 +1,178 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.320
+Organizations are
+increasingly storing
+
+3
+00:00:02.320 --> 00:00:06.810
+sensitive personally
+identifiable information, PII,
+
+4
+00:00:06.810 --> 00:00:08.920
+on MongoDB and are
+facing the challenge
+
+5
+00:00:08.920 --> 00:00:10.800
+of complying with
+security policies
+
+6
+00:00:10.800 --> 00:00:15.110
+and external regulations
+such as HIPA, PCI and FERPA.
+
+7
+00:00:15.110 --> 00:00:18.340
+These policies usually
+require encryption on disk
+
+8
+00:00:18.340 --> 00:00:20.990
+when storing sensitive
+or private data in order
+
+9
+00:00:20.990 --> 00:00:24.650
+to protect it from being
+accessed by unauthorized users.
+
+10
+00:00:24.650 --> 00:00:27.200
+In order to address these
+regulated use cases,
+
+11
+00:00:27.200 --> 00:00:29.480
+MongoDB offers database
+file encryption
+
+12
+00:00:29.480 --> 00:00:32.940
+as part of its
+enterprise offering.
+
+13
+00:00:32.940 --> 00:00:35.830
+MongoDB 3.4 is further
+strengthening its data
+
+14
+00:00:35.830 --> 00:00:38.010
+protection offering
+by adding an option
+
+15
+00:00:38.010 --> 00:00:42.120
+to redact client data
+from the system log files.
+
+16
+00:00:42.120 --> 00:00:44.300
+Additionally, log
+assertions will contain
+
+17
+00:00:44.300 --> 00:00:46.100
+no content in this mode.
+
+18
+00:00:46.100 --> 00:00:48.200
+Rather the source
+file and line number
+
+19
+00:00:48.200 --> 00:00:50.690
+will be provided instead.
+
+20
+00:00:50.690 --> 00:00:52.920
+This option will prevent
+potentially sensitive data
+
+21
+00:00:52.920 --> 00:00:55.450
+from being written
+to system logs, which
+
+22
+00:00:55.450 --> 00:00:57.700
+are stored and encrypted.
+
+23
+00:00:57.700 --> 00:01:00.360
+This will greatly simplify
+the best practices
+
+24
+00:01:00.360 --> 00:01:02.820
+for deploying MongoDB
+in regular environments
+
+25
+00:01:02.820 --> 00:01:07.640
+and helps to ensure PII data
+is protected where possible.
+
+26
+00:01:07.640 --> 00:01:09.620
+There are important
+supportability trade-offs,
+
+27
+00:01:09.620 --> 00:01:13.320
+though, to redacting client
+data from the system logs.
+
+28
+00:01:13.320 --> 00:01:16.880
+The new option will redact
+all values from documents.
+
+29
+00:01:16.880 --> 00:01:18.740
+Therefore, the
+logs will only show
+
+30
+00:01:18.740 --> 00:01:22.280
+the set of keys queried against
+without the actual values used
+
+31
+00:01:22.280 --> 00:01:23.640
+to filter.
+
+32
+00:01:23.640 --> 00:01:25.890
+While still helpful,
+this will weaken
+
+33
+00:01:25.890 --> 00:01:27.580
+the power of our
+system logs from
+
+34
+00:01:27.580 --> 00:01:30.260
+a diagnosability standpoint.
+
+35
+00:01:30.260 --> 00:01:32.500
+Now, let's have a look
+to some examples where
+
+36
+00:01:32.500 --> 00:01:35.280
+we can see the configuration
+options and trade-offs
+
+37
+00:01:35.280 --> 00:01:37.750
+while enabling log redaction.

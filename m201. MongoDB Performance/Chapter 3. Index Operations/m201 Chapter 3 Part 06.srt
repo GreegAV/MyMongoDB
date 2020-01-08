@@ -1,0 +1,517 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.010
+The most intensive resource
+utilization by your indexes
+
+3
+00:00:04.010 --> 00:00:07.570
+will be RAM or memory.
+
+4
+00:00:07.570 --> 00:00:10.040
+Our deployments should
+be sized in order
+
+5
+00:00:10.040 --> 00:00:14.090
+to accommodate our
+indexes in RAM.
+
+6
+00:00:14.090 --> 00:00:17.950
+This means that we should have
+enough space in our memory
+
+7
+00:00:17.950 --> 00:00:22.250
+to accommodate all
+of our indexes.
+
+8
+00:00:22.250 --> 00:00:26.300
+That's a good role of
+thumb in terms of sizing.
+
+9
+00:00:26.300 --> 00:00:30.650
+Now if we don't have
+enough space in our memory
+
+10
+00:00:30.650 --> 00:00:37.280
+to accommodate our indexes,
+a great deal of disk access
+
+11
+00:00:37.280 --> 00:00:42.710
+will be required to
+traverse your index file.
+
+12
+00:00:42.710 --> 00:00:44.570
+If you have different
+pages on the index,
+
+13
+00:00:44.570 --> 00:00:48.770
+they will be allocated
+to your memory.
+
+14
+00:00:48.770 --> 00:00:50.630
+If you are traversing
+that space,
+
+15
+00:00:50.630 --> 00:00:55.670
+it means that you will slide
+your pages into positions that
+
+16
+00:00:55.670 --> 00:00:59.360
+are no longer in memory, so
+allocating those into memory,
+
+17
+00:00:59.360 --> 00:01:03.330
+and flushing out
+information to disk.
+
+18
+00:01:03.330 --> 00:01:06.910
+If you are constantly
+traversing your index,
+
+19
+00:01:06.910 --> 00:01:10.970
+you will be doing a lot
+of page in and page out.
+
+20
+00:01:10.970 --> 00:01:13.340
+Now the first assessment
+that you should do
+
+21
+00:01:13.340 --> 00:01:17.000
+is make sure you understand
+the capacity of the server.
+
+22
+00:01:17.000 --> 00:01:19.040
+In this case I'm using
+a virtual machine,
+
+23
+00:01:19.040 --> 00:01:22.730
+and I have 4 gigabytes of RAM,
+4 gigabytes of memory allocated
+
+24
+00:01:22.730 --> 00:01:24.290
+to this virtual machine.
+
+25
+00:01:24.290 --> 00:01:26.920
+And I'm already using 3.7.
+
+26
+00:01:26.920 --> 00:01:31.850
+I have 177 megabytes
+of free memory.
+
+27
+00:01:31.850 --> 00:01:34.940
+Some of that is
+going to be cached.
+
+28
+00:01:34.940 --> 00:01:38.840
+Now if I start my MongoD
+with wiredTigerCacheSize
+
+29
+00:01:38.840 --> 00:01:43.400
+of 1 gigabyte, for example, I
+know that the size of my memory
+
+30
+00:01:43.400 --> 00:01:45.210
+is larger than that.
+
+31
+00:01:45.210 --> 00:01:47.960
+But the amount of cache
+size that I'm allocating
+
+32
+00:01:47.960 --> 00:01:50.610
+is only going to
+be of 1 gigabyte.
+
+33
+00:01:50.610 --> 00:01:55.280
+So my indexes will be
+placed within that cache
+
+34
+00:01:55.280 --> 00:01:58.680
+size of 1 gigabyte.
+
+35
+00:01:58.680 --> 00:02:00.820
+Now that we see that
+we can have indexes,
+
+36
+00:02:00.820 --> 00:02:03.770
+and the indexes
+can be quite large,
+
+37
+00:02:03.770 --> 00:02:07.220
+but also that those indexes
+will occupy a significant amount
+
+38
+00:02:07.220 --> 00:02:12.050
+of memory, it will be nice to
+know which percentage of that
+
+39
+00:02:12.050 --> 00:02:15.120
+index actually is
+living in memory.
+
+40
+00:02:15.120 --> 00:02:16.160
+How can we know that?
+
+41
+00:02:16.160 --> 00:02:19.250
+How can we determine
+how much of our index
+
+42
+00:02:19.250 --> 00:02:21.620
+is actually in memory or not?
+
+43
+00:02:21.620 --> 00:02:26.030
+If we go back to our shell and
+connect to our londonbikes,
+
+44
+00:02:26.030 --> 00:02:29.420
+we have this
+interesting command,
+
+45
+00:02:29.420 --> 00:02:31.947
+which is the collection stats.
+
+46
+00:02:31.947 --> 00:02:33.530
+Now with collection
+stats, we can also
+
+47
+00:02:33.530 --> 00:02:37.640
+pass a flag saying that we are
+interested in knowing the index
+
+48
+00:02:37.640 --> 00:02:39.920
+details.
+
+49
+00:02:39.920 --> 00:02:43.430
+If we run this, we
+will see that we're
+
+50
+00:02:43.430 --> 00:02:47.270
+going to get a bunch
+of information back.
+
+51
+00:02:47.270 --> 00:02:52.590
+So there's a lot of quite
+nice information around how
+
+52
+00:02:52.590 --> 00:02:57.560
+are our indexes set up, apart
+from the collection stats
+
+53
+00:02:57.560 --> 00:02:59.510
+that the command gives us.
+
+54
+00:02:59.510 --> 00:03:04.740
+So before cruising through
+all this block of text,
+
+55
+00:03:04.740 --> 00:03:08.000
+lets do a little more
+of an ingenious way
+
+56
+00:03:08.000 --> 00:03:10.610
+of dealing with this
+information, which is basically
+
+57
+00:03:10.610 --> 00:03:14.120
+putting all of this
+information into a variable.
+
+58
+00:03:14.120 --> 00:03:18.260
+And let's see about
+a couple of indexes
+
+59
+00:03:18.260 --> 00:03:20.440
+that we are going
+to be interested on.
+
+60
+00:03:20.440 --> 00:03:22.640
+Start by getting
+the index details.
+
+61
+00:03:22.640 --> 00:03:24.830
+As you can see here,
+there's a bunch
+
+62
+00:03:24.830 --> 00:03:30.170
+of index details for
+each individual index.
+
+63
+00:03:30.170 --> 00:03:34.640
+And I'm mostly interested
+on one of them, the one
+
+64
+00:03:34.640 --> 00:03:39.320
+that we just recently
+created, our endstation_name.
+
+65
+00:03:39.320 --> 00:03:43.280
+Now if we look into this
+particular set of information,
+
+66
+00:03:43.280 --> 00:03:46.580
+we can see some
+interesting information
+
+67
+00:03:46.580 --> 00:03:52.340
+on this particular setup,
+especially the cache object.
+
+68
+00:03:52.340 --> 00:03:55.460
+Inside the cache,
+we are going to get
+
+69
+00:03:55.460 --> 00:04:00.650
+a clear view of how
+much bytes are currently
+
+70
+00:04:00.650 --> 00:04:05.810
+in cache, how much bytes are
+read into cache, for example,
+
+71
+00:04:05.810 --> 00:04:09.600
+or a bunch of other
+criteria about, for example,
+
+72
+00:04:09.600 --> 00:04:14.930
+the number of pages
+requested from the cache,
+
+73
+00:04:14.930 --> 00:04:19.260
+or pages read into cache.
+
+74
+00:04:19.260 --> 00:04:21.649
+So if you are interested
+in determining
+
+75
+00:04:21.649 --> 00:04:26.410
+how much information is
+currently allocated in RAM,
+
+76
+00:04:26.410 --> 00:04:29.390
+we most certainly can
+get that information
+
+77
+00:04:29.390 --> 00:04:34.520
+by looking into the amount
+of bytes currently in cache.
+
+78
+00:04:34.520 --> 00:04:38.150
+We can also determine the
+hit and miss page ratios
+
+79
+00:04:38.150 --> 00:04:43.640
+by analyzing pages read into
+cache and pages requested
+
+80
+00:04:43.640 --> 00:04:45.620
+from cache.
+
+81
+00:04:45.620 --> 00:04:47.360
+Currently we have zero.
+
+82
+00:04:47.360 --> 00:04:52.890
+But if we run our query, the
+previous explain query here--
+
+83
+00:04:52.890 --> 00:04:55.490
+actually we don't even need
+the explain command here.
+
+84
+00:04:55.490 --> 00:04:57.890
+We just need to run the query.
+
+85
+00:04:57.890 --> 00:04:59.080
+We get some results.
+
+86
+00:04:59.080 --> 00:05:02.050
+And then we can iterate
+on them, and so forth.
+
+87
+00:05:02.050 --> 00:05:06.060
+If we send our command
+stats back again,
+
+88
+00:05:06.060 --> 00:05:10.900
+if we rerun the rides
+other stats again,
+
+89
+00:05:10.900 --> 00:05:14.970
+and if we look again into that
+particular index and the cache
+
+90
+00:05:14.970 --> 00:05:19.620
+allocation values, we
+will see that some pages
+
+91
+00:05:19.620 --> 00:05:21.960
+have been requested from cache.
+
+92
+00:05:21.960 --> 00:05:22.830
+That is great.
+
+93
+00:05:22.830 --> 00:05:26.520
+We did traverse the index and
+we needed a couple of pages
+
+94
+00:05:26.520 --> 00:05:27.960
+from RAM.
+
+95
+00:05:27.960 --> 00:05:33.600
+We need to read pages into
+cache, and the amount of data
+
+96
+00:05:33.600 --> 00:05:39.190
+of this index currently in
+cache also [? erased, ?]
+
+97
+00:05:39.190 --> 00:05:42.660
+because we needed to allocate
+more information than what
+
+98
+00:05:42.660 --> 00:05:46.170
+we previously added since
+we had a clean restart
+
+99
+00:05:46.170 --> 00:05:49.110
+of this particular MongoD.
+
+100
+00:05:49.110 --> 00:05:51.150
+Now there's a bunch
+of information
+
+101
+00:05:51.150 --> 00:05:52.760
+around this command.
+
+102
+00:05:52.760 --> 00:05:57.810
+And we are not going to go
+deep into how to decipher
+
+103
+00:05:57.810 --> 00:06:00.180
+all of this information.
+
+104
+00:06:00.180 --> 00:06:04.570
+That is out of scope for
+this particular course.
+
+105
+00:06:04.570 --> 00:06:08.190
+But do keep in mind that MongoDB
+does allow you to understand
+
+106
+00:06:08.190 --> 00:06:12.180
+pretty well what goes into
+cache, what is allocated
+
+107
+00:06:12.180 --> 00:06:16.500
+in RAM, and what isn't, using
+MongoDB WiredTiger's storage
+
+108
+00:06:16.500 --> 00:06:18.050
+engine.

@@ -1,0 +1,362 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.390
+So what if we
+wanted to only index
+
+3
+00:00:03.390 --> 00:00:06.240
+the subparts within the
+waveMeasurement field?
+
+4
+00:00:06.240 --> 00:00:08.310
+We can use the wildcard
+projection option
+
+5
+00:00:08.310 --> 00:00:09.810
+when creating the index.
+
+6
+00:00:09.810 --> 00:00:11.340
+You may be familiar
+with projections
+
+7
+00:00:11.340 --> 00:00:13.260
+from the MongoDB query language.
+
+8
+00:00:13.260 --> 00:00:15.700
+The concept is
+exactly the same here,
+
+9
+00:00:15.700 --> 00:00:17.580
+except we're specifying
+which fields we wish
+
+10
+00:00:17.580 --> 00:00:19.230
+to index in the collection.
+
+11
+00:00:19.230 --> 00:00:21.930
+The wildcard projection can be
+used to specify a set of fields
+
+12
+00:00:21.930 --> 00:00:23.910
+to include in the
+index, or it can
+
+13
+00:00:23.910 --> 00:00:25.650
+be used to specify
+a set of fields
+
+14
+00:00:25.650 --> 00:00:27.410
+to exclude from the index.
+
+15
+00:00:27.410 --> 00:00:30.210
+To index all subparts in
+the waveMeasurement field,
+
+16
+00:00:30.210 --> 00:00:31.730
+we would do the following.
+
+17
+00:00:31.730 --> 00:00:32.640
+OK, great.
+
+18
+00:00:32.640 --> 00:00:34.350
+So our index is created.
+
+19
+00:00:34.350 --> 00:00:36.420
+Let's see how our
+queries perform
+
+20
+00:00:36.420 --> 00:00:38.880
+when querying a field
+in a nested document
+
+21
+00:00:38.880 --> 00:00:41.220
+in the waveMeasurement field.
+
+22
+00:00:41.220 --> 00:00:43.755
+We're going to query
+on waveMeasurement.
+
+23
+00:00:43.755 --> 00:00:45.120
+seastate.quality.
+
+24
+00:00:45.120 --> 00:00:47.400
+And have a look at
+the Explain plan.
+
+25
+00:00:47.400 --> 00:00:47.970
+OK, great.
+
+26
+00:00:47.970 --> 00:00:49.650
+So our query used the index.
+
+27
+00:00:49.650 --> 00:00:51.340
+All good so far.
+
+28
+00:00:51.340 --> 00:00:54.060
+But let's say we don't
+want to index all subparts
+
+29
+00:00:54.060 --> 00:00:55.710
+of the waveMeasurement field.
+
+30
+00:00:55.710 --> 00:00:58.340
+We see that we're only accessing
+the waveMeasurement.wave
+
+31
+00:00:58.340 --> 00:00:59.310
+subpart.
+
+32
+00:00:59.310 --> 00:01:01.680
+So the fields outside this
+double nested document
+
+33
+00:01:01.680 --> 00:01:03.160
+are not needed.
+
+34
+00:01:03.160 --> 00:01:05.430
+We can index on
+waveMeasurement.waves,
+
+35
+00:01:05.430 --> 00:01:08.460
+and also parts using
+wildcard indexes also.
+
+36
+00:01:08.460 --> 00:01:11.970
+Let's go back to the shell
+and see how we can do this.
+
+37
+00:01:11.970 --> 00:01:15.150
+This command is creating an
+index on waveMeasurement.waves
+
+38
+00:01:15.150 --> 00:01:16.830
+and all subparts.
+
+39
+00:01:16.830 --> 00:01:19.470
+You may notice that we're
+using the familiar MongoDB
+
+40
+00:01:19.470 --> 00:01:22.740
+query language dot notation
+and the $** operator
+
+41
+00:01:22.740 --> 00:01:25.530
+that we used earlier on.
+
+42
+00:01:25.530 --> 00:01:27.330
+So our index has been created.
+
+43
+00:01:27.330 --> 00:01:30.400
+Let's query to see
+how to index works.
+
+44
+00:01:30.400 --> 00:01:34.750
+So here, we're querying on
+waveMeasurement.waves.height.
+
+45
+00:01:34.750 --> 00:01:35.250
+Great.
+
+46
+00:01:35.250 --> 00:01:38.190
+We can see that our
+query used the index.
+
+47
+00:01:38.190 --> 00:01:41.220
+One note about covered
+queries, that is,
+
+48
+00:01:41.220 --> 00:01:44.370
+queries which can retrieve
+all the requested data
+
+49
+00:01:44.370 --> 00:01:47.310
+from the index itself without
+needing to actually go
+
+50
+00:01:47.310 --> 00:01:48.720
+to the collection.
+
+51
+00:01:48.720 --> 00:01:52.020
+As we've seen above, queries
+which use multiple fields
+
+52
+00:01:52.020 --> 00:01:54.330
+can benefit from
+wildcard indexes.
+
+53
+00:01:54.330 --> 00:01:58.230
+But it's also important to note
+that wildcard indexes can only
+
+54
+00:01:58.230 --> 00:02:02.680
+cover queries if the query
+is on a single field.
+
+55
+00:02:02.680 --> 00:02:06.510
+In other words, if the user
+is querying on a single field
+
+56
+00:02:06.510 --> 00:02:10.050
+and uses a projection which
+returns only that field,
+
+57
+00:02:10.050 --> 00:02:12.990
+then the wildcard index
+can cover the query.
+
+58
+00:02:12.990 --> 00:02:15.450
+Something similar to this.
+
+59
+00:02:15.450 --> 00:02:17.650
+For queries with
+multiple fields,
+
+60
+00:02:17.650 --> 00:02:20.700
+we will need to manually create
+compound indexes if we wish
+
+61
+00:02:20.700 --> 00:02:22.470
+to have these queries covered.
+
+62
+00:02:22.470 --> 00:02:26.700
+Let's review the syntax
+for wildcard indexes.
+
+63
+00:02:26.700 --> 00:02:29.490
+We can use the standard
+createindex command
+
+64
+00:02:29.490 --> 00:02:31.680
+to create a wildcard index.
+
+65
+00:02:31.680 --> 00:02:34.740
+But we need to use
+the $** operator
+
+66
+00:02:34.740 --> 00:02:37.590
+if we want to index
+everything in the collection.
+
+67
+00:02:37.590 --> 00:02:40.770
+We can use standard dot
+notation to specify a subpart
+
+68
+00:02:40.770 --> 00:02:43.380
+to index in each document.
+
+69
+00:02:43.380 --> 00:02:45.750
+And we can also use
+wildcard projections
+
+70
+00:02:45.750 --> 00:02:50.340
+to specify which fields and
+subpatterns we wish to index.
+
+71
+00:02:50.340 --> 00:02:51.840
+Let's recap.
+
+72
+00:02:51.840 --> 00:02:55.770
+Wildcard indexes are useful
+for unpredictable workloads.
+
+73
+00:02:55.770 --> 00:03:00.010
+They are not a replacement for
+traditional standard indexes.
+
+74
+00:03:00.010 --> 00:03:02.590
+You can index on all
+fields in a document
+
+75
+00:03:02.590 --> 00:03:05.650
+or on a subset of fields,
+using either dot notation
+
+76
+00:03:05.650 --> 00:03:07.865
+or wildcard projections.
+
+77
+00:03:07.865 --> 00:03:10.240
+And that's a brief introduction
+to our new wildcard index
+
+78
+00:03:10.240 --> 00:03:12.900
+feature in MongoDB 4.2.

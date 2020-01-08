@@ -1,0 +1,111 @@
+
+1
+00:00:00.000 --> 00:00:00.680
+
+
+2
+00:00:00.680 --> 00:00:02.290
+So let's say our
+intern now needs
+
+3
+00:00:02.290 --> 00:00:06.050
+to log all of his operations
+that he is running into one
+
+4
+00:00:06.050 --> 00:00:08.800
+specific collection, but
+independent of the database
+
+5
+00:00:08.800 --> 00:00:10.160
+that collection is on.
+
+6
+00:00:10.160 --> 00:00:12.220
+Well, we can update his
+role to do just that.
+
+7
+00:00:12.220 --> 00:00:15.550
+Here I'm going to run the
+db.grantPrivilegesToRole
+
+8
+00:00:15.550 --> 00:00:19.170
+command where I'm gonna specify
+that I want on the intern role
+
+9
+00:00:19.170 --> 00:00:21.520
+I want to add this
+array of privileges.
+
+10
+00:00:21.520 --> 00:00:24.000
+In this case it's just
+one privileged document
+
+11
+00:00:24.000 --> 00:00:28.350
+where I'm saying any database
+that has the intern log
+
+12
+00:00:28.350 --> 00:00:33.160
+collection, I want this role
+to be able to insert and update
+
+13
+00:00:33.160 --> 00:00:34.450
+on this collection.
+
+14
+00:00:34.450 --> 00:00:36.970
+And it looks like
+it ran successfully.
+
+15
+00:00:36.970 --> 00:00:39.780
+And here I can go ahead
+and run db.getRole.
+
+16
+00:00:39.780 --> 00:00:41.950
+And I can specify
+the intern role.
+
+17
+00:00:41.950 --> 00:00:44.360
+And I say I want to
+show all the privileges.
+
+18
+00:00:44.360 --> 00:00:47.100
+And as you can see,
+here are the privileges
+
+19
+00:00:47.100 --> 00:00:50.670
+that we saw before--
+the ability to update
+
+20
+00:00:50.670 --> 00:00:53.430
+the meteorites collection
+on the NASA database.
+
+21
+00:00:53.430 --> 00:00:55.630
+We now also have
+a new privilege,
+
+22
+00:00:55.630 --> 00:00:57.860
+which is the ability
+to insert or update
+
+23
+00:00:57.860 --> 00:01:00.750
+a collection on any database.

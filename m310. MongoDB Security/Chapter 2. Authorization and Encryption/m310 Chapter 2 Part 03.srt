@@ -1,0 +1,208 @@
+
+1
+00:00:00.000 --> 00:00:00.310
+
+
+2
+00:00:00.310 --> 00:00:01.850
+Now that we
+understand what roles
+
+3
+00:00:01.850 --> 00:00:06.260
+are and know what built-in
+roles come with MongoDB,
+
+4
+00:00:06.260 --> 00:00:09.310
+we can now talk about
+user-defined roles.
+
+5
+00:00:09.310 --> 00:00:12.930
+The built-in roles
+that come with MongoDB
+
+6
+00:00:12.930 --> 00:00:16.320
+should cover the majority of
+the different types of people
+
+7
+00:00:16.320 --> 00:00:18.820
+who need to use our database.
+
+8
+00:00:18.820 --> 00:00:22.580
+That said, sometimes we
+have specific requirements
+
+9
+00:00:22.580 --> 00:00:25.680
+that do not exactly
+fit a particular user.
+
+10
+00:00:25.680 --> 00:00:27.790
+Let's talk about the
+different parts that
+
+11
+00:00:27.790 --> 00:00:30.610
+make up a user-defined role.
+
+12
+00:00:30.610 --> 00:00:32.380
+When we create a
+role, we create it
+
+13
+00:00:32.380 --> 00:00:36.260
+on a specific database, so
+the role name and the database
+
+14
+00:00:36.260 --> 00:00:39.810
+that it was created on
+define a unique role.
+
+15
+00:00:39.810 --> 00:00:42.070
+After giving the role
+a name, we specify
+
+16
+00:00:42.070 --> 00:00:45.240
+what other roles we'd like
+to inherit privileges from.
+
+17
+00:00:45.240 --> 00:00:48.940
+It's important to note that
+for any given role created
+
+18
+00:00:48.940 --> 00:00:53.550
+on a specific database, we
+can only include resources
+
+19
+00:00:53.550 --> 00:00:57.750
+and inherit roles defined
+on the same database.
+
+20
+00:00:57.750 --> 00:01:01.560
+For example, if we define a
+role on the Products database,
+
+21
+00:01:01.560 --> 00:01:05.870
+we can't inherit that role
+on the Orders database.
+
+22
+00:01:05.870 --> 00:01:08.410
+If we would like to
+share user-defined roles
+
+23
+00:01:08.410 --> 00:01:12.760
+across databases, then we
+need to define a global role.
+
+24
+00:01:12.760 --> 00:01:15.040
+To define a global
+role, roles that
+
+25
+00:01:15.040 --> 00:01:17.480
+have privileges on
+several databases,
+
+26
+00:01:17.480 --> 00:01:20.800
+we need to create such
+roles on the admin database.
+
+27
+00:01:20.800 --> 00:01:22.990
+Cluster-wide
+resources can also be
+
+28
+00:01:22.990 --> 00:01:26.030
+created on the admin
+database and then inherited
+
+29
+00:01:26.030 --> 00:01:28.460
+by other databases.
+
+30
+00:01:28.460 --> 00:01:31.550
+Coming back to our definition
+of a user-defined role,
+
+31
+00:01:31.550 --> 00:01:34.850
+recall that we create
+a name for a role,
+
+32
+00:01:34.850 --> 00:01:36.640
+and we create the
+role with regards
+
+33
+00:01:36.640 --> 00:01:39.330
+to a particular database,
+and that will uniquely
+
+34
+00:01:39.330 --> 00:01:41.110
+identify the role.
+
+35
+00:01:41.110 --> 00:01:45.100
+After that, we add
+any other roles
+
+36
+00:01:45.100 --> 00:01:47.830
+that we would like to
+inherit privileges from.
+
+37
+00:01:47.830 --> 00:01:51.860
+And then finally, we list all
+of the additional privileges
+
+38
+00:01:51.860 --> 00:01:53.730
+we'd like this role to have.
+
+39
+00:01:53.730 --> 00:01:56.080
+Recall that a privilege
+is just an action
+
+40
+00:01:56.080 --> 00:01:59.560
+acting on a particular resource.
+
+41
+00:01:59.560 --> 00:02:03.410
+And this is the definition of
+a user-defined role in MongoDB.
+
+42
+00:02:03.410 --> 00:02:05.780
+We'll walk through
+an example of how
+
+43
+00:02:05.780 --> 00:02:10.670
+to create a user-defined role
+in the shell in a later video.

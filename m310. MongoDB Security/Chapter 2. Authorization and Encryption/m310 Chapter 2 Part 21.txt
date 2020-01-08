@@ -1,0 +1,47 @@
+By now you should have a pretty good high level understanding of how transport encryption works in MongoDB.
+
+We're now ready to look at a concrete example of how to enable TLS/SSL between a client and a server.
+
+The best part about this exercise is that you've already done it before.
+
+If you recall from when we used X509 certificates for authentication with MongoDB that it requires an SSL connection.
+
+So this is a very similar command to what we've run before.
+
+You'll see some similar things.
+
+We're requiring SSL.
+
+And then we're providing a server certificate for SSL connections.
+
+So this command will force all clients to connect via TLS/SSL, meaning that connection between the client and the server is completely encrypted.
+
+Awesome.
+
+Transfer encryption.
+
+We've done it.
+
+But wait a second.
+
+If you take another look, you'll notice that it differs slightly from similar commands that we've issued before.
+
+Take a look at this command.
+
+This is even more similar to what we used for X509 authentication.
+
+The difference between this command and this command, obviously, is the dash dash sslCAFile and the passing of the certificate authorities certificate.
+
+So what is the difference between these two commands?
+
+Well, both commands will enable encryption between the client and server, meaning that the attacker can't simply sniff the traffic in between.
+
+The second command, however, will verify the identity of clients connecting to the server, and make sure that they are connecting with the certificate signed by the same CA.
+
+This command is not checking the client's identity, which means that clients connecting to our server would be susceptible to a man-in-the-middle attack.
+
+An attacker could act like a MongoDB client and connect to the server.
+
+If we don't provide the SSL CA file, the certificate authorities certificate, that means that would be susceptible to a man-in-the-middle attack, which means an attacker can sit right here in between the client and the server, acting like a server to the client, and acting like a client to the server, and therefore intercepting all the traffic in between the two.
+
+So while the connection will be encrypted between the client and the man in the middle, and the traffic will be encrypted between the man in the middle and the server, the man in the middle can look at all the traffic in plaintext, because it's using the man in the middle's private key and public key to encrypt all the traffic in between the client and in between the server.

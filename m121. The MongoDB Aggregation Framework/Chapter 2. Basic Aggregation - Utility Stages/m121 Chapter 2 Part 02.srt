@@ -1,0 +1,445 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.050
+It is time we discuss some
+useful utility stages, what
+
+3
+00:00:04.050 --> 00:00:06.870
+we call cursor-like stages.
+
+4
+00:00:06.870 --> 00:00:10.980
+These stages are sort,
+skip, limit, and counts.
+
+5
+00:00:10.980 --> 00:00:15.270
+And they have an equivalent in
+our query language as a cursor
+
+6
+00:00:15.270 --> 00:00:16.470
+method.
+
+7
+00:00:16.470 --> 00:00:17.550
+Let's have a look.
+
+8
+00:00:17.550 --> 00:00:21.180
+After connecting to my
+aggregations database,
+
+9
+00:00:21.180 --> 00:00:24.540
+I can express this simple
+query on solar system
+
+10
+00:00:24.540 --> 00:00:27.010
+where I am going to
+find all my documents.
+
+11
+00:00:27.010 --> 00:00:28.700
+This is a full collection scan.
+
+12
+00:00:28.700 --> 00:00:32.350
+and only projecting out
+the name, number of Moons,
+
+13
+00:00:32.350 --> 00:00:34.715
+and keeping out the _id.
+
+14
+00:00:34.715 --> 00:00:41.400
+If I do this, I can see all
+the results of my collection,
+
+15
+00:00:41.400 --> 00:00:43.860
+only exposing the
+name, number of Moons
+
+16
+00:00:43.860 --> 00:00:47.010
+per each one of the documents.
+
+17
+00:00:47.010 --> 00:00:49.350
+Sweet, this works well.
+
+18
+00:00:49.350 --> 00:00:52.620
+The other thing I can do
+is basically call count.
+
+19
+00:00:52.620 --> 00:00:55.890
+Now this will count the
+full amount of documents
+
+20
+00:00:55.890 --> 00:00:58.860
+returned by the query.
+
+21
+00:00:58.860 --> 00:01:03.440
+Here, I can see that I have on
+my solar system nine documents.
+
+22
+00:01:03.440 --> 00:01:09.810
+Another thing that I can do is
+basically skip five documents.
+
+23
+00:01:09.810 --> 00:01:12.780
+And if execute this
+query, I can see that a
+
+24
+00:01:12.780 --> 00:01:15.570
+skipped a few first documents.
+
+25
+00:01:15.570 --> 00:01:20.610
+Now if you are wondering
+why did I get this order,
+
+26
+00:01:20.610 --> 00:01:24.150
+why did I skip those previous
+five documents and not
+
+27
+00:01:24.150 --> 00:01:31.260
+others, if I do not specify a
+sorting operation or a sorting
+
+28
+00:01:31.260 --> 00:01:35.970
+of my cursor, I will
+get from MongoDB
+
+29
+00:01:35.970 --> 00:01:38.730
+the order by which the
+documents are inserted
+
+30
+00:01:38.730 --> 00:01:42.510
+in the collection, what
+we call the natural order
+
+31
+00:01:42.510 --> 00:01:44.364
+of the collection.
+
+32
+00:01:44.364 --> 00:01:45.780
+So in this case,
+I'm going to skip
+
+33
+00:01:45.780 --> 00:01:48.750
+the five first
+elements that have been
+
+34
+00:01:48.750 --> 00:01:51.840
+inserted into this collection.
+
+35
+00:01:51.840 --> 00:01:54.000
+The following method
+will be limit,
+
+36
+00:01:54.000 --> 00:01:56.060
+where I can specify
+the number of documents
+
+37
+00:01:56.060 --> 00:01:57.285
+that I'm going to return.
+
+38
+00:01:57.285 --> 00:02:01.440
+And again, following the
+exactly same sorting order,
+
+39
+00:02:01.440 --> 00:02:04.890
+which in this case is going to
+be my natural insert sorting
+
+40
+00:02:04.890 --> 00:02:07.320
+order on our solar
+system collection,
+
+41
+00:02:07.320 --> 00:02:11.510
+I'll get the Sun, Mercury,
+Venus, Earth, and Mars,
+
+42
+00:02:11.510 --> 00:02:15.920
+which are the five first
+documents of my collection.
+
+43
+00:02:15.920 --> 00:02:18.300
+And lastly, I can
+also specify a sort
+
+44
+00:02:18.300 --> 00:02:20.610
+for the result set
+of my collection.
+
+45
+00:02:20.610 --> 00:02:22.780
+Here, I'm going to
+find everything.
+
+46
+00:02:22.780 --> 00:02:25.440
+But instead of
+giving back the order
+
+47
+00:02:25.440 --> 00:02:28.830
+by which documents are
+inserted in the collection,
+
+48
+00:02:28.830 --> 00:02:32.910
+I'm going to sort the result
+set based on the number of Moons
+
+49
+00:02:32.910 --> 00:02:35.700
+that each one of these
+documents contain.
+
+50
+00:02:35.700 --> 00:02:37.950
+Minus 1 specifies the order.
+
+51
+00:02:37.950 --> 00:02:41.460
+And in this case, it
+will be descending.
+
+52
+00:02:41.460 --> 00:02:44.820
+So as we can see, we
+are going to get, first,
+
+53
+00:02:44.820 --> 00:02:50.040
+the ones that have more Moons to
+the ones that have less Moons.
+
+54
+00:02:50.040 --> 00:02:52.800
+Now we've seen the
+cursor methods,
+
+55
+00:02:52.800 --> 00:02:58.200
+but we also have stages that
+execute exactly the same kind
+
+56
+00:02:58.200 --> 00:02:59.940
+of functionality.
+
+57
+00:02:59.940 --> 00:03:05.910
+We have $limit, $skip,
+$count, and $sort.
+
+58
+00:03:05.910 --> 00:03:09.030
+They will vary a little bit
+on the syntax, where limit
+
+59
+00:03:09.030 --> 00:03:11.070
+will take an integer,
+skip will take also
+
+60
+00:03:11.070 --> 00:03:14.190
+an integer, specifying the
+number of limit documents
+
+61
+00:03:14.190 --> 00:03:16.260
+and the number of
+skip documents.
+
+62
+00:03:16.260 --> 00:03:17.820
+Count, on the
+other hand, we will
+
+63
+00:03:17.820 --> 00:03:20.520
+need to specify a
+field where we want
+
+64
+00:03:20.520 --> 00:03:23.850
+to collect the count value.
+
+65
+00:03:23.850 --> 00:03:26.700
+And sort, we need to specify
+the keys and the order
+
+66
+00:03:26.700 --> 00:03:32.400
+by which we want our result sets
+of the pipeline to be sorted.
+
+67
+00:03:32.400 --> 00:03:34.690
+Let's see some of
+this in action.
+
+68
+00:03:34.690 --> 00:03:37.830
+Now to mimic exactly the same
+operation as before in our find
+
+69
+00:03:37.830 --> 00:03:42.960
+command, I'm going to execute
+the project of name and number
+
+70
+00:03:42.960 --> 00:03:48.970
+of Moons, excluding _id, exactly
+the same operation as before.
+
+71
+00:03:48.970 --> 00:03:52.350
+And in this case, given the
+pipeline that I'm executing
+
+72
+00:03:52.350 --> 00:03:55.830
+and given the documents that
+this aggregation pipeline will
+
+73
+00:03:55.830 --> 00:04:00.870
+provide, I will add a limit
+stage to my pipe, saying,
+
+74
+00:04:00.870 --> 00:04:03.630
+I only want the
+first five documents
+
+75
+00:04:03.630 --> 00:04:06.240
+coming from this project stage.
+
+76
+00:04:06.240 --> 00:04:08.610
+And as expected, I
+get the same results
+
+77
+00:04:08.610 --> 00:04:12.630
+as I would if I would
+limit on a find operation.
+
+78
+00:04:12.630 --> 00:04:15.670
+The following
+stage will be skip.
+
+79
+00:04:15.670 --> 00:04:20.040
+And again, given the results
+incoming from the project
+
+80
+00:04:20.040 --> 00:04:22.950
+stage, I will skip only one.
+
+81
+00:04:22.950 --> 00:04:25.170
+In this case, I'm
+going to skip the Sun.
+
+82
+00:04:25.170 --> 00:04:27.420
+So how do I know that I'm
+going to skip the Sun?
+
+83
+00:04:27.420 --> 00:04:30.150
+Well basically,
+the order by which
+
+84
+00:04:30.150 --> 00:04:32.820
+I'm going to get the
+results into the project
+
+85
+00:04:32.820 --> 00:04:35.880
+is the natural order,
+exactly in the same way
+
+86
+00:04:35.880 --> 00:04:37.350
+as we've seen before.
+
+87
+00:04:37.350 --> 00:04:40.110
+The project will filter
+out only the fields
+
+88
+00:04:40.110 --> 00:04:44.340
+that I'm interested on and pass
+along that to the skip stage.
+
+89
+00:04:44.340 --> 00:04:49.850
+Skip, by skipping up one, I'm
+going to be skipping the Sun.
+
+90
+00:04:49.850 --> 00:04:53.460
+As you can see here, all
+different celestial bodies
+
+91
+00:04:53.460 --> 00:04:57.130
+will be reported
+back in my results,
+
+92
+00:04:57.130 --> 00:05:00.650
+except for the Sun, which is the
+first element, the one that I'm
+
+93
+00:05:00.650 --> 00:05:03.850
+skipping in the pipeline.

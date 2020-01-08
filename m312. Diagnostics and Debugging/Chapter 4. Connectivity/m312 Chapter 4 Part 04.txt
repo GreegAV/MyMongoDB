@@ -1,0 +1,47 @@
+In this lesson, we'll be talking about connection management, especially around closing and dropping connections.
+
+First we will be talking about greed.
+
+No, not Wall Street kind of greed, that's a matter of discussion for another type of class.
+
+Today, what we are going to be focusing on is discussing how resource greedy applications and keeping connections for extended periods of time while leaving them idle, most importantly, what resource allocation, especially memory, will be looking like.
+
+We will also be looking into how to detect poorly connect configured hosts regarding connectivity, related pedometers.
+
+So we're going to be looking into how these can affect your deployment.
+
+And finally, we are going to be looking into what happens when the new primaries election within the replica set.
+
+This is not necessarily a problem.
+
+But once an election takes place, what happens to your application from the connection perspective and how to then handle the subsequent connection operations that will be affected by that election.
+
+Let's consider greedy connections that your applications might have or might be configured and how to see their effects.
+
+In the hand outs of this lesson, you will find a script called, make lots of connections to servers.py.
+
+If you want to follow up with this lesson, you should download this into your vagrant environment shared folder.
+
+So in my case, I have it here for my m312 vagrant environment.
+
+Now what this script will do is simulate one of the worst scenarios possible.
+
+One that creates several different connections from an application to a database that end up not doing much.
+
+And actually in this case, we are just creating the connection and that's it.
+
+We are not even reading anything from this particular application.
+
+We're just going to throw a bunch of threads or processes, all of them will create a bunch of different connections.
+
+And they will idle for a long period of time.
+
+Now first to understand what's going on, we will need to use a couple of tools.
+
+We're going to be using Mongostats, that as you know allows us to see what's going on from a real time perspective on our server.
+
+We'll definitely be using serverStatus to get some information of a couple of parameters that we're going to be looking into.
+
+From the OS perspective, we're going to be using free.
+
+And obviously, you're going to be tailing and catting and seeing what the log file has to offer in terms of information of what's going on when we have such a setup.

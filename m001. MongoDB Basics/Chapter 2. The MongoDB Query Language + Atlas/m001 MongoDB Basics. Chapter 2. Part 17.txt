@@ -1,0 +1,39 @@
+OK.
+
+Let's talk about the situations in which update operators can actually create new documents.
+
+We call these operations upserts.
+
+As I was creating the data set for this lesson, I actually made use of the upsert functionality in MongoDB to create our movie details collection.
+
+I'm going to walk through an example of how I built this collection.
+
+Now, I did this in a script, but I'll take a look at the same basic steps I went through here in this example.
+
+So imagine that we have this detail object.
+
+In the script that I wrote, I essentially looped through data that I was bringing into the database, but I wanted to make sure that I didn't introduce any duplicate movie entries.
+
+So the way I dealt with this was by using a command that looks like this.
+
+The process that I used to collect the data that I wanted to put into the movie details collection was such that I couldn't guarantee only retrieving movies not already present in the movie details collection.
+
+So what I decided to do was to make use of the $set operator.
+
+The net effect of this was that, if the document already existed, I essentially replaced it with exactly the same detail data.
+
+If it didn't already exist, updateOne performed an upsert.
+
+Using updateOne with the upsert option meant that I didn't need to first query the collection to see whether the document already existed and then do a second query to insert.
+
+I let MongoDB do all the work for me.
+
+The trick here is that I'm using this third parameter to updateOne, setting upsert to true.
+
+This means that if this filter doesn't match any documents in my collection, this document-- which, for the Martian example, would be this one-- will be inserted in the collection.
+
+And that's the basic idea for upserts.
+
+Update documents matching the filter.
+
+If there are none, insert the update document as a new document in the collection.

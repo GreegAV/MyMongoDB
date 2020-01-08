@@ -1,0 +1,561 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.350
+Let's start by
+instantiating MongoClient
+
+3
+00:00:02.350 --> 00:00:05.640
+object since this is the
+pillar of our client--
+
+4
+00:00:05.640 --> 00:00:07.110
+your code-- and server--
+
+5
+00:00:07.110 --> 00:00:09.390
+the atlas cluster--
+communication.
+
+6
+00:00:09.390 --> 00:00:13.990
+To do this, we'll be using
+the MongoClients builder.
+
+7
+00:00:13.990 --> 00:00:16.440
+For this example, we'll
+be using MongoDB uri
+
+8
+00:00:16.440 --> 00:00:20.310
+that defines to which cluster
+how we should be connecting.
+
+9
+00:00:20.310 --> 00:00:22.560
+Once I have my
+connection string,
+
+10
+00:00:22.560 --> 00:00:24.690
+I can go ahead and
+call MongoClients
+
+11
+00:00:24.690 --> 00:00:29.330
+and create a MongoClient
+instance by providing the user
+
+12
+00:00:29.330 --> 00:00:31.110
+uri string.
+
+13
+00:00:31.110 --> 00:00:35.487
+The MongoClients object will
+create a MongoClient instance
+
+14
+00:00:35.487 --> 00:00:37.320
+by extracting the client
+connection settings
+
+15
+00:00:37.320 --> 00:00:39.540
+from the connection string.
+
+16
+00:00:39.540 --> 00:00:42.630
+However, we can extend
+the configuration
+
+17
+00:00:42.630 --> 00:00:45.420
+by setting configuration
+options that may not
+
+18
+00:00:45.420 --> 00:00:48.180
+be present in the
+connection string uri
+
+19
+00:00:48.180 --> 00:00:52.680
+by sending the MongoDB
+client's object.
+
+20
+00:00:52.680 --> 00:00:55.380
+This class contains
+a builder method,
+
+21
+00:00:55.380 --> 00:00:58.170
+a static class
+method called builder
+
+22
+00:00:58.170 --> 00:01:01.890
+that allows you to compose
+the different types of client
+
+23
+00:01:01.890 --> 00:01:03.721
+settings upon each other.
+
+24
+00:01:03.721 --> 00:01:05.970
+So in this case, we are
+applying the connection string
+
+25
+00:01:05.970 --> 00:01:09.690
+that we created
+via the uri string,
+
+26
+00:01:09.690 --> 00:01:13.080
+we are applying an application
+name to the client connection
+
+27
+00:01:13.080 --> 00:01:15.780
+settings, and
+we're also creating
+
+28
+00:01:15.780 --> 00:01:19.320
+an applyToConnectionPoolSettings
+by calling a lambda that
+
+29
+00:01:19.320 --> 00:01:21.930
+calls a builder that allows
+you to define, for example,
+
+30
+00:01:21.930 --> 00:01:26.060
+connection pool settings
+like maxWaitTime.
+
+31
+00:01:26.060 --> 00:01:29.630
+Once we call build, we can
+pass that client's settings
+
+32
+00:01:29.630 --> 00:01:35.460
+and create our mongoClient with
+the create MongoClients method.
+
+33
+00:01:35.460 --> 00:01:39.780
+Once we run this test, we
+can see that everything,
+
+34
+00:01:39.780 --> 00:01:42.690
+it's properly
+asserted as NotNull.
+
+35
+00:01:42.690 --> 00:01:45.220
+Now that we have a
+MongoClient instance,
+
+36
+00:01:45.220 --> 00:01:47.070
+we can go ahead and
+connect to our cluster
+
+37
+00:01:47.070 --> 00:01:52.140
+and list all available databases
+by calling listDatabaseNames.
+
+38
+00:01:52.140 --> 00:01:54.420
+This will be very similar
+to do the following command
+
+39
+00:01:54.420 --> 00:01:55.410
+in the shell--
+
+40
+00:01:55.410 --> 00:01:58.920
+db.getMongo( ).getDatabaseNames.
+
+41
+00:01:58.920 --> 00:02:01.710
+This command returns a
+MongoIterable instance,
+
+42
+00:02:01.710 --> 00:02:03.940
+an iterable object that
+we can use to iterate over
+
+43
+00:02:03.940 --> 00:02:05.730
+results of a given command.
+
+44
+00:02:05.730 --> 00:02:10.259
+We will use MongoIterable
+quite a lot in this course.
+
+45
+00:02:10.259 --> 00:02:12.900
+Important to note that
+iterable instances get
+
+46
+00:02:12.900 --> 00:02:15.750
+exhausted, like a
+cursor, so you may
+
+47
+00:02:15.750 --> 00:02:19.530
+want to consider using the
+iterable instance to fill
+
+48
+00:02:19.530 --> 00:02:22.830
+arrays and lists if you need
+to go over the contents more
+
+49
+00:02:22.830 --> 00:02:24.640
+than once.
+
+50
+00:02:24.640 --> 00:02:27.020
+Then we have our
+MongoDatabase object.
+
+51
+00:02:27.020 --> 00:02:29.140
+We will use this
+object to the access,
+
+52
+00:02:29.140 --> 00:02:31.540
+create, and drop
+our collections,
+
+53
+00:02:31.540 --> 00:02:35.050
+run commands, and define
+database-level preferences,
+
+54
+00:02:35.050 --> 00:02:38.500
+read concerns, and a lot of
+other different configuration
+
+55
+00:02:38.500 --> 00:02:39.976
+options.
+
+56
+00:02:39.976 --> 00:02:41.350
+To get the database,
+we just need
+
+57
+00:02:41.350 --> 00:02:44.080
+to do mongoClient.getDatabase
+and provide
+
+58
+00:02:44.080 --> 00:02:48.220
+the name of the database that
+we are interested on accessing.
+
+59
+00:02:48.220 --> 00:02:52.540
+Here, because we did not
+specify a Read Preference,
+
+60
+00:02:52.540 --> 00:02:57.340
+the driver will use the default
+configuration which is primary.
+
+61
+00:02:57.340 --> 00:03:01.780
+If we run the tests, you can
+see that everything gets green,
+
+62
+00:03:01.780 --> 00:03:06.190
+and all of our
+databases get listed.
+
+63
+00:03:06.190 --> 00:03:08.380
+A MongoCollection
+instance is what
+
+64
+00:03:08.380 --> 00:03:12.190
+is used to read and write to
+the documents which is usually
+
+65
+00:03:12.190 --> 00:03:15.100
+the entity the application
+processes to manipulate
+
+66
+00:03:15.100 --> 00:03:16.840
+the data it needs.
+
+67
+00:03:16.840 --> 00:03:18.670
+To instantiate a
+collection, we need
+
+68
+00:03:18.670 --> 00:03:24.040
+to provide a collection name to
+the MongoDB database instance.
+
+69
+00:03:24.040 --> 00:03:27.190
+In this example, we are
+using the basic form
+
+70
+00:03:27.190 --> 00:03:28.870
+of interacting
+with data defining
+
+71
+00:03:28.870 --> 00:03:32.440
+the MongoCollection
+where we return Document
+
+72
+00:03:32.440 --> 00:03:34.700
+instances from any given query.
+
+73
+00:03:34.700 --> 00:03:37.660
+However, MongoCollection
+allows us to specify Codec
+
+74
+00:03:37.660 --> 00:03:40.090
+so that we can return
+business objects,
+
+75
+00:03:40.090 --> 00:03:44.920
+application-defined classes,
+as return of the queries.
+
+76
+00:03:44.920 --> 00:03:49.750
+More about this on our
+POJO support lessons.
+
+77
+00:03:49.750 --> 00:03:52.120
+All of our Data
+Manipulation language--
+
+78
+00:03:52.120 --> 00:03:56.390
+DML-- will be expressed via
+a MongoCollection instance.
+
+79
+00:03:56.390 --> 00:03:59.380
+Once we run the tests,
+again, everything gets green.
+
+80
+00:03:59.380 --> 00:04:02.020
+The basic data structures
+in MongoDB are documents.
+
+81
+00:04:02.020 --> 00:04:03.700
+The document model
+is what we consider
+
+82
+00:04:03.700 --> 00:04:05.890
+to be the best way
+to represent data.
+
+83
+00:04:05.890 --> 00:04:08.860
+Using documents makes your
+application definition
+
+84
+00:04:08.860 --> 00:04:13.780
+as close as possible to
+your OOP object models.
+
+85
+00:04:13.780 --> 00:04:16.300
+Since we are dealing with an
+Object-Oriented Programming
+
+86
+00:04:16.300 --> 00:04:18.820
+language like Java,
+having a class
+
+87
+00:04:18.820 --> 00:04:22.254
+that represents the document's
+structure becomes imperative.
+
+88
+00:04:22.254 --> 00:04:24.170
+So in this case, I'm
+going to instantiate here
+
+89
+00:04:24.170 --> 00:04:28.090
+a new document which will
+have a particular structure.
+
+90
+00:04:28.090 --> 00:04:30.080
+This document defines
+a MongoDB document
+
+91
+00:04:30.080 --> 00:04:33.430
+that looks like this
+in its JSON format
+
+92
+00:04:33.430 --> 00:04:35.740
+where we have a name
+which has two fields--
+
+93
+00:04:35.740 --> 00:04:37.700
+first and last.
+
+94
+00:04:37.700 --> 00:04:40.570
+And obviously, we can
+use those documents to be
+
+95
+00:04:40.570 --> 00:04:43.600
+inserted into the collection.
+
+96
+00:04:43.600 --> 00:04:45.500
+We use documents for
+everything in MongoDB
+
+97
+00:04:45.500 --> 00:04:47.830
+to define data objects,
+define queries,
+
+98
+00:04:47.830 --> 00:04:51.370
+define update operations,
+define configuration settings.
+
+99
+00:04:51.370 --> 00:04:54.040
+At the Java layer, we
+have the document class,
+
+100
+00:04:54.040 --> 00:04:56.750
+but we also have the BSON class.
+
+101
+00:04:56.750 --> 00:04:58.750
+The Document class
+implements the BSON interface
+
+102
+00:04:58.750 --> 00:05:00.760
+because Documents, well,
+they are essentially
+
+103
+00:05:00.760 --> 00:05:02.380
+BSON data structures.
+
+104
+00:05:02.380 --> 00:05:06.160
+We will use instances of
+BSON, throughout the course,
+
+105
+00:05:06.160 --> 00:05:08.350
+to define fine-tuned
+aspects of our queries
+
+106
+00:05:08.350 --> 00:05:10.930
+like query operators
+and aggregation stages.
+
+107
+00:05:10.930 --> 00:05:13.855
+More on that in the
+next following lectures.
+
+108
+00:05:13.855 --> 00:05:15.310
+So let's recap.
+
+109
+00:05:15.310 --> 00:05:18.340
+Application needs to use a
+client-side library, a driver,
+
+110
+00:05:18.340 --> 00:05:19.780
+to interact with MongoDB.
+
+111
+00:05:19.780 --> 00:05:22.960
+There are two types of
+drivers, async and sync,
+
+112
+00:05:22.960 --> 00:05:25.380
+which we will be
+using in this course.
+
+113
+00:05:25.380 --> 00:05:27.970
+And there are a few basic
+MongoDB Java driver classes
+
+114
+00:05:27.970 --> 00:05:29.560
+that define the
+MongoDB server data
+
+115
+00:05:29.560 --> 00:05:33.250
+structures like MongoClients,
+MongoDatabase, MongoCollection,
+
+116
+00:05:33.250 --> 00:05:35.360
+Document, and BSON.

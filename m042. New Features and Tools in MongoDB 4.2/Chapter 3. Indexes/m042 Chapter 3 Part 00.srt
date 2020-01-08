@@ -1,0 +1,355 @@
+
+1
+00:00:00.000 --> 00:00:00.210
+
+
+2
+00:00:00.210 --> 00:00:00.855
+Hi there.
+
+3
+00:00:00.855 --> 00:00:03.480
+In this section, we're going to
+talk about the new hybrid index
+
+4
+00:00:03.480 --> 00:00:07.620
+build feature in MongoDB 4.2
+on how this feature removes
+
+5
+00:00:07.620 --> 00:00:09.120
+database locks.
+
+6
+00:00:09.120 --> 00:00:12.030
+In our quest to continually
+improve MongoDB,
+
+7
+00:00:12.030 --> 00:00:14.430
+we've redesigned
+index builds to remove
+
+8
+00:00:14.430 --> 00:00:17.700
+the trade-offs and limitations
+of the previous index
+
+9
+00:00:17.700 --> 00:00:19.210
+build types.
+
+10
+00:00:19.210 --> 00:00:22.560
+First let's have a look at
+why we've made these changes.
+
+11
+00:00:22.560 --> 00:00:24.600
+In previous versions
+of MongoDB, we
+
+12
+00:00:24.600 --> 00:00:27.720
+had two different methods
+of building indexes.
+
+13
+00:00:27.720 --> 00:00:29.760
+The first was a
+foreground index build,
+
+14
+00:00:29.760 --> 00:00:32.700
+which was the most performant
+but had the unfortunate side
+
+15
+00:00:32.700 --> 00:00:35.700
+effect of locking the entire
+database for the duration
+
+16
+00:00:35.700 --> 00:00:36.845
+of the index build.
+
+17
+00:00:36.845 --> 00:00:38.220
+This meant that
+you could neither
+
+18
+00:00:38.220 --> 00:00:40.260
+read from or write
+to the database
+
+19
+00:00:40.260 --> 00:00:43.110
+for the duration
+of the index build.
+
+20
+00:00:43.110 --> 00:00:46.200
+Let's try this in the
+mongo shell in 4.0
+
+21
+00:00:46.200 --> 00:00:48.090
+to see how this
+locking can affect
+
+22
+00:00:48.090 --> 00:00:52.080
+operations on a database
+during an index build.
+
+23
+00:00:52.080 --> 00:00:55.740
+As you can see, we cannot find
+or insert any documents while
+
+24
+00:00:55.740 --> 00:00:57.540
+the index build is in flight.
+
+25
+00:00:57.540 --> 00:00:59.370
+You can see how this
+could be problematic
+
+26
+00:00:59.370 --> 00:01:02.290
+if triggered on a production
+database in error.
+
+27
+00:01:02.290 --> 00:01:05.250
+Let's try this in MongoDB 4.2.
+
+28
+00:01:05.250 --> 00:01:07.070
+First we're going
+to create an index.
+
+29
+00:01:07.070 --> 00:01:08.970
+And while the index
+build is in flight,
+
+30
+00:01:08.970 --> 00:01:11.130
+we're going to open a new
+shell and try and insert
+
+31
+00:01:11.130 --> 00:01:13.170
+some documents.
+
+32
+00:01:13.170 --> 00:01:15.150
+As you can see,
+there's no locking.
+
+33
+00:01:15.150 --> 00:01:16.350
+Great.
+
+34
+00:01:16.350 --> 00:01:20.040
+So in previous releases, we also
+had background index builds,
+
+35
+00:01:20.040 --> 00:01:21.840
+which don't hold a
+lock on a database
+
+36
+00:01:21.840 --> 00:01:24.900
+but aren't as performant as
+a foreground index build.
+
+37
+00:01:24.900 --> 00:01:28.050
+The background index build uses
+an incremental approach that
+
+38
+00:01:28.050 --> 00:01:30.390
+is slower than the
+foreground index build.
+
+39
+00:01:30.390 --> 00:01:32.670
+That is to say that the
+background index build
+
+40
+00:01:32.670 --> 00:01:34.980
+will periodically
+lock the database
+
+41
+00:01:34.980 --> 00:01:38.250
+but will yield to incoming
+read and write operations,
+
+42
+00:01:38.250 --> 00:01:41.820
+releasing resources to
+attend to incoming requests.
+
+43
+00:01:41.820 --> 00:01:44.940
+If the index is larger
+than the available RAM,
+
+44
+00:01:44.940 --> 00:01:47.460
+the incremental approach
+can take much longer
+
+45
+00:01:47.460 --> 00:01:49.560
+than a foreground index build.
+
+46
+00:01:49.560 --> 00:01:51.900
+The other downside
+of background indexes
+
+47
+00:01:51.900 --> 00:01:53.640
+is that the index
+structure resulting
+
+48
+00:01:53.640 --> 00:01:57.420
+from this type of index build is
+less efficient than foreground
+
+49
+00:01:57.420 --> 00:02:00.660
+indexes, resulting in less
+optimal index traversal
+
+50
+00:02:00.660 --> 00:02:01.950
+operations.
+
+51
+00:02:01.950 --> 00:02:03.840
+In this latest release,
+we have addressed
+
+52
+00:02:03.840 --> 00:02:07.800
+these trade-offs with our new
+hybrid index build feature.
+
+53
+00:02:07.800 --> 00:02:11.580
+From 4.2 onwards, there will
+be no need for a background
+
+54
+00:02:11.580 --> 00:02:13.410
+or a foreground index build--
+
+55
+00:02:13.410 --> 00:02:18.180
+only one hybrid mechanism that
+takes the best of both worlds.
+
+56
+00:02:18.180 --> 00:02:21.060
+The new hybrid index build
+has both the performance
+
+57
+00:02:21.060 --> 00:02:24.390
+of a foreground index build
+and the nonlocking properties
+
+58
+00:02:24.390 --> 00:02:27.870
+of a background index build,
+meaning that all database
+
+59
+00:02:27.870 --> 00:02:30.000
+operations can
+proceed uninhibited
+
+60
+00:02:30.000 --> 00:02:32.360
+for the duration of the build.
+
+61
+00:02:32.360 --> 00:02:36.500
+This is now the only way to
+build an index on MongoDB.
+
+62
+00:02:36.500 --> 00:02:39.000
+It's the only option available.
+
+63
+00:02:39.000 --> 00:02:42.140
+It's important to note that
+the index structure remains
+
+64
+00:02:42.140 --> 00:02:43.440
+unchanged.
+
+65
+00:02:43.440 --> 00:02:47.090
+However, the method we use to
+build the indexes has changed
+
+66
+00:02:47.090 --> 00:02:50.600
+to allow database operations
+to continue as normal
+
+67
+00:02:50.600 --> 00:02:52.530
+for the duration of the build.
+
+68
+00:02:52.530 --> 00:02:54.160
+So let's recap.
+
+69
+00:02:54.160 --> 00:02:57.500
+MongoDB has one index
+build type, which
+
+70
+00:02:57.500 --> 00:02:59.750
+is lockless and performant.
+
+71
+00:02:59.750 --> 00:03:02.840
+Our motivation for this was
+to address the trade-offs
+
+72
+00:03:02.840 --> 00:03:06.110
+of building indexes using
+foreground and indexes using
+
+73
+00:03:06.110 --> 00:03:07.730
+the background methods.
+
+74
+00:03:07.730 --> 00:03:10.640
+We can now build indexes
+quickly and without the need
+
+75
+00:03:10.640 --> 00:03:13.240
+to lock the entire database.

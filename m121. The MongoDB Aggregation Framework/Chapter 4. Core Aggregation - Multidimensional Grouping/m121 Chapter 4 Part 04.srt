@@ -1,0 +1,467 @@
+
+1
+00:00:00.000 --> 00:00:00.660
+
+
+2
+00:00:00.660 --> 00:00:04.410
+OK, let's move on to
+the $bucketAuto stage.
+
+3
+00:00:04.410 --> 00:00:07.120
+$bucketAuto has
+the following form.
+
+4
+00:00:07.120 --> 00:00:09.750
+As we can see, it looks
+similar to $bucket
+
+5
+00:00:09.750 --> 00:00:12.360
+with a few key differences.
+
+6
+00:00:12.360 --> 00:00:17.430
+GroupBy works exactly the
+same as the bucket state.
+
+7
+00:00:17.430 --> 00:00:19.770
+Instead of defining
+boundaries, we just
+
+8
+00:00:19.770 --> 00:00:22.410
+let MongoDB figure
+those out by specifying
+
+9
+00:00:22.410 --> 00:00:24.900
+how many buckets we want.
+
+10
+00:00:24.900 --> 00:00:28.050
+$$bucketAuto will attempt to
+evenly distribute the documents
+
+11
+00:00:28.050 --> 00:00:30.120
+into the specified
+number of buckets,
+
+12
+00:00:30.120 --> 00:00:32.850
+calculating the
+boundaries for us.
+
+13
+00:00:32.850 --> 00:00:35.160
+Here, we must
+specify four buckets,
+
+14
+00:00:35.160 --> 00:00:36.810
+and $bucketAuto
+will try to give us
+
+15
+00:00:36.810 --> 00:00:40.290
+four buckets with roughly
+equal number of documents.
+
+16
+00:00:40.290 --> 00:00:42.810
+Keep in mind that we may
+not get as many buckets
+
+17
+00:00:42.810 --> 00:00:45.830
+back as we specify,
+especially if we specified
+
+18
+00:00:45.830 --> 00:00:48.930
+a number of buckets greater than
+the number of input documents
+
+19
+00:00:48.930 --> 00:00:53.030
+or the number of unique values
+in the groupBy expression.
+
+20
+00:00:53.030 --> 00:00:56.730
+Output works the same as it
+does in the bucket stage.
+
+21
+00:00:56.730 --> 00:00:59.640
+Before we cover the
+field, granularity,
+
+22
+00:00:59.640 --> 00:01:02.580
+let's see $bucketAuto in action.
+
+23
+00:01:02.580 --> 00:01:05.880
+OK, we're specifying that
+we'd like to groupBy the IMDB
+
+24
+00:01:05.880 --> 00:01:09.570
+rating, we want four
+buckets, and as output we'd
+
+25
+00:01:09.570 --> 00:01:12.450
+like the average per
+bucket and account.
+
+26
+00:01:12.450 --> 00:01:15.120
+Let's run it.
+
+27
+00:01:15.120 --> 00:01:16.900
+This is pretty neat.
+
+28
+00:01:16.900 --> 00:01:18.540
+We got back four buckets.
+
+29
+00:01:18.540 --> 00:01:21.060
+And we can see the
+count per bucket
+
+30
+00:01:21.060 --> 00:01:23.180
+and the average per bucket.
+
+31
+00:01:23.180 --> 00:01:26.210
+The documents don't look
+evenly distributed, though.
+
+32
+00:01:26.210 --> 00:01:28.830
+And our boundaries
+are a bit strange.
+
+33
+00:01:28.830 --> 00:01:30.510
+This is because
+some documents are
+
+34
+00:01:30.510 --> 00:01:33.300
+missing an $imdb.rating value.
+
+35
+00:01:33.300 --> 00:01:35.190
+Let's clean this up
+with a match stage
+
+36
+00:01:35.190 --> 00:01:39.300
+so we only get documents
+with an IMDB rating.
+
+37
+00:01:39.300 --> 00:01:41.310
+Here, we'll just
+filter documents out
+
+38
+00:01:41.310 --> 00:01:43.920
+they don't have an IMDB
+rating value greater than
+
+39
+00:01:43.920 --> 00:01:45.450
+or equal to 0.
+
+40
+00:01:45.450 --> 00:01:47.460
+Documents with
+the missing values
+
+41
+00:01:47.460 --> 00:01:50.280
+won't be messing up our results.
+
+42
+00:01:50.280 --> 00:01:51.880
+Pretty interesting.
+
+43
+00:01:51.880 --> 00:01:54.300
+We can see the $bucketAuto
+did nearly the same thing as
+
+44
+00:01:54.300 --> 00:01:55.140
+before.
+
+45
+00:01:55.140 --> 00:01:57.690
+While it attempts
+to evenly distribute
+
+46
+00:01:57.690 --> 00:02:00.480
+the documents among the
+specified number of buckets,
+
+47
+00:02:00.480 --> 00:02:02.520
+it isn't guaranteed to do so.
+
+48
+00:02:02.520 --> 00:02:05.790
+Here, because the
+cardinality of $imdb.ratings
+
+49
+00:02:05.790 --> 00:02:09.330
+isn't very unique, it's
+impossible to evenly distribute
+
+50
+00:02:09.330 --> 00:02:13.410
+documents among buckets and
+maintain contiguous ranges.
+
+51
+00:02:13.410 --> 00:02:15.270
+Let's groupBy title
+instead to see
+
+52
+00:02:15.270 --> 00:02:17.238
+a much more even distribution.
+
+53
+00:02:17.238 --> 00:02:21.540
+
+
+54
+00:02:21.540 --> 00:02:26.670
+And here we see a much more
+even distribution of documents.
+
+55
+00:02:26.670 --> 00:02:29.660
+OK, the last thing to talk
+about with $bucketAuto
+
+56
+00:02:29.660 --> 00:02:31.280
+is granularity.
+
+57
+00:02:31.280 --> 00:02:33.920
+It's an optional argument,
+and specifying it
+
+58
+00:02:33.920 --> 00:02:35.750
+will attempt to place
+bucket boundaries
+
+59
+00:02:35.750 --> 00:02:39.140
+along the given
+preferred number series.
+
+60
+00:02:39.140 --> 00:02:41.360
+What's a preferred
+number series?
+
+61
+00:02:41.360 --> 00:02:43.700
+They are commonly used
+in industrial design
+
+62
+00:02:43.700 --> 00:02:46.310
+to standardize
+product dimensions.
+
+63
+00:02:46.310 --> 00:02:49.910
+For R, E, and 1-2-5
+series, it's a way
+
+64
+00:02:49.910 --> 00:02:53.870
+to subdivide 10 according
+to a standard specification.
+
+65
+00:02:53.870 --> 00:02:58.430
+POWERSOF2 attempts to create
+boundaries along powers of 2.
+
+66
+00:02:58.430 --> 00:03:00.650
+Keep in mind that
+specifying a granularity
+
+67
+00:03:00.650 --> 00:03:03.590
+requires us to specify
+a numeric value
+
+68
+00:03:03.590 --> 00:03:05.150
+in the groupBy expression.
+
+69
+00:03:05.150 --> 00:03:07.610
+It may produce less
+buckets than specified
+
+70
+00:03:07.610 --> 00:03:10.790
+if the granularity
+specified has less intervals
+
+71
+00:03:10.790 --> 00:03:14.580
+or is not fine enough to
+evenly distribute documents.
+
+72
+00:03:14.580 --> 00:03:17.300
+Let's look at a quick example.
+
+73
+00:03:17.300 --> 00:03:20.000
+OK, first I'm going
+to open a local Mongo
+
+74
+00:03:20.000 --> 00:03:23.490
+shell in my computer
+to test this out.
+
+75
+00:03:23.490 --> 00:03:26.540
+I'll disconnect from
+the Class Atlas Cluster
+
+76
+00:03:26.540 --> 00:03:29.990
+and connect to a local
+running instance of Mongo.
+
+77
+00:03:29.990 --> 00:03:34.060
+OK, now that we have a Mongo
+shell to a local instance,
+
+78
+00:03:34.060 --> 00:03:35.960
+let's use a small
+JavaScript function
+
+79
+00:03:35.960 --> 00:03:38.060
+to generate some values for us.
+
+80
+00:03:38.060 --> 00:03:41.110
+I'm going to use a database
+[? neo-space ?] called Agg fort
+
+81
+00:03:41.110 --> 00:03:43.260
+this example.
+
+82
+00:03:43.260 --> 00:03:46.940
+So here, we use a four loop
+to generate some random values
+
+83
+00:03:46.940 --> 00:03:49.550
+that should map nicely to
+powers of 2 and the Renard
+
+84
+00:03:49.550 --> 00:03:51.920
+and E-series distribution.
+
+85
+00:03:51.920 --> 00:03:54.260
+We insert those numbers
+into a collection
+
+86
+00:03:54.260 --> 00:03:57.450
+called granularity test.
+
+87
+00:03:57.450 --> 00:03:59.690
+We run our function,
+and then verify
+
+88
+00:03:59.690 --> 00:04:01.640
+that the function
+worked by calling count
+
+89
+00:04:01.640 --> 00:04:03.560
+on our collection.
+
+90
+00:04:03.560 --> 00:04:06.520
+OK, let's look at the
+powers of 2 granularity
+
+91
+00:04:06.520 --> 00:04:11.080
+and leave the R and
+E-series for self-testing.
+
+92
+00:04:11.080 --> 00:04:13.220
+Here we specifying
+that we'd like to group
+
+93
+00:04:13.220 --> 00:04:15.440
+by the powers of 2 field.
+
+94
+00:04:15.440 --> 00:04:17.959
+We want 10 buckets,
+and the granularity
+
+95
+00:04:17.959 --> 00:04:19.640
+should fall on the
+preferred number
+
+96
+00:04:19.640 --> 00:04:22.910
+series called powers of 2.
+
+97
+00:04:22.910 --> 00:04:23.990
+And there we go.
+
+98
+00:04:23.990 --> 00:04:25.550
+We can see that our
+bucket boundaries
+
+99
+00:04:25.550 --> 00:04:28.660
+were placed along powers of 2.

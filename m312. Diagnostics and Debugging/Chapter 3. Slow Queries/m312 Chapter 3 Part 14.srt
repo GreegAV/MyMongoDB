@@ -1,0 +1,278 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.224
+Talking about getting
+our hands dirty,
+
+3
+00:00:02.224 --> 00:00:03.640
+let's do that right
+now by looking
+
+4
+00:00:03.640 --> 00:00:06.220
+at those different methods
+of creating an index.
+
+5
+00:00:06.220 --> 00:00:09.370
+First, I'm going to
+prepare my system.
+
+6
+00:00:09.370 --> 00:00:10.861
+Let's prepare this setup.
+
+7
+00:00:10.861 --> 00:00:12.610
+We're going to want a
+three-member replica
+
+8
+00:00:12.610 --> 00:00:18.100
+set that starts on port
+30,000 of localhost.
+
+9
+00:00:18.100 --> 00:00:20.440
+And we'll prepare a
+collection with some data
+
+10
+00:00:20.440 --> 00:00:22.345
+that we can build indexes on.
+
+11
+00:00:22.345 --> 00:00:24.310
+We'll also build one
+index just to make
+
+12
+00:00:24.310 --> 00:00:26.020
+it feel like a regular
+production system.
+
+13
+00:00:26.020 --> 00:00:29.050
+
+
+14
+00:00:29.050 --> 00:00:29.550
+Great.
+
+15
+00:00:29.550 --> 00:00:33.220
+And let's see what
+our data looks like.
+
+16
+00:00:33.220 --> 00:00:34.860
+In this example,
+we'll want to add
+
+17
+00:00:34.860 --> 00:00:39.330
+an index on the Social Security
+number to our collection.
+
+18
+00:00:39.330 --> 00:00:43.530
+First, let's look at
+the existing indexes.
+
+19
+00:00:43.530 --> 00:00:44.100
+Great.
+
+20
+00:00:44.100 --> 00:00:46.930
+We can see that there's no index
+on Social Security numbers.
+
+21
+00:00:46.930 --> 00:00:47.850
+So let's create it.
+
+22
+00:00:47.850 --> 00:00:50.730
+
+
+23
+00:00:50.730 --> 00:00:51.900
+The index has been created.
+
+24
+00:00:51.900 --> 00:00:53.970
+And the command reports
+the number of indexes
+
+25
+00:00:53.970 --> 00:00:57.800
+before and after the
+index creation process.
+
+26
+00:00:57.800 --> 00:00:59.320
+This looks good.
+
+27
+00:00:59.320 --> 00:01:01.890
+The index, by the way, is also
+building on the secondaries.
+
+28
+00:01:01.890 --> 00:01:04.100
+I can connect to one
+of those and confirm.
+
+29
+00:01:04.100 --> 00:01:05.850
+I'm going I want to
+give myself permission
+
+30
+00:01:05.850 --> 00:01:07.896
+to read from a secondary.
+
+31
+00:01:07.896 --> 00:01:09.645
+I can connect to one
+of those and confirm.
+
+32
+00:01:09.645 --> 00:01:12.320
+
+
+33
+00:01:12.320 --> 00:01:14.930
+I'll give myself permission
+to read from a secondary.
+
+34
+00:01:14.930 --> 00:01:18.090
+And here's my index on
+Social Security number.
+
+35
+00:01:18.090 --> 00:01:20.660
+Next, let's go back to the
+primary, drop the index,
+
+36
+00:01:20.660 --> 00:01:22.413
+and create it in the background.
+
+37
+00:01:22.413 --> 00:01:25.590
+
+
+38
+00:01:25.590 --> 00:01:28.080
+It looks pretty much the same
+as the previous operation.
+
+39
+00:01:28.080 --> 00:01:29.610
+So how can we tell
+that the index
+
+40
+00:01:29.610 --> 00:01:31.140
+was built in the background?
+
+41
+00:01:31.140 --> 00:01:33.500
+One way to find out is
+to look into the log.
+
+42
+00:01:33.500 --> 00:01:37.230
+I'm going to let bash
+do the work for me.
+
+43
+00:01:37.230 --> 00:01:38.610
+And there's our log file.
+
+44
+00:01:38.610 --> 00:01:40.090
+Let's look at the index options.
+
+45
+00:01:40.090 --> 00:01:43.730
+
+
+46
+00:01:43.730 --> 00:01:47.130
+And here, the index got built in
+the background with background
+
+47
+00:01:47.130 --> 00:01:48.560
+true.
+
+48
+00:01:48.560 --> 00:01:51.230
+I can also see this if I look
+at the command components.
+
+49
+00:01:51.230 --> 00:01:53.740
+
+
+50
+00:01:53.740 --> 00:01:56.630
+And here, once again, is
+our createIndex command
+
+51
+00:01:56.630 --> 00:01:58.200
+with background true.
+
+52
+00:01:58.200 --> 00:01:59.720
+Interestingly, in
+the commands, I
+
+53
+00:01:59.720 --> 00:02:02.750
+can also see my
+dropIndex command.
+
+54
+00:02:02.750 --> 00:02:05.270
+A difference between the
+background and foreground
+
+55
+00:02:05.270 --> 00:02:07.970
+builds is that this command
+will yield the collection
+
+56
+00:02:07.970 --> 00:02:10.630
+locks more often, letting
+other [? rights ?] happen.
+
+57
+00:02:10.630 --> 00:02:12.260
+Again, for that
+reason, you would
+
+58
+00:02:12.260 --> 00:02:14.450
+prefer building an
+index in the background
+
+59
+00:02:14.450 --> 00:02:17.120
+instead of building it in the
+foreground on a production
+
+60
+00:02:17.120 --> 00:02:18.670
+system.

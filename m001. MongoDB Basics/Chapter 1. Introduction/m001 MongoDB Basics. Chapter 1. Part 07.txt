@@ -1,0 +1,27 @@
+In addition to nested documents, MongoDB also supports array values for fields.
+
+In this data set, we can see an example of array in the section's field.
+
+For this example, it's going to be best if we look at the Documents tab, in Compass.
+
+In this tab, we see not just a summary view of the schema for documents in a collection, but we can look at the actual documents our 100 Year Weather collection contains.
+
+Documents in this data set contain measurements for a consistent set of meteorological readings.
+
+These include air temperature, pressure, wind, etc.
+
+But there are more than 100 other readings that might be available as well, depending on the weather station.
+
+Supplementary values, such as these, are labeled using a three to four character code following a standard established for meteorological data.
+
+Because MongoDB has a flexible data model, all documents don't have to contain exactly the same fields.
+
+So in this data set, the supplementary readings available in a specific document are stored in the section's field in this data set.
+
+Since the available readings will vary from one document to the next, it makes sense to provide a summary list of what supplemental readings are available in a given document.
+
+An array is a good choice for this in MongoDB.
+
+The MongoDB query language supports queries on array fields that make it easy for us to filter documents containing a particular set of supplementary fields.
+
+And the advantage of noting the supplementary data this way is that we simply need to build an index on sections, and can then very quickly look up documents containing a specific set of supplementary data.

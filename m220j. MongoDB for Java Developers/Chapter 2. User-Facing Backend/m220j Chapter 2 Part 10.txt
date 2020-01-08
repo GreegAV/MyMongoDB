@@ -1,0 +1,147 @@
+In this lesson, we are going to check out how to perform deletes and remove documents that match a particular query predicate.
+
+For the purpose of this lesson, I'm going to go ahead and create a sample collection, in my test database, called sports.
+
+And I instantiate it here.
+
+And then I'll go ahead and populate the sports collection with a few examples of sports, things like football, basketball, F1, and whatnot.
+
+The first thing to understand is that a delete operation is in fact a write in database world.
+
+Confused?
+
+What I mean by this that when a delete takes place of a document from our database, we are actually executing a state change in the data that implies a database write.
+
+Deletes imply that several different things will happen.
+
+Collection data will be changed.
+
+Indexes will be updated.
+
+And entries in our oplog, the replication mechanism, will be added.
+
+All the same operations that an insert or an update will originate.
+
+But let's go ahead and see this in action with a single document delete.
+
+Before I start deleting data from my collection, I'm going to count the number of documents in the sports collection.
+
+And I'm going to place it in this variable here, nSportsBefore.
+
+Now that I know how many sports documents my collection holds, I'm going to just delete one.
+
+First, I need to define a query predicate or a query filter.
+
+In this case, I'm going to just specify one that is empty, which will be similar to running the db.DeleteOne without any query predicate at all from the MongoDB shell.
+
+Once I execute the deleteOne method, I can get a DeleteResults object.
+
+We can verify that the delete was successful by checking the number of deleted documents in our DeleteResult object, the resulting object of the delete.
+
+By asserting that the number of deleted count is equal to 1, we can verify that at least one document was in fact deleted.
+
+If I now count the number of documents, I can see that it has been decreased by 1.
+
+If I execute db.countDocuments and subtract minus 1 to nSportsBefore, I can see that this search matches.
+
+Wait, but which document did I just remove from the collection?
+
+Well, in this case, MongoDB will select the first $natural document it encounters in the collection and delete that one.
+
+Given that the insertMany inserts documents in order, the document that I had just deleted will be the one with the "name" = "football," which makes me very sad.
+
+Let's just run this test altogether to see the results.
+
+And as we can see, one of those certs matches and our test passes.
+
+A delete that takes the first element of the collection $natural order tends to be a less than usual thing that you will be doing in your application.
+
+So let's use something a little bit more elaborate.
+
+Let's say that I'd like to delete a document that matches a particular name.
+
+Let's delete the first sport where the fieldName starts with a string "bas".
+
+To do that, I can express a single regex pattern in string format and call the Filters.regex method.
+
+The query in the MongoDB shell should be something like the following, where db.sports.delete = name and the expression of our regex that matches that name.
+
+To do that, I can just, again, use the filters.regex, bassing, the name of the field, and the pattern.
+
+Once we execute it, we get the results on the DeleteResults.
+
+After running the delete method and capturing the DeleteResults, we can confirm that one sport was deleted by asserting the delete count matches 1.
+
+Now, which one did I just delete?
+
+Again, the same logic will be applied.
+
+The first element that can be found in the collection that matches the query predicate will be the one to get deleted.
+
+That means that our dear "basketball" no longer resides in the collection after this delete.
+
+And we can Assert for that by trying to find it and actually getting no from the iterator tryNext.
+
+This actually raises an important aspect about deleting one element of a multi-document match query.
+
+To run this operation safely, this means deleting the exact document we are looking for.
+
+The match should be done using the primary key of the documents.
+
+Otherwise, you will be deleting documents based on their initial insert/update order, which can be very, very widely.
+
+Obviously, deleting one single document at a time when what we want to do is delete all documents that match a query predicate will be very slow.
+
+Therefore, MongoDB also allows you to delete all documents that match a given criteria.
+
+This time around, I would like to delete all documents that have a particular field.
+
+Not interested in the kind of value that they represented with, but more with the leading all documents that have such field.
+
+If the field exists, the document has to go.
+
+Something similar to this will be expressed in a shell, where "note," for example, "$exists" = 1.
+
+Let's create the delete criteria where if the field note exists, we want to delete all those documents.
+
+Using the Filters builder, that will be done like this.
+
+Bson criteria = Filters.exists and the fieldName.
+
+Running the deleteMany method with this criteria will result in three documents being deleted.
+
+So let's run it to make sure that this is exactly correct.
+
+And it is.
+
+All of our tests pass.
+
+One last method that allows us to remove documents from our collection is our findAndDelete method.
+
+Comparing this with deleteOne method, the difference will reside in the what object is returned by the method.
+
+In the case of deleteOne, we get back the DeleteResult object that tells us if the command was acknowledged and the number of documents deleted.
+
+In the case of findAndDeleteOne, what we get back is the document that was just deleted.
+
+This method might be very useful in cases where we need to return back the last state of the document for post-processing by the application.
+
+Think about Q's or something that needs to be done with that document after it's gotten deleted.
+
+If we tried to delete the sport with the named "table tennis" Using the findOneAndDelete method, expressing the query predicate, we get back a document, which is the deletedSport.
+
+We can assert that it's NotNull and we can assert that the ObjectId will be set in this object.
+
+If we run the tests, we can see that everything is green, just like we like it.
+
+Well, let's recap.
+
+Deleting data is just another write operation database.
+
+We can delete one document at a time with deleteOne.
+
+Or we can deleteMany documents in one go.
+
+The method findAndDeleteOne returns the state of the document before the delete command got executed.
+
+And running all the tests in this lesson, we see that everything passes.

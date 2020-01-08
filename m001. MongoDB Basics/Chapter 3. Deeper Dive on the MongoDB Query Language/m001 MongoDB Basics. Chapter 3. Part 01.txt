@@ -1,0 +1,125 @@
+In this lesson, we will discuss comparison query operators.
+
+These are operators that allow us to match based on a fields value relative to some other value.
+
+In our movie details collection, most documents have a field called run time.
+
+This makes a good starting point for considering some comparison operators.
+
+Here I have mongo shell connected to my sandbox Atlas cluster.
+
+We're going to filter for all movies that have a run time greater than 90.
+
+Now runtime is specified in minutes, so this is all movies longer than an hour and a half.
+
+If we like we can actually project out just the title and the runtime to give us a quicker summary of this results set.
+
+You can see that every document in our result set does in fact have a runtime greater than 90 minutes.
+
+Now let's revisit the syntax for a minute.
+
+Why is it structured this way?
+
+The idea here is to maintain consistency with equality filters.
+
+And to be clear by equality filter, I simply mean a filter for an exact value.
+
+For equality filters, we define a specific value a key should have in matching documents.
+
+In the case of this query, instead of specifying a value we need runtime to be equal to, we are instead expressing the type of relationship we want all documents in the result set to have with respect to the runtime field.
+
+This syntax also makes it very convenient to express ranges.
+
+For example, I can stipulate that I'd like to see movies greater than 90 minutes long and less than 120 minutes.
+
+To do that, we can use this query.
+
+And for the sake of completeness, I'll mention that $lt is the less than operator.
+
+Now what I really want is for all movies that match my filter to be greater than or equal to 90 minutes and less than a equal to 120 minutes.
+
+So I can modify my filter slightly to use the greater than or equal to, or $gte operator, and the $lte operator.
+
+Let's run this.
+
+Here we can see we've lost a few results from the last time because now we're specifying that we want movies in a range up to only two hours.
+
+So with this query, we had quite a few movies that were in fact longer than two hours.
+
+And with this one, only those that are between 90 minutes and two hours.
+
+Of course, with comparison operators were not limited to working with a single field.
+
+We can easily work with as many fields as we need to using combinations of comparison operators, other operators, and equality matches.
+
+Suppose we're interested in movies that are highly rated and also have long run times.
+
+Let's mix things up a little bit more by using an embedded document field, the tomato meter.
+
+Now for tomato meter, the max is 100.
+
+So what I'll do is combine a selector for tomato meter looking for values that are greater than or equal to 95 with runtime looking for values that are greater than or equal to 180.
+
+So in this case, movies that are three hours or longer.
+
+Here we can see that we have two results that meet these criteria.
+
+The Godfather: Part II, of course, being very long, and in my opinion, the best of the three godfather movies.
+
+So let's take a look at what other comparison operators there are.
+
+$eq, has exactly the same semantics as the equality matches you're already familiar with.
+
+We've looked at greater than, greater than or equal to, less than, and less than or equal to.
+
+Now let's take a look at not equal to, or $ne and $in.
+
+First, we'll look at $ne.
+
+Now in a lot of applications, particularly if we're doing something like data cleaning, we might be interested in partitioning our data because we know we have some fields that are not as expected.
+
+A lot of movies in this collection have four rated a value of unrated.
+
+So maybe we just want to look at all documents that have an actual rating, such as PG, PG-13, R, et cetera.
+
+We can use $ne to do this, and the semantics of this filter are that we'll match all documents that for the rated key will have a value that is anything other than or that is not equal to unrated.
+
+Now there's one thing I should mention about $ne.
+
+In addition to matching all documents containing a rated field whose value is something other then unrated, $ne will also return documents that don't have a rated field at all.
+
+MongoDB supports a flexible data model.
+
+There are many use cases for documents in the same collection to have fields that other documents do not.
+
+In MongoDB data models, rather than store a null value for field, we will often simply not store at field at all.
+
+In another lesson, we look at how to distinguish documents that do not have a given field.
+
+OK, so the last comparison operator I want to look at is the $in.
+
+$in, allows us to specify one or more values.
+
+Any one of which should cause a document to be returned.
+
+This filter we'll select all documents where the value of rated is G or PG.
+
+Documents with either of those two values for the rated key will match this filter.
+
+And here we can see that in fact, all results have a value of either PG or G for the rated key.
+
+If we wanted to extend this, we simply add another element to the array value of our $in operator.
+
+Please note that the value of $in must be an array.
+
+In this case, documents that have a value for rated that is any one of these three values will be returned.
+
+If we make this up a little bit, and change this to just movies that are R rated and PG-13, you see that now our results are matching those criteria.
+
+There is also an operator that allows us to do the reverse of what the $in does.
+
+I'll leave it as an exercise to you to experiment with that operator.
+
+And with that, we've covered the comparison operators for doing queries within MongoDB.
+
+These significantly expand the types of queries that we can do against a MongoDB collection.

@@ -1,0 +1,105 @@
+Let's take a look at a marvelous tool that many databases including MongoDB have built in-- the profiler.
+
+Technically, the profiler isn't so much of a tool as it is a mode that your MongoDB database can be running in and when in this mode the server will store every operation that it sees coming in into that database.
+
+These operations will be written into the system.profile collection, a capped collection.
+
+Its size is 1 megabyte by default, and it will store one document per operation.
+
+The profiler is off by default because having it on can be quite expensive.
+
+It turns every read into a read plus insert, and every write query into a write plus insert.
+
+Unless your production server is very overpowered for its workload, you should be very cautious about turning the profiler on as it can quickly overpower your server with writes, helping to saturate your I/O.
+
+So don't leave it on.
+
+That said, it can be very useful for a limited time in order to figure out what's going on.
+
+We'll go into the administrative shell to see this.
+
+This is a command to tell us what profiling level we're at.
+
+Right now, we're at zero, which means that the profiler is not capturing any queries.
+
+At level 1, we would capture any queries that take longer than 100 milliseconds.
+
+That's useful, but keep in mind that we already capture some information on those queries in the server logs.
+
+At level 2, however, we capture every query.
+
+This can be quite useful.
+
+We can find out the actual load we've got coming in, for example.
+
+Keep in mind that as of MongoDB 3.4, Mongo replay is another way to capture those queries.
+
+But for now, let's check out the profiler in action.
+
+So my profiler is now set to level 2.
+
+If this were a production server, it would now be writing massive amounts of inserts-- one per query it gets.
+
+Now let's exit and create a small workload for it.
+
+Here's a script I wrote to do just that.
+
+It builds an index and then performs this loop 100 times.
+
+Each time, it performs several operations-- inserting, reading, updating, and deleting.
+
+This isn't a very realistic workload simulator, but it's just to illustrate what we're doing.
+
+Not all of the queries will find a document, by the way.
+
+They may look for a document that we've deleted.
+
+OK.
+
+Let's run it.
+
+And as always, let's be sure to set the profiling level back to zero.
+
+OK.
+
+Now let's see what we've got.
+
+So our 100 loops involved 2 inserts, 2 finds, an update, and a delete each.
+
+That gives us 600 documents, and I see 601.
+
+Let's see what these entries look like.
+
+That's a lot to parse so let's take a look at some of the more important fields.
+
+Scrolling up, we see this op field.
+
+This one's an insert.
+
+Let's look at what we've done by grouping these operations together with the aggregation pipeline and see how many of each we've got.
+
+So there are different operations, each of them counted up.
+
+There is also a command there.
+
+Let's see what that was.
+
+Ah, this was the drop command that we did when we were done inserting documents and reading.
+
+Now if we look just at our queries with op query, we have a number of interesting fields.
+
+You can see that we're capturing some execution stats for each query.
+
+Our plan summary is another interesting field as this will tell us whether or not we're using an index.
+
+This was a collection scan.
+
+Let's iterate over our documents and see what the plan summary looks like for each.
+
+And sure enough, we're alternating between using an index and not using an index.
+
+We'll go deeper into the profiler later on, but for now, that's how you use it.
+
+Also, remember that turning on the profiler will add an insert operation to the capped collection for every read or write.
+
+So I've been asked by our support team to remind you to always remember to turn it off in production environments.

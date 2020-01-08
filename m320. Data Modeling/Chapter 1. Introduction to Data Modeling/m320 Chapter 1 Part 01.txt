@@ -1,0 +1,27 @@
+In this lesson, we're going to cover the list of things that you'll need to know prior to taking this course.
+
+If any of the items in this lesson are unfamiliar to you, feel free to pause this video and fill in those gaps in knowledge before proceeding.
+
+First and foremost, we're looking for database fundamentals.
+
+Terms like table, collection, database, relationship, schema, entity, and database transaction should already be part of your vocabulary.
+
+If you're comfortable in using and explaining these and other related terms, then you're in good shape.
+
+You can refresh your memory on most of these by following the reference links in the lecture notes.
+
+Another good thing to know about is the entity relationship diagram and the appropriate notation that comes with that.
+
+Does the image in the right make sense?
+
+What is the relationship between the student and course tables?
+
+If you can answer these questions comfortably, then you're prepared to take this course.
+
+Otherwise, check out the references in the lecture notes.
+
+There is, of course, a softer requirement for this course, as well.
+
+Using Compass, you'll need to be able to connect to the M320 MongoDB Atlas cluster that was created for the purposes of this course.
+
+We will walk you through this process in one of the following lectures in the meantime, if you want to read up on Atlas, feel free to check out the link that's attached to this lesson.

@@ -1,0 +1,29 @@
+Now that we've done all the heavy work, let's have a look at the preferred method, the rolling upgrade.
+
+This time, we're going to leverage the MongoDB management tools to do this.
+
+Using Cloud Manager, we're going to build a new index in a rolling upgrade fashion, just like we covered a moment ago.
+
+If you have Ops Manager, this feature is also available to you.
+
+From this page, you want to click on the Modify button on the replica set line and scroll down to the Index Configuration section.
+
+We'll click Add and add our index.
+
+Will put it in the m312.people namespace.
+
+We'll put it on the address.city, address.zip fields.
+
+We click Apply, Review & Deploy, Confirm & Deploy, and that's it.
+
+I just have to wait for Cloud Manager to do a rolling upgrade for me.
+
+If this isn't a production system, building on the primary in the foreground should do just fine.
+
+If you have your cluster managed under Ops Manager or Cloud Manager, use that to build your indexes.
+
+If you don't have those systems and you have a window of time where performance isn't at its peak, you can use that time to build the index in the background.
+
+And if you have a primary under stress and can't afford to add any load to it, use the manual rolling upgrade procedure.
+
+And those are your options for building indexes.

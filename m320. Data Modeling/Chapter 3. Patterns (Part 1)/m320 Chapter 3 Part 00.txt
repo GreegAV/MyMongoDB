@@ -1,0 +1,39 @@
+In the previous chapters, we went over the basis of data modeling for MongoDB, from defining a flexible methodology to identifying the different representation for modeling relationships.
+
+You should now have all the knowledge needed to attack this week's chapter on patterns.
+
+Patterns are very exciting because they are the most powerful tool for designing schemas for MongoDB and NoSQL.
+
+This chapter is going to help you produce solution that can scale and perform under stress.
+
+Before we go any further, let me tell you how we define the word pattern in our course.
+
+Patterns are not full solution to problems.
+
+Those are called full solutions.
+
+Patterns are a smaller section of those solutions.
+
+They are reusable units of knowledge.
+
+For those of you who are familiar with software architecture design, you probably know the Design Patterns book from the Gang of Four.
+
+This book is doing for software design what our patterns will do for data modeling and schema design for document databases.
+
+The patterns we'll go over in this chapter will become a cookbook of powerful transformation to unleash the power of MongoDB schemas.
+
+We will see how to optimize when faced with large documents with a subset pattern, use the computed pattern to avoid repeated computations, structure similar fields with the attribute pattern, handle changes to your deployment without downtime with the schema versioning pattern, and much more.
+
+Those patterns will also serve as a common language for your teams working on schema designs.
+
+Finally, having well-defined patterns and understanding when and how to use them will remove a little bit of the are in data modeling for MongoDB and make the process more predictable.
+
+This chapter will have a lesson to introduce each pattern.
+
+Then we will follow with a lab to have you put in practice the pattern you just learned about.
+
+There is a lot to cover.
+
+However, it will be fun, and you should profit a lot.
+
+So let's get going.

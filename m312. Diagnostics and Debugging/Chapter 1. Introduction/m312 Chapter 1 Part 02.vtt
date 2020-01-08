@@ -1,0 +1,266 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.400
+In this course, we'll
+focus on problems.
+
+2
+00:00:03.400 --> 00:00:06.280
+This means that after having
+done a clear review of all
+
+3
+00:00:06.280 --> 00:00:09.280
+the tools and strategies to
+follow so we can correctly
+
+4
+00:00:09.280 --> 00:00:12.670
+diagnose and debug an issue
+with the MongoDB deployment,
+
+5
+00:00:12.670 --> 00:00:16.000
+we should get our heads together
+and think how these tools will
+
+6
+00:00:16.000 --> 00:00:19.630
+be applied to diagnose common
+issues with the deployment,
+
+7
+00:00:19.630 --> 00:00:24.220
+configuration, provisioning,
+sizing, and application logic.
+
+8
+00:00:24.220 --> 00:00:26.590
+Hopefully, with
+that in mind, you
+
+9
+00:00:26.590 --> 00:00:29.830
+can quickly relate to
+your own applications
+
+10
+00:00:29.830 --> 00:00:33.040
+and be aware of how to
+deal and diagnose correctly
+
+11
+00:00:33.040 --> 00:00:36.130
+with unintended situations.
+
+12
+00:00:36.130 --> 00:00:38.260
+There are a few
+things that we can
+
+13
+00:00:38.260 --> 00:00:41.140
+perceive from the applications
+and server hosts of MongoDB.
+
+14
+00:00:41.140 --> 00:00:45.810
+Let's say the symptoms that our
+subjects may be demonstrating.
+
+15
+00:00:45.810 --> 00:00:48.130
+These generally will drive
+us to blame the database.
+
+16
+00:00:48.130 --> 00:00:48.910
+That's OK.
+
+17
+00:00:48.910 --> 00:00:50.390
+Everyone does that.
+
+18
+00:00:50.390 --> 00:00:53.080
+But more importantly
+than who to blame
+
+19
+00:00:53.080 --> 00:00:55.810
+is how to correctly
+diagnose a situation
+
+20
+00:00:55.810 --> 00:00:58.930
+and perform corrective measures.
+
+21
+00:00:58.930 --> 00:01:00.670
+And there are a great
+deal of symptoms
+
+22
+00:01:00.670 --> 00:01:03.560
+that we should be looking for.
+
+23
+00:01:03.560 --> 00:01:05.349
+We can have very slow queries.
+
+24
+00:01:05.349 --> 00:01:07.180
+We will look into
+the tools that will
+
+25
+00:01:07.180 --> 00:01:12.040
+help us identify such offenders
+and how to correct those.
+
+26
+00:01:12.040 --> 00:01:15.440
+Applications getting slower
+writing data as time goes by--
+
+27
+00:01:15.440 --> 00:01:17.590
+we will look into
+patterns and check
+
+28
+00:01:17.590 --> 00:01:20.980
+the tool that will allow
+us to identify and monitor
+
+29
+00:01:20.980 --> 00:01:23.510
+a potential solution.
+
+30
+00:01:23.510 --> 00:01:26.230
+Aggregation pipelines aborting
+for lack of resources--
+
+31
+00:01:26.230 --> 00:01:28.450
+something to keep in mind.
+
+32
+00:01:28.450 --> 00:01:30.550
+Server incurring
+a high disk IO--
+
+33
+00:01:30.550 --> 00:01:35.280
+how to detect it, how to get
+to the bottom of the problem.
+
+34
+00:01:35.280 --> 00:01:38.090
+Incorrect file system
+configuration--
+
+35
+00:01:38.090 --> 00:01:41.130
+these can be very hard to find
+in development environments,
+
+36
+00:01:41.130 --> 00:01:43.740
+but we will soon get into
+trouble if we don't attend them
+
+37
+00:01:43.740 --> 00:01:45.780
+in production.
+
+38
+00:01:45.780 --> 00:01:48.720
+Incorrect MongoDB
+configuration-- these can span
+
+39
+00:01:48.720 --> 00:01:51.420
+from unintended behavior
+from incorrect configurations
+
+40
+00:01:51.420 --> 00:01:54.150
+of cache sizes, timeouts,
+flushing intervals,
+
+41
+00:01:54.150 --> 00:01:56.730
+and write concerns.
+
+42
+00:01:56.730 --> 00:02:00.600
+Application driver integration--
+how the application makes
+
+43
+00:02:00.600 --> 00:02:03.480
+use of our driver, which
+commands it senses,
+
+44
+00:02:03.480 --> 00:02:08.160
+and how these can derive
+in unintended situations.
+
+45
+00:02:08.160 --> 00:02:11.430
+Connectivity issues--
+when we inadvertently
+
+46
+00:02:11.430 --> 00:02:13.680
+incorrectly configure
+our system, that
+
+47
+00:02:13.680 --> 00:02:17.100
+will impact the connectivity
+of our deployment.
+
+48
+00:02:17.100 --> 00:02:20.730
+And then cluster configuration--
+by incorrectly provisioning
+
+49
+00:02:20.730 --> 00:02:23.070
+or using replica sets
+and shared clusters
+
+50
+00:02:23.070 --> 00:02:25.200
+we might get ourselves
+into situations
+
+51
+00:02:25.200 --> 00:02:28.560
+that are important to
+understand and fix.
+
+52
+00:02:28.560 --> 00:02:31.080
+These are some of
+the aspects that we
+
+53
+00:02:31.080 --> 00:02:33.930
+are going to approach
+within different chapters
+
+54
+00:02:33.930 --> 00:02:38.730
+of this course and introduce the
+tools and strategies to detect,
+
+55
+00:02:38.730 --> 00:02:44.540
+diagnose, monitor, and fix
+these unwanted scenarios.

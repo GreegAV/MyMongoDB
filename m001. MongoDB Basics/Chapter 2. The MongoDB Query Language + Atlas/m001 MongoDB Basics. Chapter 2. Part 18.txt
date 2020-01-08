@@ -1,0 +1,89 @@
+In this lesson, we are going to look into the replaceOne commands.
+
+But before we go into the actual details of how to use this command, the syntax, and semantics, let's have a look to the outset first.
+
+In my video.movieDetails collection, I can find a documents, a movie documents, which matches the title, House, M.D., Season Four, New Beginnings, a very popular TV series around here.
+
+Once I execute that find in my Compass interface, I can see the structure of my document.
+
+In here, I have all the information about this particular movie.
+
+Now, one thing that I'm noticing here is that the poster information is set to null, and the genres information here is only composed by Documentary and Short.
+
+That indicates to me that I actually have information that needs to be updated.
+
+I do have information for the poster, and I would like to extend the genres field by including the TV series as a genre for this particular movie.
+
+And for that, I'm going to use the replaceOne method.
+
+Now, you've already seen a couple of other methods to write, like inserts and updates.
+
+And this one is just another extension of that same capability that we have for either writing data, updating data, or recording data.
+
+And we're going to look into this from the context of an application.
+
+Now, we're going to use the Mongo shell, which is a JavaScript interpreter.
+
+That allows us to mimic what the natural behavior of an application will be like.
+
+First thing I'm going to do is specify the filter by which I want to find a document that I want to replace.
+
+In this case, it's the title House M.D., Season Four, New Beginnings-- perfect.
+
+And then I'm going to use the movieDetails.findOne method to retrieve only one document back that matches that filter.
+
+Let's go ahead and do that on the Mongo shell.
+
+Once I'm connected to the Mongo shell into my movies collection, I can specify the filter, which determines what am I looking for, what documents which matches title I'm interested on.
+
+And then using the findOne method on my moviesDetails, passing along that filter, I get back a variable-- or I can set a variable-- called doc with that same information.
+
+When I look into it, I can see all the information, including the fact that poster is not there, and the genres is only opposed by Short and Documentary.
+
+Now that I know that, I have to go to my poster fields and specify the value of that poster to that particular string that represents the poster information that I want to attach.
+
+Great, now I'm setting up the poster field with that information.
+
+The next step is to look into my genres.
+
+And I can see that this is an array composed of two string values.
+
+Now what I would like to do is push to that array a new one, TV Series.
+
+Once I do that, and I look into my genres again, I can see that now the array has been updated, appended a new value.
+
+Right now, my doc is fully set with all the information that I want-- the poster and the genres.
+
+But this is only in the context of the Mongo shell currently.
+
+The database has not yet been updated, because we haven't told it to be updated.
+
+One way to do that would be to use the replacement method.
+
+The replacement method will take a filter.
+
+We're going to use exactly the same one as before, where the title equals House M.D., whatever, whatever.
+
+And we're going to use the same variable that we've been changing throughout the execution of this Mongo shell with the settings that we want, like setting the poster and appending a new TV series value to the genres.
+
+Once I execute that, what will happen is that MongoDB will receive this document, match it with whatever document it finds defined by the filter, and replace it with this particular structure.
+
+Now, in case, we defined a filter that contains more than one document, or we'll be matching more than one document, it will just replace the first one that it would find.
+
+This is why just only replacing one.
+
+As we can see, as in the output of this execution, we acknowledged it, which is great.
+
+We matched one documents for our update, and we modified that same document.
+
+Once we execute the query again and retrieved again the same document now from the database, we can see that my poster is no longer null, and the documentaries are set with exact information that I want.
+
+Now, why would you use replaceOne instead, for example, of updateOne?
+
+updateOne is designed to, for example, update a specific set of values into a document.
+
+replaceOne will completely replace the documents.
+
+In one hand, replaceOne and updateOne do exactly the same thing, except for the fact that we are passing the full payload of our new document.
+
+All the changes will go back and forth from your application to the server, while updateOne you can specify only the sets or field set operators that you are interested on.

@@ -1,0 +1,67 @@
+Three of the four CRUD operations are right operations, create, update, and delete.
+
+All three of these involve changing the data in a collection in one way or another.
+
+You only have read access to our class Atlas cluster.
+
+Fortunately, with the Atlas free tier option we have a means of creating a sandbox MongoDB cluster in minutes and at no cost.
+
+The Atlas free tier is ideal for proof of concept projects and in the early stages of developing a software application.
+
+It's also great for testing and for educational purposes.
+
+Please follow along and create your own Atlas free tier cluster.
+
+You'll be using this throughout the rest of this chapter.
+
+I've also included instructions for creating your sandbox cluster in the lab that immediately follows this lesson.
+
+OK, here we need to complete the registration form.
+
+Once you've completed the registration form, go ahead and click continue.
+
+Upon completing the form, you'll be asked to specify a group name.
+
+Groups or how we manage access to Atlas clusters.
+
+I'm simply going to specify shannon-m001 as my group name, and create the group.
+
+Once you've created a group, go ahead and build a cluster.
+
+You might get a notification from the intercom integration that we have here when you do this, feel free to ignore it.
+
+Also, don't be scared by what you see when this first pops up with respect to pricing.
+
+Free tier is truly free.
+
+We simply need to select the M0 instance size, and you'll note that the price has changed to zero.
+
+Then we'll need to enter a username and password.
+
+Once you've entered your username and password, you can go ahead and deploy your cluster.
+
+Now again, the cluster is free.
+
+No credit card is required for any of this.
+
+Please make sure you remember the user name and password that you entered.
+
+You will need it later.
+
+Now once you've deployed your cluster, you'll need to wait just a minute or two for the cluster to come up.
+
+Once deployed, the cluster is ready for connections.
+
+But before we connect, we need to change one security setting to make it easy for us to access the cluster from anywhere.
+
+Click on the Security tab, and then on the IP Whitelist tab.
+
+Click Add IP Address, and Allow Access From Anywhere.
+
+It'll take just a moment to update our security settings in the cluster.
+
+While that's happening, let me stress that making a cluster accessible from anywhere is not a best practice.
+
+You should be as restrictive as possible with respect to IP Whitelisting when configuring an Atlas cluster.
+
+However, for purposes of this class this is fine, and will save us wasted time debugging network issues.

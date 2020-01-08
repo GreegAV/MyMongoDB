@@ -1,0 +1,248 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.880
+In MongoDB, roles are updatable.
+
+3
+00:00:02.880 --> 00:00:04.840
+Well, some of them at least.
+
+4
+00:00:04.840 --> 00:00:07.840
+Not surprisingly, if we try
+to update a built-in role,
+
+5
+00:00:07.840 --> 00:00:09.250
+we're not going to get too far.
+
+6
+00:00:09.250 --> 00:00:12.130
+User defined roles,
+however, can be updated.
+
+7
+00:00:12.130 --> 00:00:14.700
+There are three ways
+to update a given role.
+
+8
+00:00:14.700 --> 00:00:17.850
+We can go ahead and
+use db.getRole to get
+
+9
+00:00:17.850 --> 00:00:20.520
+a role like the intern role,
+and then store it in a variable
+
+10
+00:00:20.520 --> 00:00:21.840
+called role.
+
+11
+00:00:21.840 --> 00:00:25.530
+From here it's not hard to make
+changes to this object just
+
+12
+00:00:25.530 --> 00:00:27.120
+using JavaScript.
+
+13
+00:00:27.120 --> 00:00:29.420
+As you can see here,
+we now have a variable
+
+14
+00:00:29.420 --> 00:00:31.860
+called updatedPrivileges,
+which currently contains
+
+15
+00:00:31.860 --> 00:00:34.350
+all of the old privileges
+on this role, which
+
+16
+00:00:34.350 --> 00:00:36.900
+is just the ability
+to update meteorites
+
+17
+00:00:36.900 --> 00:00:38.580
+on the NASA database.
+
+18
+00:00:38.580 --> 00:00:40.460
+And it's not hard to
+just use JavaScript
+
+19
+00:00:40.460 --> 00:00:45.375
+to push a insert action onto the
+actions array of the privileges
+
+20
+00:00:45.375 --> 00:00:46.990
+array.
+
+21
+00:00:46.990 --> 00:00:49.050
+Now if you look at
+updated privileges,
+
+22
+00:00:49.050 --> 00:00:52.234
+we'll see that insert
+is also in action.
+
+23
+00:00:52.234 --> 00:00:53.650
+I'm not going to
+run this command,
+
+24
+00:00:53.650 --> 00:00:56.680
+because I don't actually want
+to update the intern role.
+
+25
+00:00:56.680 --> 00:01:00.020
+But the db.updateRole allows
+us to pass on a role, and then
+
+26
+00:01:00.020 --> 00:01:01.770
+any updates you want
+to make to that role.
+
+27
+00:01:01.770 --> 00:01:04.144
+In this case, I'm just going
+to update all the privileges
+
+28
+00:01:04.144 --> 00:01:06.520
+with this new privilege
+array that we have to find.
+
+29
+00:01:06.520 --> 00:01:08.680
+Another way to update
+roles in MongoDB
+
+30
+00:01:08.680 --> 00:01:12.450
+is to use the
+grantPrivilegesToRole function.
+
+31
+00:01:12.450 --> 00:01:17.020
+With this command we pass in the
+name of the role that we want.
+
+32
+00:01:17.020 --> 00:01:20.460
+And then we pass an array of
+all of the privileged documents
+
+33
+00:01:20.460 --> 00:01:22.400
+that we want to
+add to this role.
+
+34
+00:01:22.400 --> 00:01:24.510
+Drawing from the last
+example, if I just
+
+35
+00:01:24.510 --> 00:01:26.500
+want to add the
+ability to insert
+
+36
+00:01:26.500 --> 00:01:28.990
+on the meteorites collection
+in the NASA database
+
+37
+00:01:28.990 --> 00:01:32.590
+on the internRole, we just
+pass in a privileged document
+
+38
+00:01:32.590 --> 00:01:35.890
+with a resource
+document like so.
+
+39
+00:01:35.890 --> 00:01:38.710
+And adding an action like so.
+
+40
+00:01:38.710 --> 00:01:40.560
+Again, I'm not going
+to run this command,
+
+41
+00:01:40.560 --> 00:01:43.330
+because I don't actually
+want to add this privilege
+
+42
+00:01:43.330 --> 00:01:45.410
+to the intern role.
+
+43
+00:01:45.410 --> 00:01:48.270
+The last way that we can
+add privileges to a role
+
+44
+00:01:48.270 --> 00:01:51.290
+is by granting roles to a role.
+
+45
+00:01:51.290 --> 00:01:57.710
+And by "roles," I mean the
+roles that a role inherits from.
+
+46
+00:01:57.710 --> 00:02:00.220
+So in this case,
+grantRolesToRole
+
+47
+00:02:00.220 --> 00:02:01.880
+takes in the name
+of the role we want
+
+48
+00:02:01.880 --> 00:02:05.850
+to add inherited roles to,
+and then just an array of all
+
+49
+00:02:05.850 --> 00:02:08.139
+the inherited roles
+we want to add.
+
+50
+00:02:08.139 --> 00:02:12.409
+In this example I am adding
+the readWriteAnyDatabase role
+
+51
+00:02:12.409 --> 00:02:14.700
+to the internRole, which of
+course we don't want to do.
+
+52
+00:02:14.700 --> 00:02:16.870
+So I'm not going to run it.

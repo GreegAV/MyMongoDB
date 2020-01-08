@@ -1,0 +1,31 @@
+By now you should have a pretty good understanding of user authorization with MongoDB.
+
+We're now ready to take our new knowledge and apply it with a real world example.
+
+For this demonstration, we're going to imagine that we have a technology organization with four users of our database.
+
+Each of these users will have different rules according to the different responsibilities that they have.
+
+So here's our imaginary organization.
+
+First, we have Alice.
+
+She's a security officer.
+
+Next, we have Ben.
+
+He's the sysadmin.
+
+Then we have Carol.
+
+She's our DBA.
+
+And finally, we have Dan.
+
+Dan's an intern, and he does most of the work on the team, but he can only touch one specific database.
+
+We don't want him messing up the configuration of the system or anything.
+
+So for all these users, we should be able to get by only using the available built-in rules with MongoDB.
+
+Let's go ahead and start by booting up a cluster with authorization enabled.

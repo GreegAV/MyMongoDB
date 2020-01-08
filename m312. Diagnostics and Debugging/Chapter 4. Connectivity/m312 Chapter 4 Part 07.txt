@@ -1,0 +1,97 @@
+Another event that might cause connections to drop is the high availability mechanism itself, especially around elections.
+
+When we elect a new primary, something happens.
+
+And you should, at the very least, drop some corrections.
+
+Let's see about that.
+
+Replica sets exist to allow our application to remain active in case of server failure.
+
+Once our primary is disconnected, either for maintenance or due to unplanned system shut down, our application is capable of staying up because there's an election process in place where a new member of the node will become the primary.
+
+And the application will know who to connect to.
+
+Now, there is something that happens here that the application needs to be aware of.
+
+The previous primary is no longer available.
+
+So you should know about it and connect to the new primary.
+
+So let's see this in action.
+
+And let's simulate in an environment where we have a replica set to do that.
+
+First thing I'm going to do is create a folder called, conns replica set, or connsrepl, in this case, where I'm going to hold all the data of my replica nodes.
+
+Second step is to create the replica set using a launch.
+
+Then I'm going to name here, conns.
+
+And I'm going to store all that data in this newly created folder.
+
+On a separate tab, I can launch my mongostats with dash, dash, discover to allow me to connect to a node and then discover all the replica set, or even shared member that are affected to this particular node that I'm connecting to.
+
+So here, once I connect to this node, I can see that there's a repl status here that allows me to know one of these particular nodes is a primary, another secondary, another secondary.
+
+Now what I'm going to do is pick up my script and create a connection to this replica set.
+
+So I'm seeing 600 different connections.
+
+So I can see that all my nodes are going to be connected by this script.
+
+If I go into the system and ask for, who is primary right now, I can see it's 27,000.
+
+Once I know who my primary is, which is 27,000, I will tell it to step down.
+
+So you will no longer become primary.
+
+You will relinquish that role to another member of the set.
+
+After we step down, we can see that, in our application, a few errors have been merged.
+
+Now what the system will tell us one of two things.
+
+Either it will not be able to complete the operation it's trying to do because this node is not master.
+
+So it will attempt to run an operation against the secondary.
+
+So the previous machine was a primary, no longer primary, needs to reconnect.
+
+But all in-flight operations will either get a not master error or will get an out to reconnect exception on your client application.
+
+By throwing you this not master error or the out to reconnect exception, is mode is basically telling you, hey, you are no longer connected to a primary.
+
+What do you want to do now?
+
+All subsequent connections, or instructions let's say, will go through no problem.
+
+Because the system will know who to reconnect after getting the first error message.
+
+So the driver will take care of that for you.
+
+For all in-flight operations, those will need to be decided by the application what to do with them.
+
+So look for those kind of error messages from in your code if you're a developer.
+
+Or if you are dba, please make sure your developers know about this and not assuming that mongodb will handle all things related with in-flight operations.
+
+Again, mongodb will not try to outsmart you.
+
+One thing that we could do is making our application aware of the exceptions by capturing those and doing something about it.
+
+In this case, we will just need to say, well I can handle this no problem since we are only reading.
+
+But if you imagine any right that could appear within this block of code, we will need to know what do we want to do about it.
+
+Do we want to retry the operation?
+
+Do we just want to discard it and try it later?
+
+Or are we just not going to be dealing with that?
+
+Mongodb will not be smarter than you on those situations.
+
+It will let you decide what you want to do.
+
+Keep that in mind for your application building in a future.

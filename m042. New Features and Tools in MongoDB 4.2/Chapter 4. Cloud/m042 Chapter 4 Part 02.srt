@@ -1,0 +1,453 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.450
+In MongoDB 4.2, when
+a tree node replica
+
+3
+00:00:03.450 --> 00:00:05.490
+set is in a state where
+two nodes are performing
+
+4
+00:00:05.490 --> 00:00:08.520
+an initial sync, the replica set
+will no longer have a primary,
+
+5
+00:00:08.520 --> 00:00:12.090
+and therefore won't
+accept writes.
+
+6
+00:00:12.090 --> 00:00:15.240
+That is, where we used to have
+primary Startup 2 and Startup
+
+7
+00:00:15.240 --> 00:00:19.440
+2, we now have secondary
+Startup 2 and Startup 2.
+
+8
+00:00:19.440 --> 00:00:21.930
+Startup 2 lets you continue
+to write your replica set.
+
+9
+00:00:21.930 --> 00:00:23.760
+When the replica set
+is in this state,
+
+10
+00:00:23.760 --> 00:00:25.230
+you can now
+reconfigure the replica
+
+11
+00:00:25.230 --> 00:00:29.010
+set to have a single voting
+node using automation.
+
+12
+00:00:29.010 --> 00:00:31.320
+So now when a replica
+set is in this state,
+
+13
+00:00:31.320 --> 00:00:33.950
+you can perform a
+reconfiguration, if needed,
+
+14
+00:00:33.950 --> 00:00:36.740
+so that the number of
+voting nodes is equal to 1,
+
+15
+00:00:36.740 --> 00:00:39.390
+and the replica set will
+continue to accept writes.
+
+16
+00:00:39.390 --> 00:00:41.730
+It's important to note
+that your client may not
+
+17
+00:00:41.730 --> 00:00:44.730
+acknowledge writes if you're
+using a custom write concern
+
+18
+00:00:44.730 --> 00:00:45.710
+value.
+
+19
+00:00:45.710 --> 00:00:47.190
+That is to say,
+that if specifying
+
+20
+00:00:47.190 --> 00:00:49.170
+a write concern where
+more than one node needs
+
+21
+00:00:49.170 --> 00:00:50.400
+to acknowledge the write--
+
+22
+00:00:50.400 --> 00:00:54.180
+w:2, for instance-- a replica
+set with one voting member will
+
+23
+00:00:54.180 --> 00:00:57.120
+not acknowledge any writes
+until that write concern can be
+
+24
+00:00:57.120 --> 00:00:58.290
+satisfied.
+
+25
+00:00:58.290 --> 00:01:01.770
+W majority and W1 writes
+will be successful
+
+26
+00:01:01.770 --> 00:01:04.260
+if the replica set has
+a single voting node.
+
+27
+00:01:04.260 --> 00:01:06.130
+For more information
+on write concerns,
+
+28
+00:01:06.130 --> 00:01:08.530
+please refer to
+our documentation.
+
+29
+00:01:08.530 --> 00:01:11.910
+Another new feature in Ops
+Manager 4.2 Account Manager
+
+30
+00:01:11.910 --> 00:01:13.350
+are service users.
+
+31
+00:01:13.350 --> 00:01:15.990
+Remember, Cloud Manager and
+Ops Manager organizations
+
+32
+00:01:15.990 --> 00:01:18.360
+can contain multiple projects.
+
+33
+00:01:18.360 --> 00:01:21.420
+And projects can contain
+multiple clusters.
+
+34
+00:01:21.420 --> 00:01:23.720
+Previously, you could
+only generate API keys
+
+35
+00:01:23.720 --> 00:01:24.700
+at a project level.
+
+36
+00:01:24.700 --> 00:01:27.630
+Also, there was no granularity
+with regard to access control
+
+37
+00:01:27.630 --> 00:01:29.160
+with these API keys.
+
+38
+00:01:29.160 --> 00:01:31.890
+This meant that if a user was
+given an API key associated
+
+39
+00:01:31.890 --> 00:01:35.110
+with a project, they had access
+to a full range of features,
+
+40
+00:01:35.110 --> 00:01:37.200
+including closer administration.
+
+41
+00:01:37.200 --> 00:01:39.300
+Also, previously,
+personal API keys
+
+42
+00:01:39.300 --> 00:01:41.850
+were not visible to
+the Ops Manager admins.
+
+43
+00:01:41.850 --> 00:01:44.070
+This meant that if a
+person left the company
+
+44
+00:01:44.070 --> 00:01:46.020
+and you had revoked
+their LDAP access,
+
+45
+00:01:46.020 --> 00:01:48.690
+they could still
+use their API key.
+
+46
+00:01:48.690 --> 00:01:50.397
+Given the principle
+of least privilege,
+
+47
+00:01:50.397 --> 00:01:51.855
+we only want to
+grant authorization
+
+48
+00:01:51.855 --> 00:01:54.100
+to a user as needed.
+
+49
+00:01:54.100 --> 00:01:56.440
+Sometimes we need to
+programmatically retrieve data,
+
+50
+00:01:56.440 --> 00:01:59.650
+but have no need to make changes
+to the cluster or to the users,
+
+51
+00:01:59.650 --> 00:02:01.030
+for instance.
+
+52
+00:02:01.030 --> 00:02:02.980
+So what are service users?
+
+53
+00:02:02.980 --> 00:02:06.750
+They are a way for you to assign
+API keys at organization level
+
+54
+00:02:06.750 --> 00:02:09.240
+and grant permissions
+to the API key.
+
+55
+00:02:09.240 --> 00:02:11.700
+You can do this directly
+from the Cloud Manager or Ops
+
+56
+00:02:11.700 --> 00:02:12.790
+Manager UI.
+
+57
+00:02:12.790 --> 00:02:15.330
+There are five different
+organization permissions
+
+58
+00:02:15.330 --> 00:02:19.200
+we can grant to an API key, the
+first being Organization Owner.
+
+59
+00:02:19.200 --> 00:02:22.600
+The Organization Owner has root
+access to the organization,
+
+60
+00:02:22.600 --> 00:02:24.990
+including the project
+owner role to all projects
+
+61
+00:02:24.990 --> 00:02:26.550
+in the organization.
+
+62
+00:02:26.550 --> 00:02:28.380
+This service user
+also has access
+
+63
+00:02:28.380 --> 00:02:32.150
+to administrator organization
+settings, users and teams,
+
+64
+00:02:32.150 --> 00:02:34.680
+and access to delete the
+organization permissions
+
+65
+00:02:34.680 --> 00:02:37.080
+granted to the roles below.
+
+66
+00:02:37.080 --> 00:02:40.020
+The organization Project Creator
+provides project creation
+
+67
+00:02:40.020 --> 00:02:41.850
+access, as well as
+permissions being
+
+68
+00:02:41.850 --> 00:02:44.520
+granted to the
+organization member role.
+
+69
+00:02:44.520 --> 00:02:46.200
+The Organization
+Billing Admin role
+
+70
+00:02:46.200 --> 00:02:48.570
+provides access to administrator
+billing information
+
+71
+00:02:48.570 --> 00:02:51.090
+for the organization, as well
+as all permissions granted
+
+72
+00:02:51.090 --> 00:02:53.370
+to the organization member role.
+
+73
+00:02:53.370 --> 00:02:55.620
+The Organization Read
+Only role provides access
+
+74
+00:02:55.620 --> 00:02:57.460
+to everything in
+the organization,
+
+75
+00:02:57.460 --> 00:03:00.040
+including all projects
+in that organization.
+
+76
+00:03:00.040 --> 00:03:02.100
+And finally, the
+Organization Member role
+
+77
+00:03:02.100 --> 00:03:05.130
+provides read only access to
+the organization, including
+
+78
+00:03:05.130 --> 00:03:07.440
+settings, users, and billing.
+
+79
+00:03:07.440 --> 00:03:10.710
+Remember, API keys are only used
+for accessing this information
+
+80
+00:03:10.710 --> 00:03:11.670
+programmatically.
+
+81
+00:03:11.670 --> 00:03:13.540
+You can still get all
+of this information
+
+82
+00:03:13.540 --> 00:03:15.000
+and perform all
+of the tasks we've
+
+83
+00:03:15.000 --> 00:03:18.460
+listed through Declare
+Manager and Ops Manager UI.
+
+84
+00:03:18.460 --> 00:03:19.680
+So let's recap.
+
+85
+00:03:19.680 --> 00:03:21.270
+Ops Manager 4.2
+and Cloud Manager
+
+86
+00:03:21.270 --> 00:03:23.550
+provide two new features.
+
+87
+00:03:23.550 --> 00:03:26.160
+Automation Now allows you
+to reconfigure a tree node
+
+88
+00:03:26.160 --> 00:03:29.220
+replica set where two nodes
+are performing initial sync so
+
+89
+00:03:29.220 --> 00:03:30.863
+that you have one voting member.
+
+90
+00:03:30.863 --> 00:03:32.280
+This ensures that
+your replica set
+
+91
+00:03:32.280 --> 00:03:35.040
+can take writes while
+it's in this state.
+
+92
+00:03:35.040 --> 00:03:37.050
+We've also added
+service users, which
+
+93
+00:03:37.050 --> 00:03:39.510
+are a way for you to
+assign roles to API keys
+
+94
+00:03:39.510 --> 00:03:42.540
+at organization level to
+allow finer-grained access
+
+95
+00:03:42.540 --> 00:03:45.410
+control for your applications.

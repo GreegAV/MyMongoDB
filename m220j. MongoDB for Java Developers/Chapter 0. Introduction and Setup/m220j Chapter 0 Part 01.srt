@@ -1,0 +1,589 @@
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:01.092
+Hello.
+
+3
+00:00:01.092 --> 00:00:03.300
+In this lesson, we're going
+to review our application
+
+4
+00:00:03.300 --> 00:00:05.550
+architecture and
+functionality, as well
+
+5
+00:00:05.550 --> 00:00:09.660
+as some tools that we'll use to
+build and test the application.
+
+6
+00:00:09.660 --> 00:00:12.180
+You will be working on
+MFlix, a service that
+
+7
+00:00:12.180 --> 00:00:14.910
+allows users to browse
+for their favorite movies,
+
+8
+00:00:14.910 --> 00:00:17.610
+see the movie reviews, and
+leave their own impressions
+
+9
+00:00:17.610 --> 00:00:20.880
+about a given motion
+picture for others to see.
+
+10
+00:00:20.880 --> 00:00:23.097
+To get access to the
+app and the tickets
+
+11
+00:00:23.097 --> 00:00:24.930
+that you will be working
+on, please download
+
+12
+00:00:24.930 --> 00:00:28.000
+the handout available
+for this lesson.
+
+13
+00:00:28.000 --> 00:00:29.610
+In it, you will find
+all the material
+
+14
+00:00:29.610 --> 00:00:32.159
+that will be used
+throughout this course.
+
+15
+00:00:32.159 --> 00:00:34.260
+At the top level of
+the MFlix Java handout,
+
+16
+00:00:34.260 --> 00:00:36.150
+you will find a
+README file, which
+
+17
+00:00:36.150 --> 00:00:38.310
+helps you setup all the
+necessary components
+
+18
+00:00:38.310 --> 00:00:41.460
+and dependencies that you
+need for MFlix to function.
+
+19
+00:00:41.460 --> 00:00:43.710
+When you set everything up,
+please follow the README
+
+20
+00:00:43.710 --> 00:00:44.510
+carefully.
+
+21
+00:00:44.510 --> 00:00:46.890
+And if you hit any roadblocks,
+remember to check out
+
+22
+00:00:46.890 --> 00:00:49.020
+the class online forum.
+
+23
+00:00:49.020 --> 00:00:51.564
+Before we talk about the
+front and back-end components,
+
+24
+00:00:51.564 --> 00:00:52.980
+it is important
+to mention that we
+
+25
+00:00:52.980 --> 00:00:56.370
+will be using Maven to aid
+in compiling and managing
+
+26
+00:00:56.370 --> 00:01:00.660
+our code, and Spring Boot as the
+framework for our application.
+
+27
+00:01:00.660 --> 00:01:02.430
+The files pertaining
+to Maven are
+
+28
+00:01:02.430 --> 00:01:05.900
+located at the top of
+the MFlix directory.
+
+29
+00:01:05.900 --> 00:01:07.580
+They should not be
+modified for Maven
+
+30
+00:01:07.580 --> 00:01:09.794
+to serve its purpose
+successfully.
+
+31
+00:01:09.794 --> 00:01:11.460
+Feel free to take a
+look at these files.
+
+32
+00:01:11.460 --> 00:01:13.940
+However, you will not
+need to change anything.
+
+33
+00:01:13.940 --> 00:01:16.850
+We will not be covering
+Spring Boot or Maven in-depth
+
+34
+00:01:16.850 --> 00:01:20.180
+in this course feel free to
+explore those tools on your own
+
+35
+00:01:20.180 --> 00:01:22.010
+by following the
+documentation links that
+
+36
+00:01:22.010 --> 00:01:24.080
+are attached to this lesson.
+
+37
+00:01:24.080 --> 00:01:28.160
+Maven allows you to run commands
+and most of the necessary tests
+
+38
+00:01:28.160 --> 00:01:29.480
+from the command line.
+
+39
+00:01:29.480 --> 00:01:35.450
+Simply type mvn test to
+run all the test files,
+
+40
+00:01:35.450 --> 00:01:43.590
+or type mvn spring-boot:run
+to run the application.
+
+41
+00:01:43.590 --> 00:01:46.820
+However, you do not need to
+run tests or launch MFlix
+
+42
+00:01:46.820 --> 00:01:47.970
+from the command line.
+
+43
+00:01:47.970 --> 00:01:50.840
+You can use your ID for
+those tasks just as well.
+
+44
+00:01:50.840 --> 00:01:53.450
+Keep this functionality in
+mind as an alternative way
+
+45
+00:01:53.450 --> 00:01:55.580
+to quickly check your
+progress as you're
+
+46
+00:01:55.580 --> 00:01:58.430
+moving along the
+tickets in this course.
+
+47
+00:01:58.430 --> 00:02:01.520
+As you just saw, the Maven files
+are already complete for you
+
+48
+00:02:01.520 --> 00:02:03.020
+and have full
+functionality, which
+
+49
+00:02:03.020 --> 00:02:05.780
+is why they are marked
+in red in this diagram.
+
+50
+00:02:05.780 --> 00:02:08.900
+That is to signify that they
+won't require any changes
+
+51
+00:02:08.900 --> 00:02:10.789
+throughout this course.
+
+52
+00:02:10.789 --> 00:02:12.980
+The entire app infrastructure
+is built for you
+
+53
+00:02:12.980 --> 00:02:16.280
+under the source within
+the main directory.
+
+54
+00:02:16.280 --> 00:02:17.780
+Before we get to
+look at that, it
+
+55
+00:02:17.780 --> 00:02:19.790
+is important to address
+the testing of the app
+
+56
+00:02:19.790 --> 00:02:22.070
+functionality that
+you will be building.
+
+57
+00:02:22.070 --> 00:02:23.820
+The unit tests are
+created for you,
+
+58
+00:02:23.820 --> 00:02:26.060
+and are placed in
+the test folder.
+
+59
+00:02:26.060 --> 00:02:28.310
+When working on
+the tickets, first
+
+60
+00:02:28.310 --> 00:02:29.960
+read the ticket description.
+
+61
+00:02:29.960 --> 00:02:32.390
+Then to verify
+your understanding,
+
+62
+00:02:32.390 --> 00:02:37.520
+check out the respective unit
+test in the test java mflix api
+
+63
+00:02:37.520 --> 00:02:38.930
+daos directory.
+
+64
+00:02:38.930 --> 00:02:40.640
+For every ticket
+that you complete,
+
+65
+00:02:40.640 --> 00:02:43.470
+there is always a
+corresponding test file.
+
+66
+00:02:43.470 --> 00:02:46.160
+You may notice that there is
+an additional folder called
+
+67
+00:02:46.160 --> 00:02:48.530
+lessons under the
+test directory.
+
+68
+00:02:48.530 --> 00:02:50.870
+This folder contains
+example code
+
+69
+00:02:50.870 --> 00:02:53.660
+that will be used throughout
+the course during lectures.
+
+70
+00:02:53.660 --> 00:02:57.840
+You may use the files in this
+directory to follow along.
+
+71
+00:02:57.840 --> 00:03:01.730
+Now, we can finally address the
+front and back-end components
+
+72
+00:03:01.730 --> 00:03:03.590
+of our application.
+
+73
+00:03:03.590 --> 00:03:07.040
+Follow me along this
+journey up and back
+
+74
+00:03:07.040 --> 00:03:09.380
+down the directory tree.
+
+75
+00:03:09.380 --> 00:03:12.650
+We need to get back to source,
+then get on our merry way
+
+76
+00:03:12.650 --> 00:03:14.180
+to main.
+
+77
+00:03:14.180 --> 00:03:15.830
+Since your assignments
+for this course
+
+78
+00:03:15.830 --> 00:03:17.930
+will be tickets that
+focus on the API
+
+79
+00:03:17.930 --> 00:03:21.170
+implementation and the app
+to database communication,
+
+80
+00:03:21.170 --> 00:03:23.930
+there will be no need to modify
+the front-end files, which
+
+81
+00:03:23.930 --> 00:03:26.450
+are all located
+under the resources
+
+82
+00:03:26.450 --> 00:03:27.830
+in the build directory.
+
+83
+00:03:27.830 --> 00:03:29.660
+However, you will,
+at some point,
+
+84
+00:03:29.660 --> 00:03:32.810
+have to make changes to the
+application properties file,
+
+85
+00:03:32.810 --> 00:03:35.490
+as you hopefully
+saw in the README.
+
+86
+00:03:35.490 --> 00:03:37.530
+So where are the tickets?
+
+87
+00:03:37.530 --> 00:03:39.930
+The files you will be working
+on to complete the tickets
+
+88
+00:03:39.930 --> 00:03:45.120
+are located under the java
+mflix api daos directory.
+
+89
+00:03:45.120 --> 00:03:47.790
+You will see other files
+and folders along the way.
+
+90
+00:03:47.790 --> 00:03:50.430
+Pay no attention to them,
+as they are set in stone,
+
+91
+00:03:50.430 --> 00:03:53.490
+and do not need to be
+modified for the app to work.
+
+92
+00:03:53.490 --> 00:03:57.930
+In daos, you will find
+the Movies.Dao, UsersDao,
+
+93
+00:03:57.930 --> 00:03:59.075
+and other files.
+
+94
+00:03:59.075 --> 00:04:00.450
+These are the
+files that you will
+
+95
+00:04:00.450 --> 00:04:02.970
+need to edit to complete
+your tickets, adding
+
+96
+00:04:02.970 --> 00:04:05.460
+awesome functionality
+to MFlix, to the delight
+
+97
+00:04:05.460 --> 00:04:08.460
+of its users and yourself.
+
+98
+00:04:08.460 --> 00:04:10.260
+Once a ticket is
+complete, remember
+
+99
+00:04:10.260 --> 00:04:12.960
+to extend beyond the unit
+test and observe the added
+
+100
+00:04:12.960 --> 00:04:17.050
+functionality by using
+the MFlix user interface.
+
+101
+00:04:17.050 --> 00:04:18.880
+Given that we're
+working in Java,
+
+102
+00:04:18.880 --> 00:04:21.519
+it is important to mention
+how the strongly-typed nature
+
+103
+00:04:21.519 --> 00:04:24.730
+of Java will affect some
+aspects of our development.
+
+104
+00:04:24.730 --> 00:04:27.490
+If you're not familiar of
+the term strongly-typed,
+
+105
+00:04:27.490 --> 00:04:30.430
+feel free to pause this video
+and follow the linked below
+
+106
+00:04:30.430 --> 00:04:32.740
+to get a brief
+overview of the term.
+
+107
+00:04:32.740 --> 00:04:35.080
+As you know, when
+working with Java,
+
+108
+00:04:35.080 --> 00:04:37.630
+you have to declare a
+data type for every object
+
+109
+00:04:37.630 --> 00:04:40.390
+that you create, and
+that object is then
+
+110
+00:04:40.390 --> 00:04:43.180
+bound to the declared data type.
+
+111
+00:04:43.180 --> 00:04:44.890
+From the previous
+lesson, you also
+
+112
+00:04:44.890 --> 00:04:47.530
+know that MongDB's
+almost the exact opposite
+
+113
+00:04:47.530 --> 00:04:50.320
+of that, and almost
+any field can have
+
+114
+00:04:50.320 --> 00:04:53.230
+different data types as values.
+
+115
+00:04:53.230 --> 00:04:56.980
+While the difference between
+types like int and long
+
+116
+00:04:56.980 --> 00:04:59.800
+shouldn't be an issue
+when parsing data in Java,
+
+117
+00:04:59.800 --> 00:05:02.780
+we might run into issues
+with other data types.
+
+118
+00:05:02.780 --> 00:05:04.430
+This is important
+to keep in mind,
+
+119
+00:05:04.430 --> 00:05:05.890
+and we will certainly
+be addressing
+
+120
+00:05:05.890 --> 00:05:08.380
+this in a separate
+lesson down the line.
+
+121
+00:05:08.380 --> 00:05:11.410
+This is the end of our
+brief overview of the MFlix
+
+122
+00:05:11.410 --> 00:05:13.560
+architecture.

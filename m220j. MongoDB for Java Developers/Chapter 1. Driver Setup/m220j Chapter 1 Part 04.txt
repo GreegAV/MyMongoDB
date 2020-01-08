@@ -1,0 +1,125 @@
+In this lesson, we are going to connect your newly created Atlas cluster to MongoDB Compass and explore some of the functionality of Compass.
+
+If you don't have Compass on your machine, please download it by following the link below.
+
+First, let's connect to our Atlas cluster.
+
+After following the read me, your cluster should look something like this.
+
+In Atlas, hit Connect under the cluster name.
+
+And then connect with MongoDB Compass.
+
+If you have Compass open when you're doing this, you'll notice a message pop-up saying that a MongoDB connection string is detected.
+
+If you click on Yes, most of the information required for the connection will be filled in for you.
+
+The only thing that you will have to specify is the password.
+
+Otherwise, make sure that the filled in information corresponds to what is provided for you below the video.
+
+And hit Connect.
+
+Once connected, you should be able to see the databases available to you.
+
+Admin and local are default databases and are already in place when you create a cluster.
+
+Let's take a look at mflix, which we recently imported.
+
+You can select the database that you're interested in either from the left menu, where you can also get the list of the collections in the database, or by clicking on the database in the right section of the screen.
+
+Today, we will explore the movies collection.
+
+This is the Documents tab that gives you a preview of the documents in the collection.
+
+Here, you can see that there is a document with a film titled Carmencita with a cast of one person, Carmencita, a poster located at the given URL, and so on.
+
+Not all documents have all the same fields as this one.
+
+And various fields contain various data types in them.
+
+You can explore this tab later on your own time.
+
+To get a better overview of the various data types that are involved in the movies collection, we will check out the Schema tab in Compass.
+
+But, first, let's clarify what schema means.
+
+Schema is structure.
+
+And in case of MongoDB, it is document structure.
+
+MongoDB is a flexible schema database, which simply means that the structure isn't enforced unless you tell it so.
+
+For example, you can see that in this document some fields are present in all documents and some aren't.
+
+Let's move on to the Schema tab.
+
+Hit Analyze Schema.
+
+Analyze Schema gives us a summary of the document structure based on a sample of 1,000 documents in the collection.
+
+This allows us to explore another aspect of a schema flexible database, which is that you can create collections with fields that have varying value types across different documents without getting an error.
+
+The left column represents the field names and data types.
+
+The right column gives us a general summary about the values these fields hold.
+
+For example, if we look at the awards field, we can see that some of the values are strings, while some are undefined.
+
+And if you look at the graph on the right and you hover over some of the values there, you see that 10% of the films have one nomination, 6% have two wins, and so on.
+
+The cast field is a bit different and seems to be mostly array values with a small fraction of the values having an undefined type.
+
+An array does not give us quite enough information about the field, which is why underneath that label you can see string label, which tells us that the values in these arrays are of type string.
+
+Clicking from one to another gives us a different kind of summary on the right.
+
+With array, we get the summary about arrays.
+
+With string, we get the sample of string values.
+
+Other interesting data types that we can observe here are date, integer, and document, which you can explore in a similar way.
+
+You can use the Schema tab to get an idea of the documents and data types that you will be dealing with.
+
+Another useful Compass feature is located in the Aggregations tab.
+
+If you don't have the latest version of Compass, but you want to have access to this feature, feel free to pause this video and update your version of Compass to any version above 1.14.
+
+Throughout this course, you will be exposed to and will work with different types of MongoDB queries.
+
+The Aggregations tab in Compass helps to organize, construct, save, and more when working with aggregation queries.
+
+You will cover the details of how exactly an aggregation query works later in this course.
+
+For the purposes of this lecture, I'm going to create a simple query looking for all documents whose director field value matches Sam Raimi, the great director of the Army of Darkness and other masterpieces.
+
+What if I wanted to use this query in my code somewhere?
+
+We can do that, too.
+
+Hit the Menu icon on the right of SAVE PIPELINE, and select Export To Language.
+
+Feel free to look at the other options in that drop down menu in your spare time.
+
+They are all addressed in our documentation in the link below.
+
+To use this query in your application, you selected Export To Language.
+
+And, now, you can select the language of your choice, which in our case is Java.
+
+Success.
+
+You can now copy a line of Java code into your Java-based application.
+
+And if you haven't yet import to the libraries necessary for MongoDB and Java to communicate, you can select Include Import Statements to see which tools are needed for this particular query to run successfully.
+
+You can then copy, paste this in the appropriate section of your application and get along with your development.
+
+You can check out the documentation for this feature by following the linked below.
+
+Feel free to experiment with these features and try them out on your own before moving on to the next lecture.
+
+This is the end of our Compass Basics lesson.
+
+Enjoy what follows.

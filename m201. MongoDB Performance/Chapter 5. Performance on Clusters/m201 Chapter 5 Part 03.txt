@@ -1,0 +1,87 @@
+Next, let's talk about frequency.
+
+Not only is it important that we have a large number of different values for our shard key, but we also want to make sure that there's an even distribution for each value.
+
+If certain values come into our system more often than others, then we won't have an even amount of load across our cluster.
+
+This limits the effectiveness of our ability to scale the handling of incoming reads and writes.
+
+If for example, we built an application where the majority of the people using it had the last name Brown, then the throughput of our application would be constrained by the shard containing those values.
+
+We define this as a hot shard.
+
+Furthermore, the chunks containing our frequently appearing values would grow larger and larger.
+
+Typically, when a chunk gets close to its maximum size, MongoDB will then split it into two chunks.
+
+However, if a chunk is created where the lower and upper bounds are the same, then that chunk is no longer eligible for splitting.
+
+We call these jumbo chunks.
+
+These reduce the effectiveness of horizontal scaling, because we won't be able to move these chunks between shards.
+
+The issue of uneven frequency can be mitigated if we create a good compound shard key.
+
+You want to make sure that the fields at the beginning of your shard key still have high cardinality.
+
+But by compounding the key, we're able to effectively distribute the frequency of popular values.
+
+And finally, we have rate of change.
+
+Here, we're going to talk about how our values change over time.
+
+The key here is that we want to avoid monotonically increasing or decreasing values in our shard key.
+
+Monotonically means in a way that either is always increasing or always decreasing.
+
+The classic example of this is obectID.
+
+Because of the way that objectID is designed, new object IDs will always increase in value.
+
+Keep this in mind if you're using underscore IDs default data type, objectID, as your shard key.
+
+As you can see, when we have a monotonically increasing shard key, all of our writes are going to the same shard, the shard that contains the chunk where the upper bound is max key.
+
+As you can see, when we have a monotonically increasing shard key, all of our writes are going to the same shard.
+
+This is the shard that contains the upper bound of max key, which is often referred to as the last shard.
+
+If we were to have a monotonically decreasing value, then all of our writes would be coming in to this shard, the shard where the lower bound is set to min key, our first shard.
+
+Now, its OK to have a monotonically increasing value in your shard key, as long as it's not the first field.
+
+Adding a monotonically increasing value to the end of our shard key actually is a great idea, because it increases the total cardinality of our shard key since it's guaranteed to always be unique.
+
+Now let's spend some time talking about bulk writes in a shard cluster.
+
+When we make bulk writes into MongoDB, we have to specify whether we want those writes to be ordered or unordered.
+
+With an ordered bulk write, the server is going to execute these operations one after another, waiting for the last response to succeed before executing the next.
+
+If an operation fails, we immediately stop the bulk insertion and report back to the client.
+
+With an unordered bulk write, the server can execute all these operations in parallel.
+
+Now, with a sharded cluster, ordered bulk writes can be an issue because we have to wait for the last operation to complete before we can execute the next.
+
+While both replica sets and sharded clusters would both work in this way, the difference between the two is that in a replica set, these operations will be processed entirely in one machine, the primary.
+
+While in a sharded cluster, we are bound to the response time of each shard.
+
+So with a sharded cluster, the latency in between executing an operation and it's response is increased, since the write is being performed on a different machine.
+
+On the other hand, with an unordered bulk write, we can execute all of our operations in parallel, maintaining the distributed benefits that we get with a sharded cluster.
+
+It's important to note that with a bulk write in a sharded cluster, the Mongos is going to need to deserialize these write operations into the corresponding nodes.
+
+This means that the mongos will have to send each write operation to each individual shard.
+
+And that should give you a good overview of increasing your performance with sharding.
+
+Let's recap what we've learned.
+
+We talked about the differences between horizontal and vertical scaling.
+
+We also discussed some important rules to keep in mind when you're designing a shard key, as it's the most important part of sharding.
+
+And then finally, we discussed bulk inserts and some of the differences that you'll see when doing bulk inserts on a sharded cluster.

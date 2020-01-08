@@ -1,0 +1,394 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.390
+OK, let's talk about something
+that doesn't come up often,
+
+3
+00:00:03.390 --> 00:00:04.620
+but which does come up.
+
+4
+00:00:04.620 --> 00:00:08.370
+The interaction between
+write concern and throughput.
+
+5
+00:00:08.370 --> 00:00:12.090
+When using write concern, which
+you almost certainly should do,
+
+6
+00:00:12.090 --> 00:00:15.930
+the server must acknowledge
+each write back to the driver.
+
+7
+00:00:15.930 --> 00:00:18.180
+That acknowledgement can
+be delayed, or otherwise
+
+8
+00:00:18.180 --> 00:00:19.870
+not returned, for any
+number of reasons,
+
+9
+00:00:19.870 --> 00:00:22.350
+but it's possible to create
+cluster architectures that
+
+10
+00:00:22.350 --> 00:00:25.110
+can outright prevent
+acknowledgement when
+
+11
+00:00:25.110 --> 00:00:27.420
+even a single server goes down.
+
+12
+00:00:27.420 --> 00:00:29.010
+It's also possible
+to set things up
+
+13
+00:00:29.010 --> 00:00:30.960
+so that reasonable
+delays in acknowledgement
+
+14
+00:00:30.960 --> 00:00:32.350
+result in errors.
+
+15
+00:00:32.350 --> 00:00:33.900
+Let's take a look.
+
+16
+00:00:33.900 --> 00:00:36.490
+In write concern, we
+have a W parameter.
+
+17
+00:00:36.490 --> 00:00:38.340
+It specifies how
+many servers need
+
+18
+00:00:38.340 --> 00:00:41.420
+to perform the write before
+it gets acknowledged.
+
+19
+00:00:41.420 --> 00:00:45.750
+In write concern, we
+have this W parameter.
+
+20
+00:00:45.750 --> 00:00:47.460
+It specifies how
+many servers need
+
+21
+00:00:47.460 --> 00:00:50.580
+to perform the write before
+it gets acknowledged.
+
+22
+00:00:50.580 --> 00:00:54.000
+The default write
+concern is w: 1.
+
+23
+00:00:54.000 --> 00:00:56.340
+This means that the driver
+receives acknowledgement
+
+24
+00:00:56.340 --> 00:00:58.320
+from the primary
+once it, the primary,
+
+25
+00:00:58.320 --> 00:00:59.640
+has performed the write.
+
+26
+00:00:59.640 --> 00:01:01.560
+This is acceptable
+for some use cases,
+
+27
+00:01:01.560 --> 00:01:04.080
+but it's mathematically
+possible for that server
+
+28
+00:01:04.080 --> 00:01:07.380
+to go down before the write has
+made it to any other servers.
+
+29
+00:01:07.380 --> 00:01:08.940
+In cases where the
+application needs
+
+30
+00:01:08.940 --> 00:01:11.850
+to be robust against any
+single point of failure,
+
+31
+00:01:11.850 --> 00:01:15.390
+it's necessary to use a
+write concern of two or more.
+
+32
+00:01:15.390 --> 00:01:18.030
+Under almost all such cases,
+the preferred write concern
+
+33
+00:01:18.030 --> 00:01:19.440
+is majority.
+
+34
+00:01:19.440 --> 00:01:21.960
+This ensures that acknowledged
+writes will be durable,
+
+35
+00:01:21.960 --> 00:01:25.440
+except in cases where you lose
+a majority of your servers.
+
+36
+00:01:25.440 --> 00:01:27.661
+Note that I'm being very
+precise about my language.
+
+37
+00:01:27.661 --> 00:01:29.910
+It doesn't necessarily
+guarantee that your writes will
+
+38
+00:01:29.910 --> 00:01:32.670
+get acknowledged, even if
+your primary, which requires
+
+39
+00:01:32.670 --> 00:01:35.130
+a majority of votes, is up.
+
+40
+00:01:35.130 --> 00:01:38.280
+At least not for all
+architectures, as we'll see.
+
+41
+00:01:38.280 --> 00:01:40.410
+By the way, I'm going to
+focus on write concern,
+
+42
+00:01:40.410 --> 00:01:43.110
+but this applies to
+read concern as well,
+
+43
+00:01:43.110 --> 00:01:44.902
+for architectures that use it.
+
+44
+00:01:44.902 --> 00:01:46.110
+Let's dig in a little deeper.
+
+45
+00:01:46.110 --> 00:01:48.010
+Starting with w: 1.
+
+46
+00:01:48.010 --> 00:01:50.880
+First, our driver
+sends out a write,
+
+47
+00:01:50.880 --> 00:01:53.070
+then the server
+performs the write,
+
+48
+00:01:53.070 --> 00:01:55.650
+but the acknowledgement
+hasn't yet been sent.
+
+49
+00:01:55.650 --> 00:01:57.930
+This situation
+doesn't last long,
+
+50
+00:01:57.930 --> 00:01:59.640
+because the acknowledgement
+is sent back
+
+51
+00:01:59.640 --> 00:02:01.920
+as fast as the server
+can make it happen.
+
+52
+00:02:01.920 --> 00:02:03.450
+When acknowledgment
+occurs, the data
+
+53
+00:02:03.450 --> 00:02:05.940
+could be in this state
+written to just your primary,
+
+54
+00:02:05.940 --> 00:02:08.190
+or perhaps it's made it
+to one of the secondaries
+
+55
+00:02:08.190 --> 00:02:10.410
+by the time it
+gets acknowledged.
+
+56
+00:02:10.410 --> 00:02:13.710
+I'm just showing you all of the
+possibilities for completeness.
+
+57
+00:02:13.710 --> 00:02:16.710
+Now, what if the write
+concern is majority?
+
+58
+00:02:16.710 --> 00:02:18.630
+Now things get a little
+more interesting.
+
+59
+00:02:18.630 --> 00:02:20.520
+For a three member
+replica set, a majority
+
+60
+00:02:20.520 --> 00:02:23.610
+means two copies of the data,
+each on different servers.
+
+61
+00:02:23.610 --> 00:02:25.800
+So a write has to propagate
+beyond the primary,
+
+62
+00:02:25.800 --> 00:02:27.870
+and then that fact has
+to get communicated back
+
+63
+00:02:27.870 --> 00:02:30.720
+to the primary before
+it can be acknowledged.
+
+64
+00:02:30.720 --> 00:02:33.200
+So, after we write
+to the primary,
+
+65
+00:02:33.200 --> 00:02:35.430
+the secondary
+performs the write,
+
+66
+00:02:35.430 --> 00:02:37.740
+then the secondary
+lets the primary know
+
+67
+00:02:37.740 --> 00:02:40.890
+it's got the write, and then
+the primary can acknowledge
+
+68
+00:02:40.890 --> 00:02:42.760
+that write to the driver.
+
+69
+00:02:42.760 --> 00:02:45.910
+Obviously, it could go to
+the other secondary first,
+
+70
+00:02:45.910 --> 00:02:48.420
+or to both.
+
+71
+00:02:48.420 --> 00:02:50.550
+Now what if there's a partition?
+
+72
+00:02:50.550 --> 00:02:53.430
+It still works fine, because
+it has the other secondary.
+
+73
+00:02:53.430 --> 00:02:56.730
+So, a network partition,
+or a secondary going down,
+
+74
+00:02:56.730 --> 00:02:59.160
+won't cause much of a
+problem, in and of itself,
+
+75
+00:02:59.160 --> 00:03:01.549
+for this vanilla setup.
+
+76
+00:03:01.549 --> 00:03:03.840
+Obviously, things get even
+more complicated when you're
+
+77
+00:03:03.840 --> 00:03:06.300
+dealing with, say, a
+five member replica set,
+
+78
+00:03:06.300 --> 00:03:08.700
+and a write concern of
+majority, but we're not
+
+79
+00:03:08.700 --> 00:03:12.270
+going to go into that
+level of detail here.
+
+80
+00:03:12.270 --> 00:03:14.550
+OK, so that's a description
+of how things generally
+
+81
+00:03:14.550 --> 00:03:16.290
+work in vanilla replica sets.
+
+82
+00:03:16.290 --> 00:03:19.250
+Now we'll talk about
+what can go wrong.

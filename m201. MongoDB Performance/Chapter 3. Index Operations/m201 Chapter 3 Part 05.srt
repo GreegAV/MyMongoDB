@@ -1,0 +1,447 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.620
+So far we've seen that indexes
+are important data structures.
+
+3
+00:00:04.620 --> 00:00:10.040
+They will help us optimize our
+queries and, as a side effect,
+
+4
+00:00:10.040 --> 00:00:12.560
+reduce our response time.
+
+5
+00:00:12.560 --> 00:00:15.110
+If well designed, the usage
+of an index supporting a given
+
+6
+00:00:15.110 --> 00:00:19.040
+query might reduce the response
+time in a few orders magnitude.
+
+7
+00:00:19.040 --> 00:00:21.750
+Let's have a quick example.
+
+8
+00:00:21.750 --> 00:00:23.930
+I have a database
+called London bikes.
+
+9
+00:00:23.930 --> 00:00:26.660
+And in this London
+bikes database,
+
+10
+00:00:26.660 --> 00:00:29.660
+I have these
+rides_other collection
+
+11
+00:00:29.660 --> 00:00:32.990
+where I'm going to just express
+a query looking for all end
+
+12
+00:00:32.990 --> 00:00:36.920
+stations around the
+MongoDB office in London,
+
+13
+00:00:36.920 --> 00:00:41.210
+and see how that behaves.
+
+14
+00:00:41.210 --> 00:00:44.820
+Now if I pull up
+my explain command,
+
+15
+00:00:44.820 --> 00:00:48.530
+I can see that the execution
+time in milliseconds
+
+16
+00:00:48.530 --> 00:00:50.940
+was quite alarming.
+
+17
+00:00:50.940 --> 00:00:57.027
+It took me 7,426
+milliseconds to execute.
+
+18
+00:00:57.027 --> 00:00:58.610
+It did return a few
+amount of results,
+
+19
+00:00:58.610 --> 00:01:01.280
+like almost 20,000 documents.
+
+20
+00:01:01.280 --> 00:01:08.580
+But still, it did a lot of work
+just to find a few documents.
+
+21
+00:01:08.580 --> 00:01:15.770
+And by that, also inadvertently
+got a lot of time to do that.
+
+22
+00:01:15.770 --> 00:01:19.070
+Now after we create an
+index on that same field
+
+23
+00:01:19.070 --> 00:01:22.310
+that we expressed a query
+on, and we write again
+
+24
+00:01:22.310 --> 00:01:25.070
+the same query,
+and also expecting
+
+25
+00:01:25.070 --> 00:01:29.180
+to look into the execution
+stats of our explain command,
+
+26
+00:01:29.180 --> 00:01:37.670
+we can see that we come from
+7,000 milliseconds to only 337.
+
+27
+00:01:37.670 --> 00:01:41.390
+So the usage of a
+single index did
+
+28
+00:01:41.390 --> 00:01:45.260
+reduce in an order of
+magnitude the amount of time
+
+29
+00:01:45.260 --> 00:01:48.600
+that this query took to operate.
+
+30
+00:01:48.600 --> 00:01:52.790
+However, indexes are not
+some sort of black magic.
+
+31
+00:01:52.790 --> 00:01:56.360
+They are data structures
+that our databases use,
+
+32
+00:01:56.360 --> 00:02:01.460
+that will in turn require
+resources to operate.
+
+33
+00:02:01.460 --> 00:02:05.510
+Therefore, it is quite important
+to determine the index size,
+
+34
+00:02:05.510 --> 00:02:08.990
+and what kind of resources will
+be involved in its allocation
+
+35
+00:02:08.990 --> 00:02:10.120
+and operation.
+
+36
+00:02:10.120 --> 00:02:14.450
+In some edge cases where
+we might compromise or do
+
+37
+00:02:14.450 --> 00:02:17.690
+some compromising in
+terms of what we need,
+
+38
+00:02:17.690 --> 00:02:22.400
+in terms of resources to operate
+with those particular indexes.
+
+39
+00:02:22.400 --> 00:02:27.470
+Let's start by looking into how
+can we determine an index size.
+
+40
+00:02:27.470 --> 00:02:31.160
+Using MongoDB Compass, we can
+have a clear understanding
+
+41
+00:02:31.160 --> 00:02:36.620
+of the size of our indexes
+for each one of our databases.
+
+42
+00:02:36.620 --> 00:02:38.450
+Once we select the
+database, we can
+
+43
+00:02:38.450 --> 00:02:40.850
+look into the
+different collections
+
+44
+00:02:40.850 --> 00:02:47.540
+and here, we will have the total
+index size for each collection.
+
+45
+00:02:47.540 --> 00:02:51.290
+Now if we select, for
+example, this one over here,
+
+46
+00:02:51.290 --> 00:02:53.870
+the collection we used before.
+
+47
+00:02:53.870 --> 00:02:57.200
+And if we look into
+our indexes, we
+
+48
+00:02:57.200 --> 00:02:59.990
+can see we have a breakdown
+between the different indexes
+
+49
+00:02:59.990 --> 00:03:02.670
+that support this
+particular collection.
+
+50
+00:03:02.670 --> 00:03:05.390
+We have our _ID,
+our primary key,
+
+51
+00:03:05.390 --> 00:03:09.080
+and obviously the one that we
+recently created on endstation
+
+52
+00:03:09.080 --> 00:03:10.610
+name.
+
+53
+00:03:10.610 --> 00:03:13.070
+We can also, obviously,
+get that information
+
+54
+00:03:13.070 --> 00:03:16.610
+from our MongoDB
+command db.stats,
+
+55
+00:03:16.610 --> 00:03:19.490
+where we are going to
+have the full index size.
+
+56
+00:03:19.490 --> 00:03:21.380
+And obviously,
+per collection, we
+
+57
+00:03:21.380 --> 00:03:25.820
+can also see the index
+size of a given collection,
+
+58
+00:03:25.820 --> 00:03:29.270
+and the different sizes for
+the different in indexes
+
+59
+00:03:29.270 --> 00:03:31.340
+of this collection.
+
+60
+00:03:31.340 --> 00:03:35.860
+Now indexes need two basic
+computational resources.
+
+61
+00:03:35.860 --> 00:03:39.280
+We are going to need disk to
+store the index information,
+
+62
+00:03:39.280 --> 00:03:40.655
+and, obviously,
+we are also going
+
+63
+00:03:40.655 --> 00:03:46.020
+to need memory so we can operate
+with those data structures.
+
+64
+00:03:46.020 --> 00:03:52.340
+In index terms, disks are
+generally not a big issue
+
+65
+00:03:52.340 --> 00:03:55.370
+or they are generally
+not an issue at all.
+
+66
+00:03:55.370 --> 00:03:59.120
+If we don't have space in
+our disk for our index file,
+
+67
+00:03:59.120 --> 00:04:01.660
+apart from having
+larger problems,
+
+68
+00:04:01.660 --> 00:04:05.820
+the indexes would end up
+not been created at all.
+
+69
+00:04:05.820 --> 00:04:08.390
+So if you are restrained
+in terms of disk size,
+
+70
+00:04:08.390 --> 00:04:11.720
+if you ask the system to
+create a particular index.
+
+71
+00:04:11.720 --> 00:04:14.246
+If we don't have space
+for the indexed file,
+
+72
+00:04:14.246 --> 00:04:16.120
+then you don't have a
+problem with the index,
+
+73
+00:04:16.120 --> 00:04:20.660
+you have other, slightly
+more important problems.
+
+74
+00:04:20.660 --> 00:04:23.870
+After the indexes
+have been created,
+
+75
+00:04:23.870 --> 00:04:28.280
+the disk space requirements
+will be a function of your data.
+
+76
+00:04:28.280 --> 00:04:31.430
+Which means that
+you will run out
+
+77
+00:04:31.430 --> 00:04:33.440
+of disk space for
+collection data
+
+78
+00:04:33.440 --> 00:04:38.510
+before having issues with
+space for your indexes.
+
+79
+00:04:38.510 --> 00:04:43.250
+That said, if you are using
+different physical drives
+
+80
+00:04:43.250 --> 00:04:46.730
+in one dedicated
+for your indexes,
+
+81
+00:04:46.730 --> 00:04:50.240
+you do need to make sure
+we have enough resources
+
+82
+00:04:50.240 --> 00:04:55.190
+for our indexes in
+that particular disk.
+
+83
+00:04:55.190 --> 00:04:57.680
+So regardless of
+the amount of data
+
+84
+00:04:57.680 --> 00:05:00.645
+that you put for
+your collections--
+
+85
+00:05:00.645 --> 00:05:02.770
+so let's say that you are
+using this disk over here
+
+86
+00:05:02.770 --> 00:05:05.380
+for the index file.
+
+87
+00:05:05.380 --> 00:05:08.380
+If you have other disks
+for your collection data,
+
+88
+00:05:08.380 --> 00:05:12.310
+you might not run out of disk
+space on your collection data,
+
+89
+00:05:12.310 --> 00:05:16.060
+but you might end up having
+issues allocating resources
+
+90
+00:05:16.060 --> 00:05:18.970
+for your indexes if you
+don't pay close attention
+
+91
+00:05:18.970 --> 00:05:20.620
+to that physical drive.
+
+92
+00:05:20.620 --> 00:05:25.080
+Just keep an eye on this if you
+have this type of architecture.

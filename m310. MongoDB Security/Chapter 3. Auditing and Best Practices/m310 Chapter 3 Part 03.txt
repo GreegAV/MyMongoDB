@@ -1,0 +1,45 @@
+In this video, we're going to talk about audit filters.
+
+And so by now, you might be asking yourself the question, what is logged by default when we have auditing enabled?
+
+And we already know that there are four categories of events that can be logged through MongoDB's auditing system.
+
+There are Schema, or DDL, Operations.
+
+There are Replica Set and Sharded Cluster Operations.
+
+There are Authentication and Authorization Operations.
+
+And finally, there are CRUD, also known as DML, Operations.
+
+But by default, we only audit these three categories.
+
+And the reason this is is the same reason we have audit filters in the first place.
+
+And that's because when we audit everything, we have too many logs.
+
+And we also have performance loss.
+
+We have performance loss because we're constantly writing to disk for every operation.
+
+That's why CRUD is not audited by default, even when auditing is enabled.
+
+If CRUD was enabled by default, then virtually every operation on your database would have an additional write.
+
+And those additional writes are going to make you lose performance on your database.
+
+And moreover, we just have too many logs.
+
+We were just logging so much stuff, it's hard to even know what's going on.
+
+And that's why audit filters exist.
+
+Audit filters, like the logs that they describe, are defined in JSON.
+
+We specify an audit filter using a filter document.
+
+As you can see, this filter document is pretty straightforward.
+
+Here, we're creating a filter document where we want to log any time that there's a createCollection or dropCollection, atype.
+
+Essentially, all we're doing is writing a query document with the MongoDB query language as if we are querying these logs.

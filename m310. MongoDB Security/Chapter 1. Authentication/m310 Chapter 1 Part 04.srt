@@ -1,0 +1,279 @@
+
+1
+00:00:00.000 --> 00:00:00.030
+
+
+2
+00:00:00.030 --> 00:00:01.790
+Now that you understand
+at a high level
+
+3
+00:00:01.790 --> 00:00:03.690
+the different
+authentication mechanisms
+
+4
+00:00:03.690 --> 00:00:06.070
+supported in MongoDB, let's
+see what that actually
+
+5
+00:00:06.070 --> 00:00:09.560
+looks like via the Mongo
+shell and the Mongo server.
+
+6
+00:00:09.560 --> 00:00:12.400
+I already have MongoDB
+installed on this computer.
+
+7
+00:00:12.400 --> 00:00:15.350
+To begin, we'll start
+the Mongo server using
+
+8
+00:00:15.350 --> 00:00:18.720
+mongod with the --auth option.
+
+9
+00:00:18.720 --> 00:00:20.680
+This will enable authorization.
+
+10
+00:00:20.680 --> 00:00:22.950
+But in order for the
+server to properly identify
+
+11
+00:00:22.950 --> 00:00:25.270
+a client's level of
+access, this will
+
+12
+00:00:25.270 --> 00:00:28.090
+force all clients to
+authenticate to the server
+
+13
+00:00:28.090 --> 00:00:30.420
+before they can
+perform any actions.
+
+14
+00:00:30.420 --> 00:00:32.299
+You'll see that if I
+start the Mongo shell,
+
+15
+00:00:32.299 --> 00:00:33.720
+I'm not able to do anything.
+
+16
+00:00:33.720 --> 00:00:35.910
+If I try and run
+show dbs, I'll get
+
+17
+00:00:35.910 --> 00:00:40.500
+this "not authorized on admin to
+execute command" error message.
+
+18
+00:00:40.500 --> 00:00:42.650
+This is because I have
+not authenticated yet
+
+19
+00:00:42.650 --> 00:00:43.680
+to the database.
+
+20
+00:00:43.680 --> 00:00:45.050
+But this is a new database.
+
+21
+00:00:45.050 --> 00:00:47.070
+There are no users
+in this database.
+
+22
+00:00:47.070 --> 00:00:49.390
+So if I'm not authorized
+to do anything,
+
+23
+00:00:49.390 --> 00:00:51.316
+how do I create a user?
+
+24
+00:00:51.316 --> 00:00:53.065
+Well, there is one
+exception to this rule,
+
+25
+00:00:53.065 --> 00:00:55.279
+and it's called the
+localhost exception.
+
+26
+00:00:55.279 --> 00:00:56.820
+The first thing you
+are allowed to do
+
+27
+00:00:56.820 --> 00:00:59.680
+when connected to an
+authenticated Mongo server
+
+28
+00:00:59.680 --> 00:01:02.910
+is you're allowed to create
+the first user in the database.
+
+29
+00:01:02.910 --> 00:01:06.097
+With that first user, you
+can then create other users.
+
+30
+00:01:06.097 --> 00:01:07.680
+That means we're
+going to want to give
+
+31
+00:01:07.680 --> 00:01:11.400
+that user the ability or the
+role who has the privilege
+
+32
+00:01:11.400 --> 00:01:12.920
+to create other users.
+
+33
+00:01:12.920 --> 00:01:14.410
+So let's go ahead and do that.
+
+34
+00:01:14.410 --> 00:01:16.260
+We'll switch to
+the admin database,
+
+35
+00:01:16.260 --> 00:01:17.690
+and then we'll create our user.
+
+36
+00:01:17.690 --> 00:01:19.689
+In this case, I'm creating
+a user whose username
+
+37
+00:01:19.689 --> 00:01:22.150
+will be kirby, whose
+password will be password,
+
+38
+00:01:22.150 --> 00:01:25.890
+who has a role of
+userAdminAnyDatabase
+
+39
+00:01:25.890 --> 00:01:27.910
+on the admin
+database, which means
+
+40
+00:01:27.910 --> 00:01:30.460
+they'll be able to
+administrate any database.
+
+41
+00:01:30.460 --> 00:01:32.900
+You'll notice that we're still
+not allowed to do anything.
+
+42
+00:01:32.900 --> 00:01:36.820
+Show dbs will fail, as will
+trying to create another user.
+
+43
+00:01:36.820 --> 00:01:39.400
+This is because the
+localhost exception only
+
+44
+00:01:39.400 --> 00:01:42.200
+applies for the first
+user in a database.
+
+45
+00:01:42.200 --> 00:01:44.540
+After you've created the
+first user in a database,
+
+46
+00:01:44.540 --> 00:01:46.890
+or if a user already
+exists in the database,
+
+47
+00:01:46.890 --> 00:01:49.170
+the localhost exception
+will not apply.
+
+48
+00:01:49.170 --> 00:01:52.120
+I should also mention that
+the localhost exception only
+
+49
+00:01:52.120 --> 00:01:54.890
+applies when you're
+connected to the database
+
+50
+00:01:54.890 --> 00:01:58.180
+via the localhost interface,
+meaning if you're not
+
+51
+00:01:58.180 --> 00:01:59.820
+on the same computer,
+you will not
+
+52
+00:01:59.820 --> 00:02:02.600
+be able to utilize
+localhost exception.
+
+53
+00:02:02.600 --> 00:02:06.570
+From here, we can go ahead
+and authenticate with db.auth,
+
+54
+00:02:06.570 --> 00:02:10.259
+passing in my username of kirby,
+whose password is password.
+
+55
+00:02:10.259 --> 00:02:14.580
+And then I can run
+db.system.users.find,
+
+56
+00:02:14.580 --> 00:02:17.750
+and see we have the kirby
+user on the admin database.
+
+57
+00:02:17.750 --> 00:02:20.590
+And here's all of that
+goodness, like with the role
+
+58
+00:02:20.590 --> 00:02:22.080
+userAdminAnyDatabase.

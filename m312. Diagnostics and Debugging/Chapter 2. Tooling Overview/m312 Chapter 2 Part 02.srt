@@ -1,0 +1,120 @@
+
+1
+00:00:00.000 --> 00:00:00.570
+
+
+2
+00:00:00.570 --> 00:00:02.920
+In this lesson, we're going
+to talk about the MongoDB
+
+3
+00:00:02.920 --> 00:00:05.220
+shell, also known as Mongo.
+
+4
+00:00:05.220 --> 00:00:07.900
+It comes with the
+MongoDB software package.
+
+5
+00:00:07.900 --> 00:00:10.540
+For this course, we assume that
+you're familiar with the shell,
+
+6
+00:00:10.540 --> 00:00:12.610
+most likely because
+you've already been using
+
+7
+00:00:12.610 --> 00:00:14.410
+it to learn about MongoDB.
+
+8
+00:00:14.410 --> 00:00:17.080
+But in a nutshell,
+the Mongo shell
+
+9
+00:00:17.080 --> 00:00:20.900
+is our default server command
+line administration tool.
+
+10
+00:00:20.900 --> 00:00:22.540
+From the Mongo
+shell, we can perform
+
+11
+00:00:22.540 --> 00:00:25.455
+any administrative command
+that MongoDB provides.
+
+12
+00:00:25.455 --> 00:00:26.830
+This includes
+things that will be
+
+13
+00:00:26.830 --> 00:00:29.692
+useful from a diagnostics
+and debugging perspective.
+
+14
+00:00:29.692 --> 00:00:31.900
+Throughout the course, we'll
+be using the Mongo shell
+
+15
+00:00:31.900 --> 00:00:34.540
+for many tasks, including
+things like analyzing
+
+16
+00:00:34.540 --> 00:00:38.900
+queries, enabling profiling,
+and changing server settings.
+
+17
+00:00:38.900 --> 00:00:40.780
+Another interesting
+aspect of the shell
+
+18
+00:00:40.780 --> 00:00:42.820
+is the fact that we
+can write JavaScript
+
+19
+00:00:42.820 --> 00:00:46.270
+that can be used to automate
+administrative tasks.
+
+20
+00:00:46.270 --> 00:00:48.580
+We do have other tools
+that provide or build
+
+21
+00:00:48.580 --> 00:00:51.040
+on this functionality
+like Ops Manager,
+
+22
+00:00:51.040 --> 00:00:54.220
+but the Mongo shell remains
+a powerful low-level tool
+
+23
+00:00:54.220 --> 00:00:56.260
+that can help in
+finding and solving
+
+24
+00:00:56.260 --> 00:00:59.454
+many of the administrative
+tasks that you face.
+
+25
+00:00:59.454 --> 00:00:59.953

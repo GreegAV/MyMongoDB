@@ -1,0 +1,85 @@
+We've been drawing diagrams up until this point.
+
+Let's see all of this in action.
+
+I'll spin up a replica set with three members in my VM.
+
+Next, I'll run a script I wrote to test write concern.
+
+It performs a set of writes, 10 by default, with a write concern I can specify using majority by default.
+
+Let's run 100 tests with write concern majority, and see what the average time to get our write acknowledged is.
+
+That took an average time of 2.6 milliseconds.
+
+Pretty fast, but that makes sense; I'm just doing this on local host.
+
+Now let's see what happens when I try to do this with a write concern of four.
+
+So that's good.
+
+If I try to use a write concern of four, then it will throw this write concern error -- Not enough data-bearing nodes.
+
+So it knows that when I have a three member replica set, but want a write concern of four, that I'm asking for the impossible, and it will just tell me no.
+
+The problem is that it's not as obvious to your system if one of your servers is just down.
+
+I'll disconnect, and run my script again, this time with a write concern of three and a wTimeOut of one second.
+
+And as I can see it timed out after that one second delay.
+
+So, this wTimeOut will let my replica set know that it should throw an error if it takes more than a second to replicate the data, in this case to the three members since W equals three.
+
+Be aware that, if you don't have that timeout set, my write concern won't even get that error.
+
+And it just hangs, because by default, there is no wTimeOut.
+
+The application won't move on without acknowledgment, but it will wait for that acknowledgement for as long as it takes.
+
+I'm going to use control-C to kill this.
+
+And just to be clear, the write occurred, it's just not getting to all three servers as specified in my write concern.
+
+So, it's definitely important to use a wTimeOut, but as we'll see, we don't want to set it too low either.
+
+Let's use mlaunch to shut down my two remaining servers, and then restart the whole set.
+
+Now, let's see how long things take for a write concern of three.
+
+And let's see what happens if I set my wTimeOut to 1 millisecond.
+
+Even on local host, it can take more than one millisecond in order for a write to propagate.
+
+Keep in mind, this script uses W majority by default, so, for a three member replica set, that's the same as W two.
+
+For a wTimeOut of 2 milliseconds, it looks like some of them went through, and then one of them failed on this machine.
+
+Your results may differ.
+
+What if I had a replica set with two nodes plus an arbiter?
+
+Let's change our configuration and find out.
+
+And let's connect.
+
+When I look at my rs.conf, I can see that my second member has this arbiter only flag set.
+
+That means it's an arbiter, it's not carrying data.
+
+Now what if a member goes down?
+
+I've killed my secondary.
+
+Let's run this with W majority by default.
+
+I lost just one server of what I thought of as a three member replica set, and what my write concern thinks of as a three member replica set.
+
+I still have a primary, but it can't handle W majority at all.
+
+So what have we talked about?
+
+We've discussed how arbiters and delayed secondaries can cause problems with write concerns of greater than one.
+
+We've talked about the importance of being mindful of your majority, and we've seen how this plays out in action with wTimeOut.
+
+And that's a quick tour of unexpected problems that can arise from write concern.

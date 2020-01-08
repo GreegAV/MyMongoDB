@@ -1,0 +1,161 @@
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.700
+Hi MongoDB Java developer,
+welcome to M220J.
+
+3
+00:00:03.700 --> 00:00:07.330
+I'm Varsha and it's my pleasure
+to be one of your instructors.
+
+4
+00:00:07.330 --> 00:00:09.130
+This course is one of
+our language variant
+
+5
+00:00:09.130 --> 00:00:11.117
+courses for MongoDB developers.
+
+6
+00:00:11.117 --> 00:00:13.450
+It's intended for people who
+have taken our introduction
+
+7
+00:00:13.450 --> 00:00:16.660
+to MongoDB course or have two
+to three months of experience
+
+8
+00:00:16.660 --> 00:00:18.286
+working with MongoDB.
+
+9
+00:00:18.286 --> 00:00:19.660
+You should have
+basic familiarity
+
+10
+00:00:19.660 --> 00:00:22.460
+with Java before
+starting this course.
+
+11
+00:00:22.460 --> 00:00:25.220
+Here, you will learn how to
+use MongoDB's Java driver
+
+12
+00:00:25.220 --> 00:00:29.350
+to build performant, resilient,
+and robust applications.
+
+13
+00:00:29.350 --> 00:00:31.270
+You'll be put in the
+role of a new developer
+
+14
+00:00:31.270 --> 00:00:34.810
+on a team implementing the
+database layer of an API.
+
+15
+00:00:34.810 --> 00:00:36.690
+Each lab in this course
+is called a ticket
+
+16
+00:00:36.690 --> 00:00:39.310
+and each ticket has a
+user story and unit tests.
+
+17
+00:00:39.310 --> 00:00:41.470
+For a given ticket, you
+will read the user story,
+
+18
+00:00:41.470 --> 00:00:43.990
+make all the tests pass,
+and use the pre-packaged UI
+
+19
+00:00:43.990 --> 00:00:46.270
+to run integration tests
+and get your validation code
+
+20
+00:00:46.270 --> 00:00:48.377
+for the corresponding ticket.
+
+21
+00:00:48.377 --> 00:00:49.960
+Throughout this
+course, you will learn
+
+22
+00:00:49.960 --> 00:00:52.420
+to create and share a
+database connection,
+
+23
+00:00:52.420 --> 00:00:55.810
+perform the basic Create, Read,
+Update, and Delete operations
+
+24
+00:00:55.810 --> 00:00:58.930
+through the driver, handle
+errors, utilize the MongoDB
+
+25
+00:00:58.930 --> 00:01:01.190
+best practices and more.
+
+26
+00:01:01.190 --> 00:01:03.430
+The technology stack
+is pretty simple.
+
+27
+00:01:03.430 --> 00:01:06.500
+We're using Spring Boot,
+MongoDB, and React.
+
+28
+00:01:06.500 --> 00:01:09.240
+The React application is
+pre-built and bundled for you
+
+29
+00:01:09.240 --> 00:01:11.582
+and the API layer is
+also fully implemented.
+
+30
+00:01:11.582 --> 00:01:13.290
+You'll only be
+implementing the functions
+
+31
+00:01:13.290 --> 00:01:15.510
+which directly call to MongoDB.
+
+32
+00:01:15.510 --> 00:01:17.204
+So welcome again to this course.
+
+33
+00:01:17.204 --> 00:01:19.620
+We hope you enjoy the material
+that we've prepared for you
+
+34
+00:01:19.620 --> 00:01:22.010
+and wish you the best of luck.

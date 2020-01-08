@@ -1,0 +1,690 @@
+
+1
+00:00:00.000 --> 00:00:00.152
+
+
+2
+00:00:00.152 --> 00:00:01.610
+In this lesson,
+we're going to look
+
+3
+00:00:01.610 --> 00:00:04.610
+at the new geospatial chart
+types available in MongoDB
+
+4
+00:00:04.610 --> 00:00:05.655
+Charts.
+
+5
+00:00:05.655 --> 00:00:07.280
+So these charts are
+a great way for you
+
+6
+00:00:07.280 --> 00:00:10.460
+to gain quick and visual
+insights into your data stored
+
+7
+00:00:10.460 --> 00:00:12.980
+inside MongoDB.
+
+8
+00:00:12.980 --> 00:00:15.650
+MongoDB documents have a
+rich set of data types,
+
+9
+00:00:15.650 --> 00:00:21.590
+such as dates, subdocuments,
+arrays, Decimal128, and others
+
+10
+00:00:21.590 --> 00:00:24.770
+to provide data precision
+and data affinity with what
+
+11
+00:00:24.770 --> 00:00:28.490
+that information represents
+and how the application works
+
+12
+00:00:28.490 --> 00:00:30.050
+with that same data.
+
+13
+00:00:30.050 --> 00:00:32.630
+One of those rich data
+types is the ability
+
+14
+00:00:32.630 --> 00:00:34.970
+to store geolocation
+data, and there
+
+15
+00:00:34.970 --> 00:00:36.800
+are several different
+types of analysis
+
+16
+00:00:36.800 --> 00:00:39.650
+that one can do using
+geospatial fields.
+
+17
+00:00:39.650 --> 00:00:42.140
+Charts is built to
+natively support and work
+
+18
+00:00:42.140 --> 00:00:45.500
+with the MongoDB document
+model, and it connects directly
+
+19
+00:00:45.500 --> 00:00:47.570
+to your MongoDB cluster.
+
+20
+00:00:47.570 --> 00:00:51.050
+This means that we do not need
+to go through ETL operations
+
+21
+00:00:51.050 --> 00:00:53.570
+to convert or
+format data, or use
+
+22
+00:00:53.570 --> 00:00:56.810
+different connectors to
+integrate with other BI tools.
+
+23
+00:00:56.810 --> 00:00:59.390
+Let's jump into the Charts UI
+and have a look at the three
+
+24
+00:00:59.390 --> 00:01:01.470
+different type of
+geospatial charts
+
+25
+00:01:01.470 --> 00:01:04.440
+we've added in this
+latest release of Charts.
+
+26
+00:01:04.440 --> 00:01:06.980
+So from the Atlas UI,
+let's jump into Charts
+
+27
+00:01:06.980 --> 00:01:10.180
+and create a geospatial chart.
+
+28
+00:01:10.180 --> 00:01:12.670
+So we have our m042 dashboard.
+
+29
+00:01:12.670 --> 00:01:15.690
+Let's open that up
+and add a chart.
+
+30
+00:01:15.690 --> 00:01:18.410
+And as we're going to be looking
+at our geospatial charts,
+
+31
+00:01:18.410 --> 00:01:20.390
+we're going to create
+a geospatial chart
+
+32
+00:01:20.390 --> 00:01:24.680
+from the dropdown
+and select Heatmap.
+
+33
+00:01:24.680 --> 00:01:27.790
+So we need to select our
+data source from the top,
+
+34
+00:01:27.790 --> 00:01:32.080
+and we're going to use our
+sample_airbnb data set.
+
+35
+00:01:32.080 --> 00:01:35.450
+And we're interested
+in the address field.
+
+36
+00:01:35.450 --> 00:01:40.810
+So let's drag our location
+onto the coordinates plane.
+
+37
+00:01:40.810 --> 00:01:44.800
+And for intensity, we're
+going to use the price.
+
+38
+00:01:44.800 --> 00:01:50.190
+
+
+39
+00:01:50.190 --> 00:01:52.455
+And we're going to
+select the mean price.
+
+40
+00:01:52.455 --> 00:01:55.890
+
+
+41
+00:01:55.890 --> 00:01:57.930
+That's a lot of
+information, so let's say
+
+42
+00:01:57.930 --> 00:02:02.500
+we wanted to filter down
+by a suburb in New York.
+
+43
+00:02:02.500 --> 00:02:04.330
+Let's have a look at
+how we can do that.
+
+44
+00:02:04.330 --> 00:02:09.280
+So we add a filter, go back up
+to our address, subdocument,
+
+45
+00:02:09.280 --> 00:02:11.280
+and select suburb.
+
+46
+00:02:11.280 --> 00:02:13.870
+Let's drag suburb
+onto the Filter field.
+
+47
+00:02:13.870 --> 00:02:17.090
+And you can see, we have quite a
+few suburbs all over the world.
+
+48
+00:02:17.090 --> 00:02:18.660
+So we'll deselect
+all the suburbs
+
+49
+00:02:18.660 --> 00:02:21.630
+and let's have a
+look at Brooklyn.
+
+50
+00:02:21.630 --> 00:02:22.690
+Great.
+
+51
+00:02:22.690 --> 00:02:25.540
+Here you can see we've
+got a heatmap of all
+
+52
+00:02:25.540 --> 00:02:29.110
+the most expensive Airbnb
+listings in Brooklyn
+
+53
+00:02:29.110 --> 00:02:30.130
+in New York.
+
+54
+00:02:30.130 --> 00:02:31.540
+It's pretty impressive, right?
+
+55
+00:02:31.540 --> 00:02:33.290
+Let's have a look at
+the other chart types
+
+56
+00:02:33.290 --> 00:02:34.550
+and see what we can do.
+
+57
+00:02:34.550 --> 00:02:38.470
+So as we said, our heatmap
+shows the most expensive areas
+
+58
+00:02:38.470 --> 00:02:41.200
+to rent an Airbnb in Brooklyn.
+
+59
+00:02:41.200 --> 00:02:42.910
+That's really nice,
+but what if we
+
+60
+00:02:42.910 --> 00:02:45.640
+want to get more detail
+on what type of rentals
+
+61
+00:02:45.640 --> 00:02:48.100
+we have in this data
+and their price?
+
+62
+00:02:48.100 --> 00:02:50.840
+For that, we can
+use a scatter chart.
+
+63
+00:02:50.840 --> 00:02:52.450
+So let's add a new chart.
+
+64
+00:02:52.450 --> 00:02:54.300
+Again, we're going
+to select Geospatial.
+
+65
+00:02:54.300 --> 00:02:57.015
+And this time, we're going
+to use a Scatter chart.
+
+66
+00:02:57.015 --> 00:02:59.200
+We need to select our
+data set, which is
+
+67
+00:02:59.200 --> 00:03:02.580
+our Airbnb.listingsAndReviews.
+
+68
+00:03:02.580 --> 00:03:07.100
+and again, we're interested
+in the address field.
+
+69
+00:03:07.100 --> 00:03:12.410
+So we're going to drag the
+location onto Coordinates.
+
+70
+00:03:12.410 --> 00:03:16.840
+And we want our color to
+indicate the number of bedrooms
+
+71
+00:03:16.840 --> 00:03:18.350
+in a listing.
+
+72
+00:03:18.350 --> 00:03:20.590
+So let's drag the number
+of bedrooms onto Color.
+
+73
+00:03:20.590 --> 00:03:23.380
+
+
+74
+00:03:23.380 --> 00:03:26.080
+And we want the size
+to indicate the price,
+
+75
+00:03:26.080 --> 00:03:28.600
+so let's drag the price
+field onto the Size.
+
+76
+00:03:28.600 --> 00:03:32.720
+
+
+77
+00:03:32.720 --> 00:03:35.830
+OK, so we've got a wide
+range of documents here,
+
+78
+00:03:35.830 --> 00:03:37.990
+and you might
+notice that we have
+
+79
+00:03:37.990 --> 00:03:39.940
+a little message of
+the top that says,
+
+80
+00:03:39.940 --> 00:03:41.950
+The maximum query
+response is 1,000.
+
+81
+00:03:41.950 --> 00:03:45.390
+So let's go again and
+filter by address.
+
+82
+00:03:45.390 --> 00:03:49.190
+So we'll drag
+suburb onto Filter.
+
+83
+00:03:49.190 --> 00:03:51.960
+And again, we can see we've
+got suburbs all over the world.
+
+84
+00:03:51.960 --> 00:03:54.950
+So if we deselect them
+and select Brooklyn,
+
+85
+00:03:54.950 --> 00:03:57.470
+so now we've got
+a map which shows
+
+86
+00:03:57.470 --> 00:04:01.190
+all the listings in
+Brooklyn, and their price
+
+87
+00:04:01.190 --> 00:04:04.650
+is indicated by the size of
+the circle on the scatter plot.
+
+88
+00:04:04.650 --> 00:04:06.650
+You may notice that we
+only have properties here
+
+89
+00:04:06.650 --> 00:04:08.337
+listed with zero bedrooms.
+
+90
+00:04:08.337 --> 00:04:09.420
+So that's not quite right.
+
+91
+00:04:09.420 --> 00:04:11.962
+So let's turn the BINNING off.
+
+92
+00:04:11.962 --> 00:04:13.670
+And there you can see
+that we have a list
+
+93
+00:04:13.670 --> 00:04:18.829
+from 0 to 4 for bedrooms, and
+the size of all these circles
+
+94
+00:04:18.829 --> 00:04:20.180
+indicates the price.
+
+95
+00:04:20.180 --> 00:04:22.400
+And when we hover over
+each individual listing,
+
+96
+00:04:22.400 --> 00:04:24.860
+charts will pop up and
+give us more detail
+
+97
+00:04:24.860 --> 00:04:28.680
+on that actual listing or that
+actual geopoint in our data.
+
+98
+00:04:28.680 --> 00:04:29.970
+That's pretty cool.
+
+99
+00:04:29.970 --> 00:04:32.180
+So this is really
+useful information.
+
+100
+00:04:32.180 --> 00:04:35.180
+We can very clearly see the
+amount of rooms and properties
+
+101
+00:04:35.180 --> 00:04:37.170
+available on the map.
+
+102
+00:04:37.170 --> 00:04:39.680
+There are a lot of properties
+on Airbnb globally.
+
+103
+00:04:39.680 --> 00:04:43.130
+What if we wanted to see where
+all of those properties were
+
+104
+00:04:43.130 --> 00:04:45.260
+and how many properties
+were in each country?
+
+105
+00:04:45.260 --> 00:04:48.230
+Let's use the sample
+data set in Atlas again.
+
+106
+00:04:48.230 --> 00:04:50.840
+And this time, we're going to
+see how many properties are
+
+107
+00:04:50.840 --> 00:04:53.030
+in each region of the world.
+
+108
+00:04:53.030 --> 00:04:55.910
+To do this, we're going to
+use the choropleth map, which
+
+109
+00:04:55.910 --> 00:04:58.090
+is basically a fancy
+way of saying that we're
+
+110
+00:04:58.090 --> 00:05:00.210
+going to color countries.
+
+111
+00:05:00.210 --> 00:05:04.240
+So let's go back out
+to our dashboard.
+
+112
+00:05:04.240 --> 00:05:06.810
+So this time, we're going
+to create a choropleth.
+
+113
+00:05:06.810 --> 00:05:10.320
+So again, select
+Geospatial, Choropleth.
+
+114
+00:05:10.320 --> 00:05:12.900
+We're going to select
+our Airbnb data source
+
+115
+00:05:12.900 --> 00:05:15.640
+and all the fields
+will load in the left.
+
+116
+00:05:15.640 --> 00:05:19.110
+So we're going to use the
+address.county country field
+
+117
+00:05:19.110 --> 00:05:21.280
+and drag that onto Location.
+
+118
+00:05:21.280 --> 00:05:25.320
+And we're going to use
+the _id value for Color.
+
+119
+00:05:25.320 --> 00:05:27.540
+We're going to use a
+count of that value.
+
+120
+00:05:27.540 --> 00:05:30.910
+We're sure the _id is
+unique in every collection,
+
+121
+00:05:30.910 --> 00:05:34.230
+so we can reliably use this as
+a count for all the properties
+
+122
+00:05:34.230 --> 00:05:35.640
+listed around the world.
+
+123
+00:05:35.640 --> 00:05:38.700
+There are obviously a lot of
+listings on Airbnb globally,
+
+124
+00:05:38.700 --> 00:05:43.210
+but from this map, we only have
+a subset of those listings.
+
+125
+00:05:43.210 --> 00:05:45.750
+We can see that if we
+hover over each country,
+
+126
+00:05:45.750 --> 00:05:48.340
+we will be given a map
+of the amount of Airbnb
+
+127
+00:05:48.340 --> 00:05:50.260
+listings in that country.
+
+128
+00:05:50.260 --> 00:05:51.190
+That's really cool.
+
+129
+00:05:51.190 --> 00:05:52.565
+But this is just
+a sample of what
+
+130
+00:05:52.565 --> 00:05:56.268
+you can do with the new
+geospatial maps in Charts.
+
+131
+00:05:56.268 --> 00:05:57.810
+You can see that
+these visualizations
+
+132
+00:05:57.810 --> 00:06:00.450
+can be very powerful for
+insights into your data.
+
+133
+00:06:00.450 --> 00:06:02.880
+And best of all, it's
+very easy and quick
+
+134
+00:06:02.880 --> 00:06:04.740
+to generate these charts.
+
+135
+00:06:04.740 --> 00:06:06.930
+This is just an example
+of the information
+
+136
+00:06:06.930 --> 00:06:09.215
+you can easily
+visualize from your data
+
+137
+00:06:09.215 --> 00:06:11.430
+in MongoDB using charts.
+
+138
+00:06:11.430 --> 00:06:14.430
+There's a lot more functionality
+for you to explore.
+
+139
+00:06:14.430 --> 00:06:16.260
+The great news is that
+you can experiment
+
+140
+00:06:16.260 --> 00:06:20.070
+with Charts for free on your
+free tier Atlas cluster.
+
+141
+00:06:20.070 --> 00:06:21.260
+So let's recap.
+
+142
+00:06:21.260 --> 00:06:24.860
+Charts now allows you to
+create three new chart types--
+
+143
+00:06:24.860 --> 00:06:27.790
+heat map, scatter,
+and choropleth.
+
+144
+00:06:27.790 --> 00:06:29.840
+And best of all, you can
+explore this in Atlas
+
+145
+00:06:29.840 --> 00:06:34.090
+using your free tier cluster and
+the sample data sets provided.

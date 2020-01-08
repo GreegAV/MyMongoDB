@@ -1,0 +1,33 @@
+Now that we understand what roles are and know what built-in roles come with MongoDB, we can now talk about user-defined roles.
+
+The built-in roles that come with MongoDB should cover the majority of the different types of people who need to use our database.
+
+That said, sometimes we have specific requirements that do not exactly fit a particular user.
+
+Let's talk about the different parts that make up a user-defined role.
+
+When we create a role, we create it on a specific database, so the role name and the database that it was created on define a unique role.
+
+After giving the role a name, we specify what other roles we'd like to inherit privileges from.
+
+It's important to note that for any given role created on a specific database, we can only include resources and inherit roles defined on the same database.
+
+For example, if we define a role on the Products database, we can't inherit that role on the Orders database.
+
+If we would like to share user-defined roles across databases, then we need to define a global role.
+
+To define a global role, roles that have privileges on several databases, we need to create such roles on the admin database.
+
+Cluster-wide resources can also be created on the admin database and then inherited by other databases.
+
+Coming back to our definition of a user-defined role, recall that we create a name for a role, and we create the role with regards to a particular database, and that will uniquely identify the role.
+
+After that, we add any other roles that we would like to inherit privileges from.
+
+And then finally, we list all of the additional privileges we'd like this role to have.
+
+Recall that a privilege is just an action acting on a particular resource.
+
+And this is the definition of a user-defined role in MongoDB.
+
+We'll walk through an example of how to create a user-defined role in the shell in a later video.

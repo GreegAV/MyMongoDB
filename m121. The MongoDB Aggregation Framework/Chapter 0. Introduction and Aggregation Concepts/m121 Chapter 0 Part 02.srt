@@ -1,0 +1,249 @@
+
+1
+00:00:00.000 --> 00:00:01.070
+
+
+2
+00:00:01.070 --> 00:00:02.090
+Pipelines.
+
+3
+00:00:02.090 --> 00:00:03.680
+You'll hear us mention
+pipelines quite
+
+4
+00:00:03.680 --> 00:00:06.080
+a bit throughout the course,
+so let's take a few minutes
+
+5
+00:00:06.080 --> 00:00:07.970
+to discuss what they are.
+
+6
+00:00:07.970 --> 00:00:11.540
+Pipelines can be thought of as
+a conveyor belt in a factory.
+
+7
+00:00:11.540 --> 00:00:14.760
+Along the line, there are
+different assembly stations.
+
+8
+00:00:14.760 --> 00:00:17.240
+These assembly
+stations are stages.
+
+9
+00:00:17.240 --> 00:00:19.350
+Depending on what we
+want to accomplish,
+
+10
+00:00:19.350 --> 00:00:23.000
+we may have only one stage,
+or we may have many stages.
+
+11
+00:00:23.000 --> 00:00:24.680
+Pipelines work like this.
+
+12
+00:00:24.680 --> 00:00:28.250
+Documents, represented by these
+squares, enter our pipeline
+
+13
+00:00:28.250 --> 00:00:30.532
+and begin to flow
+into our first stage.
+
+14
+00:00:30.532 --> 00:00:32.240
+This stage is called
+$match, which you'll
+
+15
+00:00:32.240 --> 00:00:34.160
+be introduced to very soon.
+
+16
+00:00:34.160 --> 00:00:36.890
+We set this stage up so that
+only red and blue squares
+
+17
+00:00:36.890 --> 00:00:38.150
+make it through.
+
+18
+00:00:38.150 --> 00:00:40.160
+Next, they flow
+through our pipeline
+
+19
+00:00:40.160 --> 00:00:41.900
+and enter the second stage.
+
+20
+00:00:41.900 --> 00:00:45.050
+In this example, we'll
+call this stage $project.
+
+21
+00:00:45.050 --> 00:00:47.410
+We set this stage up to
+transform our squares
+
+22
+00:00:47.410 --> 00:00:48.800
+into circles.
+
+23
+00:00:48.800 --> 00:00:51.860
+This is a small representation
+of the power the aggregation
+
+24
+00:00:51.860 --> 00:00:53.090
+framework offers.
+
+25
+00:00:53.090 --> 00:00:56.690
+We can transform our data
+in almost any way we desire.
+
+26
+00:00:56.690 --> 00:00:59.180
+We'll be covering the
+$project stage in great detail
+
+27
+00:00:59.180 --> 00:01:00.950
+in later lessons.
+
+28
+00:01:00.950 --> 00:01:04.340
+This stage represents one of the
+many powerful analysis stages
+
+29
+00:01:04.340 --> 00:01:06.770
+available, and it
+is called $group.
+
+30
+00:01:06.770 --> 00:01:08.630
+Here, we have
+configured the stage
+
+31
+00:01:08.630 --> 00:01:10.945
+to gather all of the documents
+that are flowing into it
+
+32
+00:01:10.945 --> 00:01:12.440
+and produce a
+single document that
+
+33
+00:01:12.440 --> 00:01:15.570
+gives us the ratio of
+red to blue circles.
+
+34
+00:01:15.570 --> 00:01:18.110
+We'll cover $group, and
+many other powerful data
+
+35
+00:01:18.110 --> 00:01:21.350
+analysis stages,
+later in the course.
+
+36
+00:01:21.350 --> 00:01:22.310
+There you have it.
+
+37
+00:01:22.310 --> 00:01:25.030
+A high-level overview
+of what pipelines are.
+
+38
+00:01:25.030 --> 00:01:28.010
+At the most basic level, they
+are a composition of stages,
+
+39
+00:01:28.010 --> 00:01:30.620
+from one to many, that we
+can arrange and configure
+
+40
+00:01:30.620 --> 00:01:32.630
+in almost any way we like.
+
+41
+00:01:32.630 --> 00:01:34.100
+The aggregation
+framework provides
+
+42
+00:01:34.100 --> 00:01:37.610
+many stages to allow us to
+filter and transform our data.
+
+43
+00:01:37.610 --> 00:01:40.790
+All we have to do is
+compose the pipeline.
+
+44
+00:01:40.790 --> 00:01:43.190
+Some key takeaways to remember.
+
+45
+00:01:43.190 --> 00:01:45.890
+Pipelines are a
+composition of stages.
+
+46
+00:01:45.890 --> 00:01:47.810
+Stages are
+configurable to produce
+
+47
+00:01:47.810 --> 00:01:50.270
+desired transformations.
+
+48
+00:01:50.270 --> 00:01:52.010
+Documents flow
+through the stages
+
+49
+00:01:52.010 --> 00:01:55.430
+like parts in an assembly
+line or water through a pipe.
+
+50
+00:01:55.430 --> 00:01:57.690
+Finally, with only
+a few exceptions,
+
+51
+00:01:57.690 --> 00:01:59.780
+which we'll cover
+later, stages can
+
+52
+00:01:59.780 --> 00:02:03.910
+be arranged in any way we like
+and as many as we require.
+
+53
+00:02:03.910 --> 00:02:04.690

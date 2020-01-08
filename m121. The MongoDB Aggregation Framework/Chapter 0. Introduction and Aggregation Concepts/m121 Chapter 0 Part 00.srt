@@ -1,0 +1,256 @@
+
+1
+00:00:00.000 --> 00:00:00.600
+
+
+2
+00:00:00.600 --> 00:00:01.980
+Hi, I'm Nathan.
+
+3
+00:00:01.980 --> 00:00:06.190
+Welcome to M121, the MongoDB
+Aggregation Framework.
+
+4
+00:00:06.190 --> 00:00:08.412
+I'll be one of your
+instructors for this course.
+
+5
+00:00:08.412 --> 00:00:09.870
+Throughout this
+course, we're going
+
+6
+00:00:09.870 --> 00:00:11.840
+to discuss the
+aggregation framework,
+
+7
+00:00:11.840 --> 00:00:14.120
+a key feature of MongoDB.
+
+8
+00:00:14.120 --> 00:00:16.620
+You'll learn about expressive
+filtering, powerful data
+
+9
+00:00:16.620 --> 00:00:20.310
+transformation, statistical
+utilities and data analysis,
+
+10
+00:00:20.310 --> 00:00:24.090
+and how to do much more work
+with a single operation.
+
+11
+00:00:24.090 --> 00:00:26.160
+This course is
+seven chapters long.
+
+12
+00:00:26.160 --> 00:00:29.640
+With each chapter, there will
+be a new set of lesson videos.
+
+13
+00:00:29.640 --> 00:00:31.320
+After most of these
+lessons, there
+
+14
+00:00:31.320 --> 00:00:34.110
+will be a quiz to assess your
+learning of the material.
+
+15
+00:00:34.110 --> 00:00:35.660
+At the end of each
+chapter, there
+
+16
+00:00:35.660 --> 00:00:38.530
+will be a set of
+related lab exercises.
+
+17
+00:00:38.530 --> 00:00:41.160
+Let's go over a few of
+the course logistics.
+
+18
+00:00:41.160 --> 00:00:43.950
+The target audience-- this
+is a beginner's course
+
+19
+00:00:43.950 --> 00:00:46.110
+focused on developer practices.
+
+20
+00:00:46.110 --> 00:00:47.580
+If you're coming
+from an operations
+
+21
+00:00:47.580 --> 00:00:50.070
+background, fear not,
+young grasshopper,
+
+22
+00:00:50.070 --> 00:00:52.110
+we have something for you too.
+
+23
+00:00:52.110 --> 00:00:55.110
+It is expected that you are
+familiar with the MongoDB query
+
+24
+00:00:55.110 --> 00:00:56.160
+language.
+
+25
+00:00:56.160 --> 00:00:59.490
+If you aren't, we recommend you
+taking our definitive beginner
+
+26
+00:00:59.490 --> 00:01:04.379
+course, M001, before
+attempting M121.
+
+27
+00:01:04.379 --> 00:01:05.790
+How does grading work?
+
+28
+00:01:05.790 --> 00:01:09.540
+There are quizzes,
+labs, and a final exam.
+
+29
+00:01:09.540 --> 00:01:12.150
+Quizzes are ungraded and
+exist to make sure that you're
+
+30
+00:01:12.150 --> 00:01:13.890
+understanding the content.
+
+31
+00:01:13.890 --> 00:01:15.760
+Your grade in the
+class, however,
+
+32
+00:01:15.760 --> 00:01:19.260
+will be based on how well you do
+on the labs and the final exam,
+
+33
+00:01:19.260 --> 00:01:22.830
+each of these being worth
+50% of your total grade.
+
+34
+00:01:22.830 --> 00:01:25.500
+Students with a grade
+of 65% or greater
+
+35
+00:01:25.500 --> 00:01:27.300
+will receive a passing
+grade and will get
+
+36
+00:01:27.300 --> 00:01:29.340
+a certificate of completion.
+
+37
+00:01:29.340 --> 00:01:32.340
+Finally, I'd highly
+encourage you to participate
+
+38
+00:01:32.340 --> 00:01:33.810
+in the discussion forum.
+
+39
+00:01:33.810 --> 00:01:36.300
+We have knowledgeable teaching
+assistants who are there
+
+40
+00:01:36.300 --> 00:01:38.500
+to answer your questions.
+
+41
+00:01:38.500 --> 00:01:40.830
+We also have your
+classmates who can also
+
+42
+00:01:40.830 --> 00:01:42.510
+contribute to answering
+your questions
+
+43
+00:01:42.510 --> 00:01:45.870
+and are often beneficial
+and knowledgeable resources.
+
+44
+00:01:45.870 --> 00:01:48.810
+The labs in this course
+can be challenging.
+
+45
+00:01:48.810 --> 00:01:50.790
+Based on our
+experience, we've seen
+
+46
+00:01:50.790 --> 00:01:53.100
+that students who perform
+best in the course
+
+47
+00:01:53.100 --> 00:01:56.310
+are those who are most active
+in the discussion forum.
+
+48
+00:01:56.310 --> 00:01:57.990
+By the end of this
+course, you should
+
+49
+00:01:57.990 --> 00:02:00.960
+be familiar with how to
+transform data, perform data
+
+50
+00:02:00.960 --> 00:02:04.590
+analysis, and reallocate work
+to the server from your client
+
+51
+00:02:04.590 --> 00:02:05.850
+application.
+
+52
+00:02:05.850 --> 00:02:08.070
+With all of that said,
+we're excited to have you
+
+53
+00:02:08.070 --> 00:02:09.750
+as a student in this course.
+
+54
+00:02:09.750 --> 00:02:11.630
+Best of luck.

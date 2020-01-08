@@ -1,0 +1,93 @@
+In this lesson, we're going to talk about partial indexes.
+
+Sometimes, it makes sense for us to only index a portion of the documents in a collection.
+
+When we index on a subset of our documents, we can have lower storage requirements and reduce the performance cost of creating and maintaining indexes.
+
+To achieve this, MongoDB supports the creation of partial indexes.
+
+Let's look at an example.
+
+Take, for instance, a collection of restaurant information.
+
+Maybe there are lots of queries for finding a particular cuisine in a particular city, but of all these queries that the server receives, 90% of them are for restaurants with 3.5 and above stars.
+
+So instead of creating a compound index on city and cuisine, or city cuisine and stars, instead we can create a partial index where we index on city and cuisine only if the restaurant has 3.5 or more stars.
+
+We're effectively reducing the number of index keys that we need to store, and therefore reducing our space requirements for our index.
+
+This can be useful if our index has grown too large to fit into memory.
+
+Partial indexes can also be useful with multi key indexes.
+
+As we know, with multi key indexes, keys are created for each array entry.
+
+If our documents have particularly large arrays, then the server will be creating lots of index keys.
+
+This could cause issues with fitting the index into memory.
+
+We can mitigate these kinds of issues by creating a partial index.
+
+I'd also like to point out that sparse indexes are a special case of partial indexes.
+
+With a sparse index, we only index documents where the field exists that we're indexing on, rather than creating an index key with a null value.
+
+We can achieve the same effect by creating a partial index where the filter expression checks for the existence of the field were indexing on.
+
+It might be somewhat obvious, but I'd like to point out that partial indexes are much more expressive than sparse indexes.
+
+With partial indexes we can define a filter expression that checks for the existence of fields other than the ones we're indexing on.
+
+Therefore, we suggest that you use partial indexes over sparse indexes.
+
+Let's head over to the shell so that we can see partial indexes in practice.
+
+We can go ahead and switch over to the M201 database that we've been using.
+
+And from here, we can go ahead and insert a document similar to our example.
+
+And let's go ahead and run a find query on our document, matching on city and cuisine.
+
+And of course, we find the document we just inserted.
+
+And now we can go ahead and create our explainable objects and rerun our query.
+
+Now, I would expect this to be a collection scan because we have not created any indexes yet.
+
+And indeed, the winning plan was to do a collection scan.
+
+Let's go ahead and create the partial index from our example.
+
+Now, if we run the same query again, we'd expect it to use the index because we're querying on the keys of our compound index and our document has greater than 3.5 stars.
+
+And when we scroll up, we see that whoa, we're doing a collection scan.
+
+I did this because I wanted to point out an important part of partial indexes.
+
+In order to use a partial index, the query must be guaranteed to match a subset of the documents, specified by the filter expression.
+
+This is because the server could miss results in the case where matching documents are not indexed.
+
+In order for us to trigger an index scan, we need to include the stars predicate in our query that matches our filter expression.
+
+And now when want to explain output, we can see that we're indeed doing an index scan.
+
+Just remember that your query predicate must be guaranteed to match a subset of the documents that will match our filter expression.
+
+This property will hold, regardless of which documents happen to be in the collection.
+
+Let's take a moment to discuss some of the restrictions of partial indexes.
+
+So we cannot specify both a partialFilterExpression and the sparse option, and that's OK because we can actually make a sparse query with a filter expression.
+
+We also can't make our _ID index partial, and that's because every document has to have an indexed _ID field.
+
+And finally, we cannot have our shared key be a partial index.
+
+Let's recap what we've learned.
+
+So we've learned how to create and use partial indexes, we've also learned about some of the advantages and disadvantages of partial indexes.
+
+We've learned how to predict when a query will ignore the existence of a partial index, and we've learned how to emulate a sparse index with a partial index.
+
+And that should give you a good overview of partial indexes.

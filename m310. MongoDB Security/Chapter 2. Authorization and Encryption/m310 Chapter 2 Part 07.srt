@@ -1,0 +1,127 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.200
+By now you should have a pretty
+good understanding of user
+
+3
+00:00:03.200 --> 00:00:06.120
+authorization with MongoDB.
+
+4
+00:00:06.120 --> 00:00:08.000
+We're now ready to
+take our new knowledge
+
+5
+00:00:08.000 --> 00:00:10.180
+and apply it with a
+real world example.
+
+6
+00:00:10.180 --> 00:00:11.650
+For this demonstration,
+we're going
+
+7
+00:00:11.650 --> 00:00:13.160
+to imagine that we
+have a technology
+
+8
+00:00:13.160 --> 00:00:16.660
+organization with four
+users of our database.
+
+9
+00:00:16.660 --> 00:00:18.679
+Each of these users will
+have different rules
+
+10
+00:00:18.679 --> 00:00:20.470
+according to the
+different responsibilities
+
+11
+00:00:20.470 --> 00:00:21.850
+that they have.
+
+12
+00:00:21.850 --> 00:00:24.340
+So here's our
+imaginary organization.
+
+13
+00:00:24.340 --> 00:00:25.920
+First, we have Alice.
+
+14
+00:00:25.920 --> 00:00:27.630
+She's a security officer.
+
+15
+00:00:27.630 --> 00:00:29.100
+Next, we have Ben.
+
+16
+00:00:29.100 --> 00:00:31.380
+He's the sysadmin.
+
+17
+00:00:31.380 --> 00:00:33.280
+Then we have Carol.
+
+18
+00:00:33.280 --> 00:00:35.130
+She's our DBA.
+
+19
+00:00:35.130 --> 00:00:37.410
+And finally, we have Dan.
+
+20
+00:00:37.410 --> 00:00:40.430
+Dan's an intern, and he does
+most of the work on the team,
+
+21
+00:00:40.430 --> 00:00:43.141
+but he can only touch
+one specific database.
+
+22
+00:00:43.141 --> 00:00:45.640
+We don't want him messing up
+the configuration of the system
+
+23
+00:00:45.640 --> 00:00:47.300
+or anything.
+
+24
+00:00:47.300 --> 00:00:48.920
+So for all these
+users, we should
+
+25
+00:00:48.920 --> 00:00:52.450
+be able to get by only using
+the available built-in rules
+
+26
+00:00:52.450 --> 00:00:53.870
+with MongoDB.
+
+27
+00:00:53.870 --> 00:00:56.100
+Let's go ahead and start
+by booting up a cluster
+
+28
+00:00:56.100 --> 00:00:58.490
+with authorization enabled.

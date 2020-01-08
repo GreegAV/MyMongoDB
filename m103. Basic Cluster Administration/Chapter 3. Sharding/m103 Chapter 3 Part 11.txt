@@ -1,0 +1,49 @@
+In a prior lesson, we talked about how the Mongos routes queries at a high level.
+
+We're going to dig into more detail here on targeted versus scatter gather query routing.
+
+Remember that each shard contains chunks of sharded data, where each chunk represents an inclusive lower bound and exclusive upper bound.
+
+The context of a replica set keeps a table of the shard chunk The Mongos s keeps a cached local copy of this metadata table.
+
+That means that each Mongos has a map of which shard contains any given shard key value.
+
+Briefly, minKey represents the lowest possible shard key value.
+
+Think of this like minus infinity, while maxKey represents the highest possible shard key value, maximum infinity for you math purists out there.
+
+These chunks handle capturing the lower and upper boundaries of your shard key values, so that you don't have to worry about redefining what the lowest or highest possible shard key value is for the collection.
+
+So when the Mongos receives a query whose predicate includes the shard key, the Mongos can look at the table and know exactly which shards to direct at query to.
+
+The Mongos opens a cursor against only those shards that can satisfy the query predicate.
+
+Because the Mongos is targeting the query to a subset of shards in the cluster, these targeted queries are generally faster than having to check in with every shard in the cluster.
+
+If, for example, the Mongos can satisfy the entire query by targeting a single shard, then the Mongos can even bypass the merge stage and just return the results.
+
+This is particularly fast.
+
+When the query predicate does not include the shard key, than the Mongos cannot derive exactly which shards satisfy the query.
+
+These scatter gather queries must necessarily ping and wait for the reply of every shard in the cluster, regardless if they have something to contribute towards the execution of the query or not.
+
+Depending on the number of shards in your cluster, the amount of network latency between shards and Mongos and a number of other factors, these queries can be slow.
+
+That's why we advised in the Shard key lessons to choose a shard key that satisfies the majority of your queries, or at least the most common and important ones.
+
+Now, on a similar note, ranged queries on a hashed shard key are almost always scatter gather, because two adjacent shard key values are likely to be on two completely different chunks.
+
+There's a pretty low probability that the Mongos will be able to satisfy the ranged query with a subset of shards within the hash based ranged query predicate.
+
+Single document queries on a hashed shard key can still be targeted though.
+
+One thing to emphasize, if you're using a compound index as your shard key, then you can specify each prefix up to the entire shard key and still get a targeted query.
+
+So let's say we have a shard key on sku, type, and name.
+
+I can use any of the shard key prefix fields, up to the full shard key, to perform a targeted query.
+
+But I can't use any arbitrary field in the shard key.
+
+So even though type and name are part of the shard key itself, I haven't included the full prefix leading up to either of these fields, so we cannot get our targeted query.

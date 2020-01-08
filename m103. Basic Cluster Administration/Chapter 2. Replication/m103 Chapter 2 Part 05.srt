@@ -1,0 +1,448 @@
+1
+00:00:00,499 --> 00:00:03,320
+In this lesson, we are
+going to take a quick peek
+
+2
+00:00:03,320 --> 00:00:07,070
+into a fundamental database and
+the old replication process--
+
+3
+00:00:07,070 --> 00:00:10,815
+our dear, sweet Local DB.
+
+4
+00:00:10,815 --> 00:00:14,967
+The minute we start our MongoDB,
+like I'm doing right now,
+
+5
+00:00:14,967 --> 00:00:16,050
+there's a standalone node.
+
+6
+00:00:16,050 --> 00:00:19,180
+And once I connect
+to that node, we
+
+7
+00:00:19,180 --> 00:00:21,760
+can see two different
+name spaces, or databases,
+
+8
+00:00:21,760 --> 00:00:23,600
+if you prefer.
+
+9
+00:00:23,600 --> 00:00:27,380
+We have admin, which comprises
+all the Administration
+
+10
+00:00:27,380 --> 00:00:29,750
+Data and where most
+of our administration
+
+11
+00:00:29,750 --> 00:00:33,380
+commands like db.shutdownServer,
+for example, needs to be
+
+12
+00:00:33,380 --> 00:00:36,980
+executed, or will be executed.
+
+13
+00:00:36,980 --> 00:00:39,570
+And we have local.
+
+14
+00:00:39,570 --> 00:00:43,080
+So let's jump into
+local for a second.
+
+15
+00:00:43,080 --> 00:00:44,970
+And we can see that,
+in this instance,
+
+16
+00:00:44,970 --> 00:00:48,330
+a standalone, all
+by itself, node.
+
+17
+00:00:48,330 --> 00:00:54,370
+The local DB has only one
+collection-- startup.log.
+
+18
+00:00:54,370 --> 00:01:00,070
+Nothing extraordinary so far,
+in that this startup_log only
+
+19
+00:01:00,070 --> 00:01:03,460
+holds the start up log
+of this particular node,
+
+20
+00:01:03,460 --> 00:01:06,820
+as the saying kind of leads to.
+
+21
+00:01:06,820 --> 00:01:08,890
+So let's connect to
+our replica set instead
+
+22
+00:01:08,890 --> 00:01:13,060
+and check out how
+these local do once we
+
+23
+00:01:13,060 --> 00:01:15,890
+are in the replica set
+land. Now that I'm
+
+24
+00:01:15,890 --> 00:01:17,164
+connected to a replica set--
+
+25
+00:01:17,164 --> 00:01:19,580
+and you can see here from the
+prompt that I'm connected ta
+
+26
+00:01:19,580 --> 00:01:23,452
+replica M103 and to its primary.
+
+27
+00:01:23,452 --> 00:01:27,570
+If I use local and show
+the collections-- so here
+
+28
+00:01:27,570 --> 00:01:30,000
+we have a little bit
+more of information,
+
+29
+00:01:30,000 --> 00:01:34,500
+or at least a bit more of
+collections in this scenario.
+
+30
+00:01:34,500 --> 00:01:38,380
+Great, but what are
+these for anyway?
+
+31
+00:01:38,380 --> 00:01:41,080
+Most of these
+collections, like me,
+
+32
+00:01:41,080 --> 00:01:45,540
+startup log, system replica
+set, system rollback ID,
+
+33
+00:01:45,540 --> 00:01:48,320
+or replica set
+election, and min val
+
+34
+00:01:48,320 --> 00:01:51,050
+are collections maintained
+internally by the server.
+
+35
+00:01:51,050 --> 00:01:52,900
+They don't really
+vary that much,
+
+36
+00:01:52,900 --> 00:01:56,200
+and the information they hold
+are simple configuration data--
+
+37
+00:01:56,200 --> 00:01:58,850
+nothing too interesting there.
+
+38
+00:01:58,850 --> 00:02:00,850
+But where things get
+really interesting
+
+39
+00:02:00,850 --> 00:02:03,730
+is with one collection
+in particular-- oplog.rs.
+
+40
+00:02:06,250 --> 00:02:10,538
+oplog.rs is the central point
+of our replication mechanism.
+
+41
+00:02:10,538 --> 00:02:13,120
+This is the oplog
+collection that
+
+42
+00:02:13,120 --> 00:02:16,780
+will keep track of all
+statements being replicated
+
+43
+00:02:16,780 --> 00:02:19,430
+in our replica set.
+
+44
+00:02:19,430 --> 00:02:22,610
+Every single piece of
+information and operations
+
+45
+00:02:22,610 --> 00:02:27,170
+that need to be replicated will
+be logged in this collection.
+
+46
+00:02:27,170 --> 00:02:29,750
+There are a few things about
+the oplog.rs collection
+
+47
+00:02:29,750 --> 00:02:31,320
+that you should know about.
+
+48
+00:02:31,320 --> 00:02:34,040
+First of all, it's
+a capped collection.
+
+49
+00:02:34,040 --> 00:02:36,650
+Capped collection means that
+the size of this collection
+
+50
+00:02:36,650 --> 00:02:40,160
+is limited to a specific size.
+
+51
+00:02:40,160 --> 00:02:44,300
+If we collect the stats of our
+oplog.rs collection into this
+
+52
+00:02:44,300 --> 00:02:48,860
+variable, there's a flag called
+.capped that will tell us that
+
+53
+00:02:48,860 --> 00:02:51,935
+this collection
+is, indeed, capped.
+
+54
+00:02:51,935 --> 00:02:54,865
+You can see the size
+of this collection.
+
+55
+00:02:54,865 --> 00:03:01,040
+We can also see the max size
+of the particular collection.
+
+56
+00:03:01,040 --> 00:03:06,740
+Now if you want to see the
+stats into a megabyte unit,
+
+57
+00:03:06,740 --> 00:03:09,650
+you can see that this
+collection in here
+
+58
+00:03:09,650 --> 00:03:12,630
+holds up to almost 2
+gigabytes of data--
+
+59
+00:03:12,630 --> 00:03:15,050
+1.8 gigabytes.
+
+60
+00:03:15,050 --> 00:03:18,470
+By default, the
+oplog.rs collection
+
+61
+00:03:18,470 --> 00:03:22,400
+will take 5% of your free disk.
+
+62
+00:03:22,400 --> 00:03:28,230
+In my case, I have nearly 36
+gigabytes of available data.
+
+63
+00:03:28,230 --> 00:03:34,320
+So 1.8 gigabytes
+gives me those 5%.
+
+64
+00:03:34,320 --> 00:03:38,320
+The size of our oplog will
+determine our replication
+
+65
+00:03:38,320 --> 00:03:38,860
+window--
+
+66
+00:03:38,860 --> 00:03:43,390
+the amount of time that it will
+take to fill in your oplog.
+
+67
+00:03:43,390 --> 00:03:45,970
+Now, we can also see
+some of that information
+
+68
+00:03:45,970 --> 00:03:50,520
+from the printReplicationInfo,
+where here,
+
+69
+00:03:50,520 --> 00:03:54,650
+giving the current
+status of my oplog.
+
+70
+00:03:54,650 --> 00:04:00,900
+We are configured for
+those 1,819 megabytes.
+
+71
+00:04:00,900 --> 00:04:08,330
+The log length starts to end is
+around 362 seconds, 0.1 hours--
+
+72
+00:04:08,330 --> 00:04:10,120
+a very short one.
+
+73
+00:04:10,120 --> 00:04:13,490
+And it's calculated based on
+the oplog first event time
+
+74
+00:04:13,490 --> 00:04:16,370
+and the oplog last event time.
+
+75
+00:04:16,370 --> 00:04:20,200
+Now as you can see, I
+haven't done much so far.
+
+76
+00:04:20,200 --> 00:04:23,090
+And from now, where
+we stand right now
+
+77
+00:04:23,090 --> 00:04:27,530
+at this moment in time, I
+see that I have not done much
+
+78
+00:04:27,530 --> 00:04:30,360
+in this particular replica set.
+
+79
+00:04:30,360 --> 00:04:36,600
+So the calculated time to fill
+in the oplog is relatively low.
+
+80
+00:04:36,600 --> 00:04:38,390
+But wait just a second.
+
+81
+00:04:38,390 --> 00:04:42,770
+I thought that the oplog
+size was measured in size,
+
+82
+00:04:42,770 --> 00:04:48,070
+therefore it's megabytes, but
+we are talking about hours?
+
+83
+00:04:48,070 --> 00:04:50,367
+Fear not, young Padawan.
+
+84
+00:04:50,367 --> 00:04:52,700
+What is happening here is
+that MongoDB will let you know
+
+85
+00:04:52,700 --> 00:04:54,720
+how much time it will take--
+
+86
+00:04:54,720 --> 00:04:57,890
+given the current workload,
+how much time will
+
+87
+00:04:57,890 --> 00:05:01,880
+it take to start overwriting
+entries in your oplog.
+
+88
+00:05:01,880 --> 00:05:05,450
+In this case, I have
+not been doing much,
+
+89
+00:05:05,450 --> 00:05:08,310
+therefore my workload
+is quite low.
+
+90
+00:05:08,310 --> 00:05:12,020
+So it will only
+take about 0.1 hours
+
+91
+00:05:12,020 --> 00:05:14,690
+to fill the oplog,
+which is not really
+
+92
+00:05:14,690 --> 00:05:16,070
+predictable at this point.
+
+93
+00:05:16,070 --> 00:05:19,710
+We need more data to
+actually calculate correctly
+
+94
+00:05:19,710 --> 00:00:00,000
+how much time does it
+take to fill up our oplog.
+

@@ -1,0 +1,738 @@
+1
+00:00:00,000 --> 00:00:00,499
+
+
+2
+00:00:00,499 --> 00:00:02,560
+MongoDB provides two
+logging facilities
+
+3
+00:00:02,560 --> 00:00:05,320
+for tracking activities
+on your database.
+
+4
+00:00:05,320 --> 00:00:07,390
+The process log
+displays activity
+
+5
+00:00:07,390 --> 00:00:09,270
+on the MongoDB instance.
+
+6
+00:00:09,270 --> 00:00:11,110
+The process log
+collects activity
+
+7
+00:00:11,110 --> 00:00:14,380
+into one of the
+following components.
+
+8
+00:00:14,380 --> 00:00:17,590
+Each of these components has
+an associated verbosity level.
+
+9
+00:00:17,590 --> 00:00:20,890
+You can use db.getLogComponents
+in the Mongo shell
+
+10
+00:00:20,890 --> 00:00:22,660
+to review the currently
+configured log
+
+11
+00:00:22,660 --> 00:00:23,860
+component verbosity.
+
+12
+00:00:23,860 --> 00:00:26,030
+Let's take a look.
+
+13
+00:00:26,030 --> 00:00:29,150
+I'm connected to the MongoDB
+server using the mongo shell.
+
+14
+00:00:29,150 --> 00:00:32,960
+I can run db.getLogComponents
+to retrieve the log components
+
+15
+00:00:32,960 --> 00:00:34,980
+from my current database.
+
+16
+00:00:34,980 --> 00:00:37,400
+So what does all of this mean?
+
+17
+00:00:37,400 --> 00:00:39,830
+Starting at the top,
+the verbosity field
+
+18
+00:00:39,830 --> 00:00:43,010
+is the default verbosity
+level for the MongoDB server.
+
+19
+00:00:43,010 --> 00:00:46,150
+Any of the other components
+can inherit from this field.
+
+20
+00:00:46,150 --> 00:00:48,980
+See how all of these other
+components have negative 1
+
+21
+00:00:48,980 --> 00:00:51,110
+as their verbosity?
+
+22
+00:00:51,110 --> 00:00:53,810
+Negative 1 means
+inherit from parent.
+
+23
+00:00:53,810 --> 00:00:57,050
+You can see I have a verbosity
+of 1, so all of my components
+
+24
+00:00:57,050 --> 00:00:58,790
+are inheriting from that.
+
+25
+00:00:58,790 --> 00:01:02,420
+Log levels 1 through 5 just
+increase the verbosity level
+
+26
+00:01:02,420 --> 00:01:04,550
+to include debug messages.
+
+27
+00:01:04,550 --> 00:01:07,040
+The higher the number,
+the more verbose
+
+28
+00:01:07,040 --> 00:01:08,810
+your debug messages are.
+
+29
+00:01:08,810 --> 00:01:11,180
+Let's just recap
+that very briefly.
+
+30
+00:01:11,180 --> 00:01:13,190
+Negative 1 means that
+the log component
+
+31
+00:01:13,190 --> 00:01:15,920
+inherits its verbosity
+level from its parent.
+
+32
+00:01:15,920 --> 00:01:18,890
+By default, your
+verbosity is typically 0.
+
+33
+00:01:18,890 --> 00:01:21,290
+That means informational
+messages only.
+
+34
+00:01:21,290 --> 00:01:23,270
+I had set my
+verbosity level to 1
+
+35
+00:01:23,270 --> 00:01:26,100
+so I could see more
+debug messages.
+
+36
+00:01:26,100 --> 00:01:29,960
+A higher verbosity level means
+more detailed and more frequent
+
+37
+00:01:29,960 --> 00:01:31,470
+debug messages.
+
+38
+00:01:31,470 --> 00:01:34,190
+If you're not trying to actively
+identify and resolve an issue,
+
+39
+00:01:34,190 --> 00:01:39,595
+you can leave the verbosity at 0
+for a base level of monitoring.
+
+40
+00:01:39,595 --> 00:01:41,720
+You'll notice that for some
+of these log components
+
+41
+00:01:41,720 --> 00:01:44,322
+there are actually
+subcomponents as well.
+
+42
+00:01:44,322 --> 00:01:46,280
+Remember, there were
+three different components
+
+43
+00:01:46,280 --> 00:01:47,537
+for replication.
+
+44
+00:01:47,537 --> 00:01:49,370
+You had your standard
+replication component,
+
+45
+00:01:49,370 --> 00:01:52,550
+and then you had a heartbeats
+and a rollback component.
+
+46
+00:01:52,550 --> 00:01:55,070
+You can see all three of them
+here under the replication
+
+47
+00:01:55,070 --> 00:01:56,630
+parent.
+
+48
+00:01:56,630 --> 00:01:58,820
+Each one is inheriting.
+
+49
+00:01:58,820 --> 00:02:01,490
+Heartbeats and
+rollback both inherit
+
+50
+00:02:01,490 --> 00:02:04,190
+from replication,
+which itself inherits
+
+51
+00:02:04,190 --> 00:02:07,170
+from my top-level
+verbosity field.
+
+52
+00:02:07,170 --> 00:02:08,810
+Now, how does all this work?
+
+53
+00:02:08,810 --> 00:02:11,090
+There are two ways that
+we can look at the logs.
+
+54
+00:02:11,090 --> 00:02:14,060
+The first is by using the
+getLogs database command here
+
+55
+00:02:14,060 --> 00:02:15,530
+in the mongo shell.
+
+56
+00:02:15,530 --> 00:02:18,620
+The other is to use a
+utility, like tail -f,
+
+57
+00:02:18,620 --> 00:02:20,820
+to follow the end of the log.
+
+58
+00:02:20,820 --> 00:02:23,270
+Let's start with
+the getLogs command.
+
+59
+00:02:23,270 --> 00:02:25,670
+I'm using db.adminCommand
+because getLog
+
+60
+00:02:25,670 --> 00:02:27,820
+has to be run against
+the admin database.
+
+61
+00:02:27,820 --> 00:02:30,950
+I'm specifying global to
+tell getLog to give me
+
+62
+00:02:30,950 --> 00:02:32,960
+all of the log activity.
+
+63
+00:02:32,960 --> 00:02:35,000
+This is going to return
+the entire log up
+
+64
+00:02:35,000 --> 00:02:37,560
+to the point we
+ran this command.
+
+65
+00:02:37,560 --> 00:02:40,650
+You can see that I have
+a lot of index activity.
+
+66
+00:02:40,650 --> 00:02:43,590
+There are several
+commands in here,
+
+67
+00:02:43,590 --> 00:02:48,800
+including the command I
+ran when I ran db.getLog.
+
+68
+00:02:48,800 --> 00:02:52,550
+Looking at this, I actually
+have a little bit too much index
+
+69
+00:02:52,550 --> 00:02:53,780
+activity.
+
+70
+00:02:53,780 --> 00:02:56,630
+I don't really need
+this level of detail.
+
+71
+00:02:56,630 --> 00:02:59,510
+Let's change the log verbosity
+for the index component
+
+72
+00:02:59,510 --> 00:03:02,140
+back down to 0.
+
+73
+00:03:02,140 --> 00:03:04,120
+I'm specifying the
+verbosity level
+
+74
+00:03:04,120 --> 00:03:06,330
+that I want to change
+the component to
+
+75
+00:03:06,330 --> 00:03:09,040
+with db.setLogLevel.
+
+76
+00:03:09,040 --> 00:03:12,880
+The output here is what the
+log level configuration was.
+
+77
+00:03:12,880 --> 00:03:15,700
+I can rerun
+db.getLogComponents to see
+
+78
+00:03:15,700 --> 00:03:17,807
+my updated value of index.
+
+79
+00:03:17,807 --> 00:03:19,390
+We can see here that
+I've successfully
+
+80
+00:03:19,390 --> 00:03:23,140
+set the verbosity level of the
+index logging component to 0.
+
+81
+00:03:23,140 --> 00:03:27,010
+Let's take another look at the
+log, this time using tail -f.
+
+82
+00:03:27,010 --> 00:03:30,480
+I'm specifying the path to my
+log file to the tail utility.
+
+83
+00:03:30,480 --> 00:03:33,850
+And I'm specifying the
+-f flag to direct tail
+
+84
+00:03:33,850 --> 00:03:35,770
+to follow this log.
+
+85
+00:03:35,770 --> 00:03:37,300
+That means that
+I will constantly
+
+86
+00:03:37,300 --> 00:03:41,200
+get updates as there is new
+activity posted to this file.
+
+87
+00:03:41,200 --> 00:03:42,730
+Depending on your
+operating system,
+
+88
+00:03:42,730 --> 00:03:45,490
+there may be different utilities
+from tail available to you
+
+89
+00:03:45,490 --> 00:03:47,890
+that perform the
+same basic function.
+
+90
+00:03:47,890 --> 00:03:52,400
+Let's specifically take a look
+at this COMMAND logging event.
+
+91
+00:03:52,400 --> 00:03:54,490
+So this is the
+command that I just
+
+92
+00:03:54,490 --> 00:03:57,160
+identified in the log file.
+
+93
+00:03:57,160 --> 00:03:59,120
+Let's start with the time stamp.
+
+94
+00:03:59,120 --> 00:04:02,580
+This lets us know when
+the event occurred.
+
+95
+00:04:02,580 --> 00:04:05,610
+Next, I have the severity
+level of the message.
+
+96
+00:04:05,610 --> 00:04:09,160
+Briefly, there are five
+types of severity levels.
+
+97
+00:04:09,160 --> 00:04:13,730
+You have Fatal, Error,
+Warning, Informational--
+
+98
+00:04:13,730 --> 00:04:16,089
+which is related to
+verbosity level 0--
+
+99
+00:04:16,089 --> 00:04:20,769
+and Debug, which is related to
+verbosity level 1 through 5.
+
+100
+00:04:20,769 --> 00:04:23,230
+This component has a
+verbosity level of I,
+
+101
+00:04:23,230 --> 00:04:26,990
+which means that this is
+an Informational message.
+
+102
+00:04:26,990 --> 00:04:29,140
+Next, we have the
+actual log component
+
+103
+00:04:29,140 --> 00:04:31,250
+that the operation falls under.
+
+104
+00:04:31,250 --> 00:04:33,800
+In this case, the
+operation is a command.
+
+105
+00:04:33,800 --> 00:04:36,600
+We can also see the connection
+that the event occurred on.
+
+106
+00:04:36,600 --> 00:04:38,225
+Connections are
+incremented and unique,
+
+107
+00:04:38,225 --> 00:04:40,850
+so any events initiated
+by a specific connection
+
+108
+00:04:40,850 --> 00:04:43,310
+are likely from the same client.
+
+109
+00:04:43,310 --> 00:04:46,130
+We have more specific
+information on the event.
+
+110
+00:04:46,130 --> 00:04:47,600
+We have a command
+action that was
+
+111
+00:04:47,600 --> 00:04:50,150
+executed on the admin database.
+
+112
+00:04:50,150 --> 00:04:53,220
+The $cmd indicates that
+this was a database command.
+
+113
+00:04:53,220 --> 00:04:55,220
+The full list of possible
+events and descriptors
+
+114
+00:04:55,220 --> 00:04:55,940
+are out of scope.
+
+115
+00:04:55,940 --> 00:04:58,370
+But in general, you can
+expect that what immediately
+
+116
+00:04:58,370 --> 00:05:00,440
+follows the connection
+to be the operation that
+
+117
+00:05:00,440 --> 00:05:01,860
+triggered the event.
+
+118
+00:05:01,860 --> 00:05:05,540
+AppName indicates what client
+initiated the operation--
+
+119
+00:05:05,540 --> 00:05:08,570
+in this case, the mongo shell.
+
+120
+00:05:08,570 --> 00:05:10,700
+Now we can dig into
+the command itself.
+
+121
+00:05:10,700 --> 00:05:12,470
+The entire document
+is the skeleton
+
+122
+00:05:12,470 --> 00:05:14,390
+of the command executed.
+
+123
+00:05:14,390 --> 00:05:16,760
+Under the hood, we have
+a set parameter command
+
+124
+00:05:16,760 --> 00:05:20,210
+that sets the log component
+verbosity of the index log
+
+125
+00:05:20,210 --> 00:05:23,282
+component on the admin database.
+
+126
+00:05:23,282 --> 00:05:24,740
+The command was
+spawned by me using
+
+127
+00:05:24,740 --> 00:05:28,020
+the db.setLogLevel method.
+
+128
+00:05:28,020 --> 00:05:29,690
+Finally, we have
+some metadata related
+
+129
+00:05:29,690 --> 00:05:32,060
+to how the operation performed.
+
+130
+00:05:32,060 --> 00:05:34,570
+The last data point is
+of particular interest.
+
+131
+00:05:34,570 --> 00:05:37,530
+It's how long this
+operation took to complete.
+
+132
+00:05:37,530 --> 00:05:39,980
+We will talk in another
+lesson about slow operations
+
+133
+00:05:39,980 --> 00:05:42,480
+and how to identify them.
+
+134
+00:05:42,480 --> 00:05:45,510
+Looking back at my log, we can
+see that the index events have
+
+135
+00:05:45,510 --> 00:05:47,970
+reduced in frequency since
+we're just back to Informational
+
+136
+00:05:47,970 --> 00:05:50,190
+messages for that log component.
+
+137
+00:05:50,190 --> 00:05:52,830
+Let's see what happens
+when we issue a write.
+
+138
+00:05:52,830 --> 00:05:56,029
+I'm going to update a document
+in our products collection.
+
+139
+00:05:56,029 --> 00:05:57,570
+This is a simple
+update command where
+
+140
+00:05:57,570 --> 00:06:00,580
+I'm setting the sale price
+of this particular product.
+
+141
+00:06:00,580 --> 00:06:03,330
+Now let's take a
+look at our logs.
+
+142
+00:06:03,330 --> 00:06:05,970
+Both of these log events are
+related to the single update
+
+143
+00:06:05,970 --> 00:06:07,770
+command that I issued.
+
+144
+00:06:07,770 --> 00:06:09,570
+Now, you might be
+thinking, I thought we
+
+145
+00:06:09,570 --> 00:06:11,490
+just updated one document.
+
+146
+00:06:11,490 --> 00:06:14,680
+Well, an update operation is
+essentially two components.
+
+147
+00:06:14,680 --> 00:06:16,830
+One is the command,
+and the other
+
+148
+00:06:16,830 --> 00:06:18,540
+is the write
+operation that occurs
+
+149
+00:06:18,540 --> 00:06:20,520
+as a result of that command.
+
+150
+00:06:20,520 --> 00:06:22,350
+Let's recap.
+
+151
+00:06:22,350 --> 00:06:25,170
+The MongoDB review process log
+supports multiple components
+
+152
+00:06:25,170 --> 00:06:28,380
+for controlling granularity
+of events captured.
+
+153
+00:06:28,380 --> 00:06:30,900
+You can retrieve the
+log from the mongo shell
+
+154
+00:06:30,900 --> 00:06:33,930
+or by using command line
+utilities like tail.
+
+155
+00:06:33,930 --> 00:06:36,960
+Finally, you can change the
+verbosity of any log component
+
+156
+00:06:36,960 --> 00:00:00,000
+using the mongo shell.
+

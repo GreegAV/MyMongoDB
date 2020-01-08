@@ -1,0 +1,57 @@
+Now, the nice thing about index stats is that it's free.
+
+It's done by the server automatically, and it includes a surprising amount of data about my access patterns.
+
+Let's look at that full index stats document again.
+
+We'll eliminate our project stage, and there we go.
+
+So one of the things you'll notice is that we have this host field here, seems to be the same for all three of my indexes.
+
+Why are we putting that in every single document?
+
+Well, the problem is that I might have servers go down, and a secondary will become primary.
+
+Suddenly, all of our counters start out at some other number, because each server looks at its own ops independently and counts them up.
+
+Let's see this in action.
+
+OK, my primary is now a secondary.
+
+I happen to know that the server on port 30001 will be stepping up.
+
+And sure enough, it's now primary.
+
+And I'll look at those index stats, and what do you know, the ops are 0 for each of my three indexes.
+
+That's because I haven't performed any queries on this server on port 30001.
+
+All right, so that's bad enough for a replica set, but things get really interesting when we're dealing with a sharded cluster.
+
+Now that you're familiar with the basics of index stats, let's make it even more interesting.
+
+We've stopped our set.
+
+Let's blow away our data, and let's create a sharded cluster with four shards, each with three replica sets.
+
+We'll connect to our MongoS, and let's do some interesting stuff.
+
+We're going to use mgenerate to create some data, and this might take a little while.
+
+It's not terribly efficient.
+
+I don't want a bunch of chunks moving around on their own very slowly, so let's start by sharding our collection and pre-splitting some of the chunks.
+
+We'll create an index and shard that collection.
+
+Create the index, shard the collection.
+
+And I'm going to write a little script to pre-split my data.
+
+To find a variable I'm going to use, pre-split my data, and when I look at sh.status status, initially, all of my chunks are on one shard.
+
+And a few moments later, it started to move around.
+
+Several seconds later, they're evenly distributed.
+
+Great, let's disconnect and create some data.

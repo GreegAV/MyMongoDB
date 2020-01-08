@@ -1,0 +1,341 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.940
+There are times
+where we are not sure
+
+3
+00:00:02.940 --> 00:00:05.470
+if a document really
+exists in the collection
+
+4
+00:00:05.470 --> 00:00:08.940
+and we just want to update
+it if it already exists.
+
+5
+00:00:08.940 --> 00:00:13.630
+Something like update or
+insert if it does not exist.
+
+6
+00:00:13.630 --> 00:00:17.340
+Well, MongoDB allows for that
+in a very straightforward way.
+
+7
+00:00:17.340 --> 00:00:20.190
+Let's go ahead and
+instantiate our documents
+
+8
+00:00:20.190 --> 00:00:25.100
+about Final Fantasy from our
+good friends at Square Enix.
+
+9
+00:00:25.100 --> 00:00:28.550
+And instead of going to
+the database, run a query,
+
+10
+00:00:28.550 --> 00:00:30.630
+and check if the
+document already exists,
+
+11
+00:00:30.630 --> 00:00:34.150
+we are going to emit an update
+command with the flag upsert
+
+12
+00:00:34.150 --> 00:00:35.580
+equals true.
+
+13
+00:00:35.580 --> 00:00:38.580
+We set the query predicate
+that finds the video game based
+
+14
+00:00:38.580 --> 00:00:43.230
+on this title and
+we try to update it.
+
+15
+00:00:43.230 --> 00:00:46.260
+If we do not provide
+the upsert flag
+
+16
+00:00:46.260 --> 00:00:50.620
+and just set the document to
+be updated based on the title,
+
+17
+00:00:50.620 --> 00:00:53.490
+if the document does not exist,
+the number of match documents
+
+18
+00:00:53.490 --> 00:00:55.020
+should be zero.
+
+19
+00:00:55.020 --> 00:00:59.970
+So as the number of modified
+counts of the documents.
+
+20
+00:00:59.970 --> 00:01:03.930
+On the other hand, if we
+do provide an upsert flag
+
+21
+00:01:03.930 --> 00:01:08.840
+by setting the update options
+document with the upsert flag
+
+22
+00:01:08.840 --> 00:01:12.990
+to true and adding those
+options to the update method
+
+23
+00:01:12.990 --> 00:01:15.750
+by specifying it
+on the updateOne.
+
+24
+00:01:15.750 --> 00:01:18.540
+In this case, our
+number of modified count
+
+25
+00:01:18.540 --> 00:01:21.330
+is still going to be
+0 given that there's
+
+26
+00:01:21.330 --> 00:01:25.050
+no documents in the
+collection to be modified.
+
+27
+00:01:25.050 --> 00:01:30.900
+However, the upsert ID,
+as a result of the insert,
+
+28
+00:01:30.900 --> 00:01:36.930
+will be set to not null and
+should be of type object ID.
+
+29
+00:01:36.930 --> 00:01:40.410
+Another component of the
+update or insert upsert
+
+30
+00:01:40.410 --> 00:01:43.050
+is that we can set
+values just in case
+
+31
+00:01:43.050 --> 00:01:45.690
+we are inserting the document.
+
+32
+00:01:45.690 --> 00:01:50.430
+Let's say we add a field called
+just insert if the document did
+
+33
+00:01:50.430 --> 00:01:54.840
+not exist before, but
+do not set the field
+
+34
+00:01:54.840 --> 00:01:57.450
+if the document already exists.
+
+35
+00:01:57.450 --> 00:02:01.270
+Let's try to update Final
+Fantasy, which already exists.
+
+36
+00:02:01.270 --> 00:02:04.230
+We need to set up an object that
+defines the update operation,
+
+37
+00:02:04.230 --> 00:02:07.230
+sets the title, and appends
+the field just inserted
+
+38
+00:02:07.230 --> 00:02:09.039
+with a string yes.
+
+39
+00:02:09.039 --> 00:02:11.370
+So that can be done
+here, where we specify
+
+40
+00:02:11.370 --> 00:02:17.580
+update object one sets the
+title to Final Fantasy 1,
+
+41
+00:02:17.580 --> 00:02:21.870
+and sets also an option here
+set on insert just inserted
+
+42
+00:02:21.870 --> 00:02:26.230
+while the string
+equals the string yes.
+
+43
+00:02:26.230 --> 00:02:31.480
+We specify the query filter
+and run the updateOne.
+
+44
+00:02:31.480 --> 00:02:33.730
+In this case, the field
+will not be present
+
+45
+00:02:33.730 --> 00:02:37.930
+when we query for this document
+back from the database,
+
+46
+00:02:37.930 --> 00:02:41.450
+running exactly the
+expected filter,
+
+47
+00:02:41.450 --> 00:02:45.280
+finding Final Fantasy 1 now,
+and we retrieve the first.
+
+48
+00:02:45.280 --> 00:02:49.690
+We can see that no such
+field just inserted exists.
+
+49
+00:02:49.690 --> 00:02:52.990
+On the other hand, if the
+document is not updated
+
+50
+00:02:52.990 --> 00:02:57.800
+but inserted, like in this case
+a new document called title
+
+51
+00:02:57.800 --> 00:03:02.710
+CS:GO, we specify the update
+object as a set of documents
+
+52
+00:03:02.710 --> 00:03:08.770
+two and we specify as well a set
+on insert of the same flag just
+
+53
+00:03:08.770 --> 00:03:13.540
+inserted with a flag
+set to a string yes.
+
+54
+00:03:13.540 --> 00:03:16.690
+Once we run the
+updateOne, then we
+
+55
+00:03:16.690 --> 00:03:19.420
+will see that the
+field is correctly set,
+
+56
+00:03:19.420 --> 00:03:22.720
+querying the collection
+using the upsert ID field
+
+57
+00:03:22.720 --> 00:03:24.670
+in the update result object.
+
+58
+00:03:24.670 --> 00:03:27.010
+In this case, we can
+assert that, yes,
+
+59
+00:03:27.010 --> 00:03:31.490
+since the CS:GO game
+did not exist before,
+
+60
+00:03:31.490 --> 00:03:34.150
+caught the flag just inserted.
+
+61
+00:03:34.150 --> 00:03:37.060
+Running the tests for
+test upsert document,
+
+62
+00:03:37.060 --> 00:03:40.060
+everything gets
+correctly tested.
+
+63
+00:03:40.060 --> 00:03:41.750
+But let's recap.
+
+64
+00:03:41.750 --> 00:03:44.050
+We can insert new documents
+using both the insertOne
+
+65
+00:03:44.050 --> 00:03:45.930
+and insertMany
+collection methods.
+
+66
+00:03:45.930 --> 00:03:49.480
+Update using a dollar
+upsert flag set to true
+
+67
+00:03:49.480 --> 00:03:52.870
+allows us to insert
+new documents on update
+
+68
+00:03:52.870 --> 00:03:55.570
+if they don't already
+exist, and using set
+
+69
+00:03:55.570 --> 00:03:57.820
+on insert update
+operator provides a way
+
+70
+00:03:57.820 --> 00:04:03.000
+to set specific fields
+only in the case of insert.

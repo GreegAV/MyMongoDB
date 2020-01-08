@@ -1,0 +1,173 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.830
+Let's see how we can do
+the same with Compass.
+
+3
+00:00:02.830 --> 00:00:05.840
+There isn't a Compass for
+Linux as of this recording.
+
+4
+00:00:05.840 --> 00:00:07.540
+And we're running a
+headless VM, anyway.
+
+5
+00:00:07.540 --> 00:00:11.270
+So I'll exit and run
+this on my host machine.
+
+6
+00:00:11.270 --> 00:00:13.660
+First, I'll need to connect.
+
+7
+00:00:13.660 --> 00:00:17.710
+I've got my system setup to
+forward ports 30,000 30,001,
+
+8
+00:00:17.710 --> 00:00:21.140
+and 30,002 from my VM
+onto my host machine.
+
+9
+00:00:21.140 --> 00:00:22.960
+So I'm going to be
+looking at the same data
+
+10
+00:00:22.960 --> 00:00:24.960
+here that I have in
+the virtual machine.
+
+11
+00:00:24.960 --> 00:00:28.970
+
+
+12
+00:00:28.970 --> 00:00:29.620
+Great.
+
+13
+00:00:29.620 --> 00:00:30.740
+We're connected.
+
+14
+00:00:30.740 --> 00:00:33.560
+Now let's go to m312.people.
+
+15
+00:00:33.560 --> 00:00:36.320
+And we'll click on
+the Indexes tab.
+
+16
+00:00:36.320 --> 00:00:37.040
+Great.
+
+17
+00:00:37.040 --> 00:00:38.870
+This page is presenting
+me with a view--
+
+18
+00:00:38.870 --> 00:00:41.570
+well, a much prettier view--
+of my current indexes,
+
+19
+00:00:41.570 --> 00:00:43.880
+but with a lot of
+cool additional stats.
+
+20
+00:00:43.880 --> 00:00:46.370
+For purposes of this lesson,
+what we're interested in
+
+21
+00:00:46.370 --> 00:00:49.347
+is this green
+button, Create Index.
+
+22
+00:00:49.347 --> 00:00:50.930
+The first thing that
+we see is that we
+
+23
+00:00:50.930 --> 00:00:53.780
+don't have to remember all the
+options when creating indexes.
+
+24
+00:00:53.780 --> 00:00:55.238
+They're right there
+in front of us,
+
+25
+00:00:55.238 --> 00:00:58.310
+including the Build Index
+and the Background option.
+
+26
+00:00:58.310 --> 00:01:00.277
+If you want to name
+the index, go ahead.
+
+27
+00:01:00.277 --> 00:01:02.360
+Otherwise, you'll get the
+default name constructed
+
+28
+00:01:02.360 --> 00:01:04.310
+by the field names and types.
+
+29
+00:01:04.310 --> 00:01:06.500
+Note that you can also name
+your index in the shell,
+
+30
+00:01:06.500 --> 00:01:08.900
+but I rarely do that.
+
+31
+00:01:08.900 --> 00:01:14.410
+Let's add the field
+address.city of type Ascending.
+
+32
+00:01:14.410 --> 00:01:16.610
+We'll create it
+in the background.
+
+33
+00:01:16.610 --> 00:01:18.290
+And we click Create.
+
+34
+00:01:18.290 --> 00:01:19.040
+That's it.
+
+35
+00:01:19.040 --> 00:01:21.620
+We can see the new
+index in the list.
+
+36
+00:01:21.620 --> 00:01:24.260
+This is obviously much
+easier than the command line
+
+37
+00:01:24.260 --> 00:01:26.110
+interface.

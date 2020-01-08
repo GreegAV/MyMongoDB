@@ -1,0 +1,103 @@
+In this lesson, we're going to talk about reading from secondaries as it relates to performance in MongoDB.
+
+We're going to spend some time talking about when reading from secondaries is a good idea, and we're also discuss when it's a bad idea.
+
+Before we talk about when it's a bad idea to read from a secondary, let's first talk about read preference.
+
+When we read data out of MongoDB, there's always an associated read preference.
+
+By default, this is set to a primary, meaning that all of our reads will go to the primary.
+
+There are several other read preferences available to us, but discussing what each of these do, and when you'd use them, is out of the scope for this lesson.
+
+For now, we're just going discuss the read preferences relevant to performance.
+
+Like I said, by default, mongoDB's read preference is primary, meaning that all reads and writes are going to go in to your primary server.
+
+If you change the read preference to secondary, then all your reads will be routed to one of the secondaries.
+
+When your read preferences is set to secondary preferred, then that means your reads will be preferred to go to a secondary, but if there aren't any available then your reads will be routed to the primary.
+
+And finally, we have nearest, where we will read from the member that has the lowest network latency.
+
+Now, it's super important for you to understand that whenever we read from a secondary, that there's the chance that we're going to be reading stale data.
+
+Since all writes come into our primary, when we read from the primary, we are guaranteed to be reading the latest state of our data.
+
+This is called strong consistency.
+
+On the other hand, when we read from the secondaries, we're not guaranteed to be reading the most up to date copy of our data.
+
+This is because our data is being asynchronously replicated to our secondaries as writes occur on the primary.
+
+This is called eventual consistency.
+
+So anytime that our read preference isn't set to primary, the default, we need to make sure that our application or client is OK with reading stale data.
+
+Now that we understand how we can change the way we read our data, let's discuss it when it's a good idea to do so.
+
+The two most common performance scenarios for reading from secondaries is for offloading work, and for doing local reads.
+
+Let's talk about offloading work onto secondaries.
+
+A great example of this is that you might need to run an analytics or reporting job against your data.
+
+This is a great example because the queries required to do analytics are generally resource intensive and long running.
+
+We don't want to execute these queries on our primary, because the reads and writes coming from our application would be affected.
+
+So with this set up, we get the best of both worlds.
+
+Our application continues to read the most up to date copy of our information, just like it always has.
+
+And we're also able to run these long running and resource intensive queries made by our analytics job.
+
+Now, I want to point out that this is possible because our analytics job is OK with reading still data.
+
+This is typically true for batch operations, since they don't expect to be ran on the latest data.
+
+Another great use case for reading from secondaries is for local reads in geographically distributed replica sets.
+
+In this case, we have two application servers, one on the west coast of the United States, and the other on the east coast.
+
+In this hypothetical scenario, one of our members is located on one coast, and the remaining two members are located on the other coast.
+
+This is favorable when application clients need to have low latency, but are OK with reading stale data.
+
+We've discussed the two most common best practice use cases for reading from secondaries.
+
+Now let's discuss why it's a bad idea to read from secondaries.
+
+First of all, it's not generally a great idea to rad from secondaries.
+
+Secondaries exist to provide high availability to our database, not to provide increased performance.
+
+Sharding increases the read and write capacity by distributing read and write operations across a group of machines.
+
+And this is often a better strategy for adding capacity.
+
+Two commonly encountered bad ideas, is to increase your overall read throughput by reading from secondaries, and to read from secondaries in sharded clusters.
+
+Some people have the false notion that if their primary is overworked by writes, then they can offload their reads to secondaries.
+
+This is not the case, because as writes come into our primary, they're replicated to the secondaries.
+
+This means all members of a replica set have roughly about the same amount of write traffic.
+
+On the other hand, if a primary is overworked by reads, and you're OK with stale data, then it's totally fine to read from secondaries.
+
+Now a really terrible idea is to read from the secondaries in a sharded cluster.
+
+In general, it's a very bad idea to ever connect directly to a shard to read or write data.
+
+When we query the secondary of a sharded collection, we may return stale results with missing or duplicated data because of incomplete or terminated chunk migrations.
+
+So we should never do this.
+
+We should never read directly from a shard, whether it's a primary or a secondary.
+
+But secondaries are definitely worse.
+
+And this should give you a good overview of reading from secondaries.
+
+We discussed some different good ideas with regards to reading from secondaries, but then we also discussed some bad ideas with regards to reading from secondaries.

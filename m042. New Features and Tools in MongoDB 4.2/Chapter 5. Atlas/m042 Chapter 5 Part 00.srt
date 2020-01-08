@@ -1,0 +1,608 @@
+
+1
+00:00:00.000 --> 00:00:00.520
+
+
+2
+00:00:00.520 --> 00:00:01.645
+All right welcome back.
+
+3
+00:00:01.645 --> 00:00:03.130
+In this lesson,
+we'll be discussing
+
+4
+00:00:03.130 --> 00:00:05.050
+analytics nodes and
+the brand new tag
+
+5
+00:00:05.050 --> 00:00:07.360
+that we can use
+for them on Atlas.
+
+6
+00:00:07.360 --> 00:00:10.070
+So to understand why these
+analytics nodes are useful,
+
+7
+00:00:10.070 --> 00:00:12.610
+we'll start with a replica set
+under a typical applications
+
+8
+00:00:12.610 --> 00:00:14.180
+workload.
+
+9
+00:00:14.180 --> 00:00:16.340
+The application sends
+writes periodically,
+
+10
+00:00:16.340 --> 00:00:19.460
+and even if the exact amount
+of writes vary every day or so,
+
+11
+00:00:19.460 --> 00:00:22.590
+we know the general trends of
+writes over a period of time.
+
+12
+00:00:22.590 --> 00:00:24.380
+And ideally, our
+cluster is built
+
+13
+00:00:24.380 --> 00:00:27.360
+to support the amount of writes
+they will receive at peak time,
+
+14
+00:00:27.360 --> 00:00:30.630
+regardless of when that
+peak time actually occurs.
+
+15
+00:00:30.630 --> 00:00:32.570
+However, our cluster
+is not necessarily
+
+16
+00:00:32.570 --> 00:00:36.200
+built to handle the workload
+from analytics queries.
+
+17
+00:00:36.200 --> 00:00:38.960
+Analytics are a vital
+part of any organization,
+
+18
+00:00:38.960 --> 00:00:40.850
+and metrics about
+a company's product
+
+19
+00:00:40.850 --> 00:00:43.640
+can completely change
+that product's trajectory.
+
+20
+00:00:43.640 --> 00:00:46.490
+But while reporting is
+invaluable to the organization,
+
+21
+00:00:46.490 --> 00:00:49.850
+it provides some
+complications to the database.
+
+22
+00:00:49.850 --> 00:00:51.770
+Analytics or reporting
+queries do not
+
+23
+00:00:51.770 --> 00:00:54.200
+come from the core
+application, and the workload
+
+24
+00:00:54.200 --> 00:00:56.540
+associated with these
+queries is distinctly
+
+25
+00:00:56.540 --> 00:01:00.000
+different from the workload
+of those application queries.
+
+26
+00:01:00.000 --> 00:01:02.480
+These queries can have a
+very large workload that
+
+27
+00:01:02.480 --> 00:01:05.269
+occurs only every few weeks
+or so, and for this reason,
+
+28
+00:01:05.269 --> 00:01:08.870
+their memory foot print tends
+to be considerably larger.
+
+29
+00:01:08.870 --> 00:01:11.420
+An analytics query could be
+an aggregation pipeline run
+
+30
+00:01:11.420 --> 00:01:13.220
+against one of our
+biggest collections,
+
+31
+00:01:13.220 --> 00:01:14.657
+and for this reason,
+these queries
+
+32
+00:01:14.657 --> 00:01:16.490
+have the potential to
+slow down the response
+
+33
+00:01:16.490 --> 00:01:19.370
+time for the server, and they
+could even block other database
+
+34
+00:01:19.370 --> 00:01:20.473
+operations.
+
+35
+00:01:20.473 --> 00:01:21.890
+So one of the ways
+we can mitigate
+
+36
+00:01:21.890 --> 00:01:23.420
+this is by sending
+these analytics
+
+37
+00:01:23.420 --> 00:01:26.518
+queries directly to a secondary
+node in a replica set.
+
+38
+00:01:26.518 --> 00:01:28.310
+This won't change the
+total number of reads
+
+39
+00:01:28.310 --> 00:01:30.602
+and writes in the whole
+system, because the same number
+
+40
+00:01:30.602 --> 00:01:33.040
+of reads and writes will come
+in and out of the cluster,
+
+41
+00:01:33.040 --> 00:01:35.540
+but as long as this secondary
+that we're sending our queries
+
+42
+00:01:35.540 --> 00:01:39.170
+does not become the primary,
+the acting primary node will
+
+43
+00:01:39.170 --> 00:01:41.710
+experience fewer
+reads as a result.
+
+44
+00:01:41.710 --> 00:01:43.902
+What will be really ideal
+is if we could prevent
+
+45
+00:01:43.902 --> 00:01:46.110
+this secondary that we're
+querying from ever becoming
+
+46
+00:01:46.110 --> 00:01:48.810
+the primary to ensure sure that
+this analytics workload will
+
+47
+00:01:48.810 --> 00:01:51.660
+always be isolated from
+the operational workload.
+
+48
+00:01:51.660 --> 00:01:53.790
+With the new analytics
+node an Atlas,
+
+49
+00:01:53.790 --> 00:01:56.460
+we can direct our queries to
+a read-only secondary that
+
+50
+00:01:56.460 --> 00:01:59.520
+can't vote and cannot
+become the primary node.
+
+51
+00:01:59.520 --> 00:02:02.380
+Because this analytics node
+can't vote in elections,
+
+52
+00:02:02.380 --> 00:02:04.290
+the total number of
+voting members in our set
+
+53
+00:02:04.290 --> 00:02:06.485
+has not been affected.
+
+54
+00:02:06.485 --> 00:02:08.610
+And we've essentially
+dedicated this secondary node
+
+55
+00:02:08.610 --> 00:02:11.653
+to analytics and reporting,
+so we can create any indexes
+
+56
+00:02:11.653 --> 00:02:13.320
+that we need on this
+node to accommodate
+
+57
+00:02:13.320 --> 00:02:15.060
+those types of queries.
+
+58
+00:02:15.060 --> 00:02:18.570
+One caveat of using a secondary
+node for any analytics queries
+
+59
+00:02:18.570 --> 00:02:20.257
+is that we're OK
+reading stale data.
+
+60
+00:02:20.257 --> 00:02:22.590
+The query that we're running
+against the secondary could
+
+61
+00:02:22.590 --> 00:02:24.870
+take a long time and the
+primary could receive
+
+62
+00:02:24.870 --> 00:02:27.420
+writes while this query is
+still running on the secondary.
+
+63
+00:02:27.420 --> 00:02:29.130
+But typically, with
+analytics queries,
+
+64
+00:02:29.130 --> 00:02:31.380
+we're aggregating over
+a large amount of data
+
+65
+00:02:31.380 --> 00:02:34.440
+and we're OK missing out on
+that small amount of writes.
+
+66
+00:02:34.440 --> 00:02:36.690
+So now that we've seen the
+value of an analytics node,
+
+67
+00:02:36.690 --> 00:02:39.220
+we'll see how to add
+one to our cluster.
+
+68
+00:02:39.220 --> 00:02:42.160
+So here if I want to start
+building a new cluster.
+
+69
+00:02:42.160 --> 00:02:44.930
+So this feature is only
+available on cluster tiers M10
+
+70
+00:02:44.930 --> 00:02:46.680
+and up, so the first
+thing I'm going to do
+
+71
+00:02:46.680 --> 00:02:49.780
+is I'm going to change the
+cluster tier to M10 here.
+
+72
+00:02:49.780 --> 00:02:51.720
+And then under Cloud
+provider and region,
+
+73
+00:02:51.720 --> 00:02:54.930
+we can choose Advanced
+replication options,
+
+74
+00:02:54.930 --> 00:02:57.570
+and it will ask us if
+we want to add any more
+
+75
+00:02:57.570 --> 00:03:01.670
+electable nodes,
+anymore read-only nodes,
+
+76
+00:03:01.670 --> 00:03:03.590
+or any more analytics nodes.
+
+77
+00:03:03.590 --> 00:03:05.300
+So I can add a
+region here, and then
+
+78
+00:03:05.300 --> 00:03:08.090
+say I want to add one
+analytics node to my cluster.
+
+79
+00:03:08.090 --> 00:03:10.970
+I can hit Create
+cluster, and we can
+
+80
+00:03:10.970 --> 00:03:13.460
+see that it's
+provisioning 4 servers,
+
+81
+00:03:13.460 --> 00:03:15.800
+3 or those are voting
+members in our replica set,
+
+82
+00:03:15.800 --> 00:03:18.270
+and the fourth one is
+our analytics node.
+
+83
+00:03:18.270 --> 00:03:20.270
+So now that we've just
+created an analytics node
+
+84
+00:03:20.270 --> 00:03:22.910
+in our cluster, this is
+showing the URI options
+
+85
+00:03:22.910 --> 00:03:26.120
+that we use to connect
+directly to the analytics node.
+
+86
+00:03:26.120 --> 00:03:27.920
+Let's say we built out
+our reporting system
+
+87
+00:03:27.920 --> 00:03:29.270
+in some application.
+
+88
+00:03:29.270 --> 00:03:31.790
+If we wanted to direct all
+that applications traffic
+
+89
+00:03:31.790 --> 00:03:34.520
+to the analytics node,
+we'd add these two options
+
+90
+00:03:34.520 --> 00:03:36.590
+to the URI string.
+
+91
+00:03:36.590 --> 00:03:39.470
+We specify that we want to
+read from a secondary node,
+
+92
+00:03:39.470 --> 00:03:43.250
+and then we specify that we
+want the tag to read, analytics.
+
+93
+00:03:43.250 --> 00:03:45.050
+Using these two
+options in conjunction
+
+94
+00:03:45.050 --> 00:03:47.690
+means that if we had more
+than one analytics node
+
+95
+00:03:47.690 --> 00:03:49.790
+and one of them went down,
+we could automatically
+
+96
+00:03:49.790 --> 00:03:52.990
+connect to the other analytics
+node that was healthy.
+
+97
+00:03:52.990 --> 00:03:56.080
+One use case of an analytics
+node is with charts.
+
+98
+00:03:56.080 --> 00:03:59.110
+Charts queries are closely
+associated with reporting,
+
+99
+00:03:59.110 --> 00:04:01.630
+and these types of queries
+have a similar workload.
+
+100
+00:04:01.630 --> 00:04:03.610
+With the Data Sources
+tab and charts,
+
+101
+00:04:03.610 --> 00:04:07.040
+we can specify analytics
+to target with our query.
+
+102
+00:04:07.040 --> 00:04:08.950
+So I'll just choose a
+new data source here,
+
+103
+00:04:08.950 --> 00:04:11.380
+and I'll point of the
+cluster I just created,
+
+104
+00:04:11.380 --> 00:04:13.790
+and I just loaded some
+sample data in here.
+
+105
+00:04:13.790 --> 00:04:16.980
+I'm going to create a chart for
+the sample mflix data source.
+
+106
+00:04:16.980 --> 00:04:18.903
+Published the data source.
+
+107
+00:04:18.903 --> 00:04:21.070
+So let's say I'm working
+on the chart for the movies
+
+108
+00:04:21.070 --> 00:04:23.740
+collection I can actually
+change the configuration here
+
+109
+00:04:23.740 --> 00:04:24.970
+to edit the read preference.
+
+110
+00:04:24.970 --> 00:04:26.470
+Change from a
+standard secondary,
+
+111
+00:04:26.470 --> 00:04:28.690
+to an analytics node.
+
+112
+00:04:28.690 --> 00:04:30.190
+By choosing analytics
+node, we can
+
+113
+00:04:30.190 --> 00:04:31.930
+isolate the workload
+of charts queries
+
+114
+00:04:31.930 --> 00:04:34.555
+from our operational workload.
+
+115
+00:04:34.555 --> 00:04:35.930
+Just to recap, in
+this lesson, we
+
+116
+00:04:35.930 --> 00:04:38.870
+cover the value of dedicating
+nodes for analytics queries
+
+117
+00:04:38.870 --> 00:04:40.490
+in MongoDB.
+
+118
+00:04:40.490 --> 00:04:43.700
+These new analytics nodes
+cannot vote or become primary,
+
+119
+00:04:43.700 --> 00:04:46.280
+which supports workload
+isolation from our operational
+
+120
+00:04:46.280 --> 00:04:47.240
+workload.
+
+121
+00:04:47.240 --> 00:04:50.120
+Now Atlas supports the creation
+of these nodes through the UI,
+
+122
+00:04:50.120 --> 00:04:52.550
+and we can target analytics
+nodes with a read preference
+
+123
+00:04:52.550 --> 00:04:53.750
+option.
+
+124
+00:04:53.750 --> 00:04:55.400
+We can also specify
+an analytics node
+
+125
+00:04:55.400 --> 00:04:57.580
+when querying through charts.

@@ -1,0 +1,75 @@
+In this lesson, we'll be looking into ways that you, wearing the system administrator or DB hat, has to identify potential impact of client application changes.
+
+We'll be looking into keeping track of historical monitoring data, why is that important.
+
+We'll be looking to a couple of different spikes in terms of graphical information that we should look into, like watching out for spikes and connections and spikes in ops per seconds and some other few indicators for a couple of different examples that we have prepared for you, and obviously, spotting long-lasting non-indexed question.
+
+This is specifically interesting from a slow query or slowness analysis of our system.
+
+But you, if you're wearing the DB hats or system administrator hats, you might say, why do I need to care about what developers are doing?
+
+Well, let's face it.
+
+Any of this information will allow us as DBAs to sleep better at nights.
+
+That new super-hot feature that will generate thousands of instructions per second and make everyone happy needs to be well-tested with the expected load, well-configured in terms of schema design and indexes to support it.
+
+So you as a DBA need to make the necessary steps to keep your system in shipshape and Bristol fashion.
+
+Let's start with the basics.
+
+If we want to be able to pinpoint changes in your code from our system infrastructure, we will need context and historical data.
+
+Let's see this in action using MongoDB Atlas.
+
+It will look similar from Cloud and Ops Manager.
+
+In this account of Atlas, I have the best of two worlds.
+
+We can deploy machines with the click of a button, which is great-- can select our infrastructure engines and Confirm and Deploy.
+
+But once we deploy it, we would immediately get our system monitored.
+
+In this particular example here, I already have preloaded a instance, or in this case, a replica set called Cluster0.
+
+And from there, I can go immediately into the dashboard of historical data, of monitored historical data, and I can start analyzing what happened with my system.
+
+Once we have a nice set of historical information on the behavior of our application, we can start to track down any changes that might affect our back end.
+
+And this includes watching out for spikes, spikes in connections, spikes in [INAUDIBLE] per second, and a few other types of spikes in our dashboard.
+
+Now, in this example, I have a few client applications mimicking the constant flow of requests.
+
+You can see it from the number of connections and a bunch of different metrics that I'm collecting here.
+
+Just analyzing the number of connections, I can see here that a few things happen.
+
+I had a jump here in terms of my connections, and then another jump on this one.
+
+And then they fall back again.
+
+But if we cross-checked with the number of documents and the number of app counters, well, looks like the spikes did not affect that much our system, or did they?
+
+Well, the question here is that we need to analyze all types of spikes.
+
+In this case here, I'm going to zoom in a region where I can have information on all different spikes that happened here.
+
+In this one here, my up counters and document metrics, as well, is skewing up a little bit my data.
+
+I know exactly what happened here.
+
+But if you don't, you as a DBA should immediately be asking your developers, what went wrong on this particular point in time?
+
+What that is saying, not what was wrong, but what did you guys do at this point?
+
+Now, if I want to correlate that with the number of connections established, I need to select just those-- still getting a little bit of skewed data.
+
+Let's just remove that from our view.
+
+And once we do that, we can see a total different figure.
+
+Raising the number of connections in my system-- this correlates with a bunch more work in my application that was being skewed out by other spikes in my graph.
+
+So make sure you understand that not always what we see is what actually is going on.
+
+So you need to be careful about that.

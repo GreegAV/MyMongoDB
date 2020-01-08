@@ -1,0 +1,57 @@
+OK, now that we've seen this for some small queries, let's do it for a whole bunch of queries.
+
+Whoops-- ran it too quick.
+
+Basically, it finds a single query and runs it 100 times.
+
+We should see the index stat incrementing for each query.
+
+And when I look at my index stats, there it is.
+
+My last name, first name index was incremented 100 times because we used it for each of those 100 queries.
+
+I also want you to notice that this used last name and first name, and I have an index that's only on first name, which could have been used, but it's not optimal.
+
+But MongoDB only used the other index to fulfill the query, so it didn't increment the operations on this first name index.
+
+So $indexStats is going to do a good job of telling us which indexes we're using and which ones we're not.
+
+By looking at the change in that ops field from one time to the next that we use $indexStats, we can get a pretty good sense of which indexes are never being used, meaning they're good candidates for deletion.
+
+Why?
+
+Well, recall that indexes will reduce the speed of inserts because you have to insert a document and add an index key for each index in that collection.
+
+By the way, it's worth asking the question, when does it increment the field?
+
+Notice that, right now, my indexes have a value of 0, 2, and 100.
+
+Let's insert one more document and see what our index stats look like.
+
+0, 2, and 100.
+
+It did not increment any of them from inserting a document.
+
+What about an update?
+
+OK, I performed a single update.
+
+We matched one document and modified it.
+
+Let's look at our index stats-- 0, 2, and 101.
+
+OK, it used this last name, first name index to fulfill that update.
+
+That's because an update is a combination of a find and a write, and since I used the index to find the document, it's incremented.
+
+By way, MongoDB will increment the ops field even if I don't update anything.
+
+I'll run the same update, setting the same field, but it will recognize that no update is necessary since we're already in the state the update is trying to create.
+
+Update one set, address, same field-- matched one document, didn't modify it.
+
+But when I look at the index stats, there we go-- incremented the ops field.
+
+We had to use the index to find the document even though we didn't write to that document.
+
+Any time I use the index to find a document, MongoDB will increment that index counter in the ops field.

@@ -1,0 +1,171 @@
+So the labs in this course will be completed inside a virtual machine.
+
+And this lesson is about how to set up the virtual machine on your host machine.
+
+But first, why are we using one?
+
+The first is that it's to sandbox the environment.
+
+We want to give you an environment that you can use without messing with the existing settings on your local machine.
+
+This also allows us to avoid dependency and system troubleshooting.
+
+So all the dependencies are downloaded for you.
+
+And you can focus on the learning.
+
+Third, it also allows us to provide more consistent support for our students throughout the course.
+
+If we know that everyone's running the same operating system, we can more quickly diagnose and solve problems that you have.
+
+So how does it work?
+
+You boot up a Vagrant virtual machine on your computer.
+
+And it uses your computer's memory, storage, and CPU in order to function just like a real computer.
+
+And by using a process called SSH, or Secure Shell, you can connect to the virtual machine.
+
+Once you're connected, you can treat it just like a regular computer.
+
+And you can connect it with your terminal or command prompt.
+
+In this course, you'll launch mongod processes and replica sets all inside your virtual machine.
+
+But in order to do that, we're going to ask that you install two dependencies.
+
+The first is VirtualBox.
+
+VirtualBox as an open source hypervisor that allows us to run virtual machines on your host machine.
+
+The second is Vagrant, which is an open source tool that allows us to build and maintain these virtual software environments very quickly.
+
+More specifically, Vagrant makes it really easy to copy files and share files from your host machine to your virtual machine.
+
+For example, if you had an exercise handout or some code that you wrote on your local machine, you can take those files and copy them directly into the virtual machine.
+
+We'll see more about this in a minute.
+
+As part of the lecture notes, you'll find the instructions to install these two software tools for Windows.
+
+So I won't be spending too much time in this video regarding that.
+
+But once you have those installed, we'll start setting up the virtual class environment.
+
+So first, we're going to create a directory for this course called m103 and a parent directory called university.
+
+This -p here creates the parent directory university in case it doesn't exist.
+
+So here we have a recursive copy, which is notated by the -r, which is used to copy entire directories into another location.
+
+In this case, we're copying the m103-vagrant-env directory into the m103 folder.
+
+So now that we're inside the m103 vagrant environment folder inside the m103 course folder, we can start looking around the actual handout to see what we just downloaded.
+
+As we can see, we have a Vagrant file and a provisioning file.
+
+The Vagrant file specifies some baseline operating system image details.
+
+As you can see, we have the operating system that we're running, Ubuntu.
+
+And I just want to quickly draw your attention to this folder that we created called Shared.
+
+This folder is going to connect our virtual machine to our host machine.
+
+So at any point, if you want to copy a file from your host machine into the virtual machine, be it a handout for a lab or some code that you wrote on your host machine, all you'd have to do is copy it in the shared folder inside the virtual environment and it would copy it into the virtual machine.
+
+There are some other details in here, such as the name of the box, mongod-m103, and the amount of memory, which is just over two gigabytes.
+
+There's also an external IP address for the Vagrant box, 192.168.103.100, which you'll actually have to use in some later labs.
+
+So now we can take a look at the provisioning file and see what's inside.
+
+This file is quite a bit longer than the Vagrant file.
+
+And it's written in Shell script because it needs to download some things in order for you to complete the course materials.
+
+The provisioning file overall specifies the dependencies and all the necessary software that will be required to complete the labs.
+
+And it will also download the validation scripts you'll run in order to check your work.
+
+We have some commands here defining which version of MongoDB to install and where to place some files and configurations and any third-party software.
+
+You don't really need to know any of this stuff.
+
+But just in case something does go wrong with the virtual environment during the course, we might ask you to change some of the settings and variables inside these files.
+
+The chances of that are very small, though.
+
+So in general, try not to mess around with these files.
+
+The reason we're using Vagrant is so that you can focus on the course material and not dependencies or any of that other stuff.
+
+So now that we've taken a look at some of the files you got in the handout, we actually bring Vagrant up and go over some of the commands you can use to configure the Vagrant box once it's running.
+
+The first that we're going to learn is called vagrant up.
+
+This is going to actually bring our box up as specified in the Vagrant file and the provisioning file.
+
+This may take a while to run, especially if it's your first time running it.
+
+So just wait a few minutes and it should complete.
+
+So once this box is running, we can check the health and status of the box using the command vagrant status.
+
+This tells us that our mongod-m103 box is running.
+
+And it also gives us some commands that we can use to shut it down with vagrant halt, suspend it with vagrant suspend, and start it back up with vagrant up.
+
+Without further ado, let's SSH into the box.
+
+So here we can connect to the box using the SSH with the command vagrant ssh.
+
+This will recognize the Vagrant file and provisioning file and use it to connect to the right VirtualBox.
+
+So once we've SSHed, you can tell that the Shell prompt has changed to say vagrant and m103.
+
+And this is a good thing.
+
+It means that we're no longer connected to our host machine and we're actually connected directly to the virtual machine.
+
+And we can run commands to actually explore our virtual machine.
+
+We'll just take a look at the mongod version that's installed on our box.
+
+And we can see it's version 3.6, which is the latest.
+
+This is because the provisioning file went and got the latest version of MongoDB for us.
+
+So we didn't have to figure out how to do it.
+
+It also installed on the right location so that you can jump right in and start running Mongo commands.
+
+If we want to exit the box, all we have to do is type exit and we're connected back to our host machine.
+
+If we want to stop the box, we can run vagrant halt.
+
+And this will gracefully shut down our virtual machine so that the state stays the same.
+
+And if we run vagrant up again, it'll bring it back up.
+
+We can verify this by running vagrant status again.
+
+And as we can see, the box is running.
+
+So just to recap, here's what will be expected of you.
+
+Download the handout that contains the Vagrant environment.
+
+Unzip the handout and place it in your new m103 folder for this course.
+
+You can bring the virtual environment up with vagrant up, and they connect with SSH.
+
+In order to verify the provisioning script ran the correct way, you can check the version of MongoDB that's installed inside the virtual machine.
+
+If you want, you can exit the box and put our system to rest, and then bring it back up again so that you can use it.
+
+All right.
+
+Thanks for listening.
+
+Good luck setting up your own virtual environment.

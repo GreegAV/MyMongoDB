@@ -1,0 +1,508 @@
+
+1
+00:00:00.000 --> 00:00:00.640
+
+
+2
+00:00:00.640 --> 00:00:03.480
+Let's learn about some
+other powerful data analysis
+
+3
+00:00:03.480 --> 00:00:06.630
+and groupings stages within
+the aggregation framework.
+
+4
+00:00:06.630 --> 00:00:10.290
+In this lesson, we'll learn
+about bucket, bucketAuto,
+
+5
+00:00:10.290 --> 00:00:12.090
+and sortByCount.
+
+6
+00:00:12.090 --> 00:00:14.220
+We'll discuss bucket first.
+
+7
+00:00:14.220 --> 00:00:15.979
+bucket has the following form.
+
+8
+00:00:15.979 --> 00:00:18.780
+And as we can see, it takes
+a few different arguments.
+
+9
+00:00:18.780 --> 00:00:21.480
+So let's go over each one.
+
+10
+00:00:21.480 --> 00:00:23.850
+As we go along and
+cover each field, let's
+
+11
+00:00:23.850 --> 00:00:27.990
+also incrementally build
+a real aggregation.
+
+12
+00:00:27.990 --> 00:00:32.100
+groupBy groups documents
+on evaluated expression,
+
+13
+00:00:32.100 --> 00:00:35.620
+just like the _ID argument
+to the group stage.
+
+14
+00:00:35.620 --> 00:00:39.660
+One catch-- we can only
+specify one value to match on.
+
+15
+00:00:39.660 --> 00:00:42.990
+We could use an expression
+that evaluates two field paths,
+
+16
+00:00:42.990 --> 00:00:46.530
+but it must ultimately
+resolve to one value.
+
+17
+00:00:46.530 --> 00:00:49.830
+Let's specify a field
+path to $imdb.rating,
+
+18
+00:00:49.830 --> 00:00:53.400
+grouping documents together
+based on their rating.
+
+19
+00:00:53.400 --> 00:00:56.550
+All right, boundaries--
+this is where buckets
+
+20
+00:00:56.550 --> 00:00:59.030
+begin to become very powerful.
+
+21
+00:00:59.030 --> 00:01:02.430
+In boundaries, we specify
+an array of values.
+
+22
+00:01:02.430 --> 00:01:06.330
+Each value is a lower bound of
+the group the documents will
+
+23
+00:01:06.330 --> 00:01:07.500
+be placed in.
+
+24
+00:01:07.500 --> 00:01:10.980
+And successive values are
+the exclusive upper bound
+
+25
+00:01:10.980 --> 00:01:12.930
+of the previous group.
+
+26
+00:01:12.930 --> 00:01:15.800
+A few things to be aware
+of about boundaries--
+
+27
+00:01:15.800 --> 00:01:17.940
+the values that we
+specify in boundaries
+
+28
+00:01:17.940 --> 00:01:20.790
+must all be of the same
+type, with the exception
+
+29
+00:01:20.790 --> 00:01:22.470
+being number values.
+
+30
+00:01:22.470 --> 00:01:25.180
+Different types of
+number can be mixed.
+
+31
+00:01:25.180 --> 00:01:30.120
+Also, we must specify
+at least two boundaries.
+
+32
+00:01:30.120 --> 00:01:34.080
+Here, I'm specifying
+an array of 0, 5, 8,
+
+33
+00:01:34.080 --> 00:01:36.630
+and infinity to boundaries.
+
+34
+00:01:36.630 --> 00:01:39.360
+That means that documents
+with an $imdb.rating
+
+35
+00:01:39.360 --> 00:01:45.090
+from 0 inclusive to 5 exclusive
+will be placed in the 0 group.
+
+36
+00:01:45.090 --> 00:01:48.600
+Documents with an IMDB
+rating between 5 and 8
+
+37
+00:01:48.600 --> 00:01:51.060
+will be placed in the
+5 group, and documents
+
+38
+00:01:51.060 --> 00:01:54.390
+with an IMDB rating
+between 8 and infinity
+
+39
+00:01:54.390 --> 00:01:56.610
+will be placed in the 8 group.
+
+40
+00:01:56.610 --> 00:02:01.500
+We call these groups buckets,
+hence the name of the stage.
+
+41
+00:02:01.500 --> 00:02:05.410
+The default field is
+optional but important.
+
+42
+00:02:05.410 --> 00:02:07.560
+If we don't specify
+it, the expression
+
+43
+00:02:07.560 --> 00:02:10.830
+we specified to
+groupBy must resolve
+
+44
+00:02:10.830 --> 00:02:13.830
+to a value that can fall within
+one of the buckets specified
+
+45
+00:02:13.830 --> 00:02:14.910
+in boundaries.
+
+46
+00:02:14.910 --> 00:02:19.230
+Otherwise we'll get an Error
+The default value we specify
+
+47
+00:02:19.230 --> 00:02:21.810
+can be of the same type
+as the boundary values,
+
+48
+00:02:21.810 --> 00:02:25.500
+but it must either be less than
+the minimum boundary specified
+
+49
+00:02:25.500 --> 00:02:28.200
+or greater than the
+maximum boundary.
+
+50
+00:02:28.200 --> 00:02:31.750
+Since we know that not all
+documents have an $imdb.rating,
+
+51
+00:02:31.750 --> 00:02:35.170
+we'll specify not
+rated to default.
+
+52
+00:02:35.170 --> 00:02:38.790
+This will catch all
+of the documents.
+
+53
+00:02:38.790 --> 00:02:41.040
+Before we go over the
+last argument, let's
+
+54
+00:02:41.040 --> 00:02:44.060
+test out bucket to
+get a feel for it.
+
+55
+00:02:44.060 --> 00:02:47.295
+Here, we're specifying
+the argument to groupBy,
+
+56
+00:02:47.295 --> 00:02:49.440
+hence setting our boundaries.
+
+57
+00:02:49.440 --> 00:02:52.080
+We know this will error
+because not all documents
+
+58
+00:02:52.080 --> 00:02:54.780
+have a value for $imdb.rating.
+
+59
+00:02:54.780 --> 00:02:59.710
+But let's run it anyway to
+see what that looks like.
+
+60
+00:02:59.710 --> 00:03:02.100
+This is the error we'll get.
+
+61
+00:03:02.100 --> 00:03:03.990
+Now that we know
+what it looks like,
+
+62
+00:03:03.990 --> 00:03:05.520
+if we encounter
+it in the future,
+
+63
+00:03:05.520 --> 00:03:08.670
+we'll know where to look
+to fix our pipeline.
+
+64
+00:03:08.670 --> 00:03:11.980
+Let's include that
+default argument.
+
+65
+00:03:11.980 --> 00:03:17.080
+Here we included the default
+and specified not rated.
+
+66
+00:03:17.080 --> 00:03:19.950
+Now let's see it in action.
+
+67
+00:03:19.950 --> 00:03:21.960
+We can see a few
+different things.
+
+68
+00:03:21.960 --> 00:03:23.670
+The $bucket stage
+automatically gives us
+
+69
+00:03:23.670 --> 00:03:25.710
+a count field
+within each bucket,
+
+70
+00:03:25.710 --> 00:03:29.190
+counting how many documents
+were put into that bucket.
+
+71
+00:03:29.190 --> 00:03:35.100
+We can see that there were
+4,992 documents in the 0 to 5,
+
+72
+00:03:35.100 --> 00:03:38.820
+35,516 documents in
+the 5 to 8 bucket,
+
+73
+00:03:38.820 --> 00:03:43.600
+and 2,284 documents in the
+8 to infinity document.
+
+74
+00:03:43.600 --> 00:03:48.540
+We can also see there were 1,705
+documents that aren't rated,
+
+75
+00:03:48.540 --> 00:03:50.850
+meaning they did not have
+a value that we could group
+
+76
+00:03:50.850 --> 00:03:54.670
+on in the $imdb.rating field.
+
+77
+00:03:54.670 --> 00:03:56.050
+This is pretty cool.
+
+78
+00:03:56.050 --> 00:03:58.830
+We can see the vast
+majority of IMDB ratings
+
+79
+00:03:58.830 --> 00:04:01.410
+fall between 5 and 8.
+
+80
+00:04:01.410 --> 00:04:04.450
+This alone, however,
+may not be enough.
+
+81
+00:04:04.450 --> 00:04:07.230
+The bucket stage fundamentally
+transformed the resulting
+
+82
+00:04:07.230 --> 00:04:08.490
+documents.
+
+83
+00:04:08.490 --> 00:04:11.820
+What if we wanted to find the
+average rating per bucket?
+
+84
+00:04:11.820 --> 00:04:16.079
+This is where the last
+field, output, comes in.
+
+85
+00:04:16.079 --> 00:04:18.990
+output is much like the
+additional fields we
+
+86
+00:04:18.990 --> 00:04:21.209
+can specify in the group stage.
+
+87
+00:04:21.209 --> 00:04:23.190
+We can give the
+fields almost any name
+
+88
+00:04:23.190 --> 00:04:26.460
+we like and use familiar
+accumulator expressions
+
+89
+00:04:26.460 --> 00:04:28.530
+to calculate their values.
+
+90
+00:04:28.530 --> 00:04:32.090
+Let's get the average
+rating per bucket.
+
+91
+00:04:32.090 --> 00:04:34.530
+Here I've specified
+the same arguments as
+
+92
+00:04:34.530 --> 00:04:37.680
+before with the addition
+of an output field
+
+93
+00:04:37.680 --> 00:04:41.310
+and the average per bucket key.
+
+94
+00:04:41.310 --> 00:04:42.150
+Awesome.
+
+95
+00:04:42.150 --> 00:04:45.720
+We can see that we get the
+average for documents that fall
+
+96
+00:04:45.720 --> 00:04:47.520
+within our defined buckets.
+
+97
+00:04:47.520 --> 00:04:49.830
+But we're missing
+the count field now.
+
+98
+00:04:49.830 --> 00:04:51.690
+The reason for this
+is because count
+
+99
+00:04:51.690 --> 00:04:55.200
+is the default accumulator
+for the bucket stage.
+
+100
+00:04:55.200 --> 00:04:59.676
+If no output is defined, MongoDB
+inserts the count for us.
+
+101
+00:04:59.676 --> 00:05:03.460
+If we specify an output
+and also want the count,
+
+102
+00:05:03.460 --> 00:05:07.110
+we must specify that as
+well using the same method
+
+103
+00:05:07.110 --> 00:05:09.460
+we do in the group stage.
+
+104
+00:05:09.460 --> 00:05:13.560
+Here, everything is identical
+with the addition of the count
+
+105
+00:05:13.560 --> 00:05:15.520
+field.
+
+106
+00:05:15.520 --> 00:05:18.870
+Now we're seeing we get the
+same average ratings as before
+
+107
+00:05:18.870 --> 00:05:22.550
+per bucket along with the
+count that we expected.

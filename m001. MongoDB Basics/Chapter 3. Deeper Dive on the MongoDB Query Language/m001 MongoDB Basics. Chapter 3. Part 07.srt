@@ -1,0 +1,396 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:01,950
+MongoDB supports
+a query operator
+
+3
+00:00:01,950 --> 00:00:05,940
+that allows us to use regular
+expressions to match fields
+
+4
+00:00:05,940 --> 00:00:08,090
+with string values.
+
+5
+00:00:08,090 --> 00:00:11,380
+If you're looking for more
+comprehensive text search,
+
+6
+00:00:11,380 --> 00:00:15,280
+I encourage you to look at the
+text operator and full text
+
+7
+00:00:15,280 --> 00:00:16,172
+indexes.
+
+8
+00:00:16,172 --> 00:00:18,380
+Full text search is outside
+the scope of this course,
+
+9
+00:00:18,380 --> 00:00:20,990
+but I mention it here because
+it's related to $regex
+
+10
+00:00:20,990 --> 00:00:22,600
+and may be of interest to you.
+
+11
+00:00:22,600 --> 00:00:25,080
+Now to use the
+$regex operator you
+
+12
+00:00:25,080 --> 00:00:26,750
+need to have a fairly
+good understanding
+
+13
+00:00:26,750 --> 00:00:29,390
+of regular expressions,
+but it's important you
+
+14
+00:00:29,390 --> 00:00:32,080
+know this operator
+exists for the situations
+
+15
+00:00:32,080 --> 00:00:35,790
+in which regular expressions
+make sense for an application.
+
+16
+00:00:35,790 --> 00:00:37,750
+Now in our movie
+details collection,
+
+17
+00:00:37,750 --> 00:00:41,970
+the documents have an awards
+field that has as its value
+
+18
+00:00:41,970 --> 00:00:46,030
+an embedded document
+with a field called text.
+
+19
+00:00:46,030 --> 00:00:48,730
+This text describes the
+awards that a given movie
+
+20
+00:00:48,730 --> 00:00:50,650
+has received.
+
+21
+00:00:50,650 --> 00:00:53,090
+And for this particular
+data set given
+
+22
+00:00:53,090 --> 00:00:56,970
+the way it was generated, if a
+movie has one or was nominated
+
+23
+00:00:56,970 --> 00:01:01,220
+for an Oscar, you'll see that
+reflected in the first word
+
+24
+00:01:01,220 --> 00:01:02,700
+of this text field.
+
+25
+00:01:02,700 --> 00:01:05,060
+This field has a certain
+pattern it follows
+
+26
+00:01:05,060 --> 00:01:07,250
+in reporting on the
+awards for movies,
+
+27
+00:01:07,250 --> 00:01:11,200
+and we can see that reflected if
+we just do a bit of projection
+
+28
+00:01:11,200 --> 00:01:12,890
+on the entire collection.
+
+29
+00:01:12,890 --> 00:01:16,460
+So what I'm going to
+do is run a find query,
+
+30
+00:01:16,460 --> 00:01:18,360
+and all were running
+this fine query
+
+31
+00:01:18,360 --> 00:01:21,160
+for is in order to
+do this projection.
+
+32
+00:01:21,160 --> 00:01:24,160
+The way we do that is by simply
+specifying an empty document
+
+33
+00:01:24,160 --> 00:01:25,180
+as our filter.
+
+34
+00:01:25,180 --> 00:01:27,430
+This empty document will
+match every document
+
+35
+00:01:27,430 --> 00:01:29,020
+in the collection.
+
+36
+00:01:29,020 --> 00:01:34,140
+So for Oscar winning movies, we
+tend to see the word one first
+
+37
+00:01:34,140 --> 00:01:39,350
+and nominated first for
+Oscar nominated movies.
+
+38
+00:01:39,350 --> 00:01:41,970
+Now there are some other words
+that follow the same pattern,
+
+39
+00:01:41,970 --> 00:01:43,420
+but for purposes
+of this example,
+
+40
+00:01:43,420 --> 00:01:45,820
+let's go ahead and use the
+fact that Oscar awards are
+
+41
+00:01:45,820 --> 00:01:48,310
+stipulated in this way.
+
+42
+00:01:48,310 --> 00:01:51,700
+Here we have an example of the
+use of the $regex operator.
+
+43
+00:01:51,700 --> 00:01:55,850
+If you're not familiar
+with regular expressions,
+
+44
+00:01:55,850 --> 00:01:59,280
+this syntax is probably
+a little bit confusing,
+
+45
+00:01:59,280 --> 00:02:00,720
+but we'll clear that up.
+
+46
+00:02:00,720 --> 00:02:02,650
+A full explanation of
+regular expressions
+
+47
+00:02:02,650 --> 00:02:05,060
+is outside the scope of
+this particular lesson,
+
+48
+00:02:05,060 --> 00:02:10,690
+but essentially these slashes
+delimit the regular expression.
+
+49
+00:02:10,690 --> 00:02:14,950
+The caret here means start at
+the beginning of whatever field
+
+50
+00:02:14,950 --> 00:02:18,760
+we;re matching on, in this
+case, the awards.text field.
+
+51
+00:02:18,760 --> 00:02:22,620
+At the very beginning of
+the value of that field,
+
+52
+00:02:22,620 --> 00:02:30,560
+we want to match exactly a
+capital W, a lowercase O,
+
+53
+00:02:30,560 --> 00:02:35,840
+a lowercase N. Then this dot
+is a wild card character.
+
+54
+00:02:35,840 --> 00:02:38,980
+It stipulates that we
+should match any character,
+
+55
+00:02:38,980 --> 00:02:41,300
+and then with the
+asterisk here we're
+
+56
+00:02:41,300 --> 00:02:44,760
+matching any character
+any number of times.
+
+57
+00:02:44,760 --> 00:02:47,840
+So in summary, what this
+regular expression is matching
+
+58
+00:02:47,840 --> 00:02:53,360
+is the word won at the
+beginning of the text field
+
+59
+00:02:53,360 --> 00:02:56,700
+for the awards
+embedded document.
+
+60
+00:02:56,700 --> 00:03:00,300
+And we don't care what
+comes after the word won.
+
+61
+00:03:00,300 --> 00:03:02,250
+It can be anything.
+
+62
+00:03:02,250 --> 00:03:03,930
+And what I really
+need to do here
+
+63
+00:03:03,930 --> 00:03:07,390
+is make this just a
+little bit more precise,
+
+64
+00:03:07,390 --> 00:03:10,310
+and put a space here to
+indicate that there must
+
+65
+00:03:10,310 --> 00:03:12,140
+be a space after the word won.
+
+66
+00:03:12,140 --> 00:03:14,460
+I want to ignore for
+example any documents where
+
+67
+00:03:14,460 --> 00:03:18,560
+the field begins with the word
+wonder or some other word that
+
+68
+00:03:18,560 --> 00:03:21,350
+has these three letters
+at the beginning.
+
+69
+00:03:21,350 --> 00:03:23,280
+So let's take a look at that.
+
+70
+00:03:23,280 --> 00:03:26,180
+And in fact, let's
+do this version
+
+71
+00:03:26,180 --> 00:03:30,555
+of it projecting out the title
+and the awards.text field.
+
+72
+00:03:30,555 --> 00:03:32,180
+And you can see that
+we're getting back
+
+73
+00:03:32,180 --> 00:03:36,440
+the kinds of documents that
+we want, all Oscar winners.
+
+74
+00:03:36,440 --> 00:03:41,760
+So that's a very simple example
+of using the $regex operator.
+
+75
+00:03:41,760 --> 00:03:44,320
+If you have a use case where
+regular expressions are
+
+76
+00:03:44,320 --> 00:03:47,930
+important, that is where
+you have a string field,
+
+77
+00:03:47,930 --> 00:03:50,760
+and you want to
+match documents that
+
+78
+00:03:50,760 --> 00:03:54,550
+have a particular pattern
+of text in that field,
+
+79
+00:03:54,550 --> 00:03:57,920
+the $regex operator is
+the one you should use.
+
+80
+00:03:57,920 --> 00:03:59,950
+And if you have such
+a use case, I strongly
+
+81
+00:03:59,950 --> 00:04:02,610
+encourage you to dive deeper
+into the use of this operator.
+
+82
+00:04:02,610 --> 00:00:00,000
+There's a great deal
+of flexibility there.
+

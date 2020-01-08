@@ -1,0 +1,85 @@
+Let's start by instantiating MongoClient object since this is the pillar of our client-- your code-- and server-- the atlas cluster-- communication.
+
+To do this, we'll be using the MongoClients builder.
+
+For this example, we'll be using MongoDB uri that defines to which cluster how we should be connecting.
+
+Once I have my connection string, I can go ahead and call MongoClients and create a MongoClient instance by providing the user uri string.
+
+The MongoClients object will create a MongoClient instance by extracting the client connection settings from the connection string.
+
+However, we can extend the configuration by setting configuration options that may not be present in the connection string uri by sending the MongoDB client's object.
+
+This class contains a builder method, a static class method called builder that allows you to compose the different types of client settings upon each other.
+
+So in this case, we are applying the connection string that we created via the uri string, we are applying an application name to the client connection settings, and we're also creating an applyToConnectionPoolSettings by calling a lambda that calls a builder that allows you to define, for example, connection pool settings like maxWaitTime.
+
+Once we call build, we can pass that client's settings and create our mongoClient with the create MongoClients method.
+
+Once we run this test, we can see that everything, it's properly asserted as NotNull.
+
+Now that we have a MongoClient instance, we can go ahead and connect to our cluster and list all available databases by calling listDatabaseNames.
+
+This will be very similar to do the following command in the shell-- db.getMongo( ).getDatabaseNames.
+
+This command returns a MongoIterable instance, an iterable object that we can use to iterate over results of a given command.
+
+We will use MongoIterable quite a lot in this course.
+
+Important to note that iterable instances get exhausted, like a cursor, so you may want to consider using the iterable instance to fill arrays and lists if you need to go over the contents more than once.
+
+Then we have our MongoDatabase object.
+
+We will use this object to the access, create, and drop our collections, run commands, and define database-level preferences, read concerns, and a lot of other different configuration options.
+
+To get the database, we just need to do mongoClient.getDatabase and provide the name of the database that we are interested on accessing.
+
+Here, because we did not specify a Read Preference, the driver will use the default configuration which is primary.
+
+If we run the tests, you can see that everything gets green, and all of our databases get listed.
+
+A MongoCollection instance is what is used to read and write to the documents which is usually the entity the application processes to manipulate the data it needs.
+
+To instantiate a collection, we need to provide a collection name to the MongoDB database instance.
+
+In this example, we are using the basic form of interacting with data defining the MongoCollection where we return Document instances from any given query.
+
+However, MongoCollection allows us to specify Codec so that we can return business objects, application-defined classes, as return of the queries.
+
+More about this on our POJO support lessons.
+
+All of our Data Manipulation language-- DML-- will be expressed via a MongoCollection instance.
+
+Once we run the tests, again, everything gets green.
+
+The basic data structures in MongoDB are documents.
+
+The document model is what we consider to be the best way to represent data.
+
+Using documents makes your application definition as close as possible to your OOP object models.
+
+Since we are dealing with an Object-Oriented Programming language like Java, having a class that represents the document's structure becomes imperative.
+
+So in this case, I'm going to instantiate here a new document which will have a particular structure.
+
+This document defines a MongoDB document that looks like this in its JSON format where we have a name which has two fields-- first and last.
+
+And obviously, we can use those documents to be inserted into the collection.
+
+We use documents for everything in MongoDB to define data objects, define queries, define update operations, define configuration settings.
+
+At the Java layer, we have the document class, but we also have the BSON class.
+
+The Document class implements the BSON interface because Documents, well, they are essentially BSON data structures.
+
+We will use instances of BSON, throughout the course, to define fine-tuned aspects of our queries like query operators and aggregation stages.
+
+More on that in the next following lectures.
+
+So let's recap.
+
+Application needs to use a client-side library, a driver, to interact with MongoDB.
+
+There are two types of drivers, async and sync, which we will be using in this course.
+
+And there are a few basic MongoDB Java driver classes that define the MongoDB server data structures like MongoClients, MongoDatabase, MongoCollection, Document, and BSON.

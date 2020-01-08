@@ -1,0 +1,121 @@
+In this lesson, we are going to review the different cursor methods that the find command provides, as well as the alternative aggregation framework stages to similar or equivalent functionality within the context of an aggregation pipeline.
+
+We will cover things like the FindIterable sort, limit, and skip methods, the aggregate method, as well as briefly review some of the builders that we've already been talking about, like Sorts and Aggregates.
+
+And just to clarify, we're going to have a small 1,000-document dummy collection called sortable.
+
+More often than not, the results of our queries are required to be sorted.
+
+Databases do a good job sorting those for us, so that we don't have to implement extra logic to sort the results after they've been sent back to the application.
+
+In MongoDB, we can do this by appending the sort method to the FindIterable.
+
+In this case I want to be able to sort all my documents by field 'i' descending.
+
+We can start by defining the sort criteria using the Sorts.descending method and placing that into a Bson object sortBy_i_Descending.
+
+Then what we can do is a full table scan by passing the sorting arguments, the Bson that we just created, to the sort method.
+
+Finally, what we want to make sure is that we got all the results, the 1,000 documents in our sortedArray, which we do, and then check if the first elements of this sortedArray matches the highest value of our collection 'i' documents, which is 999.
+
+We run the test to make sure that everything is matching our assertions.
+
+In addition to sorting the query outputs, we might be interested in sections of the results set instead of retrieving the whole set all the time.
+
+So skip is another cursor method that we can call from the Iterable object.
+
+Out of the 1,000 documents that we have in our collection, we might want to skip the first 990.
+
+For that we just need to append the number of documents we want to skip.
+
+In this specific case, we are not specifying a particular sort order to our documents.
+
+This means that the results will be returned in their $natural sort order, which implies that the documents will be returned based on how they got stored or created in the database server.
+
+And we can see the effect of this if we try to remove one of the documents.
+
+In this case, the document where 'i' matches the value 10 and inserting it back again.
+
+If we rerun the query with the same skip, we will find that the highest value of our array lists will be the one which has the value 'i' of 10.
+
+This means that using skip on its own without determining a particular sort order may result in different documents, given that they are bound to the insertion order of documents, not the values of the fields they represent.
+
+But there is nothing stopping us from sorting and then skipping at the same time.
+
+The order by which we define the sort and skip instructions is completely irrelevant.
+
+By running the tests, we can see that all of our sorts match our expectation.
+
+And the important thing to understand about skip is that the database will still have to iterate over all the documents in the collection.
+
+Only returns after the skipped number of documents has been reached.
+
+However, it will still need to traverse the collection and indexes to return the matching documents.
+
+Another cursor method is limit.
+
+The ability to define how many documents we want to retrieve from the collection on a given query.
+
+If we limit it here to 10, the number of expected results of our collecting list should be 10.
+
+One interesting aspect of limits is that we can use this to influence the cursor batch size.
+
+The cursor batch size determines the number of documents returned in one cursor batch.
+
+If our query hits 1 million elements or documents, you may not want to wait till all of those elements are returned to start processing the result set.
+
+Therefore each time we open a cursor or iterable, the results are sent back to the application in smaller batches, hence the cursor batch size.
+
+By default the Java driver will set the batch size to 0, which means the driver will use the server defined batchSize, which by default is 101 documents.
+
+However, you can define your own batchSize for a final operation by specifying the batchSize, calling the batchSize method.
+
+Getting all the cursor methods together is done by appending each one of those methods to the resulting find iterable.
+
+We run the tests.
+
+Everything matches green.
+
+Instead of cursor methods, we can use the aggregation stages to accomplish the same results.
+
+Why do we need an aggregation stage to do this?
+
+Well, the need for intermediary sort, limit, and skip stages exist in multiple pipeline executions, so these stages are readily available for usage within the aggregation pipelines.
+
+Let's start with limits.
+
+If we want to specify in our movies dataset, we can run the following query.
+
+Now that we know how to do it in the find command, let's do it again within our aggregation pipeline by specifying the $limit stage.
+
+We add the Aggregates.limit to two results, and then we execute that same method by calling aggregate with the pipeline that we created.
+
+And all of them are there.
+
+Now let's look at the $sort stage and sort method together.
+
+To specify the $sort stage, we can use again the builder Aggregates.sort, specifying the Sorts.ascending on year.
+
+And we can also build a match stage by calling the Aggregates.match method.
+
+Again, all the results of these two lists should match and be exactly the same.
+
+Now let's put it all together.
+
+Now that we know that we can use sort, limit, and skip methods together by appending these methods to the find command, we should be able to do exactly the same thing using the aggregation stages, where we can define the different stages using the builder.
+
+But there is a significant distinction between how we execute the find command with the cursor methods and how we execute the different stages of our aggregation pipeline.
+
+For aggregation, the order of stages in the pipeline does matter.
+
+Since we are setting up a pipeline, the results will vary given the processing order of the different stages.
+
+If we execute this test, this will be reflected in our sort.
+
+Let's do a little bit of a recap here.
+
+Cursor methods have equivalent aggregation stages.
+
+The order by which the cursor methods are appended to the find iterable does not impact the results.
+
+On the other hand, the order by which aggregation stages are defined within the pipeline does matter.

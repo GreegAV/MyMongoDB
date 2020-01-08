@@ -1,0 +1,538 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.320
+So let's get started
+working with facets
+
+3
+00:00:04.320 --> 00:00:06.600
+and explore this
+new functionality
+
+4
+00:00:06.600 --> 00:00:08.540
+that [INAUDIBLE] brings.
+
+5
+00:00:08.540 --> 00:00:11.220
+Now, to get a better picture
+of what we are going to do,
+
+6
+00:00:11.220 --> 00:00:13.600
+let's imagine the
+following scenario.
+
+7
+00:00:13.600 --> 00:00:15.780
+Let's imagine that we
+have an application that
+
+8
+00:00:15.780 --> 00:00:18.210
+has some sort of
+search bar where
+
+9
+00:00:18.210 --> 00:00:21.420
+we can look for things
+like MongoDB, for example.
+
+10
+00:00:21.420 --> 00:00:24.120
+Once we press the
+Enter button looking
+
+11
+00:00:24.120 --> 00:00:26.730
+for this particular
+keyword or term,
+
+12
+00:00:26.730 --> 00:00:30.830
+we are generally prompt
+with some list of results.
+
+13
+00:00:30.830 --> 00:00:33.300
+We might have some
+attributes, some indication
+
+14
+00:00:33.300 --> 00:00:37.020
+of things related with this
+term given the catalog that we
+
+15
+00:00:37.020 --> 00:00:38.680
+are searching on.
+
+16
+00:00:38.680 --> 00:00:43.860
+But we also might have some sort
+of filters or characterization
+
+17
+00:00:43.860 --> 00:00:46.920
+for this search
+term in combination
+
+18
+00:00:46.920 --> 00:00:49.160
+with several
+different dimensions
+
+19
+00:00:49.160 --> 00:00:50.580
+that this information
+that we are
+
+20
+00:00:50.580 --> 00:00:54.010
+storing in the catalog of
+this application might have.
+
+21
+00:00:54.010 --> 00:00:55.650
+So to explain this
+very well, we're
+
+22
+00:00:55.650 --> 00:00:59.600
+going to be using a very
+dear data set to you guys
+
+23
+00:00:59.600 --> 00:01:02.650
+that we've been exploring
+throughout the course.
+
+24
+00:01:02.650 --> 00:01:04.650
+The data set that we're
+going to be looking into
+
+25
+00:01:04.650 --> 00:01:07.770
+is the Companies
+data set that you can
+
+26
+00:01:07.770 --> 00:01:10.720
+find on our startups database.
+
+27
+00:01:10.720 --> 00:01:12.990
+With this, we're
+going to be exploring
+
+28
+00:01:12.990 --> 00:01:16.890
+this data set as a
+catalog of companies,
+
+29
+00:01:16.890 --> 00:01:21.660
+and how we can organize, search,
+and find information and get
+
+30
+00:01:21.660 --> 00:01:26.740
+facets out of the data stored
+in that particular collection.
+
+31
+00:01:26.740 --> 00:01:30.180
+So let's get started by looking
+through one single document
+
+32
+00:01:30.180 --> 00:01:32.775
+inside this Companies data set.
+
+33
+00:01:32.775 --> 00:01:34.650
+As usual, you can find
+a bunch of information
+
+34
+00:01:34.650 --> 00:01:41.040
+from external links to awards
+and milestones and acquisitions
+
+35
+00:01:41.040 --> 00:01:45.030
+and a bunch of other information
+related to one single company
+
+36
+00:01:45.030 --> 00:01:48.130
+listed on this data set.
+
+37
+00:01:48.130 --> 00:01:51.300
+Now, what we might
+have is the need for us
+
+38
+00:01:51.300 --> 00:01:54.810
+to search on a bunch of
+different dimensions.
+
+39
+00:01:54.810 --> 00:01:58.200
+And for that-- going to be using
+a very straightforward search
+
+40
+00:01:58.200 --> 00:02:02.280
+terms, like for example on
+description and overview
+
+41
+00:02:02.280 --> 00:02:07.200
+for companies which are in some
+way related with networking.
+
+42
+00:02:07.200 --> 00:02:08.699
+To express such a
+query, we're going
+
+43
+00:02:08.699 --> 00:02:14.820
+to be creating a text index
+on description and overview.
+
+44
+00:02:14.820 --> 00:02:18.540
+And if you want to
+find the companies that
+
+45
+00:02:18.540 --> 00:02:21.750
+have the keyword
+"networking" in their field--
+
+46
+00:02:21.750 --> 00:02:24.870
+either in description
+or overview--
+
+47
+00:02:24.870 --> 00:02:28.920
+we can use it by simply issuing
+the query where Companies
+
+48
+00:02:28.920 --> 00:02:34.120
+can aggregate and match on tags
+searching for term "network."
+
+49
+00:02:34.120 --> 00:02:37.550
+Once we do this, we
+get a list of results.
+
+50
+00:02:37.550 --> 00:02:39.680
+Now, let's assume
+that the application
+
+51
+00:02:39.680 --> 00:02:42.960
+of our building-- our corporate
+catalog-- not only wants
+
+52
+00:02:42.960 --> 00:02:48.090
+to give the end user
+the result set, but also
+
+53
+00:02:48.090 --> 00:02:53.890
+to render a facet describing
+the category code.
+
+54
+00:02:53.890 --> 00:02:56.170
+Now, this is a field
+that will tell us
+
+55
+00:02:56.170 --> 00:03:00.160
+the type of company or sector
+on which this particular company
+
+56
+00:03:00.160 --> 00:03:02.270
+is operating.
+
+57
+00:03:02.270 --> 00:03:06.280
+So basically, for that
+particular functionality,
+
+58
+00:03:06.280 --> 00:03:08.980
+we now can use SortByCounts.
+
+59
+00:03:08.980 --> 00:03:14.230
+SortByCount will allow us to
+create the facet by category
+
+60
+00:03:14.230 --> 00:03:19.000
+on the list of results that
+the previous stage, match, will
+
+61
+00:03:19.000 --> 00:03:20.290
+provide.
+
+62
+00:03:20.290 --> 00:03:23.890
+So for all the companies that
+will include "network" keyword
+
+63
+00:03:23.890 --> 00:03:26.350
+on their description
+or overview,
+
+64
+00:03:26.350 --> 00:03:29.370
+those will be piped
+into a SortByCount
+
+65
+00:03:29.370 --> 00:03:33.620
+where we're going to be
+grouping the category code.
+
+66
+00:03:33.620 --> 00:03:39.340
+Once we run this, we have a
+full list with their count
+
+67
+00:03:39.340 --> 00:03:43.150
+and sorted of the
+sectors of activity
+
+68
+00:03:43.150 --> 00:03:45.465
+where we can find companies.
+
+69
+00:03:45.465 --> 00:03:46.840
+In this case,
+we're going to have
+
+70
+00:03:46.840 --> 00:03:52.150
+web with 788 companies
+listed, software with 463,
+
+71
+00:03:52.150 --> 00:03:53.960
+and so forth.
+
+72
+00:03:53.960 --> 00:03:58.720
+So SortByCount groups incoming
+documents coming from our match
+
+73
+00:03:58.720 --> 00:04:03.760
+query based on their
+specified expression, "search
+
+74
+00:04:03.760 --> 00:04:07.360
+for network," and then computes
+the count of the documents
+
+75
+00:04:07.360 --> 00:04:09.190
+in which distinct group.
+
+76
+00:04:09.190 --> 00:04:11.770
+And sort by its count.
+
+77
+00:04:11.770 --> 00:04:16.390
+Each group is a document
+with two fields--
+
+78
+00:04:16.390 --> 00:04:21.399
+an _id specifying the value
+by which we are grouping,
+
+79
+00:04:21.399 --> 00:04:25.300
+and accounts-- determining the
+number of documents that match
+
+80
+00:04:25.300 --> 00:04:26.250
+that group.
+
+81
+00:04:26.250 --> 00:04:28.300
+If we want the same
+result, but let's
+
+82
+00:04:28.300 --> 00:04:32.500
+say with instead of having
+the breakdown per category,
+
+83
+00:04:32.500 --> 00:04:36.040
+we want it for office
+location, city-- something
+
+84
+00:04:36.040 --> 00:04:40.150
+like that-- we could run the--
+an aggregation pipeline that's
+
+85
+00:04:40.150 --> 00:04:43.580
+a little more elaborate
+than this simple one.
+
+86
+00:04:43.580 --> 00:04:45.580
+Let's say, for
+example, what we want
+
+87
+00:04:45.580 --> 00:04:47.680
+is still search for
+all companies that
+
+88
+00:04:47.680 --> 00:04:51.370
+have "network" keyword on
+their description or overview,
+
+89
+00:04:51.370 --> 00:04:56.980
+but then given that offices is
+an array of different locations
+
+90
+00:04:56.980 --> 00:05:01.730
+that we might have, we want to
+unwind that particular array
+
+91
+00:05:01.730 --> 00:05:06.670
+and then match the offices
+which do have a city.
+
+92
+00:05:06.670 --> 00:05:13.270
+So they have this city
+value different than empty.
+
+93
+00:05:13.270 --> 00:05:20.050
+For all that, let's SortByCount
+on the different offices.city
+
+94
+00:05:20.050 --> 00:05:21.850
+values that we find.
+
+95
+00:05:21.850 --> 00:05:23.690
+So there we go.
+
+96
+00:05:23.690 --> 00:05:28.120
+We now have a list of
+documents specifying
+
+97
+00:05:28.120 --> 00:05:30.670
+the value of the office
+city-- in this case,
+
+98
+00:05:30.670 --> 00:05:34.390
+for example, San Francisco
+with a count of 245.
+
+99
+00:05:34.390 --> 00:05:39.070
+New York will have 218--
+London, Los Angeles, Palo Alto,
+
+100
+00:05:39.070 --> 00:05:40.400
+and so on.
+
+101
+00:05:40.400 --> 00:05:42.010
+So this is also to
+demonstrate that we
+
+102
+00:05:42.010 --> 00:05:45.790
+can have elaborate
+pipelines that
+
+103
+00:05:45.790 --> 00:05:50.680
+would filter project,
+match, group, determine
+
+104
+00:05:50.680 --> 00:05:54.910
+the list of documents that
+then can use to sort by
+
+105
+00:05:54.910 --> 00:05:59.650
+and count given one
+of the attributes
+
+106
+00:05:59.650 --> 00:06:02.470
+that is coming
+with the result set
+
+107
+00:06:02.470 --> 00:06:04.690
+to this last stage
+of the pipeline.
+
+108
+00:06:04.690 --> 00:06:08.170
+In essence, with this
+aggregation inquiry,
+
+109
+00:06:08.170 --> 00:06:11.200
+we can have the breakdown
+of companies per city
+
+110
+00:06:11.200 --> 00:06:14.560
+that match networking,
+or in this case,
+
+111
+00:06:14.560 --> 00:06:18.180
+"network," in their
+description overview.

@@ -1,0 +1,597 @@
+
+1
+00:00:00.000 --> 00:00:00.510
+
+
+2
+00:00:00.510 --> 00:00:04.640
+Let's go ahead and create
+a DDL audit filter.
+
+3
+00:00:04.640 --> 00:00:07.960
+Let's create a filter
+audit anytime a user
+
+4
+00:00:07.960 --> 00:00:11.341
+tries to create an index
+on a specific database.
+
+5
+00:00:11.341 --> 00:00:13.840
+A great way to figure out what
+your filter document is going
+
+6
+00:00:13.840 --> 00:00:17.190
+to look like is to just
+turn auditing on, and then
+
+7
+00:00:17.190 --> 00:00:20.200
+run the type of query that
+you want to audit for,
+
+8
+00:00:20.200 --> 00:00:22.060
+and then just look
+at the logs, and see
+
+9
+00:00:22.060 --> 00:00:25.410
+what those kind of
+audit logs look like.
+
+10
+00:00:25.410 --> 00:00:27.260
+Let's go and do this now.
+
+11
+00:00:27.260 --> 00:00:29.740
+I still have my
+config.yaml file.
+
+12
+00:00:29.740 --> 00:00:32.430
+Let's go ahead and go in
+here and remove the filter
+
+13
+00:00:32.430 --> 00:00:36.110
+that we currently have so
+that we can audit all events.
+
+14
+00:00:36.110 --> 00:00:39.330
+Now, we can go ahead
+and restart the server.
+
+15
+00:00:39.330 --> 00:00:40.920
+Now that our server's
+up and running,
+
+16
+00:00:40.920 --> 00:00:43.650
+let's go to and connect
+to it and create an index
+
+17
+00:00:43.650 --> 00:00:45.992
+on a specific database.
+
+18
+00:00:45.992 --> 00:00:47.950
+So we need to figure out
+what specific database
+
+19
+00:00:47.950 --> 00:00:49.354
+we want to use.
+
+20
+00:00:49.354 --> 00:00:51.520
+We could use a test database,
+but let's do something
+
+21
+00:00:51.520 --> 00:00:53.320
+a little bit more interesting.
+
+22
+00:00:53.320 --> 00:00:56.230
+Here, I'm going to switch
+the myApplication database.
+
+23
+00:00:56.230 --> 00:00:59.210
+And I said that we wanted to
+audit the creation of indexes.
+
+24
+00:00:59.210 --> 00:01:00.793
+So let's go ahead
+and create an index.
+
+25
+00:01:00.793 --> 00:01:03.200
+
+
+26
+00:01:03.200 --> 00:01:04.491
+Our index has been created.
+
+27
+00:01:04.491 --> 00:01:05.990
+Let's go ahead and
+look at the audit
+
+28
+00:01:05.990 --> 00:01:10.810
+logs to see what kind of audit
+documents were generated.
+
+29
+00:01:10.810 --> 00:01:12.490
+We have a bunch
+of output in here.
+
+30
+00:01:12.490 --> 00:01:13.700
+Let's go through it.
+
+31
+00:01:13.700 --> 00:01:16.530
+Now, this is for
+another collection,
+
+32
+00:01:16.530 --> 00:01:18.400
+so that's from our last test.
+
+33
+00:01:18.400 --> 00:01:22.300
+That means that all of these
+are actually what we care about.
+
+34
+00:01:22.300 --> 00:01:25.110
+The first one here
+is createDatabase.
+
+35
+00:01:25.110 --> 00:01:27.680
+That's because the myApplication
+database didn't exist yet.
+
+36
+00:01:27.680 --> 00:01:28.920
+Makes sense.
+
+37
+00:01:28.920 --> 00:01:30.900
+Next, we have
+createCollection, and that's
+
+38
+00:01:30.900 --> 00:01:33.610
+because the products
+collection did not exist
+
+39
+00:01:33.610 --> 00:01:35.579
+on the myApplication database.
+
+40
+00:01:35.579 --> 00:01:37.870
+And then, here we go, here's
+what we really care about,
+
+41
+00:01:37.870 --> 00:01:39.230
+createIndex.
+
+42
+00:01:39.230 --> 00:01:41.990
+And we have this
+big param object.
+
+43
+00:01:41.990 --> 00:01:44.380
+Let's go out and copy
+this and reformat it
+
+44
+00:01:44.380 --> 00:01:46.750
+so it's a little
+bit easier to read.
+
+45
+00:01:46.750 --> 00:01:48.640
+I have copied it
+into my clipboard.
+
+46
+00:01:48.640 --> 00:01:51.860
+Now, I'm going to open up
+the text editor of my choice
+
+47
+00:01:51.860 --> 00:01:53.174
+and just paste it in here.
+
+48
+00:01:53.174 --> 00:01:54.840
+Let's go ahead and
+reformat this so it's
+
+49
+00:01:54.840 --> 00:01:57.350
+a little bit easier to read.
+
+50
+00:01:57.350 --> 00:02:00.130
+Now our document's a
+lot easier to read.
+
+51
+00:02:00.130 --> 00:02:01.630
+So what do we want
+to look for here?
+
+52
+00:02:01.630 --> 00:02:03.680
+We want to look for
+the creation of indexes
+
+53
+00:02:03.680 --> 00:02:06.530
+and, also, the specific
+database, in this case,
+
+54
+00:02:06.530 --> 00:02:08.729
+myApplication.
+
+55
+00:02:08.729 --> 00:02:11.000
+Well, right off the bat,
+we can see createIndex,
+
+56
+00:02:11.000 --> 00:02:12.440
+so atype is probably
+a field we're
+
+57
+00:02:12.440 --> 00:02:14.860
+going to want to keep track of.
+
+58
+00:02:14.860 --> 00:02:17.050
+I don't see anything
+important, nothing important.
+
+59
+00:02:17.050 --> 00:02:19.040
+Scroll down, nothing important.
+
+60
+00:02:19.040 --> 00:02:20.020
+Oh, here we go.
+
+61
+00:02:20.020 --> 00:02:21.400
+I see myApplication.
+
+62
+00:02:21.400 --> 00:02:24.130
+Probably going to want to
+pay attention to this one.
+
+63
+00:02:24.130 --> 00:02:27.520
+Don't care about it, don't care
+about it, don't care about it.
+
+64
+00:02:27.520 --> 00:02:29.179
+We could care about
+this, but we're
+
+65
+00:02:29.179 --> 00:02:31.220
+getting the same information
+for right here, so I
+
+66
+00:02:31.220 --> 00:02:33.461
+guess it doesn't really matter.
+
+67
+00:02:33.461 --> 00:02:34.960
+Let's go ahead and
+remove everything
+
+68
+00:02:34.960 --> 00:02:36.543
+except for the things
+that I mentioned
+
+69
+00:02:36.543 --> 00:02:38.090
+that we want to care about.
+
+70
+00:02:38.090 --> 00:02:40.710
+Now, we can see a document that
+describes the kind of thing
+
+71
+00:02:40.710 --> 00:02:42.080
+that we're looking for.
+
+72
+00:02:42.080 --> 00:02:43.870
+But it isn't quite right.
+
+73
+00:02:43.870 --> 00:02:45.970
+This would only
+audit the creation
+
+74
+00:02:45.970 --> 00:02:48.800
+of indexes on the
+products collection
+
+75
+00:02:48.800 --> 00:02:50.550
+on the myApplication database.
+
+76
+00:02:50.550 --> 00:02:53.640
+We just want to audit
+the creation of indexes
+
+77
+00:02:53.640 --> 00:02:55.820
+on the myApplication database.
+
+78
+00:02:55.820 --> 00:02:58.250
+Well, if you're familiar with
+the MongoDB query language,
+
+79
+00:02:58.250 --> 00:03:00.050
+you know that it
+supports regexes.
+
+80
+00:03:00.050 --> 00:03:02.920
+We can probably just
+use a regex to define
+
+81
+00:03:02.920 --> 00:03:08.290
+namespaces that include only
+the myApplication database.
+
+82
+00:03:08.290 --> 00:03:10.610
+Now, we have a
+regex that will look
+
+83
+00:03:10.610 --> 00:03:13.010
+at the very beginning
+of this field
+
+84
+00:03:13.010 --> 00:03:16.120
+and will look for
+my-application, the database
+
+85
+00:03:16.120 --> 00:03:17.146
+that we care about.
+
+86
+00:03:17.146 --> 00:03:18.520
+And then it will
+immediately look
+
+87
+00:03:18.520 --> 00:03:20.470
+for a period
+signifying that we're
+
+88
+00:03:20.470 --> 00:03:24.100
+switching to now some
+kind of other namespace,
+
+89
+00:03:24.100 --> 00:03:28.450
+whether it be a collection or
+some other nested database.
+
+90
+00:03:28.450 --> 00:03:30.350
+We can simplify this
+query a little bit
+
+91
+00:03:30.350 --> 00:03:33.890
+by embedding ns inside a
+param with dot notation.
+
+92
+00:03:33.890 --> 00:03:37.240
+Fantastic, I think we have
+our query ready way to go.
+
+93
+00:03:37.240 --> 00:03:38.960
+Let's try it out.
+
+94
+00:03:38.960 --> 00:03:42.180
+Let's go and update config.yaml
+with our new filter.
+
+95
+00:03:42.180 --> 00:03:46.480
+We just say "filter" and
+specify our filter document.
+
+96
+00:03:46.480 --> 00:03:48.300
+You'll notice I'm
+using single quotes,
+
+97
+00:03:48.300 --> 00:03:50.780
+because I use double quotes
+within the actual document
+
+98
+00:03:50.780 --> 00:03:51.560
+itself.
+
+99
+00:03:51.560 --> 00:03:54.530
+Go ahead and save, and
+restart the server.
+
+100
+00:03:54.530 --> 00:03:57.450
+We can now connect to the
+server and test our filter.
+
+101
+00:03:57.450 --> 00:03:59.230
+First let's try
+creating and index
+
+102
+00:03:59.230 --> 00:04:02.610
+on a database that
+isn't my-application.
+
+103
+00:04:02.610 --> 00:04:04.820
+I'm currently on
+the test database.
+
+104
+00:04:04.820 --> 00:04:07.802
+Let's do a collection different
+than products, just to be fun.
+
+105
+00:04:07.802 --> 00:04:10.260
+Now, since we're not talking
+to the myApplication database,
+
+106
+00:04:10.260 --> 00:04:13.750
+we shouldn't see this
+in the audit logs.
+
+107
+00:04:13.750 --> 00:04:15.810
+Index was successfully created.
+
+108
+00:04:15.810 --> 00:04:19.180
+And now let's switch the
+my-application database.
+
+109
+00:04:19.180 --> 00:04:21.070
+And from here,
+let's create indexes
+
+110
+00:04:21.070 --> 00:04:22.420
+on two different collections.
+
+111
+00:04:22.420 --> 00:04:23.980
+Both of them should be logged.
+
+112
+00:04:23.980 --> 00:04:25.625
+Success, great.
+
+113
+00:04:25.625 --> 00:04:27.630
+Let's do it on a
+different collection.
+
+114
+00:04:27.630 --> 00:04:29.270
+And here's another index.
+
+115
+00:04:29.270 --> 00:04:32.862
+So we'd expect to see both
+of these in the audit log.
+
+116
+00:04:32.862 --> 00:04:35.420
+I'll just tail the audit log.
+
+117
+00:04:35.420 --> 00:04:37.467
+And then, here, we can
+see all of our new logs.
+
+118
+00:04:37.467 --> 00:04:38.550
+The first one is shutdown.
+
+119
+00:04:38.550 --> 00:04:40.870
+That was from when I
+restarted the server.
+
+120
+00:04:40.870 --> 00:04:45.200
+Create index,
+my-application on products.
+
+121
+00:04:45.200 --> 00:04:46.290
+Key was test.
+
+122
+00:04:46.290 --> 00:04:47.952
+Cool, that was there.
+
+123
+00:04:47.952 --> 00:04:51.700
+And create index, "bazz"
+on my application.
+
+124
+00:04:51.700 --> 00:04:52.550
+Awesome.
+
+125
+00:04:52.550 --> 00:04:54.880
+I didn't see anything in
+here about the test database.
+
+126
+00:04:54.880 --> 00:04:57.230
+I just saw stuff pertaining
+to myApplication.
+
+127
+00:04:57.230 --> 00:04:59.680
+It looks like our filter
+works successfully.

@@ -1,0 +1,98 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.230
+Before we get
+started talking about
+
+3
+00:00:02.230 --> 00:00:04.520
+the different
+authentication mechanisms
+
+4
+00:00:04.520 --> 00:00:07.040
+the MongoDB supports,
+I want to clarify
+
+5
+00:00:07.040 --> 00:00:09.460
+a common point of confusion.
+
+6
+00:00:09.460 --> 00:00:11.905
+Authentication and
+authorization are commonly
+
+7
+00:00:11.905 --> 00:00:14.030
+interchanged with one
+another, but they're actually
+
+8
+00:00:14.030 --> 00:00:16.610
+two very different things.
+
+9
+00:00:16.610 --> 00:00:18.720
+Authentication is
+the process by which
+
+10
+00:00:18.720 --> 00:00:21.780
+we verify the
+identity of a user,
+
+11
+00:00:21.780 --> 00:00:26.590
+whereas authorization is the
+process by which we verify
+
+12
+00:00:26.590 --> 00:00:29.170
+the privileges of a user.
+
+13
+00:00:29.170 --> 00:00:32.360
+The best way to think about it
+is that authentication answers
+
+14
+00:00:32.360 --> 00:00:35.280
+the question, who are you?
+
+15
+00:00:35.280 --> 00:00:38.290
+Whereas authorization
+answers the question,
+
+16
+00:00:38.290 --> 00:00:41.050
+what do you have access to?
+
+17
+00:00:41.050 --> 00:00:42.950
+I can be authenticated
+to a system,
+
+18
+00:00:42.950 --> 00:00:46.720
+but I might not be authorized
+to control a certain resource.
+
+19
+00:00:46.720 --> 00:00:50.860
+Authentication enables
+us to do authorization.
+
+20
+00:00:50.860 --> 00:00:53.500
+Once we know who you
+are, we can then ask,
+
+21
+00:00:53.500 --> 00:00:55.890
+what do you have access to?

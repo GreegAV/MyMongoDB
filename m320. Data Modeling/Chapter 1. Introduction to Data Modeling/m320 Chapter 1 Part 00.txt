@@ -1,0 +1,61 @@
+Hi.
+
+I'm Daniel, one of your instructors for this course.
+
+Did you ever wonder what is the single most important aspect of using MongoDB to ensure good performance, maximize the productivity of your developers, and minimize the overall cost of your solution?
+
+Yes-- a good data model.
+
+Welcome to M320, the data modeling course for MongoDB.
+
+In this course, we're going to discuss all aspects of data modeling for MongoDB.
+
+You'll learn how to gather the requirements to create the data model, learn those requirements into a basic model, apply powerful transformation patterns to optimize your data model, and finally, understand how to evolve your data model over time.
+
+Armed with that knowledge, you'll be able to design schema to make the best use of MongoDB.
+
+This course is five chapters long.
+
+With each chapter, there is a set of lesson videos.
+
+After most of these lessons, there is a quiz and labs to assess your learning of the material.
+
+Let's go over a few logistics for the course.
+
+What's the target audience?
+
+It's an advanced course.
+
+It is geared more toward architects and developers, then DevOp people.
+
+However, everyone can benefit from it.
+
+If you're used to tabular or relational databases, we try to make the parallel between MongoDB and these databases.
+
+This course has another course as a prerequisite, M001, Introduction to MongoDB.
+
+If you have not done this course, you should be familiar with the following-- using a cluster deploy in Atlas, using Compass to access the cluster, and you should also be familiar with database concepts and vocabulary, reading an entity relationship diagram using the Crow's Foot notation.
+
+If you're not, we recommend you take our beginners course, M001, and go through the additional external resources we reference in the first lesson of this course.
+
+How does grading work?
+
+There are quizzes, labs, and a final exam.
+
+Quizzes are ungraded and exist to make sure that you understand the content.
+
+Your grade in the class will be based on how well you do on the labs and the final exam, each of these being worth 50% of your grade.
+
+To receive a certificate of course completion, you need a passing grade of 65% or higher.
+
+Finally, we will highly encourage you to participate in the discussion forum.
+
+We have knowledgeable MongoDB employees who are there to help answer your questions.
+
+You also have your classmates, who can also contribute to answering your question and are often beneficial and very knowledgeable resources.
+
+We've observed that students who perform best in the courses are those who are the most active in the discussion forum.
+
+By the end of this course, you should be ready to design schema for your applications.
+
+With all that said, we're excited to have you as a student in this class.

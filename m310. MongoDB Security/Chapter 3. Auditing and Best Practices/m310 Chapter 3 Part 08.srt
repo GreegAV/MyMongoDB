@@ -1,0 +1,257 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.530
+Let's go ahead and
+modify our config file
+
+3
+00:00:02.530 --> 00:00:05.039
+so we can pass the appropriate
+parameters to our MongoDB.
+
+4
+00:00:05.039 --> 00:00:07.330
+The first thing we do is go
+ahead and delete our filter
+
+5
+00:00:07.330 --> 00:00:08.510
+from last time.
+
+6
+00:00:08.510 --> 00:00:12.180
+And now, in order to enable
+the auditing of DML operations,
+
+7
+00:00:12.180 --> 00:00:15.360
+actually all we want to
+do is enable the auditing
+
+8
+00:00:15.360 --> 00:00:17.880
+of authorization success.
+
+9
+00:00:17.880 --> 00:00:21.490
+We can enable this auditing
+via server parameter.
+
+10
+00:00:21.490 --> 00:00:22.940
+And this is how we do that.
+
+11
+00:00:22.940 --> 00:00:25.470
+We just use a server
+parameter and say
+
+12
+00:00:25.470 --> 00:00:28.900
+"auditAuthorizationSuccess"
+and set it to true.
+
+13
+00:00:28.900 --> 00:00:32.229
+And now, any kind of operation
+that passes successfully,
+
+14
+00:00:32.229 --> 00:00:36.140
+in this case DML
+or CRUD operations,
+
+15
+00:00:36.140 --> 00:00:37.112
+should now be audited.
+
+16
+00:00:37.112 --> 00:00:39.195
+Let's go in and try it out
+by starting our server.
+
+17
+00:00:39.195 --> 00:00:42.710
+
+
+18
+00:00:42.710 --> 00:00:44.470
+Now that our server's
+up and running
+
+19
+00:00:44.470 --> 00:00:46.620
+with CRUD operations
+being audited,
+
+20
+00:00:46.620 --> 00:00:50.160
+we can now go ahead and
+test our CRUD operation.
+
+21
+00:00:50.160 --> 00:00:52.620
+Le'ts go ahead and switch to
+the my-application database.
+
+22
+00:00:52.620 --> 00:00:55.078
+And, from here, we can go ahead
+and try to insert something
+
+23
+00:00:55.078 --> 00:00:56.950
+into the products collection.
+
+24
+00:00:56.950 --> 00:00:59.410
+And here, I'm going to insert
+a product called "candy bar"
+
+25
+00:00:59.410 --> 00:01:01.917
+into the products collection.
+
+26
+00:01:01.917 --> 00:01:02.750
+And it was inserted.
+
+27
+00:01:02.750 --> 00:01:04.416
+And now let's go ahead
+and see our audit
+
+28
+00:01:04.416 --> 00:01:08.300
+logs and see if this CRUD
+operation was logged.
+
+29
+00:01:08.300 --> 00:01:10.880
+And, right here, you can see
+that we have an "authCheck."
+
+30
+00:01:10.880 --> 00:01:13.100
+We actually though, we
+have a bunch of authChecks,
+
+31
+00:01:13.100 --> 00:01:15.160
+but this is the authCheck
+that pertains to us.
+
+32
+00:01:15.160 --> 00:01:18.692
+We can see that there is
+an insert into products,
+
+33
+00:01:18.692 --> 00:01:21.150
+and then we have the following
+document, productName "candy
+
+34
+00:01:21.150 --> 00:01:22.410
+bar."
+
+35
+00:01:22.410 --> 00:01:23.910
+But it's important
+to point out here
+
+36
+00:01:23.910 --> 00:01:25.250
+that there are
+lots of authChecks.
+
+37
+00:01:25.250 --> 00:01:26.625
+There's an authCheck
+to make sure
+
+38
+00:01:26.625 --> 00:01:28.210
+that we're Master,
+another authCheck
+
+39
+00:01:28.210 --> 00:01:30.310
+to make sure that we're
+Master, another authCheck
+
+40
+00:01:30.310 --> 00:01:32.140
+to make sure that we're Master.
+
+41
+00:01:32.140 --> 00:01:34.000
+There's a lot of noise in here.
+
+42
+00:01:34.000 --> 00:01:36.900
+So it's highly recommended
+that you don't actually
+
+43
+00:01:36.900 --> 00:01:40.780
+turn on CRUD operations to
+be audited unless you really,
+
+44
+00:01:40.780 --> 00:01:44.230
+really need that functionality
+from a security perspective,
+
+45
+00:01:44.230 --> 00:01:48.430
+because we are significantly
+increasing the write load
+
+46
+00:01:48.430 --> 00:01:49.850
+that the server has.
+
+47
+00:01:49.850 --> 00:01:53.270
+So if this server was under
+a high amount of write load
+
+48
+00:01:53.270 --> 00:01:55.660
+from clients, then
+the server is going
+
+49
+00:01:55.660 --> 00:01:57.990
+to be having a
+bunch of additional
+
+50
+00:01:57.990 --> 00:02:00.600
+writes just for
+auditing purposes.
+
+51
+00:02:00.600 --> 00:02:02.180
+That would take away
+from its ability
+
+52
+00:02:02.180 --> 00:02:05.674
+to handle the writes that
+are coming in from clients.
+
+53
+00:02:05.674 --> 00:02:07.090
+And that's how you
+enable auditing
+
+54
+00:02:07.090 --> 00:02:10.180
+for CRUD operations
+with MongoDB.

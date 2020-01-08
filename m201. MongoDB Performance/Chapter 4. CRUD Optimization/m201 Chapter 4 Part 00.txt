@@ -1,0 +1,135 @@
+In this lesson, we're going to talk about how we can optimize our CRUD operations.
+
+By now we already understand the important rule that indexes play with regards to performance.
+
+In this lesson, we're going to discuss index selectivity, which concerns minimizing the number of index keys that we examine; the equality, sort, range rule, which is useful when building indexes; and finally, we'll discuss the trade-offs between these two.
+
+Let's go ahead and jump into the shell and look at some examples.
+
+And for this lesson, we're going to continue using the new restaurant data set.
+
+Here I'm creating an explainable object, and here's our query.
+
+We're going to search for restaurants whose zip code is over 50,000, whose cuisine is sushi, and we're going to sort by stars descending.
+
+Now, this collection doesn't have any indexes on it.
+
+So we would assume this would not be very performant, and this is exactly what we want.
+
+This is our baseline.
+
+And when we look at the explain output, we can see that we're doing a collection scan, followed by an in-memory sort.
+
+And when we look at execution stats, we can see that we returned 11,000 documents, and it took 386 milliseconds.
+
+But we had to examine one million documents to do so.
+
+This is pretty terrible, but it's what we expected.
+
+Looking back at our query, we might go ahead and naively create an index on zip code, cuisine, and stars, which is what we're querying on and sorting on.
+
+And now when we rerun the same query, we'd expect some better results, and we do.
+
+We can see that we're no longer examining a million documents.
+
+We're only examining the 11,000 that we return, is the same that we're examining.
+
+And instead of doing a collection scan, we're now doing an index scan.
+
+But you can see that we're still doing an in-memory sort which isn't very cool.
+
+And we're also looking at a bunch of unnecessary index keys, which also isn't very cool.
+
+But in general, our execution time is down.
+
+And we're examining an extra 80,000 index keys because the first key in our index is zip code.
+
+And in our query here, zip code is a range query, which isn't very selective.
+
+If zip code was an equality condition, then our index key would be very selective, because there's only a hundred thousand possible different zip codes and we have a million documents.
+
+So if we were doing something like this where we were doing an equality condition on zip code, we expect there to only be about 10 documents, which is exactly how many there are.
+
+However, our query isn't doing an equality condition on zip code.
+
+It's doing a range query.
+
+We're saying that we want all zip codes greater than 50,000.
+
+So since 50,000 is about half of the hundred thousand possible zip codes, we expect about half a million documents, which is pretty much exactly what we see.
+
+So zip code as a range query isn't a very selective index because we're returning half of our million.
+
+On the other hand, cuisine has an equality condition, and so we'd expect this to be pretty selective, and it is.
+
+We're only seeing 23,000 documents, which is about 2% of our million document collection.
+
+So this is much more selective than the 50% that we'd get with zip code.
+
+Knowing the selective parts of our query, we can reorder our index to take advantage of this.
+
+Let's go ahead and this time create an index on cuisine first instead of zip code first.
+
+So we're effectively just swapping these two fields.
+
+And now we can rerun the same query.
+
+And when we look at the output, you'll see that our execution stats are way better.
+
+We're now not examining any unnecessary index keys.
+
+Our execution time is way down.
+
+This is almost a third of what it took the last time to run.
+
+But when we look up at the winning plan, you'll see that we're still doing an in-memory sort.
+
+So we know we can actually probably do better.
+
+And you might be surprised that we're doing an in-memory sort because our index includes the stars key.
+
+Well, if you remember correctly, we can only use an index for both filtering and sorting if the keys in our query predicate are equality conditions.
+
+And since zip code is a range query, we're not able to use that index for sorting.
+
+So we can swap stars and zip code, and this will allow us to prevent doing an in-memory sort.
+
+And so when we look at our explain output, we can see that our winning plan is just do an index scan followed by a fetch.
+
+No more in-memory sort.
+
+And when we scroll down to execution stats, you'll see that our execution time is way down, only 43 milliseconds.
+
+You might also notice that we're looking at a few more index keys, but that's OK because by doing this sort with the index, we've actually saved on the execution time overall.
+
+And this is a nice segue into equality, sort, range.
+
+Here's our query, and here's the index that we just used to get our most perform execution.
+
+And so we can use this phrase equality, sort, range when building our indexes to determine the best way to service our queries.
+
+At the beginning of our index, we should match on equality conditions in the query predicate, followed by sort conditions, and finally range conditions; equality, sort, range.
+
+And while this cool trick won't always give us the most performant results, it's a really great rule of thumb and it works most of the time.
+
+And as you can see, if we don't use indexes, our queries are going to be slow.
+
+And we can build indexes so that we're not examining unnecessary documents that we're not returning.
+
+We can continue to increase performance by thinking about selectivity when we build our indexes so that we're not looking at superfluous index keys.
+
+But that being said, sometimes it makes sense for us to make a trade-off between examining index keys and doing an in-memory sort.
+
+As we can see, the rule of equality, sort, range when used as a rule of thumb for building our indexes can be very effective.
+
+Let's recap what we've learned.
+
+So we talked about index selectivity.
+
+And when we choose our indexes, we want to make sure that the most selective fields are first.
+
+We also talked about equality, sort, range, which is a really great rule for determining how we should order our index fields.
+
+And finally, we talked about performance trade-offs.
+
+Sometimes it makes sense to be a little bit less selective, to prevent an in-memory sort because in the end our execution time will be the lowest.

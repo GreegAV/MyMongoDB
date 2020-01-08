@@ -1,0 +1,818 @@
+
+1
+00:00:00.000 --> 00:00:01.030
+
+
+2
+00:00:01.030 --> 00:00:04.090
+All right, let's now discuss
+another common operation
+
+3
+00:00:04.090 --> 00:00:07.720
+that developers encounter when
+using a one-to-end pattern,
+
+4
+00:00:07.720 --> 00:00:10.450
+like the attribute or
+the subset patterns,
+
+5
+00:00:10.450 --> 00:00:14.260
+such as stocks traded in a given
+moment or the top 20 customer
+
+6
+00:00:14.260 --> 00:00:16.450
+reviews for a product.
+
+7
+00:00:16.450 --> 00:00:18.530
+How do we efficiently
+work with that data
+
+8
+00:00:18.530 --> 00:00:22.670
+if we'd like to perform some
+aggregation framework analysis?
+
+9
+00:00:22.670 --> 00:00:26.590
+Let's imagine we're working with
+documents of this schema, that
+
+10
+00:00:26.590 --> 00:00:28.870
+is tracking all buy
+and sell transactions
+
+11
+00:00:28.870 --> 00:00:31.060
+on our trading platform.
+
+12
+00:00:31.060 --> 00:00:34.810
+We'd like to analyze how many
+total transactions we have,
+
+13
+00:00:34.810 --> 00:00:36.880
+as well as how
+many buys and sells
+
+14
+00:00:36.880 --> 00:00:41.080
+were performed per time stamp,
+and then use this data later
+
+15
+00:00:41.080 --> 00:00:42.880
+in our pipeline.
+
+16
+00:00:42.880 --> 00:00:46.900
+In other words, we want to
+group data in the document,
+
+17
+00:00:46.900 --> 00:00:48.982
+not across documents.
+
+18
+00:00:48.982 --> 00:00:50.440
+Let's take a look
+at the collection
+
+19
+00:00:50.440 --> 00:00:53.840
+and think about how we
+might accomplish this.
+
+20
+00:00:53.840 --> 00:00:56.530
+OK, so we have our
+time stamp, and then we
+
+21
+00:00:56.530 --> 00:01:01.540
+have our trades array
+with many, many documents.
+
+22
+00:01:01.540 --> 00:01:03.790
+OK, this might be
+our first approach,
+
+23
+00:01:03.790 --> 00:01:05.930
+where we unwind the
+trades array, and then
+
+24
+00:01:05.930 --> 00:01:09.090
+group on the time and the
+action, [INAUDIBLE] account.
+
+25
+00:01:09.090 --> 00:01:11.755
+And then group again,
+just on the time,
+
+26
+00:01:11.755 --> 00:01:15.580
+and pushing the action and
+account for that type of action
+
+27
+00:01:15.580 --> 00:01:18.940
+into an array, and then getting
+the total number of actions we
+
+28
+00:01:18.940 --> 00:01:22.120
+performed per that time stamp.
+
+29
+00:01:22.120 --> 00:01:25.120
+So we should get total
+actions per document
+
+30
+00:01:25.120 --> 00:01:27.910
+with the individual numbers
+of buy and sell actions.
+
+31
+00:01:27.910 --> 00:01:30.040
+Let's test it up.
+
+32
+00:01:30.040 --> 00:01:33.310
+OK, we can see that it's
+the same pipeline as that
+
+33
+00:01:33.310 --> 00:01:34.990
+from the previous slide.
+
+34
+00:01:34.990 --> 00:01:39.100
+We unwind the trades array,
+group on the time stamp
+
+35
+00:01:39.100 --> 00:01:43.630
+and the action, and then group
+again just on the time stamp.
+
+36
+00:01:43.630 --> 00:01:46.330
+We've added this
+sort stage here, just
+
+37
+00:01:46.330 --> 00:01:49.220
+to ensure we get consistent
+ordering for comparison later
+
+38
+00:01:49.220 --> 00:01:49.720
+on.
+
+39
+00:01:49.720 --> 00:01:54.030
+
+
+40
+00:01:54.030 --> 00:01:57.310
+All right, it gives us
+the results we expected--
+
+41
+00:01:57.310 --> 00:02:00.730
+total actions and the
+number of buy and sell
+
+42
+00:02:00.730 --> 00:02:04.310
+actions per document.
+
+43
+00:02:04.310 --> 00:02:08.860
+This is a visual representation
+of the previous pipeline.
+
+44
+00:02:08.860 --> 00:02:11.860
+The black squares
+are our documents.
+
+45
+00:02:11.860 --> 00:02:15.010
+If we start with four
+documents and unwind a field
+
+46
+00:02:15.010 --> 00:02:17.350
+with just three
+entries per document,
+
+47
+00:02:17.350 --> 00:02:20.290
+we now have 12 documents.
+
+48
+00:02:20.290 --> 00:02:22.630
+We then group our
+documents twice
+
+49
+00:02:22.630 --> 00:02:25.090
+to produce the desired
+results, ending up
+
+50
+00:02:25.090 --> 00:02:28.330
+with the same number of
+documents we started with.
+
+51
+00:02:28.330 --> 00:02:32.770
+This should start to feel
+horribly inefficient.
+
+52
+00:02:32.770 --> 00:02:34.810
+Sadly, it gets worse.
+
+53
+00:02:34.810 --> 00:02:38.050
+Let's examine how this
+inefficiency impacts operations
+
+54
+00:02:38.050 --> 00:02:40.660
+in Shard D environment.
+
+55
+00:02:40.660 --> 00:02:44.020
+Each shard performs the unwind.
+
+56
+00:02:44.020 --> 00:02:46.960
+Initial processing for
+the first group stage
+
+57
+00:02:46.960 --> 00:02:48.640
+will be done on the shards.
+
+58
+00:02:48.640 --> 00:02:53.050
+But the final grouping has to
+happen in a single location.
+
+59
+00:02:53.050 --> 00:02:56.800
+Every other stage, including the
+entirety of the second group,
+
+60
+00:02:56.800 --> 00:02:59.770
+would then take place
+on that location.
+
+61
+00:02:59.770 --> 00:03:03.920
+Imagine if three or four
+other stages followed.
+
+62
+00:03:03.920 --> 00:03:06.250
+When not grouping
+across documents,
+
+63
+00:03:06.250 --> 00:03:10.000
+this causes needless overhead
+in network traffic and causes
+
+64
+00:03:10.000 --> 00:03:11.950
+[INAUDIBLE],, after
+the group, to be
+
+65
+00:03:11.950 --> 00:03:14.170
+run in the location
+of the merge,
+
+66
+00:03:14.170 --> 00:03:16.730
+rather than remain distributed.
+
+67
+00:03:16.730 --> 00:03:19.240
+Here, we're shown that
+the grouping is happening
+
+68
+00:03:19.240 --> 00:03:22.960
+on Shard A. In reality, it
+could happen anywhere at random
+
+69
+00:03:22.960 --> 00:03:25.220
+in our cluster.
+
+70
+00:03:25.220 --> 00:03:27.730
+So we really need a way
+to iterate over the array
+
+71
+00:03:27.730 --> 00:03:31.510
+and perform our desired
+logic within the document.
+
+72
+00:03:31.510 --> 00:03:34.930
+Thankfully, we have
+map, reduce, filter,
+
+73
+00:03:34.930 --> 00:03:37.780
+and the accumulator expressions
+available in the project
+
+74
+00:03:37.780 --> 00:03:40.830
+stage to remedy this problem.
+
+75
+00:03:40.830 --> 00:03:43.190
+Let's examine this pipeline.
+
+76
+00:03:43.190 --> 00:03:46.600
+We'll get the size of
+the resultant arrays
+
+77
+00:03:46.600 --> 00:03:48.940
+by filtering to
+remove the action we
+
+78
+00:03:48.940 --> 00:03:50.950
+don't want for that field.
+
+79
+00:03:50.950 --> 00:03:53.320
+In this case, we
+only allow documents
+
+80
+00:03:53.320 --> 00:03:55.330
+through that had
+the buy action--
+
+81
+00:03:55.330 --> 00:03:58.300
+here, the sell action.
+
+82
+00:03:58.300 --> 00:04:01.450
+Lastly, we'll just get the
+size of the trades array
+
+83
+00:04:01.450 --> 00:04:04.720
+to get how many
+total trades we had.
+
+84
+00:04:04.720 --> 00:04:07.130
+Now, this seems
+almost too simple,
+
+85
+00:04:07.130 --> 00:04:09.820
+so let's look at it in action.
+
+86
+00:04:09.820 --> 00:04:14.230
+Again, this is the same pipeline
+as on the previous slide.
+
+87
+00:04:14.230 --> 00:04:16.720
+The sort stage is
+added just to ensure
+
+88
+00:04:16.720 --> 00:04:19.660
+we get consistent results,
+so that we can do comparisons
+
+89
+00:04:19.660 --> 00:04:22.060
+later.
+
+90
+00:04:22.060 --> 00:04:24.640
+Awesome--
+functionally-identical results.
+
+91
+00:04:24.640 --> 00:04:28.180
+And I'd argue that this format
+is easier to reason about.
+
+92
+00:04:28.180 --> 00:04:31.660
+Let's look at the previous
+output to compare.
+
+93
+00:04:31.660 --> 00:04:34.390
+And here are the results
+from that previous pipeline
+
+94
+00:04:34.390 --> 00:04:36.580
+where we used the double group.
+
+95
+00:04:36.580 --> 00:04:38.440
+We can see the
+information we still
+
+96
+00:04:38.440 --> 00:04:42.190
+want is embedded within
+this actions array.
+
+97
+00:04:42.190 --> 00:04:45.220
+This is a visualization
+of our new pipeline.
+
+98
+00:04:45.220 --> 00:04:48.220
+Our new pipeline produced
+functionally-identical results,
+
+99
+00:04:48.220 --> 00:04:50.890
+but visually-- we can
+see in the execution--
+
+100
+00:04:50.890 --> 00:04:52.660
+is much different.
+
+101
+00:04:52.660 --> 00:04:54.850
+Rather than performing
+unnecessary work
+
+102
+00:04:54.850 --> 00:04:57.580
+and possibly moving and
+collapsing our pipeline
+
+103
+00:04:57.580 --> 00:05:01.150
+to a single location, causing
+a slowdown in extra network
+
+104
+00:05:01.150 --> 00:05:04.570
+usage, we retain the
+same number of documents
+
+105
+00:05:04.570 --> 00:05:09.130
+performing the work in a
+targeted manner and in place.
+
+106
+00:05:09.130 --> 00:05:11.320
+And in the shard
+environment, the benefits
+
+107
+00:05:11.320 --> 00:05:12.770
+are tangible as well.
+
+108
+00:05:12.770 --> 00:05:17.530
+We've kept all work
+distributed among the shards.
+
+109
+00:05:17.530 --> 00:05:19.810
+All right, but wait-- but wait.
+
+110
+00:05:19.810 --> 00:05:22.540
+That's all fine for
+essentially binary input,
+
+111
+00:05:22.540 --> 00:05:25.300
+when we want to count the
+occurrence of something.
+
+112
+00:05:25.300 --> 00:05:29.320
+But what if we want to do
+something more meaningful?
+
+113
+00:05:29.320 --> 00:05:32.890
+What if we'd like to find how
+many times a specific stock was
+
+114
+00:05:32.890 --> 00:05:36.610
+bought, sold, and what the
+total price was for each?
+
+115
+00:05:36.610 --> 00:05:40.870
+Let's find that information
+out for MongoDB stock.
+
+116
+00:05:40.870 --> 00:05:45.760
+Again, map, reduce, filter,
+and the accumulator expressions
+
+117
+00:05:45.760 --> 00:05:50.440
+available on the project
+stage are amazing tools.
+
+118
+00:05:50.440 --> 00:05:53.470
+So this is one example
+pipeline that would
+
+119
+00:05:53.470 --> 00:05:56.080
+produce those results for us.
+
+120
+00:05:56.080 --> 00:05:59.770
+First, we specify the
+reduced expression.
+
+121
+00:05:59.770 --> 00:06:03.197
+As the input array, we'll go
+ahead and filter the trades
+
+122
+00:06:03.197 --> 00:06:06.130
+array, filtering out
+any stock ticker that
+
+123
+00:06:06.130 --> 00:06:09.010
+isn't equal to MongoDB.
+
+124
+00:06:09.010 --> 00:06:11.740
+The initial value and the
+value that will be used
+
+125
+00:06:11.740 --> 00:06:15.280
+as the accumulator value,
+dollar-dollar value--
+
+126
+00:06:15.280 --> 00:06:18.970
+we're going to specify this
+document, with two keys--
+
+127
+00:06:18.970 --> 00:06:21.640
+buy and sell-- that
+are each documents,
+
+128
+00:06:21.640 --> 00:06:25.630
+with keys of total
+count and total value.
+
+129
+00:06:25.630 --> 00:06:29.270
+Here, an in is our logic.
+
+130
+00:06:29.270 --> 00:06:31.390
+We start with this
+conditional expression,
+
+131
+00:06:31.390 --> 00:06:35.790
+where we check if this dot
+action is equal to buy.
+
+132
+00:06:35.790 --> 00:06:38.290
+Remember, dollar-dollar
+this refers
+
+133
+00:06:38.290 --> 00:06:42.230
+to the current element
+of the input array.
+
+134
+00:06:42.230 --> 00:06:44.320
+Remember, we
+filtered that, so we
+
+135
+00:06:44.320 --> 00:06:46.780
+know we're only going
+to get documents that
+
+136
+00:06:46.780 --> 00:06:50.540
+had MDB as the ticker symbol.
+
+137
+00:06:50.540 --> 00:06:54.280
+So if it is a buy action,
+we modify the total count
+
+138
+00:06:54.280 --> 00:06:57.770
+by adding one to
+dollar-dollar value,
+
+139
+00:06:57.770 --> 00:06:59.410
+dot buy, dot total count.
+
+140
+00:06:59.410 --> 00:07:01.720
+Remember, dollar-dollar
+value refers
+
+141
+00:07:01.720 --> 00:07:04.690
+to the accumulator,
+which we set initially
+
+142
+00:07:04.690 --> 00:07:07.660
+to be this value right here.
+
+143
+00:07:07.660 --> 00:07:12.430
+We also modify total value
+by adding this dot price
+
+144
+00:07:12.430 --> 00:07:16.660
+to dollar-dollar value,
+dot buy, dot total value.
+
+145
+00:07:16.660 --> 00:07:21.340
+And if this was a buy action,
+we don't modify sell in any way.
+
+146
+00:07:21.340 --> 00:07:24.900
+We just reassign
+it back to itself.
+
+147
+00:07:24.900 --> 00:07:29.320
+If it is a sell action, we
+essentially do the same thing,
+
+148
+00:07:29.320 --> 00:07:36.490
+adding one to sell-total-count
+and adding this stock price
+
+149
+00:07:36.490 --> 00:07:40.960
+to sell-total-value, and then
+finally re-assigning buy back
+
+150
+00:07:40.960 --> 00:07:44.170
+to itself, because
+this was a sell.
+
+151
+00:07:44.170 --> 00:07:47.450
+We can see that,
+based on MongoDB only,
+
+152
+00:07:47.450 --> 00:07:50.350
+the buy total count was 10,
+and the sell total count
+
+153
+00:07:50.350 --> 00:07:52.630
+was five for this
+specific document.
+
+154
+00:07:52.630 --> 00:07:54.940
+We can also see the
+dollar value associated
+
+155
+00:07:54.940 --> 00:07:56.710
+with all the transactions.
+
+156
+00:07:56.710 --> 00:08:01.450
+Again, we see 22 and 19
+and the value associated.
+
+157
+00:08:01.450 --> 00:08:05.990
+All right, we've covered a lot
+of information in this lesson.
+
+158
+00:08:05.990 --> 00:08:08.980
+Let's go ahead and summarize
+what we talked about.
+
+159
+00:08:08.980 --> 00:08:11.950
+First, avoid unnecessary stages.
+
+160
+00:08:11.950 --> 00:08:15.010
+The aggregation framework can
+project fields automatically
+
+161
+00:08:15.010 --> 00:08:17.080
+if the final shape of
+the output document
+
+162
+00:08:17.080 --> 00:08:21.040
+can be determined
+from initial input.
+
+163
+00:08:21.040 --> 00:08:24.160
+Second, use accumulator
+expressions--
+
+164
+00:08:24.160 --> 00:08:26.020
+as well as dollar-map,
+dollar-reduce,
+
+165
+00:08:26.020 --> 00:08:27.970
+and dollar-filter expressions--
+
+166
+00:08:27.970 --> 00:08:31.750
+in project stages before
+an unwind, if possible.
+
+167
+00:08:31.750 --> 00:08:33.820
+Again, this only
+applies if you need
+
+168
+00:08:33.820 --> 00:08:37.809
+to group within a document,
+not among your documents.
+
+169
+00:08:37.809 --> 00:08:41.020
+Lastly, every high-order
+array function
+
+170
+00:08:41.020 --> 00:08:42.870
+can be implemented
+with dollar-reduce
+
+171
+00:08:42.870 --> 00:08:47.430
+if the provided expressions
+do not meet your needs.

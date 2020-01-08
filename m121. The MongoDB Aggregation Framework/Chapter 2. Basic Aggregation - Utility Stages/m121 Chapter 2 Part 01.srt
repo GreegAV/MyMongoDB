@@ -1,0 +1,392 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.730
+Let's take a break from
+transformation for a moment
+
+3
+00:00:02.730 --> 00:00:05.100
+and discuss a
+useful utility stage
+
+4
+00:00:05.100 --> 00:00:07.420
+if we work would GeoJSON data--
+
+5
+00:00:07.420 --> 00:00:09.140
+$geoNear.
+
+6
+00:00:09.140 --> 00:00:11.730
+$geoNear is the aggregation
+framework solution
+
+7
+00:00:11.730 --> 00:00:15.630
+to performing geoqueries within
+the aggregation pipeline.
+
+8
+00:00:15.630 --> 00:00:18.000
+Within a pipeline,
+$geoNear must be
+
+9
+00:00:18.000 --> 00:00:20.550
+the first stage in a pipeline.
+
+10
+00:00:20.550 --> 00:00:23.850
+Also of note, we cannot use the
+$near predicate in the query
+
+11
+00:00:23.850 --> 00:00:27.660
+field, though it wouldn't
+really make much sense to do so.
+
+12
+00:00:27.660 --> 00:00:30.180
+So if we already
+have $near operator
+
+13
+00:00:30.180 --> 00:00:32.310
+available for find
+operations, why
+
+14
+00:00:32.310 --> 00:00:35.730
+do we need an aggregation
+stage like $geoNear?
+
+15
+00:00:35.730 --> 00:00:38.970
+$geoNear can be used
+on charted collections,
+
+16
+00:00:38.970 --> 00:00:41.040
+whereas $near can't.
+
+17
+00:00:41.040 --> 00:00:45.030
+Additionally, any query using
+$near cannot use other special
+
+18
+00:00:45.030 --> 00:00:48.210
+indexes, like
+$text, for example.
+
+19
+00:00:48.210 --> 00:00:50.910
+One last thing,
+$geoNear requires
+
+20
+00:00:50.910 --> 00:00:53.160
+that the collection we're
+performing our aggregations
+
+21
+00:00:53.160 --> 00:00:58.110
+on to have one and
+only one geoindex.
+
+22
+00:00:58.110 --> 00:01:01.740
+Here is the structuring
+arguments for $geoNear.
+
+23
+00:01:01.740 --> 00:01:04.470
+As we can see, it can
+take a lot of arguments,
+
+24
+00:01:04.470 --> 00:01:07.434
+though only if you're required.
+
+25
+00:01:07.434 --> 00:01:13.800
+Required arguments are near,
+distanceField, and spherical.
+
+26
+00:01:13.800 --> 00:01:16.830
+Near is the point we'd
+like to search near.
+
+27
+00:01:16.830 --> 00:01:18.450
+Results will be
+ordered from closest
+
+28
+00:01:18.450 --> 00:01:21.510
+to furthest from this location.
+
+29
+00:01:21.510 --> 00:01:24.010
+distanceField is the
+argument we supply
+
+30
+00:01:24.010 --> 00:01:27.420
+that will be inserted
+into returned documents,
+
+31
+00:01:27.420 --> 00:01:30.330
+giving us the distance from
+location to the location
+
+32
+00:01:30.330 --> 00:01:32.640
+we specified in near.
+
+33
+00:01:32.640 --> 00:01:35.540
+Spherical is the last
+required argument.
+
+34
+00:01:35.540 --> 00:01:40.320
+Specify true if the index is
+a 2dsphere, otherwise false.
+
+35
+00:01:40.320 --> 00:01:45.060
+During this lesson, we'll
+be using a 2dsphere index.
+
+36
+00:01:45.060 --> 00:01:48.360
+Let's go ahead and execute
+a $geoNear aggregation.
+
+37
+00:01:48.360 --> 00:01:50.730
+I'm going to search for
+locations near the MongoDB
+
+38
+00:01:50.730 --> 00:01:54.360
+headquarters in New York City.
+
+39
+00:01:54.360 --> 00:01:57.750
+Here I've specified my
+three required arguments--
+
+40
+00:01:57.750 --> 00:02:00.981
+near, distanceField,
+and spherical.
+
+41
+00:02:00.981 --> 00:02:04.070
+
+
+42
+00:02:04.070 --> 00:02:08.620
+Well, we got a ton of results,
+so we can see it works.
+
+43
+00:02:08.620 --> 00:02:12.140
+However, it's not very
+useful in its current state.
+
+44
+00:02:12.140 --> 00:02:14.600
+Let's look at those optional
+arguments in greater detail
+
+45
+00:02:14.600 --> 00:02:18.950
+to learn how to make this
+aggregation much more targeted.
+
+46
+00:02:18.950 --> 00:02:21.470
+minDistance and
+maxDistance specify
+
+47
+00:02:21.470 --> 00:02:24.560
+the closest and furthest
+results we want.
+
+48
+00:02:24.560 --> 00:02:27.140
+Query allows us to
+specify conditions
+
+49
+00:02:27.140 --> 00:02:29.390
+that each document
+must meet, and uses
+
+50
+00:02:29.390 --> 00:02:32.980
+the same query operator
+syntax as match.
+
+51
+00:02:32.980 --> 00:02:35.390
+includeLocs would
+allow us to show
+
+52
+00:02:35.390 --> 00:02:37.025
+what location was
+used in the document
+
+53
+00:02:37.025 --> 00:02:39.590
+if it has more
+than one location.
+
+54
+00:02:39.590 --> 00:02:41.600
+For our dataset,
+this isn't necessary,
+
+55
+00:02:41.600 --> 00:02:44.510
+as each document only
+has one location.
+
+56
+00:02:44.510 --> 00:02:46.670
+And remember, $geoNear
+requires that we
+
+57
+00:02:46.670 --> 00:02:50.510
+have exactly one 2dsphere
+index in the collection.
+
+58
+00:02:50.510 --> 00:02:53.510
+Limit and num are
+functionally identical
+
+59
+00:02:53.510 --> 00:02:56.570
+and are used to limit the
+number of documents returned.
+
+60
+00:02:56.570 --> 00:02:59.390
+Lastly,
+distanceMultiplier is used
+
+61
+00:02:59.390 --> 00:03:02.960
+to convert distance results
+from radians into whatever unit
+
+62
+00:03:02.960 --> 00:03:07.110
+we need, should we be using
+legacy geospatial data.
+
+63
+00:03:07.110 --> 00:03:08.900
+So let's clean up
+our aggregation
+
+64
+00:03:08.900 --> 00:03:10.760
+and fetch useful results.
+
+65
+00:03:10.760 --> 00:03:12.830
+I'd like to find the
+five nearest hospitals
+
+66
+00:03:12.830 --> 00:03:14.837
+to the MongoDB headquarters.
+
+67
+00:03:14.837 --> 00:03:23.440
+
+
+68
+00:03:23.440 --> 00:03:26.220
+Here I've added the
+optional query field
+
+69
+00:03:26.220 --> 00:03:29.556
+and specified that it
+should be type "Hospital."
+
+70
+00:03:29.556 --> 00:03:33.190
+And here I've added the
+optional limit field
+
+71
+00:03:33.190 --> 00:03:35.980
+and specified it as 5.
+
+72
+00:03:35.980 --> 00:03:37.390
+Much better.
+
+73
+00:03:37.390 --> 00:03:40.390
+We got the five nearest
+places that matched hospital.
+
+74
+00:03:40.390 --> 00:03:43.900
+And we could see that our
+distance is in meters.
+
+75
+00:03:43.900 --> 00:03:45.580
+And that's it for $geoNear.
+
+76
+00:03:45.580 --> 00:03:47.800
+There's just a few
+things to remember.
+
+77
+00:03:47.800 --> 00:03:51.960
+The collection can have one
+and only one 2dsphere index.
+
+78
+00:03:51.960 --> 00:03:55.660
+If using 2dsphere, the
+distance is returned in meters.
+
+79
+00:03:55.660 --> 00:03:58.090
+If using legacy
+coordinates, the distance
+
+80
+00:03:58.090 --> 00:04:00.050
+is returned in radians.
+
+81
+00:04:00.050 --> 00:04:01.960
+And $geoNear must
+be the first stage
+
+82
+00:04:01.960 --> 00:04:04.890
+in an aggregation pipeline.

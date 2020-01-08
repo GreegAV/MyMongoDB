@@ -1,0 +1,808 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.430
+In this lesson, I want
+to further discuss
+
+3
+00:00:02.430 --> 00:00:04.830
+about querying with
+compound indexes.
+
+4
+00:00:04.830 --> 00:00:07.710
+And specifically, I want to
+talk about index prefixes
+
+5
+00:00:07.710 --> 00:00:10.110
+and how they're
+used when we query.
+
+6
+00:00:10.110 --> 00:00:13.140
+By the end of this lesson,
+you should be able to--
+
+7
+00:00:13.140 --> 00:00:15.930
+for a query that has
+multiple fields that
+
+8
+00:00:15.930 --> 00:00:17.570
+overlap with an index--
+
+9
+00:00:17.570 --> 00:00:21.120
+you should be able to identify
+which fields the query can
+
+10
+00:00:21.120 --> 00:00:22.225
+use the index for.
+
+11
+00:00:22.225 --> 00:00:23.850
+The way you're going
+to learn how to do
+
+12
+00:00:23.850 --> 00:00:27.150
+that is through index prefixes.
+
+13
+00:00:27.150 --> 00:00:32.130
+An index prefix is a continuous
+subset of our compound index
+
+14
+00:00:32.130 --> 00:00:33.960
+that starts to the left.
+
+15
+00:00:33.960 --> 00:00:36.940
+The easiest way to illustrate
+it is to look at examples.
+
+16
+00:00:36.940 --> 00:00:38.500
+So here's our compound index.
+
+17
+00:00:38.500 --> 00:00:41.830
+We have a compound index on
+item, location and stock,
+
+18
+00:00:41.830 --> 00:00:43.230
+and they're all ascending.
+
+19
+00:00:43.230 --> 00:00:46.200
+And so our index prefixes
+for this compound index
+
+20
+00:00:46.200 --> 00:00:47.610
+would be the following--
+
+21
+00:00:47.610 --> 00:00:51.030
+item, or item location,
+because we always
+
+22
+00:00:51.030 --> 00:00:54.900
+start on the left-hand side
+and it has to be continuous.
+
+23
+00:00:54.900 --> 00:00:58.470
+We couldn't have an index
+prefix of location stock,
+
+24
+00:00:58.470 --> 00:01:01.210
+or just stock by itself,
+or location by itself.
+
+25
+00:01:01.210 --> 00:01:03.330
+And obviously we can't
+have anything out of order,
+
+26
+00:01:03.330 --> 00:01:06.450
+like stock item,
+or even item stock.
+
+27
+00:01:06.450 --> 00:01:08.890
+It's always from the
+left and continuous.
+
+28
+00:01:08.890 --> 00:01:11.220
+So the only two prefixes
+for this compound index
+
+29
+00:01:11.220 --> 00:01:15.420
+would be item and item
+location, both ascending.
+
+30
+00:01:15.420 --> 00:01:17.610
+And so just like
+with the phone book,
+
+31
+00:01:17.610 --> 00:01:22.530
+I can use an index prefix
+just like a regular index.
+
+32
+00:01:22.530 --> 00:01:26.490
+The query planner will ignore
+the other parts of the index,
+
+33
+00:01:26.490 --> 00:01:29.700
+and will use the prefix to
+find your documents that you
+
+34
+00:01:29.700 --> 00:01:30.880
+care about.
+
+35
+00:01:30.880 --> 00:01:32.470
+Let's look at a simple case.
+
+36
+00:01:32.470 --> 00:01:36.510
+So we already have this compound
+index of last name, first name.
+
+37
+00:01:36.510 --> 00:01:40.870
+And so an index prefix for
+this would be last name.
+
+38
+00:01:40.870 --> 00:01:44.640
+So if I have a query where
+I query on last name--
+
+39
+00:01:44.640 --> 00:01:48.390
+last name is a index prefix
+for our compound index--
+
+40
+00:01:48.390 --> 00:01:52.540
+when we run this query,
+we get our 22 documents.
+
+41
+00:01:52.540 --> 00:01:55.056
+And if we look at
+the explain output,
+
+42
+00:01:55.056 --> 00:01:58.934
+and so we can see that we
+only had to exam 22 documents,
+
+43
+00:01:58.934 --> 00:02:00.600
+which is really good
+because we ended up
+
+44
+00:02:00.600 --> 00:02:02.180
+returning 22 documents.
+
+45
+00:02:02.180 --> 00:02:03.350
+So again, a very good ratio.
+
+46
+00:02:03.350 --> 00:02:05.160
+A ratio of 1.
+
+47
+00:02:05.160 --> 00:02:08.060
+And we also had to look
+at 22 index keys, which
+
+48
+00:02:08.060 --> 00:02:09.180
+is also very, very good.
+
+49
+00:02:09.180 --> 00:02:11.900
+We didn't have to look at
+any superfluous index keys,
+
+50
+00:02:11.900 --> 00:02:16.220
+and as such, we have a execution
+time of 0 milliseconds.
+
+51
+00:02:16.220 --> 00:02:18.770
+But what if we were to
+query on first name instead
+
+52
+00:02:18.770 --> 00:02:20.180
+of last name?
+
+53
+00:02:20.180 --> 00:02:24.110
+Well then, we would still
+get our eight documents
+
+54
+00:02:24.110 --> 00:02:25.430
+that we wanted.
+
+55
+00:02:25.430 --> 00:02:27.470
+But now when we
+look at the explain,
+
+56
+00:02:27.470 --> 00:02:30.470
+you'll see that we had to
+examine 50,000 documents,
+
+57
+00:02:30.470 --> 00:02:32.650
+whereas only eight
+were returned,
+
+58
+00:02:32.650 --> 00:02:35.460
+and we didn't look at
+any index keys at all.
+
+59
+00:02:35.460 --> 00:02:37.250
+So this is a terrible ratio.
+
+60
+00:02:37.250 --> 00:02:40.830
+We looked at no index keys,
+and it took a long time.
+
+61
+00:02:40.830 --> 00:02:43.460
+And that's because if we
+look at the explain output,
+
+62
+00:02:43.460 --> 00:02:45.740
+we can see that we had
+to do a collection scan.
+
+63
+00:02:45.740 --> 00:02:48.080
+And that's because we
+weren't able to use
+
+64
+00:02:48.080 --> 00:02:50.210
+an index for this
+query, and that's
+
+65
+00:02:50.210 --> 00:02:53.090
+because we didn't
+use an index prefix.
+
+66
+00:02:53.090 --> 00:02:55.370
+So it's really helpful
+to remember this image.
+
+67
+00:02:55.370 --> 00:02:57.350
+As you can see,
+the first names can
+
+68
+00:02:57.350 --> 00:03:01.700
+be anywhere in the index,
+whereas the last names have
+
+69
+00:03:01.700 --> 00:03:02.810
+an ordering.
+
+70
+00:03:02.810 --> 00:03:05.870
+And the first names have
+an ordering relative
+
+71
+00:03:05.870 --> 00:03:07.490
+to the last name.
+
+72
+00:03:07.490 --> 00:03:10.880
+But the first name by itself, if
+that's what we're querying on,
+
+73
+00:03:10.880 --> 00:03:12.150
+they could be anywhere.
+
+74
+00:03:12.150 --> 00:03:13.902
+So the index is
+really no use to us.
+
+75
+00:03:13.902 --> 00:03:15.860
+We're just going to have
+to go through and look
+
+76
+00:03:15.860 --> 00:03:16.630
+at every single document.
+
+77
+00:03:16.630 --> 00:03:18.560
+We're going to have to
+do a collection scan.
+
+78
+00:03:18.560 --> 00:03:20.570
+And so this is one of
+the interesting features
+
+79
+00:03:20.570 --> 00:03:22.160
+of compound indexes.
+
+80
+00:03:22.160 --> 00:03:24.680
+If we have a compound
+index, it can
+
+81
+00:03:24.680 --> 00:03:27.830
+serve as query use
+for both the compound
+
+82
+00:03:27.830 --> 00:03:31.460
+and any of its prefixes, but
+it won't use an index when
+
+83
+00:03:31.460 --> 00:03:33.364
+we're not querying on a prefix.
+
+84
+00:03:33.364 --> 00:03:35.030
+So this is something
+you should consider
+
+85
+00:03:35.030 --> 00:03:36.920
+when building your indexes.
+
+86
+00:03:36.920 --> 00:03:40.550
+If your application has two
+queries and one uses fields
+
+87
+00:03:40.550 --> 00:03:42.530
+that are a subset
+of the other, you
+
+88
+00:03:42.530 --> 00:03:44.750
+should build an
+index where one query
+
+89
+00:03:44.750 --> 00:03:47.090
+uses the index
+prefix and the other
+
+90
+00:03:47.090 --> 00:03:49.640
+uses all fields of the index.
+
+91
+00:03:49.640 --> 00:03:52.070
+There's no point in building
+two indexes when you can have
+
+92
+00:03:52.070 --> 00:03:54.260
+everything with just one index.
+
+93
+00:03:54.260 --> 00:03:56.460
+Let's look at a better
+example of this.
+
+94
+00:03:56.460 --> 00:03:59.210
+Let's go ahead and delete
+this compound index
+
+95
+00:03:59.210 --> 00:04:00.840
+that we have right
+now, and we'll
+
+96
+00:04:00.840 --> 00:04:02.965
+create a new, larger index.
+
+97
+00:04:02.965 --> 00:04:04.340
+So here is our
+new, larger index.
+
+98
+00:04:04.340 --> 00:04:06.950
+We're going to call it
+job, employer, last name,
+
+99
+00:04:06.950 --> 00:04:07.845
+first name.
+
+100
+00:04:07.845 --> 00:04:10.220
+And naturally, those are the
+same fields that we'll have.
+
+101
+00:04:10.220 --> 00:04:13.874
+
+
+102
+00:04:13.874 --> 00:04:15.290
+And here's the
+name of our index--
+
+103
+00:04:15.290 --> 00:04:18.016
+it's job, employer,
+last name, first name.
+
+104
+00:04:18.016 --> 00:04:20.390
+And our indexes are going to
+be job, employer, last name,
+
+105
+00:04:20.390 --> 00:04:22.470
+first name, all ascending.
+
+106
+00:04:22.470 --> 00:04:24.530
+And go ahead and create it.
+
+107
+00:04:24.530 --> 00:04:25.860
+And now it's been created.
+
+108
+00:04:25.860 --> 00:04:27.290
+Let's go ahead and run a query.
+
+109
+00:04:27.290 --> 00:04:28.790
+You can see here,
+our query reported
+
+110
+00:04:28.790 --> 00:04:33.800
+on both job and employer, and
+these make up an index prefix.
+
+111
+00:04:33.800 --> 00:04:37.340
+So when we run the query,
+we get our five documents.
+
+112
+00:04:37.340 --> 00:04:39.500
+And when we look
+at explain, we can
+
+113
+00:04:39.500 --> 00:04:43.314
+see that we only had to examine
+five documents, which were
+
+114
+00:04:43.314 --> 00:04:44.480
+the five that were returned.
+
+115
+00:04:44.480 --> 00:04:46.520
+So again a very good ratio.
+
+116
+00:04:46.520 --> 00:04:48.620
+We only had to
+examine five keys,
+
+117
+00:04:48.620 --> 00:04:50.690
+and we had great execution time.
+
+118
+00:04:50.690 --> 00:04:53.040
+And you can see that we're
+able to use the index.
+
+119
+00:04:53.040 --> 00:04:54.770
+So if we look at
+this, we can see
+
+120
+00:04:54.770 --> 00:04:56.270
+that we are able
+to do an index scan
+
+121
+00:04:56.270 --> 00:04:59.120
+using our compound
+index, which is larger
+
+122
+00:04:59.120 --> 00:05:02.030
+than our query parameters,
+but our query parameters
+
+123
+00:05:02.030 --> 00:05:05.450
+are an index prefix
+for our given index.
+
+124
+00:05:05.450 --> 00:05:08.016
+What if we were to also
+filter on last name?
+
+125
+00:05:08.016 --> 00:05:10.140
+We know that one of our
+documents is for Sara Cook,
+
+126
+00:05:10.140 --> 00:05:13.130
+and so we can just add this
+last name predicate for Cook.
+
+127
+00:05:13.130 --> 00:05:17.210
+So when we run this, we
+find our Sara Cook document.
+
+128
+00:05:17.210 --> 00:05:18.710
+And when we look
+at explain, you can
+
+129
+00:05:18.710 --> 00:05:21.770
+see that we only had to examine
+one document for the exact one
+
+130
+00:05:21.770 --> 00:05:24.110
+document that we
+returned, and we only
+
+131
+00:05:24.110 --> 00:05:25.980
+had to look at
+that one index key.
+
+132
+00:05:25.980 --> 00:05:28.066
+So of course, it was
+really, really fast,
+
+133
+00:05:28.066 --> 00:05:30.440
+because we were doing an index
+scan, because again, we're
+
+134
+00:05:30.440 --> 00:05:32.766
+using the index prefix.
+
+135
+00:05:32.766 --> 00:05:34.640
+Let's do the same thing
+again, but this time,
+
+136
+00:05:34.640 --> 00:05:36.030
+instead of querying
+on last name,
+
+137
+00:05:36.030 --> 00:05:37.190
+we'll query on first name.
+
+138
+00:05:37.190 --> 00:05:39.260
+So we'll use Sara's first name.
+
+139
+00:05:39.260 --> 00:05:41.750
+And when we run the
+query, we get the document
+
+140
+00:05:41.750 --> 00:05:43.274
+that we would expect.
+
+141
+00:05:43.274 --> 00:05:44.690
+But when we looked
+at explain, you
+
+142
+00:05:44.690 --> 00:05:47.000
+can see that even
+though we only had
+
+143
+00:05:47.000 --> 00:05:49.710
+to look at one document,
+which was the same one that we
+
+144
+00:05:49.710 --> 00:05:52.820
+returned, we still had to
+look at six index keys.
+
+145
+00:05:52.820 --> 00:05:56.420
+So we had to look at basically
+five unnecessary index keys.
+
+146
+00:05:56.420 --> 00:05:58.400
+So even though our
+query was very fast,
+
+147
+00:05:58.400 --> 00:05:59.990
+and we were able to
+use an index scan,
+
+148
+00:05:59.990 --> 00:06:02.180
+we still had to spend
+some time looking at keys
+
+149
+00:06:02.180 --> 00:06:04.190
+that we really didn't need to.
+
+150
+00:06:04.190 --> 00:06:06.710
+So we were still able to
+use an index prefix of job
+
+151
+00:06:06.710 --> 00:06:09.020
+and employer, but we
+weren't able to use an index
+
+152
+00:06:09.020 --> 00:06:10.490
+prefix that had three fields.
+
+153
+00:06:10.490 --> 00:06:13.400
+We were only able to use
+two of the four fields
+
+154
+00:06:13.400 --> 00:06:15.740
+that make up our compound index.
+
+155
+00:06:15.740 --> 00:06:18.500
+We can take this a step
+further by looking at job,
+
+156
+00:06:18.500 --> 00:06:21.020
+first name and last name.
+
+157
+00:06:21.020 --> 00:06:23.210
+We still get the one
+document that we wanted,
+
+158
+00:06:23.210 --> 00:06:28.410
+but now we're examining way more
+keys than what we were before.
+
+159
+00:06:28.410 --> 00:06:31.400
+So we still only have to look
+at one document, the same one
+
+160
+00:06:31.400 --> 00:06:33.950
+that we returned, but now we're
+looking at a bunch of keys
+
+161
+00:06:33.950 --> 00:06:35.960
+that we don't need to.
+
+162
+00:06:35.960 --> 00:06:38.870
+Just to be clear, there are
+some performance considerations
+
+163
+00:06:38.870 --> 00:06:41.480
+that we'll be getting
+into in other lessons.
+
+164
+00:06:41.480 --> 00:06:45.140
+We haven't yet dealt with
+sorting with compound indexes,
+
+165
+00:06:45.140 --> 00:06:46.490
+but these are the basics.
+
+166
+00:06:46.490 --> 00:06:49.010
+And everything that we talked
+about in single key indexes
+
+167
+00:06:49.010 --> 00:06:51.440
+also still apply to
+compound indexes.
+
+168
+00:06:51.440 --> 00:06:54.020
+So now you know how
+to use index prefixes
+
+169
+00:06:54.020 --> 00:06:58.700
+to determine for a given query
+that overlaps the index which
+
+170
+00:06:58.700 --> 00:07:00.980
+fields in the
+query will actually
+
+171
+00:07:00.980 --> 00:07:03.220
+be able to use the index.

@@ -1,0 +1,135 @@
+In this lesson, we're going to talk about update operators.
+
+Imagine a scenario where you have a database of your favorite artists, and you're trying to keep up with the public opinion about them.
+
+So you periodically update the rating of your favorite musicians to match their public rating.
+
+First, we set up a test collection in the documents that go in it.
+
+We're calling this test collection artists and throwing Gorillaz and Weird Al Yankovic in it for testing purposes.
+
+You may notice that by some coincidence the name of the band Gorillaz is misspelled with an extra z at the end.
+
+We would definitely like to fix that right away and replace that value with a proper spelling.
+
+There is a method that allows us to replace a document.
+
+And it is called replaceOne.
+
+Here's an example of how to use it.
+
+First, we establish a connection to the artist collection and retrieve the document that we're interested in.
+
+We make sure that the band created in the database is the same band that we retrieved.
+
+And then we can create a document with the correct title where Gorillaz is spelled accurately and simply replace the document with our new replace band.
+
+Let's test this.
+
+It works!
+
+However, it looks like this replacement operation annihilated all fields other than the ID field and the title field.
+
+This is because when the replace method is used, it replaces entire documents.
+
+And since the replacement document that we created only had the title and ID fields, we ended up losing a bunch of data such as the number of albums, genre, and rating, which is unfortunate.
+
+Instead of using a method that replaces full documents, we should use something that can work with better precision and change only the field that is specified.
+
+Sounds to me like we should use set.
+
+Let us take a look at an example that uses set when changing the band title.
+
+When you use set, you want to use the update method.
+
+So you take the collection, find the document that you're looking to update, and set the field to the value that you're looking to change it to.
+
+Let's see if this works.
+
+Success!
+
+We updated the value of the title field.
+
+And the rest of the fields remained as they were without being erased from existence, which is great news.
+
+This is exactly what we were looking for.
+
+Let us look at the slightly different scenario now.
+
+Suppose Weird Al and Gorillaz are now equally more popular than before.
+
+And we want to update their rating to the appropriate 9 from the measly 8 that is in the database.
+
+One way of doing that is by using updateMany in combination with set.
+
+To use updateMany simply create a query that selects all of the documents that you're interested in.
+
+In this case, we are looking for rating 8.
+
+So every document with a rating of 8 will be now set to rating 9.
+
+And you can use updateMany same where you would use updateOne.
+
+Let's run and see if it works.
+
+Another success story!
+
+However, there is still a better way to make this update happen.
+
+In this example, we are working with numbers.
+
+To be more specific we are working with integers.
+
+Let's look at an example of how to achieve the same update result using an increment operator.
+
+To use an increment operator you can still use updateMany or updateOne, create a query that will select the documents that you're interested in changing field values for, and then use inc that increments the rating field by 1.
+
+Let's run it.
+
+And another success.
+
+Finally, we should talk about those moments when you realize that some data in your documents is unnecessary.
+
+Not only is that data unnecessary, but you simply don't need the fields to be present in the document at all.
+
+Imagine that you realized that you no longer care about the public opinion and you just like the music that you like regardless of what the rest of the world thinks about it.
+
+So you go into your database and you delete the rating field.
+
+Here's an example of how you would do that.
+
+In this case, you can use updateMany or updateOne.
+
+We're going to find all the documents that have the field rating at all in them.
+
+And we use unset and specify the field that we want to get rid of.
+
+Let's see if it worked.
+
+Wonderful!
+
+It looks like everything worked.
+
+OK, let's make sure that all the test cases that we used in this lesson work as expected.
+
+Fantastic.
+
+And we're done with update operators.
+
+Let's quickly recap what we learned.
+
+You can replace entire documents with replaceOne.
+
+This operation may cause you to lose data, so it isn't recommended for situations when you need a simple update.
+
+You can update a value in a single document using the updateOne, set or inc operators.
+
+You can update multiple documents that match your query using updateMany in conjunction with set or inc operators.
+
+You can completely remove the field from a document by using updateOne or updateMany with the unset operation.
+
+For more update operators and their use cases, feel free to check out the following documentation page.
+
+You can also find a link to this documentation page below the video.
+
+Use these tools wisely and have fun building Mflix.

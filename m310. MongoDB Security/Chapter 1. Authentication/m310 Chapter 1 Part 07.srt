@@ -1,0 +1,303 @@
+
+1
+00:00:00.000 --> 00:00:00.840
+
+
+2
+00:00:00.840 --> 00:00:03.830
+By now, you should have a pretty
+good, high-level understanding
+
+3
+00:00:03.830 --> 00:00:06.750
+of the different authentication
+mechanisms and methods
+
+4
+00:00:06.750 --> 00:00:08.660
+that MongoDB supports.
+
+5
+00:00:08.660 --> 00:00:10.890
+We've also talked about some
+important topics related
+
+6
+00:00:10.890 --> 00:00:13.830
+to authentication, like
+the localhost exception,
+
+7
+00:00:13.830 --> 00:00:15.940
+internal authentication
+mechanisms,
+
+8
+00:00:15.940 --> 00:00:19.340
+as well as how authentication
+works on a sharded cluster.
+
+9
+00:00:19.340 --> 00:00:21.180
+In the next several
+videos, we're
+
+10
+00:00:21.180 --> 00:00:23.660
+going to actually see how
+to configure authentication
+
+11
+00:00:23.660 --> 00:00:26.730
+on MongoDB for each of
+the different mechanisms
+
+12
+00:00:26.730 --> 00:00:29.780
+that we've explored
+in prior videos.
+
+13
+00:00:29.780 --> 00:00:31.597
+In this first video,
+I'm going to show you
+
+14
+00:00:31.597 --> 00:00:33.430
+how to set up the most
+common authentication
+
+15
+00:00:33.430 --> 00:00:36.480
+mechanism, SCRAM-SHA-1.
+
+16
+00:00:36.480 --> 00:00:39.310
+As you know, SCRAM-SHA-1
+is the default mechanism
+
+17
+00:00:39.310 --> 00:00:42.560
+for password-based
+authentication with MongoDB.
+
+18
+00:00:42.560 --> 00:00:44.550
+Let's go ahead and set
+up a mongod instance
+
+19
+00:00:44.550 --> 00:00:49.160
+with SCRAM-SHA-1, and connect
+our server with a mongo shell.
+
+20
+00:00:49.160 --> 00:00:52.320
+Since SCRAM-SHA-1 is the default
+authentication mechanism,
+
+21
+00:00:52.320 --> 00:00:54.150
+it really is this easy.
+
+22
+00:00:54.150 --> 00:00:58.160
+We just pass the --auth option
+to the mongod command line
+
+23
+00:00:58.160 --> 00:00:59.510
+tool.
+
+24
+00:00:59.510 --> 00:01:02.250
+When I start running this,
+our server is started.
+
+25
+00:01:02.250 --> 00:01:04.110
+I can then start a new shell.
+
+26
+00:01:04.110 --> 00:01:06.190
+I just type in mongo
+to have the mongo shell
+
+27
+00:01:06.190 --> 00:01:08.570
+connect to our mongod instance.
+
+28
+00:01:08.570 --> 00:01:09.940
+This is a clean database.
+
+29
+00:01:09.940 --> 00:01:13.160
+So I'm going to go ahead and
+switch to the admin database.
+
+30
+00:01:13.160 --> 00:01:16.080
+While on the admin database, I'm
+going to run the db.createUser
+
+31
+00:01:16.080 --> 00:01:20.090
+command, specifying kirby as the
+user, password as the password,
+
+32
+00:01:20.090 --> 00:01:22.820
+and I'm going to go ahead and
+use his handy little helper
+
+33
+00:01:22.820 --> 00:01:25.180
+and just give myself
+the role of root,
+
+34
+00:01:25.180 --> 00:01:27.810
+which gives me all privileges.
+
+35
+00:01:27.810 --> 00:01:28.610
+I run this.
+
+36
+00:01:28.610 --> 00:01:31.200
+It successfully added the user.
+
+37
+00:01:31.200 --> 00:01:34.480
+Now we can either use
+db.auth, or close this shell
+
+38
+00:01:34.480 --> 00:01:36.920
+and start a new one, and
+use command line arguments.
+
+39
+00:01:36.920 --> 00:01:38.970
+Let's go ahead
+and do the former.
+
+40
+00:01:38.970 --> 00:01:41.000
+You can see, just as
+we've done before,
+
+41
+00:01:41.000 --> 00:01:44.420
+I use db.auth, passing
+in kirby and password,
+
+42
+00:01:44.420 --> 00:01:46.510
+and I'm successfully
+authenticated.
+
+43
+00:01:46.510 --> 00:01:48.940
+Of course, if we want, we
+can use a configuration
+
+44
+00:01:48.940 --> 00:01:51.710
+file to enable SCRAM-SHA-1
+on a mongod instead
+
+45
+00:01:51.710 --> 00:01:54.820
+of passing in the information
+via the command line options.
+
+46
+00:01:54.820 --> 00:01:58.780
+Configuration files for
+MongoDB are in the YAML format,
+
+47
+00:01:58.780 --> 00:02:02.950
+and are passed to mongod
+using the --config option.
+
+48
+00:02:02.950 --> 00:02:06.290
+Here we're going to create a
+file called config using vim.
+
+49
+00:02:06.290 --> 00:02:08.660
+You can use any text
+editor that you want.
+
+50
+00:02:08.660 --> 00:02:10.660
+As you can see, in
+this config file,
+
+51
+00:02:10.660 --> 00:02:13.320
+we have this high-level
+security key,
+
+52
+00:02:13.320 --> 00:02:15.670
+followed by this
+authorization key
+
+53
+00:02:15.670 --> 00:02:18.900
+where I've set
+authorization to be enabled.
+
+54
+00:02:18.900 --> 00:02:21.140
+We can then save this file.
+
+55
+00:02:21.140 --> 00:02:24.650
+And we can now run mongod with
+our new configuration file.
+
+56
+00:02:24.650 --> 00:02:26.720
+We can confirm the
+authentication is enabled
+
+57
+00:02:26.720 --> 00:02:29.350
+by connecting to the
+server via the mongo shell,
+
+58
+00:02:29.350 --> 00:02:32.880
+and running show dbs
+without any authentication.
+
+59
+00:02:32.880 --> 00:02:36.330
+As you can see, the server is
+using our configuration file,
+
+60
+00:02:36.330 --> 00:02:38.380
+enabling authentication,
+and preventing us
+
+61
+00:02:38.380 --> 00:02:40.730
+from executing the
+show dbs command.
+
+62
+00:02:40.730 --> 00:02:44.490
+This command successfully failed
+because our configuration file
+
+63
+00:02:44.490 --> 00:02:47.590
+has successfully enabled
+SCRAM-SHA-1 authentication.

@@ -1,0 +1,51 @@
+The next user we need to create is Ben.
+
+He's our sysAdmin.
+
+It's Ben's job to manage clusters and machines.
+
+This means he's going to need to be able to do maintenance operations-- things like adding and removing members of a replica set or adding and removing shards in a sharded cluster.
+
+Ben should not, however, be allowed to see any collection data, create or drop any database or collection, or even list any collections or databases.
+
+So now it's up to Alice, our recently created security officer, to actually create such a user.
+
+We'll first need to log in with Alice's credentials.
+
+We created Alice's account on the admin database.
+
+So we need to switch that database first.
+
+Now we can log in with Alice's credentials.
+
+And now we're successfully logged in.
+
+Before creating this user and granting it a role, let's go ahead and check which roles we think Ben will allow him to do everything he needs.
+
+I haven't mentioned this yet.
+
+But it's important that you use the online documentation that docs.MongoDB.com to look at all available built-in roles.
+
+It very clearly outlines here everything that all the different roles can do.
+
+And since we want Ben to be able to add and remove shards or different members of a replica set, it probably makes sense to use the Cluster Manager role.
+
+This means he'll be able to add shards, remove shards, be able to do regular replica set operations.
+
+But he won't be able to look at any collection data, or even list any databases or collections.
+
+Great.
+
+Let's go ahead and create this user for Ben.
+
+Here I'm going to give Ben the username ben.
+
+His password, of course, is going to be cables.
+
+And we're gonna give him the Cluster Manager role on the admin database.
+
+Let's go ahead and see if we can log in.
+
+Great.
+
+Now Ben should be able to configure our replica sets and perform cluster maintenance.

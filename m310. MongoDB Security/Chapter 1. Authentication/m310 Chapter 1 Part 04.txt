@@ -1,0 +1,51 @@
+Now that you understand at a high level the different authentication mechanisms supported in MongoDB, let's see what that actually looks like via the Mongo shell and the Mongo server.
+
+I already have MongoDB installed on this computer.
+
+To begin, we'll start the Mongo server using mongod with the --auth option.
+
+This will enable authorization.
+
+But in order for the server to properly identify a client's level of access, this will force all clients to authenticate to the server before they can perform any actions.
+
+You'll see that if I start the Mongo shell, I'm not able to do anything.
+
+If I try and run show dbs, I'll get this "not authorized on admin to execute command" error message.
+
+This is because I have not authenticated yet to the database.
+
+But this is a new database.
+
+There are no users in this database.
+
+So if I'm not authorized to do anything, how do I create a user?
+
+Well, there is one exception to this rule, and it's called the localhost exception.
+
+The first thing you are allowed to do when connected to an authenticated Mongo server is you're allowed to create the first user in the database.
+
+With that first user, you can then create other users.
+
+That means we're going to want to give that user the ability or the role who has the privilege to create other users.
+
+So let's go ahead and do that.
+
+We'll switch to the admin database, and then we'll create our user.
+
+In this case, I'm creating a user whose username will be kirby, whose password will be password, who has a role of userAdminAnyDatabase on the admin database, which means they'll be able to administrate any database.
+
+You'll notice that we're still not allowed to do anything.
+
+Show dbs will fail, as will trying to create another user.
+
+This is because the localhost exception only applies for the first user in a database.
+
+After you've created the first user in a database, or if a user already exists in the database, the localhost exception will not apply.
+
+I should also mention that the localhost exception only applies when you're connected to the database via the localhost interface, meaning if you're not on the same computer, you will not be able to utilize localhost exception.
+
+From here, we can go ahead and authenticate with db.auth, passing in my username of kirby, whose password is password.
+
+And then I can run db.system.users.find, and see we have the kirby user on the admin database.
+
+And here's all of that goodness, like with the role userAdminAnyDatabase.

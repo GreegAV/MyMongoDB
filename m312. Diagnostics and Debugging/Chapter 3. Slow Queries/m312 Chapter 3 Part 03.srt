@@ -1,0 +1,438 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.200
+If we run a exact
+same query again,
+
+3
+00:00:04.200 --> 00:00:07.920
+looking for all of
+my Barcelona friends
+
+4
+00:00:07.920 --> 00:00:12.140
+and iterating a few times over
+the result set, as I can see,
+
+5
+00:00:12.140 --> 00:00:15.190
+I getting a lot of
+this information.
+
+6
+00:00:15.190 --> 00:00:16.960
+So if we look into
+the data again
+
+7
+00:00:16.960 --> 00:00:21.450
+and we only look for the queries
+that we are running with,
+
+8
+00:00:21.450 --> 00:00:25.800
+we might be again
+[? led ?] to believe
+
+9
+00:00:25.800 --> 00:00:28.200
+that our total amount of time
+that the application needed
+
+10
+00:00:28.200 --> 00:00:32.820
+to wait for a response was
+actually 0 milliseconds again.
+
+11
+00:00:32.820 --> 00:00:36.720
+Now, a way to avoid
+any confusion--
+
+12
+00:00:36.720 --> 00:00:40.060
+and let's stop our
+profiling for a second.
+
+13
+00:00:40.060 --> 00:00:41.970
+Let's put it back to 0.
+
+14
+00:00:41.970 --> 00:00:46.650
+And let's say it's back into the
+100 milliseconds default level.
+
+15
+00:00:46.650 --> 00:00:49.020
+Once we are in this
+situation and if we
+
+16
+00:00:49.020 --> 00:00:52.770
+want to fully understand
+how much time is
+
+17
+00:00:52.770 --> 00:00:55.680
+our queries actually
+taking, we need
+
+18
+00:00:55.680 --> 00:00:58.920
+to call our explain command.
+
+19
+00:00:58.920 --> 00:01:02.760
+Once we run this, saying that
+we want to execute our query,
+
+20
+00:01:02.760 --> 00:01:05.040
+we will see exactly
+the statistics
+
+21
+00:01:05.040 --> 00:01:09.300
+needed to determine if our
+query is actually taking
+
+22
+00:01:09.300 --> 00:01:11.550
+the appropriate amount of time.
+
+23
+00:01:11.550 --> 00:01:14.400
+Now, in this case
+here, what we can see
+
+24
+00:01:14.400 --> 00:01:20.640
+is that we're returning
+roughly 167,000 documents.
+
+25
+00:01:20.640 --> 00:01:25.470
+And the total amount of
+documents is 1,001,010.
+
+26
+00:01:25.470 --> 00:01:30.020
+And the actual execution time
+in milliseconds is quite high--
+
+27
+00:01:30.020 --> 00:01:33.930
+is around 356 milliseconds.
+
+28
+00:01:33.930 --> 00:01:38.790
+If you all know, MongoDB will
+log this as a slow query.
+
+29
+00:01:38.790 --> 00:01:41.220
+So we can see that there's
+been a progression in terms
+
+30
+00:01:41.220 --> 00:01:45.600
+of the response time taken by
+this operation as time goes by
+
+31
+00:01:45.600 --> 00:01:48.690
+and as we add more
+data to our system
+
+32
+00:01:48.690 --> 00:01:52.680
+because frankly, this
+is not optimized at all.
+
+33
+00:01:52.680 --> 00:01:53.670
+It's a collection scan.
+
+34
+00:01:53.670 --> 00:01:56.650
+So we could do way
+better than this.
+
+35
+00:01:56.650 --> 00:02:01.980
+We can also get this
+information from our mongo logs.
+
+36
+00:02:01.980 --> 00:02:07.530
+If we run our Mongo logvis
+against our MongoDB log,
+
+37
+00:02:07.530 --> 00:02:12.030
+say no-browser, and specifying
+this output as the file
+
+38
+00:02:12.030 --> 00:02:16.890
+that we want to analyze,
+if we open our rtd.html
+
+39
+00:02:16.890 --> 00:02:20.850
+from our local box,
+we will be able to see
+
+40
+00:02:20.850 --> 00:02:27.320
+that that exact operation
+are captured in our mlogvis.
+
+41
+00:02:27.320 --> 00:02:31.050
+As you can see here, this
+operation here alone,
+
+42
+00:02:31.050 --> 00:02:35.570
+the one that is a command that
+does a find and the filter
+
+43
+00:02:35.570 --> 00:02:38.280
+equals our city of Barcelona--
+
+44
+00:02:38.280 --> 00:02:41.460
+it's actually taking
+a huge amount of time.
+
+45
+00:02:41.460 --> 00:02:45.110
+To complete, it took
+around 235 milliseconds--
+
+46
+00:02:45.110 --> 00:02:47.100
+so a quite significant
+amount of time
+
+47
+00:02:47.100 --> 00:02:49.320
+to complete a single operation.
+
+48
+00:02:49.320 --> 00:02:51.300
+Now, to solve this
+operation, we will need
+
+49
+00:02:51.300 --> 00:02:54.215
+to connect back to our mongod.
+
+50
+00:02:54.215 --> 00:02:57.720
+And once in our mongod in this
+particular collection, where
+
+51
+00:02:57.720 --> 00:03:01.710
+we have my friends, I will
+need to create an index
+
+52
+00:03:01.710 --> 00:03:04.530
+over that field,
+which is my city.
+
+53
+00:03:04.530 --> 00:03:06.930
+And once I have
+this index created,
+
+54
+00:03:06.930 --> 00:03:09.990
+if I run my query
+again with the explain,
+
+55
+00:03:09.990 --> 00:03:15.310
+I would see a dramatic change
+in terms of the execution stats.
+
+56
+00:03:15.310 --> 00:03:18.330
+The total amount of time
+taken for the execution time
+
+57
+00:03:18.330 --> 00:03:21.570
+is now a third of
+the previous one.
+
+58
+00:03:21.570 --> 00:03:24.360
+And I have a much
+more optimized query.
+
+59
+00:03:24.360 --> 00:03:27.900
+Now, obviously, we should
+not sit tight only on this.
+
+60
+00:03:27.900 --> 00:03:30.480
+We probably could do way better.
+
+61
+00:03:30.480 --> 00:03:33.120
+Let's say, for example,
+that what I'm showing
+
+62
+00:03:33.120 --> 00:03:36.110
+is not at all
+relevant to my system.
+
+63
+00:03:36.110 --> 00:03:39.750
+What I only need is
+the name of my friends.
+
+64
+00:03:39.750 --> 00:03:43.200
+And I don't even need
+their underscore ID field
+
+65
+00:03:43.200 --> 00:03:44.910
+because I'm not going
+to treat it at all.
+
+66
+00:03:44.910 --> 00:03:46.980
+I can filter that out.
+
+67
+00:03:46.980 --> 00:03:51.720
+So if I execute again the
+query with my execution stats,
+
+68
+00:03:51.720 --> 00:03:55.020
+I'll see that there's
+even more benefit there.
+
+69
+00:03:55.020 --> 00:03:59.700
+I'll be sending back a
+smaller amount of information.
+
+70
+00:03:59.700 --> 00:04:02.850
+The same number of
+documents has been returned.
+
+71
+00:04:02.850 --> 00:04:04.950
+But the total payload
+of those documents
+
+72
+00:04:04.950 --> 00:04:07.170
+will be much, much smaller.
+
+73
+00:04:07.170 --> 00:04:10.110
+We could even go further
+and say that we only
+
+74
+00:04:10.110 --> 00:04:13.870
+want an index on city and name.
+
+75
+00:04:13.870 --> 00:04:16.459
+And if we run the
+query again specifying
+
+76
+00:04:16.459 --> 00:04:20.010
+that we want to filter on the
+city and only show the name,
+
+77
+00:04:20.010 --> 00:04:22.440
+I'll even go a few
+steps further in terms
+
+78
+00:04:22.440 --> 00:04:24.720
+of the actual optimization
+[? my ?] query
+
+79
+00:04:24.720 --> 00:04:27.330
+and reduce even further
+the amount of time
+
+80
+00:04:27.330 --> 00:04:30.000
+taken to execute this query.
+
+81
+00:04:30.000 --> 00:04:32.170
+So to recap what we
+learn in this lesson,
+
+82
+00:04:32.170 --> 00:04:34.770
+make sure your working
+data set fits RAM.
+
+83
+00:04:34.770 --> 00:04:36.300
+Make sure to
+optimize your queries
+
+84
+00:04:36.300 --> 00:04:39.750
+by using indexes and filter
+responses and [INAUDIBLE]
+
+85
+00:04:39.750 --> 00:04:42.000
+pagination of those responses.
+
+86
+00:04:42.000 --> 00:04:44.610
+Smaller documents are
+better documents in general.
+
+87
+00:04:44.610 --> 00:04:47.310
+So take that into consideration.
+
+88
+00:04:47.310 --> 00:04:51.090
+Mongostat, Mongo logvis, and
+profiler are here to help.
+
+89
+00:04:51.090 --> 00:04:53.760
+Make sure you use profiler
+only on development.
+
+90
+00:04:53.760 --> 00:04:56.880
+And don't get tricked
+by the partial results
+
+91
+00:04:56.880 --> 00:04:59.900
+that profiler might give you.

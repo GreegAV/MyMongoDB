@@ -1,0 +1,77 @@
+In this lesson, we're going to discuss the options available to us when reading and parsing through a document using the Java driver.
+
+We will contrast these varying approaches to find the one that suits us best.
+
+For the purposes of this lesson, we will create an actors collection that contains documents corresponding to each actor.
+
+In our first example, we want to create a basic case where the structure of the actor class mimics a document from the actors collection.
+
+So we will call this class actor basic.
+
+Notice how each property data type matches the document field data type.
+
+That is because this method implies a strict one to one correspondence between document field data types and the class properties data types.
+
+This method uses pojo code.
+
+The first thing that we need here is a pojo codec registry.
+
+You can think of a registry as a factory of codecs, where codecs are an abstraction that determines how Bson data is converted and into what type.
+
+There are default and custom codecs.
+
+So let's start with a default one and see what it can do for us.
+
+The mechanism for pojo support is via the pojo codec provider which provides a builder for configuring how and what pojo to support.
+
+The builder allows registering of classes and packages where the helpful setting that directs the provider to automatically try and handle any pojo it sees.
+
+Here, where instantiating a codec registry and telling you to use the pojo codec provider, building it with an automatic setting which uses type introspection to determine the properties of the given pojo and accurately apply the default codec.
+
+Let us test this.
+
+The first time we run this test, it shouldn't work.
+
+Why is that?
+
+Well, our actor basic object is the only point of reference our codec registry has.
+
+And it seems to me that it is missing some crucial information.
+
+Let us add Bson annotations in the actor basic class.
+
+These add the field name references as part of our actor basic class.
+
+And the codec registry is now able to see the corresponding structure between the actor basic object and the document fields.
+
+Let's run the test again.
+
+Wonderful!
+
+This basic case of reading from the database is not always close to reality.
+
+As you have learned in earlier lessons, a field in a database can have different data types, which needs to be taken care of.
+
+Additionally, sometimes your app uses data types that are different from what is stored in the database.
+
+To demonstrate a case like that, we will use actor with string ID object, which, as you may have guessed, is an actor class where the ID field is not an object ID, but a string instead.
+
+In this case, we have several different ways to reach the desired result.
+
+The first option is to write a method that will manually map each document field to the actors string ID properties by using set ID, set name, and et cetera.
+
+Our from document method does exactly that, and returns actor with string ID object that is filled with the new data.
+
+Let us test if our from document mapper works, and whether we were able to successfully map values in each field to the values in the actor with string ID class.
+
+Reading seems to work.
+
+But if we want to write to the database, we will have to create a method that does the reverse of from document, and manages data insertion from actor class to document.
+
+This process doesn't seem too terrible because of our simple use case.
+
+But as the complexity and size of our documents grows, this can get more tedious than needed.
+
+There are easier approaches to going from Bson to a Java object.
+
+So let's take advantage of the simplicity of our case and see what other options are available to us, namely, let's look at a custom codec.

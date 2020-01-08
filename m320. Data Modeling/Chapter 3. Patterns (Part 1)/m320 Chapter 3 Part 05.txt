@@ -1,0 +1,37 @@
+Our third concern, when using patterns, is referential integrity.
+
+Referential integrity has some similarities to staleness.
+
+It may be OK for the system to have some extra or missing links, as long as they get corrected within the given period of time.
+
+Why do we get referential integrity issues?
+
+Frequently, it may be the result of deleting a piece of information [INAUDIBLE] document-- for example, without deleting the references to it.
+
+In the big data world, we can also associate referential integrity issues to adding distributed system, where a related piece of information live on different machines.
+
+At this time, the MongoDB server does not support foreign keys and associated cascading deletes and updates responsible for keeping referential integrity.
+
+It is the responsibility of the application to do so.
+
+Here again, the main concern is data quality and reliability.
+
+For delayed referential integrity, we can, again, rely on change streams.
+
+For keeping the referential integrity [INAUDIBLE],, we can avoid using references by embedding information in a single document, instead of linking it.
+
+Or we can use MongoDB with be multi-document transactions to update multiple documents at once [INAUDIBLE]..
+
+To recap, we can tame these three concerns-- duplication, staleness, and referential integrity-- by understanding the following for every piece of data in your database.
+
+Should or could the information be duplicated or not?
+
+And if it has to be duplicated and consistently updated, resolve the duplication with bulk updates.
+
+What is the tolerated or acceptable staleness?
+
+Resolve with updates based on change streams.
+
+Which pieces of data require referential integrity?
+
+Resolve or prevent inconsistencies with change streams or transactions.

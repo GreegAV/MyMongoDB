@@ -1,0 +1,37 @@
+Let's go back into our VM.
+
+And let's look at our last tool, mlogvis.
+
+This tool is very similar to mplotqueries.
+
+But the tool was created later and doesn't require the graphical libraries used by mplotqueries.
+
+Instead, it produces an HTML file in your local directory and points your browser to it.
+
+If the tool is unable to open the default browser in your system, you can open the file yourself from the browser.
+
+I'm in the VM in the shared folder.
+
+So I can switch out of the VM and open it on my desktop machine if I like.
+
+The nice thing about this behavior is that you can create the output file from one system with the minus minus no-browser option and move it to another one for analysis or send it to someone who doesn't have mtools installed at all because this HTML file doesn't require anything, just a browser.
+
+Similar to the other tools, we'll simply call mlogvis by passing it our mongod.log file.
+
+And now I've got this HTML file.
+
+I'll go to this on my host machine and open it up.
+
+Just like before, we can zoom in on the graph.
+
+First, we select Zoom and then draw a rectangle on the area of interest.
+
+And like our previous tool, I can toggle the collections I'm looking at and look at individual slow queries by clicking on the event.
+
+When you do so, you can see the corresponding query in the status box at the bottom.
+
+The UI is simple and intuitive.
+
+So feel free to play with it.
+
+In summary, these tools are particularly helpful for identifying and visualizing slow queries.

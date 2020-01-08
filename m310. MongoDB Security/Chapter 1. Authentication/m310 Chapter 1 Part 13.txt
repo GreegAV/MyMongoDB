@@ -1,0 +1,95 @@
+There are two main components that we need to configure.
+
+On one side, we're going to have our LDAP server.
+
+On the other side, we're going to have our MongoDB LDAP configuration options.
+
+They're going to set in our MongoDB configuration file.
+
+Let's start by analyzing a sample LDAP configuration file.
+
+Note that the actual LDAP server configuration details are out of scope for this lesson.
+
+This is something that you need to catch up.
+
+To configure LDAP servers, we'll be using ldif files.
+
+ldif is a standard plain data interchange formats for representing LDAP directory content and update requests, conveys directory content as a set of records, one record for each object.
+
+It also represents update requests such as heading, modifying, deleting, or even renaming operations as a set of records.
+
+Now let's assume that we have this ldif file as supporting configuration for LDAP servers.
+
+We have a set of groups-- in this case mongodb.com-- users NDBA.
+
+And we're going to also have a set of users or a couple of users in this case-- Alice and BOB.
+
+There are several different types of [INAUDIBLE], groups, and users that we can define using ldifs.
+
+For now, we are just going to be using this example for the time being.
+
+For MongoDB configuration, we have a large set of different options available to configure our server.
+
+We'll start with the LDAP servers, a comma separated string of one or more LDAP servers.
+
+We're going to have LDAP transport security.
+
+It's an option whether or not to secure the communications between LDAP servers and MongoDB.
+
+Accepted values are going to be TLS or none.
+
+ldapAuthzQueryTemplate-- this is an rfc4516 formatted URL of the LDAP Quarry to execute in order to obtain LDAP groups.
+
+In this URL, the placeholder token string user will be replaced with the queried distinguished name of the user.
+
+If not set, MongoDB will not use LDAP for authorization.
+
+Also have LDAP timeout milliseconds, the amount of time that MongoDB should wait for an LDP server to respond to a request.
+
+The default is 10 seconds.
+
+ldapBindSASLMechanisms-- the SASL mechanisms MongoDB will attempt to authenticate with against LDAP server while binding.
+
+If MongoDB is using SASL authentication, it will bind using DIGEST-MD5 by default.
+
+ldapQueryUser-- this is the LDAP entity distinguished name that MongoDB will bind as when connecting to an LDAP server.
+
+And we're also going to have its password set by ldapQueryPassword-- again, the password which MongoDB will use to bind when connecting to that same LDAP server.
+
+We also have an important one-- LDAP user to distinguish name mapping.
+
+This is an adjacent array of ordered transformations that MongoDB will apply to authenticate MongoDB user names to match their distinguished names in LDAP-- useful for when we are using alternative authentication method or if user names passed to MongoDB for authentication do not match the LDAP DN.
+
+If not defined, MongoDB will directly use whatever username you pass it through to the DN.
+
+This is intended to allow LDAP authorization to work automatically.
+
+We're also going to have LDAP user cache invalidation interval.
+
+MongoDB will hold the cache of authenticated users.
+
+During this interval, it will determine how much time MongoDB will [INAUDIBLE] to wait for external user caches to be flushed.
+
+The default is 30 seconds.
+
+ldapBindWithOSDefaults will perform queries to the service accounts' username and password.
+
+It's useful for single sign-on on where you are already authenticate against your OS and you just want to avoid passing your username and password continuously to MongoDB.
+
+Although that said, it is incompatible with ldapCoreUser and ldapCorePassword.
+
+For demo purposes, we'll be using a very simple configuration.
+
+I'm going to start by defining and setting the list of LDAP servers that I'm going to use.
+
+We're going to be setting up a query template, which is going to be user member of and base.
+
+We are going to define user distinguish names mapping option with a match, regular expression, and its substitution string.
+
+In this example, we are not going to be using any transport security and the binding mechanism is going to be set to simple.
+
+And since we are using LDAP for both authorization and authentication, I'm setting the authentication mechanism to plain, which is the respective authentication mechanism for LDAP.
+
+Once we have this configuration in place, both on LDAP and MongoDB configuration files, it will be time to validate this setup.
+
+But let's talk about that in the following lesson.

@@ -1,0 +1,302 @@
+
+1
+00:00:00.000 --> 00:00:00.739
+
+
+2
+00:00:00.739 --> 00:00:02.280
+So now that we have
+our configuration
+
+3
+00:00:02.280 --> 00:00:06.630
+set up and running, it's time
+for us to load some data.
+
+4
+00:00:06.630 --> 00:00:08.640
+I'm going to connect
+to my replica set,
+
+5
+00:00:08.640 --> 00:00:11.070
+passing along the seed list.
+
+6
+00:00:11.070 --> 00:00:14.760
+And on database
+M201, very original
+
+7
+00:00:14.760 --> 00:00:16.920
+again, and in
+collection restaurants,
+
+8
+00:00:16.920 --> 00:00:19.170
+I'm going to load
+my restaurants.json,
+
+9
+00:00:19.170 --> 00:00:21.240
+our famous file that
+we've been working
+
+10
+00:00:21.240 --> 00:00:23.320
+with throughout this course.
+
+11
+00:00:23.320 --> 00:00:28.290
+After we inserted all documents
+into are brand new replica set,
+
+12
+00:00:28.290 --> 00:00:31.790
+it's then time to
+run some queries.
+
+13
+00:00:31.790 --> 00:00:36.730
+Once my 1 million documents of
+restaurants is all loaded up,
+
+14
+00:00:36.730 --> 00:00:38.800
+I'll go ahead and connect
+to my replica set.
+
+15
+00:00:38.800 --> 00:00:40.840
+I'm going to pass on the
+replica set I'd name,
+
+16
+00:00:40.840 --> 00:00:42.274
+all the seed lists.
+
+17
+00:00:42.274 --> 00:00:43.690
+Once I'm connected
+to the primary,
+
+18
+00:00:43.690 --> 00:00:49.150
+I'm going to just go ahead
+and use my M201 database.
+
+19
+00:00:49.150 --> 00:00:54.290
+And I can see here that I have
+my collections, or my recently
+
+20
+00:00:54.290 --> 00:00:56.310
+created restaurants collection.
+
+21
+00:00:56.310 --> 00:00:57.430
+Great.
+
+22
+00:00:57.430 --> 00:00:59.920
+And as you are already
+familiar with it,
+
+23
+00:00:59.920 --> 00:01:02.160
+I'll have my
+restaurants document,
+
+24
+00:01:02.160 --> 00:01:06.010
+where I have a name, a cuisine,
+stars, address, and so on.
+
+25
+00:01:06.010 --> 00:01:09.280
+Let's say that our
+application wants
+
+26
+00:01:09.280 --> 00:01:12.550
+to be able to query on
+the restaurant name.
+
+27
+00:01:12.550 --> 00:01:15.456
+That's the main purpose
+of our application.
+
+28
+00:01:15.456 --> 00:01:17.080
+A very lame application,
+I have to say,
+
+29
+00:01:17.080 --> 00:01:19.330
+but the only thing
+that he needs to do
+
+30
+00:01:19.330 --> 00:01:24.280
+is actually find elements in
+this restaurants collection
+
+31
+00:01:24.280 --> 00:01:25.210
+based on the name.
+
+32
+00:01:25.210 --> 00:01:30.880
+This will be our operational
+workload going forward.
+
+33
+00:01:30.880 --> 00:01:34.250
+To do that, we will probably,
+as you've probably figured out
+
+34
+00:01:34.250 --> 00:01:36.800
+already, need to create
+an index to support
+
+35
+00:01:36.800 --> 00:01:39.430
+such a query so it's optimized.
+
+36
+00:01:39.430 --> 00:01:41.520
+In this case, we only need name.
+
+37
+00:01:41.520 --> 00:01:44.720
+So let's go ahead and create
+an index to do just that.
+
+38
+00:01:44.720 --> 00:01:46.640
+Once the index is
+created, we will
+
+39
+00:01:46.640 --> 00:01:50.990
+see that this index is not only
+available in the primary node,
+
+40
+00:01:50.990 --> 00:01:53.190
+but also on secondary nodes.
+
+41
+00:01:53.190 --> 00:01:55.190
+So by running this
+particular query, where we're
+
+42
+00:01:55.190 --> 00:01:58.130
+looking for one of the
+restaurants available
+
+43
+00:01:58.130 --> 00:02:00.410
+and explaining
+the output, we can
+
+44
+00:02:00.410 --> 00:02:03.140
+see that this query
+is actually supported
+
+45
+00:02:03.140 --> 00:02:05.842
+by our recently created index.
+
+46
+00:02:05.842 --> 00:02:07.550
+That's all good, but
+let's connect to one
+
+47
+00:02:07.550 --> 00:02:09.630
+of the secondaries-- in
+this case, the secondary,
+
+48
+00:02:09.630 --> 00:02:12.770
+which is a passive secondary
+right now, priority 0--
+
+49
+00:02:12.770 --> 00:02:17.840
+and see if the same
+behavior is present.
+
+50
+00:02:17.840 --> 00:02:20.630
+So once I'm connected to now
+the secondary node, as you
+
+51
+00:02:20.630 --> 00:02:24.410
+can see here I'm
+connected to 27002,
+
+52
+00:02:24.410 --> 00:02:27.320
+I will need to enable
+reads from secondaries.
+
+53
+00:02:27.320 --> 00:02:31.310
+To do that, I need to express
+the sets label k command.
+
+54
+00:02:31.310 --> 00:02:33.200
+Otherwise, as you
+all know, MongoDB
+
+55
+00:02:33.200 --> 00:02:36.410
+does not allow you to do
+secondary reads by default. You
+
+56
+00:02:36.410 --> 00:02:39.530
+need to explicitly enable that.
+
+57
+00:02:39.530 --> 00:02:41.630
+Once I do this and
+run exactly the same
+
+58
+00:02:41.630 --> 00:02:45.680
+explain command on
+the exact same query,
+
+59
+00:02:45.680 --> 00:02:51.470
+I can see that the same winning
+plan and execution stats apply.
+
+60
+00:02:51.470 --> 00:02:54.950
+So the same index has
+been used, and pretty much
+
+61
+00:02:54.950 --> 00:02:56.000
+the same winning plan.
+
+62
+00:02:56.000 --> 00:02:58.970
+So once I create
+something on the primary,
+
+63
+00:02:58.970 --> 00:03:02.330
+it will be reflected
+on the secondary nodes

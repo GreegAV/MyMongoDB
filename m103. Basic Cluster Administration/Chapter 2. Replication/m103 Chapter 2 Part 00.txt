@@ -1,0 +1,117 @@
+In this lesson, we're going to cover replication and how it makes your data more durable.
+
+MongoDB uses asynchronous, statement-based replication because it's platform independent and allows more flexibility within a replica set.
+
+But first, let's just talk about what replication is.
+
+Replication is the concept of maintaining multiple copies of your data.
+
+This is a really important concept in MongoDB, but really in any database system.
+
+The main reason why replication is necessary is because you can never assume that all of your servers will always be available.
+
+Whether you have to perform maintenance on a data center or a disaster wipes out your data entirely, your servers will experience downtime at some point.
+
+The point of replication is to make sure that in the event your server goes down, you can still access your data.
+
+This concept is called availability.
+
+A database that does not use replication only has a single database server, and we refer to these as standalone nodes.
+
+In a standalone setup, databases can service reads and writes only while that single node is up and running.
+
+But if the node goes down, we lose all access to that data.
+
+Our reads and writes won't reach the server.
+
+Now in a replicated solution, we have a couple extra nodes on hand, and they hold copies of our data.
+
+In MongoDB, a group of nodes that each have copies of the same data is called a replica set.
+
+And in a replica set, all data is handled by default in one of the nodes, and it's up to the remaining nodes in the set to sync up with it and replicate any new data that's been written through an asynchronous mechanism.
+
+The node where data is sent is called the primary node, and all the other nodes are referred to as secondary nodes.
+
+The goal here is for all nodes to stay consistent with each other.
+
+So if our application is using the database, and the primary node goes down, one of the secondary nodes can take its place as primary in a process known as failover.
+
+The nodes decide specifically which secondary will become the primary through an election.
+
+And this name is not a coincidence.
+
+The secondary nodes actually vote for one another to decide which secondary will become the primary.
+
+In a durable replica set, failover can take place quickly, so that no data is lost, and the applications using the data will continue communicating with the replica set as if nothing had ever happened.
+
+And once the node comes back up, and it's sure that it can catch up and sync on the latest copy of the data, it will rejoin the replica set automatically.
+
+Availability and redundancy of data are typical properties of a durable database solution.
+
+Data replication can take one of two forms.
+
+There is binary replication and statement-based replication.
+
+We'll take a look at the differences between these two approaches, and we'll start with binary replication.
+
+So let's say we insert this document into our database.
+
+After the write completes, we have a few bytes on disk that were written to contain some new data.
+
+The way binary replication works is by examining the exact bytes that changed in the data files and recording those changes in a binary log.
+
+The secondary nodes then receive a copy of the binary log and write the specified data that changed to the exact byte locations that are specified on the binary log.
+
+Replicating data this way is pretty easy on the secondaries because they get really specific instructions on what bytes to change and what to change them to.
+
+And in fact, the secondaries aren't even aware of the statements that they're replicating.
+
+This can be nice because there's no context about the data required to replicate a write.
+
+However, using binary replication assumes that the operating system is consistent across the entire replica set.
+
+For example, if our primary node is running Windows, the secondaries can't use the same binary log if they run Linux.
+
+And if they do have the same operating system, all machines in the replica set must have the same instruction set.
+
+So either Windows x86 or x64 and the same version of the database server running on each machine.
+
+In other words, using binary replication requires a very strict consistency across every machine running in a replica set.
+
+Even forgetting to update the database server on one of the nodes could result in corrupted data.
+
+Statement-based replication is pretty much what it sounds like.
+
+After a write is completed on the primary node, the write statement itself is stored in the oplog, and the secondaries then sync their oplogs with the primary's oplog and replay any new statements on their own data.
+
+This approach works regardless of the operating system or instruction set of the nodes in the replica set.
+
+MongoDB uses statement-based replication, but the right commands actually undergo a small transformation before they're stored in the oplog.
+
+And the goal here of the transformation is to make sure that the statements stored in the oplog can be applied an indefinite number of times while still resulting in the same data state.
+
+This property is called idempotency.
+
+For example, let's say that we had a statement that incremented the paid views on a website by 1.
+
+The primary already applied this statement to its data, so it knows that after incrementing page use by 1, the total page views went from 1,000 to 1,001.
+
+It would actually transform this statement into a statement that sets page views to 1,001 and then store that statement in the oplog.
+
+When statements are replicated this way, we can replay the oplog as many times as we want without worrying about data consistency.
+
+Now let's take a look at the pros and cons of binary and statement-based replication.
+
+The binary approach requires less data to be stored in the binary log, which means that less data is passed from the primary to the secondaries.
+
+Binary replication can be a lot faster than statement-based replication because less work is required by the secondaries when actually replicating from the binary log.
+
+The data that needs to be changed is written directly into the log in that case.
+
+On the other hand, statement-based replication in MongoDB writes actual MongoDB commands into the oplog, so the oplog is a little bigger.
+
+However, statements are not bound to a specific operating system or any machine-level dependency.
+
+So there are few constraints on the machines in a replica set in MongoDB.
+
+This is valuable for any cross-platform solution that requires multiple operating systems in the same replica set.

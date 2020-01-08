@@ -1,0 +1,57 @@
+By now, you should have a pretty good, high-level understanding of the different authentication mechanisms and methods that MongoDB supports.
+
+We've also talked about some important topics related to authentication, like the localhost exception, internal authentication mechanisms, as well as how authentication works on a sharded cluster.
+
+In the next several videos, we're going to actually see how to configure authentication on MongoDB for each of the different mechanisms that we've explored in prior videos.
+
+In this first video, I'm going to show you how to set up the most common authentication mechanism, SCRAM-SHA-1.
+
+As you know, SCRAM-SHA-1 is the default mechanism for password-based authentication with MongoDB.
+
+Let's go ahead and set up a mongod instance with SCRAM-SHA-1, and connect our server with a mongo shell.
+
+Since SCRAM-SHA-1 is the default authentication mechanism, it really is this easy.
+
+We just pass the --auth option to the mongod command line tool.
+
+When I start running this, our server is started.
+
+I can then start a new shell.
+
+I just type in mongo to have the mongo shell connect to our mongod instance.
+
+This is a clean database.
+
+So I'm going to go ahead and switch to the admin database.
+
+While on the admin database, I'm going to run the db.createUser command, specifying kirby as the user, password as the password, and I'm going to go ahead and use his handy little helper and just give myself the role of root, which gives me all privileges.
+
+I run this.
+
+It successfully added the user.
+
+Now we can either use db.auth, or close this shell and start a new one, and use command line arguments.
+
+Let's go ahead and do the former.
+
+You can see, just as we've done before, I use db.auth, passing in kirby and password, and I'm successfully authenticated.
+
+Of course, if we want, we can use a configuration file to enable SCRAM-SHA-1 on a mongod instead of passing in the information via the command line options.
+
+Configuration files for MongoDB are in the YAML format, and are passed to mongod using the --config option.
+
+Here we're going to create a file called config using vim.
+
+You can use any text editor that you want.
+
+As you can see, in this config file, we have this high-level security key, followed by this authorization key where I've set authorization to be enabled.
+
+We can then save this file.
+
+And we can now run mongod with our new configuration file.
+
+We can confirm the authentication is enabled by connecting to the server via the mongo shell, and running show dbs without any authentication.
+
+As you can see, the server is using our configuration file, enabling authentication, and preventing us from executing the show dbs command.
+
+This command successfully failed because our configuration file has successfully enabled SCRAM-SHA-1 authentication.

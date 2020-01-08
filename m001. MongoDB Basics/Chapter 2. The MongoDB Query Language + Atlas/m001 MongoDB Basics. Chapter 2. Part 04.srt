@@ -1,0 +1,288 @@
+1
+00:00:01,130 --> 00:00:02,900
+Three of the four
+CRUD operations
+
+2
+00:00:02,900 --> 00:00:08,210
+are right operations,
+create, update, and delete.
+
+3
+00:00:08,210 --> 00:00:10,610
+All three of these
+involve changing the data
+
+4
+00:00:10,610 --> 00:00:13,010
+in a collection in
+one way or another.
+
+5
+00:00:13,010 --> 00:00:17,930
+You only have read access
+to our class Atlas cluster.
+
+6
+00:00:17,930 --> 00:00:21,140
+Fortunately, with the
+Atlas free tier option
+
+7
+00:00:21,140 --> 00:00:24,140
+we have a means of creating
+a sandbox MongoDB cluster
+
+8
+00:00:24,140 --> 00:00:27,450
+in minutes and at no cost.
+
+9
+00:00:27,450 --> 00:00:31,560
+The Atlas free tier is ideal
+for proof of concept projects
+
+10
+00:00:31,560 --> 00:00:34,170
+and in the early stages
+of developing a software
+
+11
+00:00:34,170 --> 00:00:35,280
+application.
+
+12
+00:00:35,280 --> 00:00:38,670
+It's also great for testing
+and for educational purposes.
+
+13
+00:00:38,670 --> 00:00:41,070
+Please follow along and create
+your own Atlas free tier
+
+14
+00:00:41,070 --> 00:00:42,180
+cluster.
+
+15
+00:00:42,180 --> 00:00:45,240
+You'll be using this throughout
+the rest of this chapter.
+
+16
+00:00:45,240 --> 00:00:47,880
+I've also included instructions
+for creating your sandbox
+
+17
+00:00:47,880 --> 00:00:49,590
+cluster in the lab
+that immediately
+
+18
+00:00:49,590 --> 00:00:51,120
+follows this lesson.
+
+19
+00:00:51,220 --> 00:00:53,460
+OK, here we need to complete
+the registration form.
+
+20
+00:01:01,740 --> 00:01:03,740
+Once you've completed
+the registration form,
+
+21
+00:01:03,740 --> 00:01:06,240
+go ahead and click continue.
+
+22
+00:01:06,240 --> 00:01:08,000
+Upon completing
+the form, you'll be
+
+23
+00:01:08,000 --> 00:01:09,600
+asked to specify a group name.
+
+24
+00:01:09,860 --> 00:01:14,020
+Groups or how we manage
+access to Atlas clusters.
+
+25
+00:01:14,020 --> 00:01:21,080
+I'm simply going to specify
+shannon-m001 as my group name,
+
+26
+00:01:21,120 --> 00:01:22,920
+and create the group.
+
+27
+00:01:22,980 --> 00:01:26,900
+Once you've created a group,
+go ahead and build a cluster.
+
+28
+00:01:27,040 --> 00:01:30,340
+You might get a notification
+from the intercom integration
+
+29
+00:01:30,360 --> 00:01:34,500
+that we have here when you do
+this, feel free to ignore it.
+
+30
+00:01:34,500 --> 00:01:37,980
+Also, don't be scared by what
+you see when this first pops up
+
+31
+00:01:38,060 --> 00:01:39,620
+with respect to pricing.
+
+32
+00:01:39,880 --> 00:01:42,080
+Free tier is truly free.
+
+33
+00:01:42,080 --> 00:01:47,780
+We simply need to select
+the M0 instance size,
+
+34
+00:01:47,880 --> 00:01:51,420
+and you'll note that the
+price has changed to zero.
+
+35
+00:01:51,460 --> 00:01:56,780
+Then we'll need to enter
+a username and password.
+
+36
+00:01:56,780 --> 00:01:58,740
+Once you've entered your
+username and password,
+
+37
+00:01:58,880 --> 00:02:01,680
+you can go ahead and
+deploy your cluster.
+
+38
+00:02:01,740 --> 00:02:04,560
+Now again, the cluster is free.
+
+39
+00:02:04,560 --> 00:02:07,000
+No credit card is
+required for any of this.
+
+40
+00:02:07,080 --> 00:02:09,260
+Please make sure you remember
+the user name and password
+
+41
+00:02:09,340 --> 00:02:09,940
+that you entered.
+
+42
+00:02:10,160 --> 00:02:11,340
+You will need it later.
+
+43
+00:02:11,460 --> 00:02:13,040
+Now once you've
+deployed your cluster,
+
+44
+00:02:13,040 --> 00:02:15,420
+you'll need to wait
+just a minute or two
+
+45
+00:02:15,440 --> 00:02:17,480
+for the cluster to come up.
+
+46
+00:02:17,580 --> 00:02:20,840
+Once deployed, the cluster
+is ready for connections.
+
+47
+00:02:20,840 --> 00:02:24,340
+But before we connect, we need
+to change one security setting
+
+48
+00:02:24,340 --> 00:02:27,260
+to make it easy for us to access
+the cluster from anywhere.
+
+49
+00:02:27,260 --> 00:02:31,920
+Click on the Security tab, and
+then on the IP Whitelist tab.
+
+50
+00:02:31,940 --> 00:02:38,220
+Click Add IP Address, and
+Allow Access From Anywhere.
+
+51
+00:02:38,380 --> 00:02:40,860
+It'll take just a moment to
+update our security settings
+
+52
+00:02:40,860 --> 00:02:42,280
+in the cluster.
+
+53
+00:02:42,280 --> 00:02:44,100
+While that's happening,
+let me stress
+
+54
+00:02:44,100 --> 00:02:47,320
+that making a cluster
+accessible from anywhere
+
+55
+00:02:47,500 --> 00:02:49,000
+is not a best practice.
+
+56
+00:02:49,760 --> 00:02:51,540
+You should be as
+restrictive as possible
+
+57
+00:02:51,540 --> 00:02:53,600
+with respect to IP
+Whitelisting when
+
+58
+00:02:53,600 --> 00:02:55,000
+configuring an Atlas cluster.
+
+59
+00:02:55,000 --> 00:02:57,600
+However, for purposes
+of this class
+
+60
+00:02:57,600 --> 00:03:00,380
+this is fine, and will
+save us wasted time
+
+61
+00:03:00,380 --> 00:00:00,000
+debugging network issues.
+

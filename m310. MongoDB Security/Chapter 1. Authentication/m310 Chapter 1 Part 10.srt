@@ -1,0 +1,151 @@
+
+1
+00:00:00.000 --> 00:00:00.820
+
+
+2
+00:00:00.820 --> 00:00:01.630
+Hi there.
+
+3
+00:00:01.630 --> 00:00:04.880
+Today I'm going to introduce
+you to LDAP authorization--
+
+4
+00:00:04.880 --> 00:00:08.200
+a feature introduced in
+3.4 that enhances MongoDB
+
+5
+00:00:08.200 --> 00:00:10.790
+overall integration with LDAP.
+
+6
+00:00:10.790 --> 00:00:14.060
+Prior versions to 3.4
+already supported LDAP
+
+7
+00:00:14.060 --> 00:00:16.490
+for authentication purposes.
+
+8
+00:00:16.490 --> 00:00:19.140
+This meant that MongoDB
+could be configured
+
+9
+00:00:19.140 --> 00:00:22.820
+to authenticate users using an
+external mechanism to MongoDB--
+
+10
+00:00:22.820 --> 00:00:25.610
+a separate service like LDAP.
+
+11
+00:00:25.610 --> 00:00:29.320
+Now we can also configure
+MongoDB to integrate with LDAP
+
+12
+00:00:29.320 --> 00:00:32.009
+at authorization level.
+
+13
+00:00:32.009 --> 00:00:34.830
+Before, we could
+validate with LDAP
+
+14
+00:00:34.830 --> 00:00:36.870
+who the user claimed to be.
+
+15
+00:00:36.870 --> 00:00:40.650
+Now we can use LDAP to
+determine what the user is
+
+16
+00:00:40.650 --> 00:00:44.030
+allowed to do within MongoDB.
+
+17
+00:00:44.030 --> 00:00:47.980
+Enabling LDAP for authorization
+will allow authentication
+
+18
+00:00:47.980 --> 00:00:51.630
+via any of the existing external
+authentication mechanisms
+
+19
+00:00:51.630 --> 00:00:54.430
+that MongoDB already supports.
+
+20
+00:00:54.430 --> 00:00:56.460
+This means that we
+can set up MongoDB
+
+21
+00:00:56.460 --> 00:00:59.350
+to use LDAP authorization.
+
+22
+00:00:59.350 --> 00:01:02.335
+But we can use an alternate
+authentication mechanism--
+
+23
+00:01:02.335 --> 00:01:05.830
+like Kerberos or x509
+certificates-- apart
+
+24
+00:01:05.830 --> 00:01:08.410
+from the obvious LDAP
+for both authentication
+
+25
+00:01:08.410 --> 00:01:10.760
+and authorization.
+
+26
+00:01:10.760 --> 00:01:14.160
+With MongoDB 3.4, we also
+remove the dependency on SASL
+
+27
+00:01:14.160 --> 00:01:17.940
+proxy for authentication
+with LDAP-- except when
+
+28
+00:01:17.940 --> 00:01:20.130
+users use PAM mechanism.
+
+29
+00:01:20.130 --> 00:01:22.640
+For integration with popular
+single sign on solutions
+
+30
+00:01:22.640 --> 00:01:24.850
+like Centerfire and Quest.
+
+31
+00:01:24.850 --> 00:01:28.990
+In these cases, we still
+need to use SASL proxy.
+
+32
+00:01:28.990 --> 00:01:31.910
+Now let's have a look into the
+LDAP authorization mechanism
+
+33
+00:01:31.910 --> 00:01:33.460
+steps.

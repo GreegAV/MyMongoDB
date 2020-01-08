@@ -1,0 +1,220 @@
+
+1
+00:00:00.000 --> 00:00:00.551
+
+
+2
+00:00:00.551 --> 00:00:01.050
+OK.
+
+3
+00:00:01.050 --> 00:00:03.360
+So we've seen how vanilla
+replica sets usually
+
+4
+00:00:03.360 --> 00:00:05.520
+work with the write
+concern of majority.
+
+5
+00:00:05.520 --> 00:00:08.820
+With that in mind, what
+could possibly go wrong?
+
+6
+00:00:08.820 --> 00:00:13.290
+Not much unless we switch out
+a secondary for an arbiter.
+
+7
+00:00:13.290 --> 00:00:17.070
+Now I've only got one path
+to get my data acknowledged.
+
+8
+00:00:17.070 --> 00:00:21.090
+This still works, but only as
+long as nothing goes wrong.
+
+9
+00:00:21.090 --> 00:00:24.540
+If a partition occurs between
+my primary and secondary then
+
+10
+00:00:24.540 --> 00:00:27.450
+my primary can't acknowledge any
+writes until the partition is
+
+11
+00:00:27.450 --> 00:00:28.260
+resolved.
+
+12
+00:00:28.260 --> 00:00:30.799
+Similarly, if that
+secondary goes down
+
+13
+00:00:30.799 --> 00:00:32.340
+then my writes won't
+get acknowledged
+
+14
+00:00:32.340 --> 00:00:34.770
+until that secondary's back up.
+
+15
+00:00:34.770 --> 00:00:37.080
+Keep this in mind, a
+replica set with an arbiter
+
+16
+00:00:37.080 --> 00:00:38.580
+in place of a data
+bearing server
+
+17
+00:00:38.580 --> 00:00:41.220
+is better than an even
+number of replica set members
+
+18
+00:00:41.220 --> 00:00:43.110
+but it can also
+cause bad situations
+
+19
+00:00:43.110 --> 00:00:45.700
+when anything else goes wrong.
+
+20
+00:00:45.700 --> 00:00:49.020
+Let's go back to the situation
+with three data bearing members
+
+21
+00:00:49.020 --> 00:00:51.710
+but ask what happens
+with a delayed secondary.
+
+22
+00:00:51.710 --> 00:00:53.760
+A delayed secondary
+is only about as good
+
+23
+00:00:53.760 --> 00:00:56.730
+as an arbiter for purposes of
+ensuring that your W majority
+
+24
+00:00:56.730 --> 00:00:57.960
+rights go through.
+
+25
+00:00:57.960 --> 00:01:00.300
+That's because you need to
+add your delay to any time
+
+26
+00:01:00.300 --> 00:01:03.030
+for a write to occur
+and get acknowledged.
+
+27
+00:01:03.030 --> 00:01:06.660
+So if a secondary is
+delayed by five hours
+
+28
+00:01:06.660 --> 00:01:09.180
+then that secondary won't
+acknowledge any of the writes
+
+29
+00:01:09.180 --> 00:01:11.370
+for 5 hours, which
+will be a problem
+
+30
+00:01:11.370 --> 00:01:15.000
+if my theoretically up-to-date
+secondary goes down.
+
+31
+00:01:15.000 --> 00:01:17.905
+Of course you're always better
+off with a larger replica set.
+
+32
+00:01:17.905 --> 00:01:19.530
+So this brings up an
+interesting point.
+
+33
+00:01:19.530 --> 00:01:21.196
+You should always go
+through the routine
+
+34
+00:01:21.196 --> 00:01:22.800
+of calculating how
+many servers you
+
+35
+00:01:22.800 --> 00:01:25.740
+need at minimum for a majority.
+
+36
+00:01:25.740 --> 00:01:28.470
+Remember, this is about write
+concern not your ability
+
+37
+00:01:28.470 --> 00:01:29.700
+to elect a primary.
+
+38
+00:01:29.700 --> 00:01:31.680
+Don't count an arbiter
+if you have one,
+
+39
+00:01:31.680 --> 00:01:33.360
+since it can't hold data.
+
+40
+00:01:33.360 --> 00:01:35.130
+Don't count delayed secondaries.
+
+41
+00:01:35.130 --> 00:01:36.780
+You want to know
+how many servers you
+
+42
+00:01:36.780 --> 00:01:41.700
+need to write to before you
+can get that acknowledged.
+
+43
+00:01:41.700 --> 00:01:44.580
+And you want to know how many of
+them can be out of the picture
+
+44
+00:01:44.580 --> 00:01:48.030
+either because they're down or
+because of network partitions.
+
+45
+00:01:48.030 --> 00:01:50.550
+Then figure out how
+robust your system
+
+46
+00:01:50.550 --> 00:01:54.260
+is to your standard
+servers going down.

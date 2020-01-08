@@ -1,0 +1,71 @@
+One of the other things that can happen is, although one or two machines can reach each other, there might be a misconfiguration between two pair of nodes in your replica set.
+
+Let's see this in action.
+
+Let's go ahead and connect to my m1 box.
+
+And let's do something weird into the configuration.
+
+Let's say to the system that, instead of having m3, I only know the machine by its fully-qualified name.
+
+Once I do this-- and if I connect to the running host-- if I get a rs.status, I will see that my configuration are all up and running perfectly well.
+
+So there's a majority of nodes that know about each other.
+
+Notice how I connect to the machine using the replica set.
+
+I'll get an information warning stating, well, connecting to this box, getting address of m3 failed.
+
+No name or service known to the machine that I'm connecting.
+
+This is from my own m1 box, from whom we removed the definition m3.
+
+We just keep the fully-qualified name here.
+
+And once we try to connect to [?
+
+ourselves ?] replica set, we will see that there's an error message, or a warning message, saying, hey, watch out I do not know who m3 is.
+
+So look for errors like those to make sure that all of your nodes can reach each other and know about each other, regardless of the way that we configured them.
+
+And obviously, if there's an election in place, like if we tell m2 to step down, and relinquish the primary role, if we connect once more, and if m3 is not reachable by this local machine, we will get into a state where there's no way we can elect a primary.
+
+So basically, we end up in the situation where our primary gets disconnected, or steps down.
+
+We have a secondary that can be reached by this old primary.
+
+He knows about m3.
+
+But this configured machine does not know who M3 is.
+
+So ending up in a situation where we cannot elect, because this node will not know who that one is.
+
+Let's avoid doing that.
+
+So let's fix the order of the world, making sure that all nodes know about each other, and they are aware of each other's IP addresses.
+
+But if you think about it, for example, in a cloud environment, where machines can be brought down, and if we configure them with their IP addresses.
+
+And since that can be renewed, you can get into a messy state with machines that are in the sets can be reached, but not by their current IP address, or not by their old DNS name, because they cannot be identified exactly in the same way they are configured in their replicas and configuration.
+
+So we should have some good practices in place, or some best networking practice.
+
+All right.
+
+Because that nodes should be addressable from the client host, and other replica set hosts.
+
+All mongoses in a cluster should also be addressable by all client applications into all replica sets.
+
+We urge you to use DNS names instead of IP addresses to avoid IP address renew resolution conflicts.
+
+If we define good DNS names to our machines, it will be easier to move those nodes into other different hardware physical boxes, which is OK.
+
+If we use fixed IP addresses, it might be more tricky to move those machines around.
+
+And every time we renew the IP address of a node, we might lose accessibility and readability from that node, causing internal problems in terms of configuration.
+
+Make sure you use ping and other networking commands to reach machines, and to make sure that they can reach each other.
+
+And use telnet as well to see if the ports that we are using are reachable, and they are properly configured.
+
+That's all we have for you in terms of making sure your hosts and cluster configurations match, and are well set up.

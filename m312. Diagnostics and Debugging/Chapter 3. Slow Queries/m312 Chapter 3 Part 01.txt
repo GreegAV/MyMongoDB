@@ -1,0 +1,113 @@
+In this lesson, we will look into a common issue regarding applications.
+
+Response time degradation.
+
+What we mean is that the application response time, measured generally in milliseconds, will become higher as time goes by.
+
+And there's a couple of factors that will drive you to get into a situation like this.
+
+So in this lesson, we will look into how to determine the culprits, how to fix them, and more importantly, how to avoid them.
+
+There are a few scenarios that may lead to response time degradation.
+
+There are a few culprits that we might have to look into.
+
+Those scenarios can be, the working set exceeding RAM, queries taking longer as the data set grows, growing pool of clients, unbounded array growth, or even excessive number of indexes.
+
+We're going to be looking to a couple of those-- working set exceeding RAM and queries taking longer as the data set grows.
+
+Those are the two more common ones that we see coming in to our support queue.
+
+When are working sets, which compromises the data set that is most often accessed by our client application, requires more RAM than the server has available, or configured, one of the possible symptoms is that the application becomes slower over time and the response time of incoming requests takes longer and longer.
+
+Let's see an example.
+
+Let's start by creating our folder our dbpath, which is going to be our rtd.
+
+I'm using our vacant box to do this, so I recommend you guys if you want to follow along to do the same.
+
+So in this dbpath we are going to be launching a new MongoD.
+
+Now, within the handouts of this lesson you will find this file, which should be placed under the shared folder, and it's called rtd.cfg.
+
+And you can see there are some instructions on how to run our MongoD.
+
+Now, as you all know by now, what we need to do is, basically, call our MongoD, pass along the file, which should be on shared, and it should be named rtd-config file.
+
+There we go.
+
+Once this is up and running we will be able to see that we have a clear MongoD up and running in our system.
+
+And there it is.
+
+Now, if you look closely into this rtd config file, you will see that we are setting are wiredTiger size to a very small value, only 0.25% of a gigabyte.
+
+Roughly, or exactly, 256 megabytes of cache size.
+
+Now what we are trying to simulate here is when you do not have enough resources for your MongoD.
+
+And we will be loading some large data set that will be requiring a little bit more than this to operate correctly.
+
+Now that we have our MongoD up and running, let's go ahead and import a data set.
+
+The londonbikes data set.
+
+You should also have access to that data set through the handouts of this lesson.
+
+Once I put it up and running, you'll see that I'll start restoring that data.
+
+Since we configured this instance to run only on 256 megabytes of cache size, this may take longer than expected.
+
+In normal conditions, with a bit more memory to allow us to operate correctly, this process should take a very, very small amount of time.
+
+Or not such a big amount of time.
+
+But given the fact that we are using a very tiny amount of memory, the minimum that MongoD requires, this will take a little bit longer.
+
+How can we detect that into a production environment?
+
+Let's go into a different tab and let's connect to this box.
+
+Now, if we connect to this machine using our mongostat we will see some interesting data coming along.
+
+There's a bunch of information here that I might not be so much interested in, but I'm starting to see that my used memory is pretty high, in my dirty memory, the amount which is currently used, pretty low.
+
+And this might be an indicator that we don't have enough space for accommodating all the data set that we need.
+
+But let's make this a little bit more streamlined.
+
+With this instruction over here we are trimming out only the fields in the output that we are really interested in.
+
+We are going to be looking to the time, the amount of memory which is dirty-- or the amount of memory which is currently being used-- the number of inserts, the queues for reads and writes, and then the active readers and writers.
+
+Once we do this we can see that we have more sane information in front of our eyes.
+
+And we can see here that our dirty amount of information and our used amount of information is quite off balance.
+
+Generally, what we see is that this value of used memory is quite smaller than it is showing right here.
+
+And it's much more balanced with the amount of dirty information.
+
+Dirty means, all the pages, or memory allocation, that is constantly being used.
+
+So if we are doing a bunch of inserts, around 8,000 or between 8,000 and 7,000, and we are only dirtying up, let's say, this small amount, but we're still using a quite significant amount allocated-- meaning that we are using this amount of information in RAM-- there's probably, or more likely, the indicator is that our total data set is exceeding the amount of memory available.
+
+We know this because we are simulating that situation.
+
+But in a production environment if you would not know exactly what was going on and if we just see a spike in the response time per application that will probably be the cause.
+
+If we don't have enough memory to allocate all of our data sets this will imply that we are paging out a lot of information.
+
+So the actual amount of dirty pages coming in is not being able to be allocated on our total amount of memory, and therefore, we will need to page a bunch of information out to be able to accommodate new incoming data.
+
+We can also see that from our queues and active readers and writers if we don't have a lot of pending jobs to do it means that our system is actually quite idle.
+
+It just processes everything that it needs to process, no big problem.
+
+The problem here is that the response time taken back to the client and say, OK, I got that and I read it, or I wrote it.
+
+It's taking a lot more time because we need to make space in our memory to actually allocate the memory, or the data, which is incoming to the server.
+
+Now, if we go back and shut down the server in a controlled way by emitting the shut down server command and we edit our shared config file, and raise the level of this cache size to two gigabytes, and we run again, or relaunch back our MongoD, and try to reload the information that we got before-- the same exact data sets, we are actually going to say, we are going to drop it so we don't have any errors of, for example, unique key violations-- And if we look back into our mongostat again, we start seeing a completely different scenario where the amount of used data and the amount of dirty data are pretty much aligned.
+
+And also as you can see from this table here indicating amount of inserts per second that we might be getting, which we already finished for example, it's a clear indicator that things went way, way faster than before.

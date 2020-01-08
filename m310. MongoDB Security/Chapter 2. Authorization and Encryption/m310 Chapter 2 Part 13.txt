@@ -1,0 +1,11 @@
+Sometimes organizations have individuals, or processes that require specific roles to be created.
+
+To accommodate these use cases, we know that MongoDB allows us to create user-defined roles.
+
+We know from previous videos that roles are comprised of three components: a name, a list of inherited roles, and a list of privileged documents.
+
+In order to create a new role, we pass these three elements to db.createrole as a document.
+
+In the previous video, we saw how to use built in roles to create a set of generic users with their respective roles.
+
+We're now going to look at how to create a custom role for one of our users.

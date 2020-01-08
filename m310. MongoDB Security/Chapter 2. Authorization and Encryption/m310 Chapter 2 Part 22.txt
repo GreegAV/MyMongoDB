@@ -1,0 +1,67 @@
+While transport encryption between client and server is very important, it's equally important that the members of our replica set are also using TLS or SSL to communicate.
+
+Remember, a security system is only as strong as its weakest link.
+
+Setting up TLS within a replica set is a relatively straightforward process.
+
+At a high level, we're essentially doing the same thing as setting it up with a standalone server, but for each member in a replica set.
+
+Let's go ahead and do this.
+
+Hopefully by now you're starting to get the feel of setting up your replica sets in different modes.
+
+Here we're requiring SSL, because the whole point of this exercise is to enable SSL in between the members of our replica set.
+
+And then of course, we're going to have to pass in our servers certificate, our ca certificate so that we can identify and verify that everyone is who they say they are, we'll give our replica set a name, in this case myEncryptedReplSet, specify the db path, the log path, the port, and we'll fork this process.
+
+Awesome.
+
+Now we just need to do this two more times for the other two members in our replica set.
+
+And as we've done many times before, the only thing I changed here is the db path, log path, and port number, leaving all the other parameters the same.
+
+And here we go.
+
+Here is the last command, only changing the db path, log path, and port number again.
+
+Awesome.
+
+Now all four of our MongoDBs are up and running.
+
+Now that we have each of the members of our replica set up and running, we can go ahead and connect to the first server, initialize the ReplSet, and add the other members.
+
+So here we're going to need to use --ssl option saying that we're going to connect via SSL.
+
+And of course, we'll then need to provide our client SSL certificate and our ca's certificate so that we know the server is who they say they are.
+
+We're now connected and we can go ahead and initialized the ReplSet and add the other members of our replica set.
+
+We can go ahead now and initiate our ReplSet.
+
+Here I'm passing in the configuration for our ReplSet specifying the name of the replica set, the version, and an array of all the members.
+
+Each member is an object that has its ID and respective host name.
+
+And it's as simple as that.
+
+Now there's something I want to point out here.
+
+I used localhost instead of the actual hostname on my machine, which is something that I don't normally do.
+
+And the reason I did that is because my certificate, my server certificate, if we look in here we have this server.pem key file.
+
+If we go ahead and look at the contents of this key file using the open SSL command, specifying x509 since this is an x509 certificate, and then provide it as an end in parameter, and just go ahead and get out the text.
+
+We have the public key in here and stuff, but there's a really important field, which is the subject alternative name.
+
+And here, I have two alternative names, one is localhost and the other is 127.0.0.1 which is also localhost obviously.
+
+And I have to use one of these two names.
+
+Whatever names are under the alternative name, those are the hostnames that you have to use to initialize the members of your replica set.
+
+If I try to use education dash iMac, which is the name of this machine, and passed in the port of 27 0 17 I would actually get a SSL handshake failure.
+
+So that's just one little common gotcha I wanted to make clear.
+
+If you run into this you want to make sure that you check the alternate names in your actual server key files.

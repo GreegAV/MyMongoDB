@@ -1,0 +1,826 @@
+
+1
+00:00:00.000 --> 00:00:00.510
+
+
+2
+00:00:00.510 --> 00:00:01.480
+Hi there.
+
+3
+00:00:01.480 --> 00:00:03.180
+In this lesson, we
+are going to learn
+
+4
+00:00:03.180 --> 00:00:07.200
+about how to model hierarchical
+information using tree patterns
+
+5
+00:00:07.200 --> 00:00:08.940
+and examine common
+situations where
+
+6
+00:00:08.940 --> 00:00:11.860
+tree patterns can be used.
+
+7
+00:00:11.860 --> 00:00:14.280
+There are several
+types of use cases that
+
+8
+00:00:14.280 --> 00:00:17.490
+find hierarchies
+between objects or nodes
+
+9
+00:00:17.490 --> 00:00:19.970
+and the relationship
+between them,
+
+10
+00:00:19.970 --> 00:00:23.450
+use cases like company
+organization charts,
+
+11
+00:00:23.450 --> 00:00:27.050
+subject areas structures in
+a given domain like books
+
+12
+00:00:27.050 --> 00:00:30.240
+in a bookstore, or even
+a more typical example,
+
+13
+00:00:30.240 --> 00:00:35.300
+the categories of products for
+a given e-commerce site or shop.
+
+14
+00:00:35.300 --> 00:00:38.450
+All of these examples are
+hierarchical in nature
+
+15
+00:00:38.450 --> 00:00:41.390
+where there is a direct
+relationship between the parent
+
+16
+00:00:41.390 --> 00:00:44.530
+nodes and the child nodes.
+
+17
+00:00:44.530 --> 00:00:46.660
+Each hierarchical
+node relationship
+
+18
+00:00:46.660 --> 00:00:48.730
+comes associated with
+common operations that
+
+19
+00:00:48.730 --> 00:00:51.130
+will be useful to us
+in many situations
+
+20
+00:00:51.130 --> 00:00:54.340
+regardless of the actual
+content of the database, things
+
+21
+00:00:54.340 --> 00:00:58.080
+like who are the
+ancestors of node X
+
+22
+00:00:58.080 --> 00:01:02.470
+or reports to Y. Find all
+nodes that are under Z,
+
+23
+00:01:02.470 --> 00:01:07.000
+or change all categories
+of N to under P.
+
+24
+00:01:07.000 --> 00:01:09.760
+These are common operations
+applicable to any information
+
+25
+00:01:09.760 --> 00:01:11.710
+that is hierarchical in nature.
+
+26
+00:01:11.710 --> 00:01:15.160
+Documents, in themselves,
+are hierarchical structures.
+
+27
+00:01:15.160 --> 00:01:17.650
+They contain
+multidimensional information
+
+28
+00:01:17.650 --> 00:01:21.730
+within a given node, such as the
+relationships between a product
+
+29
+00:01:21.730 --> 00:01:24.040
+and the stores that
+the product's sold at
+
+30
+00:01:24.040 --> 00:01:26.990
+or the reviews of
+the same product.
+
+31
+00:01:26.990 --> 00:01:30.530
+However, when representing
+the dependency and hierarchy
+
+32
+00:01:30.530 --> 00:01:32.560
+between nodes of
+the same entity,
+
+33
+00:01:32.560 --> 00:01:36.780
+like categories, it is
+better to use tree patterns.
+
+34
+00:01:36.780 --> 00:01:38.860
+The document model
+offers a few patterns
+
+35
+00:01:38.860 --> 00:01:41.480
+for modeling tree structures.
+
+36
+00:01:41.480 --> 00:01:46.990
+We have the parent
+references, child references,
+
+37
+00:01:46.990 --> 00:01:51.340
+arrays of ancestors,
+and materialized baths.
+
+38
+00:01:51.340 --> 00:01:53.920
+In the case of
+parent preferences,
+
+39
+00:01:53.920 --> 00:01:56.950
+the document holds a
+reference to the parent node
+
+40
+00:01:56.950 --> 00:01:58.390
+in the tree hierarchy.
+
+41
+00:01:58.390 --> 00:02:02.200
+We can collect all ancestors by
+running an aggregation pipeline
+
+42
+00:02:02.200 --> 00:02:06.040
+with a graph lookup
+stage to retrieve
+
+43
+00:02:06.040 --> 00:02:09.610
+all subsequent parents of the
+immediate parents traversing
+
+44
+00:02:09.610 --> 00:02:11.310
+the full tree.
+
+45
+00:02:11.310 --> 00:02:14.220
+To find all reports
+of a given parent,
+
+46
+00:02:14.220 --> 00:02:17.280
+we can run a find command
+matching for the parent
+
+47
+00:02:17.280 --> 00:02:20.400
+and then retrieving
+all children nodes.
+
+48
+00:02:20.400 --> 00:02:22.050
+In order to change
+all nodes that
+
+49
+00:02:22.050 --> 00:02:27.250
+report, or are children of
+one parent, in other words,
+
+50
+00:02:27.250 --> 00:02:32.610
+change all categories under N
+to [INAUDIBLE] children of P,
+
+51
+00:02:32.610 --> 00:02:35.280
+we can use an update operation.
+
+52
+00:02:35.280 --> 00:02:38.280
+For parent references,
+we can perform operations
+
+53
+00:02:38.280 --> 00:02:45.000
+like who reports to Y and
+change all categories under N to
+
+54
+00:02:45.000 --> 00:02:48.540
+under P using very
+little code and changing
+
+55
+00:02:48.540 --> 00:02:50.970
+only one single document.
+
+56
+00:02:50.970 --> 00:02:53.490
+To find all nodes
+that are under Z,
+
+57
+00:02:53.490 --> 00:02:55.360
+that is also pretty
+straightforward.
+
+58
+00:02:55.360 --> 00:02:59.220
+However, we have to iterate
+over a set of documents.
+
+59
+00:02:59.220 --> 00:03:01.810
+We can also respond
+to questions,
+
+60
+00:03:01.810 --> 00:03:06.600
+Who are the ancestors of node X,
+by resorting to a lookup, which
+
+61
+00:03:06.600 --> 00:03:10.530
+is essentially as joined, which
+may not be ideal to accomplish
+
+62
+00:03:10.530 --> 00:03:12.390
+this operation.
+
+63
+00:03:12.390 --> 00:03:15.750
+This is where the child
+reference model comes in.
+
+64
+00:03:15.750 --> 00:03:18.300
+In the child reference
+model, the parent node
+
+65
+00:03:18.300 --> 00:03:22.170
+contains a single array of all
+the immediate node children.
+
+66
+00:03:22.170 --> 00:03:27.470
+In this example, the office
+node has three children-- books,
+
+67
+00:03:27.470 --> 00:03:29.630
+electronics, and stickers.
+
+68
+00:03:29.630 --> 00:03:32.050
+So to perform the operation
+finding all nodes that
+
+69
+00:03:32.050 --> 00:03:35.930
+are under Z, in this
+case, under office
+
+70
+00:03:35.930 --> 00:03:37.790
+becomes a less
+computational demanding
+
+71
+00:03:37.790 --> 00:03:39.350
+operation for the database.
+
+72
+00:03:39.350 --> 00:03:42.810
+A single request retrieves
+all of that information.
+
+73
+00:03:42.810 --> 00:03:46.560
+However, other
+questions like, who
+
+74
+00:03:46.560 --> 00:03:50.790
+are the ancestors of node X,
+become a bit more complicated.
+
+75
+00:03:50.790 --> 00:03:54.240
+Finding all nodes
+that report to Y
+
+76
+00:03:54.240 --> 00:03:59.910
+or even changing all
+categories under N to under P
+
+77
+00:03:59.910 --> 00:04:02.360
+are not ideal for this pattern.
+
+78
+00:04:02.360 --> 00:04:05.570
+Another model to represent
+the hierarchy of a tree
+
+79
+00:04:05.570 --> 00:04:07.910
+is the array of ancestors model.
+
+80
+00:04:07.910 --> 00:04:10.820
+This model uses an
+ordered array to store
+
+81
+00:04:10.820 --> 00:04:15.260
+a list of all of a node's
+ancestors on that node.
+
+82
+00:04:15.260 --> 00:04:18.260
+This model is very efficient
+for finding what are
+
+83
+00:04:18.260 --> 00:04:19.880
+the ancestors of a given node.
+
+84
+00:04:19.880 --> 00:04:22.680
+They are all stored
+in the ancestor array.
+
+85
+00:04:22.680 --> 00:04:26.330
+We can also find out which
+is the immediate reporting
+
+86
+00:04:26.330 --> 00:04:28.910
+or parent node
+using array position
+
+87
+00:04:28.910 --> 00:04:32.660
+operators if we know the
+level that the node occupies
+
+88
+00:04:32.660 --> 00:04:34.690
+in the tree.
+
+89
+00:04:34.690 --> 00:04:37.080
+The next operation, which is
+still possible, a bit more
+
+90
+00:04:37.080 --> 00:04:40.650
+tricky to do, is to change
+all categories under N
+
+91
+00:04:40.650 --> 00:04:43.080
+to under P, since this
+operation requires a few more
+
+92
+00:04:43.080 --> 00:04:47.580
+trips to the database to apply
+all the necessary changes.
+
+93
+00:04:47.580 --> 00:04:49.420
+A variation of the
+array ancestors
+
+94
+00:04:49.420 --> 00:04:52.630
+is the materialized
+paths pattern.
+
+95
+00:04:52.630 --> 00:04:55.290
+In this approach, we
+use a string value
+
+96
+00:04:55.290 --> 00:05:00.150
+to describe the node's ancestors
+with some value separator.
+
+97
+00:05:00.150 --> 00:05:05.790
+In this example, we have a
+string ancestors with a value
+
+98
+00:05:05.790 --> 00:05:08.700
+.Swag.Office.
+
+99
+00:05:08.700 --> 00:05:14.370
+That describes the direct branch
+of the books node in the tree.
+
+100
+00:05:14.370 --> 00:05:16.980
+Using the materialized
+path's approach
+
+101
+00:05:16.980 --> 00:05:18.910
+comes with a great benefit.
+
+102
+00:05:18.910 --> 00:05:21.810
+We can use a single
+regular expression
+
+103
+00:05:21.810 --> 00:05:26.040
+over a single index field
+value for all queries prepended
+
+104
+00:05:26.040 --> 00:05:29.880
+on the root tree
+node, which means
+
+105
+00:05:29.880 --> 00:05:32.820
+that we can use a
+simple index in order
+
+106
+00:05:32.820 --> 00:05:37.410
+to find a particular path of
+a branch in our hierarchy.
+
+107
+00:05:37.410 --> 00:05:40.470
+In this approach, we can
+access our ancestor's fields
+
+108
+00:05:40.470 --> 00:05:44.190
+to quickly answer the question,
+who are the ancestors of X?
+
+109
+00:05:44.190 --> 00:05:46.080
+For the question,
+who reports to Y,
+
+110
+00:05:46.080 --> 00:05:50.190
+this is a simple query but
+potentially not very efficient,
+
+111
+00:05:50.190 --> 00:05:52.410
+even relaying on a single field.
+
+112
+00:05:52.410 --> 00:05:55.950
+The index will not
+be used if we do not
+
+113
+00:05:55.950 --> 00:06:00.940
+ask for the full branch
+matching path from root.
+
+114
+00:06:00.940 --> 00:06:03.070
+Finding all nodes
+that are under Z
+
+115
+00:06:03.070 --> 00:06:07.160
+suffers from the same
+problem as reports to Y.
+
+116
+00:06:07.160 --> 00:06:10.870
+And finally, moving nodes around
+might be quite challenging
+
+117
+00:06:10.870 --> 00:06:13.630
+depending on the node
+that we are moving
+
+118
+00:06:13.630 --> 00:06:18.910
+and the reports that subsequent
+node in the hierarchy chain.
+
+119
+00:06:18.910 --> 00:06:21.460
+For any given
+application that relies
+
+120
+00:06:21.460 --> 00:06:23.080
+on hierarchical
+information, there
+
+121
+00:06:23.080 --> 00:06:24.730
+is nothing stopping
+us from using
+
+122
+00:06:24.730 --> 00:06:27.970
+any combination of different
+patterns in our model.
+
+123
+00:06:27.970 --> 00:06:32.110
+As an example, here is
+the categories collection
+
+124
+00:06:32.110 --> 00:06:34.150
+which represent the
+categories of products
+
+125
+00:06:34.150 --> 00:06:36.490
+in our e-commerce application.
+
+126
+00:06:36.490 --> 00:06:41.740
+In this example, we are using
+both the array of ancestors
+
+127
+00:06:41.740 --> 00:06:44.370
+and the parent reference model.
+
+128
+00:06:44.370 --> 00:06:47.970
+And why did we decide to use
+this combination of patterns?
+
+129
+00:06:47.970 --> 00:06:51.120
+We want to be able to do a
+couple specific operations very
+
+130
+00:06:51.120 --> 00:06:54.060
+quickly and without lots
+of unnecessary logic.
+
+131
+00:06:54.060 --> 00:06:56.790
+These operations
+include navigating
+
+132
+00:06:56.790 --> 00:06:59.820
+to the immediate
+parent node and finding
+
+133
+00:06:59.820 --> 00:07:04.830
+all categories of products
+that descend from a given node.
+
+134
+00:07:04.830 --> 00:07:09.780
+Tree parents are used to model
+hierarchical data structures.
+
+135
+00:07:09.780 --> 00:07:11.580
+There is a good variety
+of tree patterns
+
+136
+00:07:11.580 --> 00:07:15.540
+that we can apply as a solution
+for those same hierarchical
+
+137
+00:07:15.540 --> 00:07:17.400
+data structures modeling.
+
+138
+00:07:17.400 --> 00:07:21.390
+These are generally used in
+org charts, product categories,
+
+139
+00:07:21.390 --> 00:07:23.230
+and others.
+
+140
+00:07:23.230 --> 00:07:26.460
+The different patterns
+offer different benefits.
+
+141
+00:07:26.460 --> 00:07:29.940
+Child references are ideal
+to navigate the descending
+
+142
+00:07:29.940 --> 00:07:33.330
+the hierarchical of nodes of
+our tree, where on each node,
+
+143
+00:07:33.330 --> 00:07:37.410
+we can find the immediate
+child references.
+
+144
+00:07:37.410 --> 00:07:40.200
+Parent reference is
+ideal to navigate upwards
+
+145
+00:07:40.200 --> 00:07:43.020
+in the tree in institutions
+where the tree is constantly
+
+146
+00:07:43.020 --> 00:07:44.820
+being updated or moved.
+
+147
+00:07:44.820 --> 00:07:47.040
+Array of ancestors
+is ideal to get
+
+148
+00:07:47.040 --> 00:07:49.890
+a full view of a branch
+of the tree structure
+
+149
+00:07:49.890 --> 00:07:52.980
+up to the node itself,
+where materialized
+
+150
+00:07:52.980 --> 00:07:56.820
+path is an alternative to use a
+single field index on a string
+
+151
+00:07:56.820 --> 00:07:59.850
+value that enables the
+user to regular expressions
+
+152
+00:07:59.850 --> 00:08:03.500
+to find documents in
+a branch of the tree.
+
+153
+00:08:03.500 --> 00:08:05.960
+Tree patterns are
+an effective way
+
+154
+00:08:05.960 --> 00:08:08.810
+of representing these use cases.
+
+155
+00:08:08.810 --> 00:08:10.100
+But let's recap.
+
+156
+00:08:10.100 --> 00:08:13.160
+Documents are very good data
+structures to represent nodes
+
+157
+00:08:13.160 --> 00:08:14.300
+in a tree.
+
+158
+00:08:14.300 --> 00:08:17.810
+The fact that documents can hold
+parts or branches of the tree
+
+159
+00:08:17.810 --> 00:08:19.910
+within themselves
+allows us to represent
+
+160
+00:08:19.910 --> 00:08:22.580
+in a very efficient
+way models that do not
+
+161
+00:08:22.580 --> 00:08:25.370
+rely on suboptimal
+drawings to retrieve
+
+162
+00:08:25.370 --> 00:08:29.670
+the hierarchical information
+we require for each node.
+
+163
+00:08:29.670 --> 00:08:33.260
+There are several different
+ways to represent nodes
+
+164
+00:08:33.260 --> 00:08:36.200
+of a tree using documents,
+and you can even
+
+165
+00:08:36.200 --> 00:08:40.450
+use a combination of different
+patterns in your model.
+
+166
+00:08:40.450 --> 00:08:43.030
+The choice of which
+patterns you use
+
+167
+00:08:43.030 --> 00:08:46.180
+should be based on which are
+the most common operations
+
+168
+00:08:46.180 --> 00:08:48.110
+that your application
+will be performing
+
+169
+00:08:48.110 --> 00:08:51.430
+and optimized for those
+choosing the best pattern that
+
+170
+00:08:51.430 --> 00:08:53.710
+allows you to do the
+most efficient queries
+
+171
+00:08:53.710 --> 00:08:56.940
+on that particular application.

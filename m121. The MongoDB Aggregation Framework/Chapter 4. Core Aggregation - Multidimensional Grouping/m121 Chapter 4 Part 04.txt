@@ -1,0 +1,97 @@
+OK, let's move on to the $bucketAuto stage.
+
+$bucketAuto has the following form.
+
+As we can see, it looks similar to $bucket with a few key differences.
+
+GroupBy works exactly the same as the bucket state.
+
+Instead of defining boundaries, we just let MongoDB figure those out by specifying how many buckets we want.
+
+$$bucketAuto will attempt to evenly distribute the documents into the specified number of buckets, calculating the boundaries for us.
+
+Here, we must specify four buckets, and $bucketAuto will try to give us four buckets with roughly equal number of documents.
+
+Keep in mind that we may not get as many buckets back as we specify, especially if we specified a number of buckets greater than the number of input documents or the number of unique values in the groupBy expression.
+
+Output works the same as it does in the bucket stage.
+
+Before we cover the field, granularity, let's see $bucketAuto in action.
+
+OK, we're specifying that we'd like to groupBy the IMDB rating, we want four buckets, and as output we'd like the average per bucket and account.
+
+Let's run it.
+
+This is pretty neat.
+
+We got back four buckets.
+
+And we can see the count per bucket and the average per bucket.
+
+The documents don't look evenly distributed, though.
+
+And our boundaries are a bit strange.
+
+This is because some documents are missing an $imdb.rating value.
+
+Let's clean this up with a match stage so we only get documents with an IMDB rating.
+
+Here, we'll just filter documents out they don't have an IMDB rating value greater than or equal to 0.
+
+Documents with the missing values won't be messing up our results.
+
+Pretty interesting.
+
+We can see the $bucketAuto did nearly the same thing as before.
+
+While it attempts to evenly distribute the documents among the specified number of buckets, it isn't guaranteed to do so.
+
+Here, because the cardinality of $imdb.ratings isn't very unique, it's impossible to evenly distribute documents among buckets and maintain contiguous ranges.
+
+Let's groupBy title instead to see a much more even distribution.
+
+And here we see a much more even distribution of documents.
+
+OK, the last thing to talk about with $bucketAuto is granularity.
+
+It's an optional argument, and specifying it will attempt to place bucket boundaries along the given preferred number series.
+
+What's a preferred number series?
+
+They are commonly used in industrial design to standardize product dimensions.
+
+For R, E, and 1-2-5 series, it's a way to subdivide 10 according to a standard specification.
+
+POWERSOF2 attempts to create boundaries along powers of 2.
+
+Keep in mind that specifying a granularity requires us to specify a numeric value in the groupBy expression.
+
+It may produce less buckets than specified if the granularity specified has less intervals or is not fine enough to evenly distribute documents.
+
+Let's look at a quick example.
+
+OK, first I'm going to open a local Mongo shell in my computer to test this out.
+
+I'll disconnect from the Class Atlas Cluster and connect to a local running instance of Mongo.
+
+OK, now that we have a Mongo shell to a local instance, let's use a small JavaScript function to generate some values for us.
+
+I'm going to use a database [?
+
+neo-space ?] called Agg fort this example.
+
+So here, we use a four loop to generate some random values that should map nicely to powers of 2 and the Renard and E-series distribution.
+
+We insert those numbers into a collection called granularity test.
+
+We run our function, and then verify that the function worked by calling count on our collection.
+
+OK, let's look at the powers of 2 granularity and leave the R and E-series for self-testing.
+
+Here we specifying that we'd like to group by the powers of 2 field.
+
+We want 10 buckets, and the granularity should fall on the preferred number series called powers of 2.
+
+And there we go.
+
+We can see that our bucket boundaries were placed along powers of 2.

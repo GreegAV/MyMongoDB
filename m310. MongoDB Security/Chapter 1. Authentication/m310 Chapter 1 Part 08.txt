@@ -1,0 +1,127 @@
+Now let's talk about how to configure MongoDB to use X.509 certificates for authentication.
+
+It's important to remember that X.509 certificate authentication requires a secured TLS connection.
+
+So make sure you're running a build of MongoDB that has TLS enabled.
+
+You can easily tell if your version of MongoDB was compiled with TLS support by running mongod--version.
+
+And as you can tell, we have OpenSSL version.
+
+When we see OpenSSL here, we know yes, this binary was compiled with TLS support.
+
+I went ahead, and for the purpose of this demonstration, I have already created my certificate files.
+
+I have the public certificate, a MyCertificate authority in the ca.pem file.
+
+And then I have pem files for both the client and server, each of these containing both the public certificate and the corresponding private key.
+
+Here's the command for running MongoDB with X.509 support.
+
+If you're familiar with enabling TLS on a [?
+
+mongod, ?] then you've already seen these options before.
+
+There is no difference between enabling TLS and enabling X.509 authentication, because X.509 authentication is enabled by default.
+
+We just need to set the server to use TLS.
+
+So if you look here, you can see that I'm specifying an sslMode.
+
+And here I'm using requireSSL, but you could use any mode that isn't, well, just disabled.
+
+And here I'm providing the sslPEMKeyFile for the server.
+
+And this is so that we can prove to the client that we are who we say we are.
+
+And then I'm specifying the sslCAFile.
+
+And this is so that we know the client is who they say they are.
+
+And there we go.
+
+We're up and running with no errors.
+
+Let's go to another shell and try and connect.
+
+But before we connect to the server, we first need to figure out what the subject of our client certificate is.
+
+Here we have our client.pem file.
+
+And inside of this pem file, we have our private key and public certificate.
+
+Inside that certificate, there's a subject line that describes who the owner of the certificate is, or rather who the certificate was issued to.
+
+We can run the following command to read the subject line.
+
+Here we're saying that we're dealing with an X.509 certificate.
+
+We're providing an in parameter of the client.pem file.
+
+The input format is PEM, we want to get the subject.
+
+The nameopt, we're going to use RFC2253.
+
+This allows us to transform the subject name from the representation that is stored in the certificate into a string.
+
+And then finally we say no out, because we want to suppress outputting the entire certificate, because we just want the subject.
+
+And when we run this, we can see that here is the subject.
+
+It's this right there.
+
+Pretty straightforward.
+
+We're going to want to go ahead and copy this because we're going to use the subject line to identify the user when we create an account for them in the database.
+
+Now we can go ahead and connect to the server with the Mongo shell.
+
+Here I'm saying --ssl because our server is requiring SSL.
+
+And specifying the PEMKeyFile option so that the server knows who we are.
+
+And I'm still saying the ca because we want to make sure that the server is who they say they are.
+
+And now that we're connected, you'll see that we have unrestricted access to the server.
+
+And it's because we didn't pass the --off option to mongod.
+
+So let's go ahead and go back here and restart the server with --off.
+
+And now if we go back here and reconnect, we should be reconnected now.
+
+Cool.
+
+And now if we do show dbs, you'll see that we get "not authorized on admin to execute command," which is what we'd expect.
+
+We now have authorization enabled.
+
+And now we need to go ahead and take advantage of the local host exception and create our first user.
+
+And here's the command.
+
+We're going to say, db.getSiblingDB, external.
+
+And this is because X.509 is technically an external authentication mechanism just because the credentials aren't stored directly in MongoDB.
+
+Then we do runCommand.
+
+And we say we want to create a user.
+
+Here is that subject line that we had before.
+
+And then we're going to go ahead and give this user the root role on the admin database.
+
+And we can see that it ran successfully.
+
+And now that our user's been created, we can go and authenticate them in a similar fashion.
+
+Here we're going to use getting the external database again.
+
+And we run auth.
+
+And here I'm passing in that subject line again and I'm specifying that the mechanism is X.509.
+
+And awesome.
+
+We have asked successfully authenticated using X.509 certificate authentication with MongoDB.

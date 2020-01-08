@@ -1,0 +1,93 @@
+In this lesson, we're going to talk about multikey indexes.
+
+Because of MongoDB's flexible data model, we're able to embed arrays into our documents.
+
+And when we index on a field that is an array, this is what we call a multikey index.
+
+It's called this because for each entry in the array, the server will create a separate index key.
+
+For example, in this document, if we were to create index on categories, then the server would create index keys for t-shirts, clothing, and apparel.
+
+With multikey indexes, we can not only index on scalar values, like strings and numbers, but we can also index on nested documents.
+
+For instance, we might want to be able to create an index on the quantity field of our stock sub-documents so that we can sort all these documents by quantity.
+
+This would work the same way as with scalar values.
+
+In this case, the server would create three index keys, one for each of the sub-documents.
+
+For each index document, we can have at most one index field whose value is an array.
+
+In the case of our example, we can create an index on product name and stock quantity, but we couldn't create an index on both categories and stock quantity.
+
+If we were to create a compound index on both categories and stock, then we'd be creating index keys for the Cartesian product between the length of the category and stock arrays.
+
+We'd be generating a huge amount of index keys, which would affect the performance of our queries.
+
+And this brings up a good point.
+
+We want to be careful with creating multikey indexes because we want to make sure that our arrays don't grow too large.
+
+Because in doing so, we'd affect how large our index is, potentially causing problems with fitting the index into memory, pushing our data out, and vice versa.
+
+Another important caveat to point out is that multikey indexes don't support covered queries.
+
+So if you're inclined to use covered queries to prevent the reading of your documents, then you'll want to keep that in mind.
+
+Let's go ahead and look at how multikey indexes work from the shell.
+
+We can go ahead and switch over to the m201 database that we've been using.
+
+And from here, let's go ahead and insert a document similar to our example.
+
+Now we can run a FIND query and look at the document we just inserted.
+
+You'll notice that this document is slightly different than the one from our example.
+
+In the example, stock was an array.
+
+Here, it's an embed document.
+
+You'll see why I did this in a second.
+
+Let's go ahead and create an index on stock.quantity like we did in the example.
+
+And like always, we can go ahead and create our explainable object.
+
+You'll notice that I'm not specifying execution stats because we're just going to look at the stages.
+
+And now we can run a FIND on this query and look at the explain output.
+
+And you'll see that we're able to successfully use our index.
+
+But you'll notice that is multikey is false.
+
+And this should make sense because we haven't yet indexed on our array field.
+
+We modified our document slightly so that stock was an embedded document rather than our array.
+
+And so now we can actually insert the document from our example where the stock field is an array.
+
+And now, if we run our first query, which would not match the document we just inserted, it should only match our first document, you'll note that the output has changed.
+
+We're still doing an index scan, but now multikey is true.
+
+So MongoDB only recognizes that an index is multikey when a document is inserted where that field is in an array.
+
+And like I said earlier, if we try to create an index where both fields are arrays, then this should fail.
+
+And it does.
+
+However, we can still create compound multikey index using product name and stock.quantity because the stock field is only an array.
+
+So it should be fine for me to insert this document where product name is an array, but stock is not.
+
+Also, I should point out this isn't a particularly good schema to use so I wouldn't use this in production.
+
+And the document inserted just fine.
+
+However, if both product name and stock were arrays, like in this document, then we'll get an error.
+
+I hope this gives you a good overview of multikey indexes.
+
+By now, you should be familiar with how to create and use multikey indexes, the implications of multikey indexes on your index size, and some of the limitations that are associated with multikey indexes.

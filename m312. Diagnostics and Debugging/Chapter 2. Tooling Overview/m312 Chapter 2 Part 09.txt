@@ -1,0 +1,37 @@
+One of the cool new features of Compass is the ability to see real time performance statistics for the node I'm connected to.
+
+And so if I click on the Performance tab up at the top here, what I'll see is I actually get four charts presented back to me in the interface that represent key metrics that are occurring on the MongoDB server right now.
+
+And so you can see in the top chart here we actually have an Operations chart.
+
+It's made up of inserts, queries, updates, deletes, commands, and get mores.
+
+And then we have a chart that represents read and write load on the server plus any network load or memory usage on the machine.
+
+On the right-hand side here what we see is two tables.
+
+One represents the hottest collections in the server right now, and we'll see for example that actually a MongoDB database and fan club collection is at 0% usage.
+
+This is a test box and there's no traffic going on on this machine right now.
+
+But if there were you would see a percentage increase of read and write traffic displayed on this bar here.
+
+If there are any slow operations going on on the server, they'll be listed here, too.
+
+And what we effectively see is the output from DB dot current up, which is a core server internal command that you can run to get an understanding of any operations that are occurring at that time on the server.
+
+And they'll be displayed here in a table form, and you'll be able to see the type of operation, whether it's a query or a insert, and the operation ID, and specifically what the operation is.
+
+You'll notice that the data in these charts moves fairly quickly.
+
+These charts represent roughly about 30-second window of metric collection.
+
+Now it may be that we see a spike that we want to drill into, and we may want to drill into it before we see it disappearing off the window.
+
+What we can do is actually hit the Pause button in the top right up here to pause the charts from adding any more data points in before our spike ages out.
+
+And when we're ready we can actually hover over and take a look, and you'll notice there's a trend line down between all the charts to indicate that this moment in time was happening.
+
+And we can take a look, see if there's anything interesting for us to take a look at there.
+
+When we're ready we can go ahead and click Play again, and the charts will simply catch back up to the present time.

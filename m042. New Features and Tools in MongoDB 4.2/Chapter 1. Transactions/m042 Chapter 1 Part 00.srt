@@ -1,0 +1,436 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.170
+Hello.
+
+3
+00:00:01.170 --> 00:00:04.320
+I'm Ali Cabral, a product
+manager on the core server.
+
+4
+00:00:04.320 --> 00:00:07.320
+You may remember me from
+the MongoDB 4.0 university
+
+5
+00:00:07.320 --> 00:00:10.650
+course where I introduced multi
+document acid transactions
+
+6
+00:00:10.650 --> 00:00:12.090
+and replica sets.
+
+7
+00:00:12.090 --> 00:00:15.270
+MongoDB transactions are
+conversational, familiar,
+
+8
+00:00:15.270 --> 00:00:17.700
+preserve atomicity
+across operations,
+
+9
+00:00:17.700 --> 00:00:20.070
+and have snapshot isolation.
+
+10
+00:00:20.070 --> 00:00:22.920
+They are multi-document,
+multi-statement,
+
+11
+00:00:22.920 --> 00:00:26.940
+and can span any namespace
+across your MongoDB instance.
+
+12
+00:00:26.940 --> 00:00:29.550
+But let's remember,
+even before transactions
+
+13
+00:00:29.550 --> 00:00:32.460
+were launched prior
+to 4.0, MongoDB
+
+14
+00:00:32.460 --> 00:00:35.850
+atomicity at the
+single document level.
+
+15
+00:00:35.850 --> 00:00:38.310
+For instance, if you
+updated multiple fields
+
+16
+00:00:38.310 --> 00:00:40.050
+in a single update
+statement, you'd
+
+17
+00:00:40.050 --> 00:00:44.490
+have the all or nothing
+execution guarantee.
+
+18
+00:00:44.490 --> 00:00:47.880
+Now in MongoDB
+4.2, we've extended
+
+19
+00:00:47.880 --> 00:00:51.360
+multi-document transactions
+to sharded clusters,
+
+20
+00:00:51.360 --> 00:00:56.100
+making application development
+even easier with MongoDB.
+
+21
+00:00:56.100 --> 00:00:59.700
+However, just as we
+discussed with replica sets,
+
+22
+00:00:59.700 --> 00:01:01.650
+this should not
+fundamentally change
+
+23
+00:01:01.650 --> 00:01:04.450
+how you use the database.
+
+24
+00:01:04.450 --> 00:01:07.590
+Let's review our seven
+transactions guidelines
+
+25
+00:01:07.590 --> 00:01:09.600
+that still apply.
+
+26
+00:01:09.600 --> 00:01:13.470
+First, all data modeling
+rules still apply.
+
+27
+00:01:13.470 --> 00:01:15.390
+Just because you
+have transactions
+
+28
+00:01:15.390 --> 00:01:17.070
+now does not mean
+you should start
+
+29
+00:01:17.070 --> 00:01:19.350
+normalizing your
+data across tables
+
+30
+00:01:19.350 --> 00:01:22.200
+just like you did in
+relational systems.
+
+31
+00:01:22.200 --> 00:01:24.270
+To fully leverage
+the document model,
+
+32
+00:01:24.270 --> 00:01:26.910
+use the rich
+structure of documents
+
+33
+00:01:26.910 --> 00:01:30.550
+to store related data together.
+
+34
+00:01:30.550 --> 00:01:35.280
+Second, transactions should not
+be the most common operation
+
+35
+00:01:35.280 --> 00:01:36.990
+in your application.
+
+36
+00:01:36.990 --> 00:01:41.070
+Really, this is a sanity
+check for the first guideline.
+
+37
+00:01:41.070 --> 00:01:43.560
+When transactions are the
+most common operation where
+
+38
+00:01:43.560 --> 00:01:47.770
+you always read or modify
+multiple documents,
+
+39
+00:01:47.770 --> 00:01:50.580
+this often points to legacy
+data modeling practices that
+
+40
+00:01:50.580 --> 00:01:53.970
+just don't apply to MongoDB.
+
+41
+00:01:53.970 --> 00:01:58.290
+Third, pass in the
+session to all statements.
+
+42
+00:01:58.290 --> 00:02:01.530
+It's very important to remember
+to pass in the session object
+
+43
+00:02:01.530 --> 00:02:04.470
+to any CRUD operation
+you want to execute
+
+44
+00:02:04.470 --> 00:02:08.130
+within the transaction context.
+
+45
+00:02:08.130 --> 00:02:11.310
+Fourth, implement retry logic.
+
+46
+00:02:11.310 --> 00:02:13.950
+Transactions can always abort.
+
+47
+00:02:13.950 --> 00:02:16.830
+In MongoDB 4.0, we
+introduced error labels
+
+48
+00:02:16.830 --> 00:02:19.230
+to listen for and respond
+to you by retrying
+
+49
+00:02:19.230 --> 00:02:21.750
+the transaction or the commit.
+
+50
+00:02:21.750 --> 00:02:26.340
+Now in MongoDB 4.2, we've
+introduced a new callback API
+
+51
+00:02:26.340 --> 00:02:29.190
+for transactions that
+retries automatically
+
+52
+00:02:29.190 --> 00:02:32.465
+for up to 120 seconds.
+
+53
+00:02:32.465 --> 00:02:34.590
+You don't need to explicitly
+listen to error labels
+
+54
+00:02:34.590 --> 00:02:36.960
+any longer.
+
+55
+00:02:36.960 --> 00:02:42.720
+Fifth, don't unnecessarily
+leave snapshots open.
+
+56
+00:02:42.720 --> 00:02:45.180
+When we keep transactions
+open, MongoDB
+
+57
+00:02:45.180 --> 00:02:48.030
+has to keep all of the
+history since the snapshot
+
+58
+00:02:48.030 --> 00:02:50.560
+time of that transaction.
+
+59
+00:02:50.560 --> 00:02:52.500
+Once the transaction
+completes, the system
+
+60
+00:02:52.500 --> 00:02:54.690
+can clean up that history.
+
+61
+00:02:54.690 --> 00:02:57.930
+As a guardrail, we have a
+configurable transaction
+
+62
+00:02:57.930 --> 00:03:01.590
+lifetime limit seconds
+which defaults to 60 seconds
+
+63
+00:03:01.590 --> 00:03:06.900
+and proactively cleans up
+long-running transactions.
+
+64
+00:03:06.900 --> 00:03:09.060
+You can change
+this value, but you
+
+65
+00:03:09.060 --> 00:03:11.430
+must test with your
+expected workload
+
+66
+00:03:11.430 --> 00:03:15.040
+and keep an eye on
+cache pressure buildup.
+
+67
+00:03:15.040 --> 00:03:18.570
+You should also make
+sure to commit or abort
+
+68
+00:03:18.570 --> 00:03:21.600
+even read-only
+transactions, as this
+
+69
+00:03:21.600 --> 00:03:27.240
+relieves the system from needing
+to unnecessarily store history.
+
+70
+00:03:27.240 --> 00:03:31.890
+Next we have our sixth and
+second to last guideline.
+
+71
+00:03:31.890 --> 00:03:35.490
+To trigger write conflicts,
+make sure you're doing writes.
+
+72
+00:03:35.490 --> 00:03:37.440
+Reads do not trigger
+write conflicts.
+
+73
+00:03:37.440 --> 00:03:40.260
+And no-op writes do not
+trigger write conflicts.
+
+74
+00:03:40.260 --> 00:03:44.560
+No-op writes are writes that
+don't modify the document.
+
+75
+00:03:44.560 --> 00:03:47.400
+For instance, if I
+changed a color to red,
+
+76
+00:03:47.400 --> 00:03:51.600
+and the color was already red
+in the document, this is a no-op
+
+77
+00:03:51.600 --> 00:03:53.700
+and doesn't make it
+to the storage engine
+
+78
+00:03:53.700 --> 00:03:57.770
+and won't trigger
+write conflicts.
+
+79
+00:03:57.770 --> 00:04:03.110
+Our final and seventh guideline
+is plan for DDL operations.
+
+80
+00:04:03.110 --> 00:04:06.710
+DDL operations, like create
+index and drop database,
+
+81
+00:04:06.710 --> 00:04:09.460
+compete with active
+running transactions.
+
+82
+00:04:09.460 --> 00:04:13.160
+When a DDL operation is waiting
+on a transaction to finish,
+
+83
+00:04:13.160 --> 00:04:15.200
+no operations that
+need to access
+
+84
+00:04:15.200 --> 00:04:17.519
+that namespace
+for the first time
+
+85
+00:04:17.519 --> 00:04:22.660
+will be able to until the
+DDL operation completes.
+
+86
+00:04:22.660 --> 00:04:26.830
+MongoDB 4.2 introduces
+distributed transactions,
+
+87
+00:04:26.830 --> 00:04:29.950
+making transactions
+even more powerful
+
+88
+00:04:29.950 --> 00:04:32.830
+as they extend to cross shards.
+
+89
+00:04:32.830 --> 00:04:34.780
+This chapter will lay
+out the foundation
+
+90
+00:04:34.780 --> 00:04:37.090
+for working with
+distributed transactions
+
+91
+00:04:37.090 --> 00:04:39.720
+and your environment.

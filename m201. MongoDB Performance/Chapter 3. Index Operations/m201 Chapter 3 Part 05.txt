@@ -1,0 +1,73 @@
+So far we've seen that indexes are important data structures.
+
+They will help us optimize our queries and, as a side effect, reduce our response time.
+
+If well designed, the usage of an index supporting a given query might reduce the response time in a few orders magnitude.
+
+Let's have a quick example.
+
+I have a database called London bikes.
+
+And in this London bikes database, I have these rides_other collection where I'm going to just express a query looking for all end stations around the MongoDB office in London, and see how that behaves.
+
+Now if I pull up my explain command, I can see that the execution time in milliseconds was quite alarming.
+
+It took me 7,426 milliseconds to execute.
+
+It did return a few amount of results, like almost 20,000 documents.
+
+But still, it did a lot of work just to find a few documents.
+
+And by that, also inadvertently got a lot of time to do that.
+
+Now after we create an index on that same field that we expressed a query on, and we write again the same query, and also expecting to look into the execution stats of our explain command, we can see that we come from 7,000 milliseconds to only 337.
+
+So the usage of a single index did reduce in an order of magnitude the amount of time that this query took to operate.
+
+However, indexes are not some sort of black magic.
+
+They are data structures that our databases use, that will in turn require resources to operate.
+
+Therefore, it is quite important to determine the index size, and what kind of resources will be involved in its allocation and operation.
+
+In some edge cases where we might compromise or do some compromising in terms of what we need, in terms of resources to operate with those particular indexes.
+
+Let's start by looking into how can we determine an index size.
+
+Using MongoDB Compass, we can have a clear understanding of the size of our indexes for each one of our databases.
+
+Once we select the database, we can look into the different collections and here, we will have the total index size for each collection.
+
+Now if we select, for example, this one over here, the collection we used before.
+
+And if we look into our indexes, we can see we have a breakdown between the different indexes that support this particular collection.
+
+We have our _ID, our primary key, and obviously the one that we recently created on endstation name.
+
+We can also, obviously, get that information from our MongoDB command db.stats, where we are going to have the full index size.
+
+And obviously, per collection, we can also see the index size of a given collection, and the different sizes for the different in indexes of this collection.
+
+Now indexes need two basic computational resources.
+
+We are going to need disk to store the index information, and, obviously, we are also going to need memory so we can operate with those data structures.
+
+In index terms, disks are generally not a big issue or they are generally not an issue at all.
+
+If we don't have space in our disk for our index file, apart from having larger problems, the indexes would end up not been created at all.
+
+So if you are restrained in terms of disk size, if you ask the system to create a particular index.
+
+If we don't have space for the indexed file, then you don't have a problem with the index, you have other, slightly more important problems.
+
+After the indexes have been created, the disk space requirements will be a function of your data.
+
+Which means that you will run out of disk space for collection data before having issues with space for your indexes.
+
+That said, if you are using different physical drives in one dedicated for your indexes, you do need to make sure we have enough resources for our indexes in that particular disk.
+
+So regardless of the amount of data that you put for your collections-- so let's say that you are using this disk over here for the index file.
+
+If you have other disks for your collection data, you might not run out of disk space on your collection data, but you might end up having issues allocating resources for your indexes if you don't pay close attention to that physical drive.
+
+Just keep an eye on this if you have this type of architecture.

@@ -1,0 +1,53 @@
+Hi, I'm Shannon.
+
+And I'll be guiding you through the basics of MongoDB in this introductory course.
+
+MongoDB eliminates a number of technical challenges that slow the pace of application development.
+
+In this course, we'll go through the fundamentals so that you can get up and running with MongoDB.
+
+First, we'll introduce you to MongoDB Compass.
+
+Compass is a visual interface to MongoDB that we'll use for many lessons in this course.
+
+It allows us to configure a database and explore the data it contains.
+
+We'll use Compass to explore a few data-sets and talk about the important design features such as support for flexible schemas and the range of benefits that it provides to application developers.
+
+Then we'll dive into the MongoDB query language to give you plenty of preparation as you begin to think about building your own MongoDB application.
+
+Throughout the course, we'll make use of Atlas, which is MongoDB's database as a service offering.
+
+We've created a database cluster in Atlas specifically for use in this course.
+
+You'll be connecting to and using it for many lessons and labs.
+
+As you begin moving through this course, please take advantage of the discussion forum.
+
+Feel free to ask any questions you have about lessons or assignments.
+
+Many students also ask questions about more general MongoDB questions, and that's OK too.
+
+We have teaching assistants monitoring the discussion forum to help you.
+
+In addition, other students frequently jump in with great advice and answers if you get stuck on a lab.
+
+We're almost ready to begin.
+
+But before we do, I wanted to make you aware of the MongoDB University app.
+
+Many learners like to download lesson videos to watch on their commute or in other situations where internet bandwidth is unreliable.
+
+The MongoDB University app available on both iOS and Android makes this easy.
+
+Search the App Store or Google Play for MongoDB University and give the app a try.
+
+Most of our learners use it for at least some portion of every course.
+
+OK, that's all the information you need to get started.
+
+If you have any questions or comments about the course, again, please feel free to post something in the discussion forum.
+
+We're happy to have you on board.
+
+Thanks for learning with us, and good luck.

@@ -1,0 +1,299 @@
+
+1
+00:00:00.000 --> 00:00:00.630
+
+
+2
+00:00:00.630 --> 00:00:02.580
+In this lesson, we'll
+see how Mtools can help
+
+3
+00:00:02.580 --> 00:00:04.650
+us to identify slow queries.
+
+4
+00:00:04.650 --> 00:00:06.690
+We'll dive deep into
+three tools to help
+
+5
+00:00:06.690 --> 00:00:10.920
+you identify those slow
+queries, mloginfo, mplotqueries,
+
+6
+00:00:10.920 --> 00:00:12.630
+and mlogvis.
+
+7
+00:00:12.630 --> 00:00:14.820
+Mloginfo can be used to
+create a quick summary
+
+8
+00:00:14.820 --> 00:00:16.170
+of the query shapes.
+
+9
+00:00:16.170 --> 00:00:20.370
+Mplotqueries gives you a plot to
+show all the queries over time.
+
+10
+00:00:20.370 --> 00:00:22.800
+And mlogvis is similar
+to mplotqueries,
+
+11
+00:00:22.800 --> 00:00:24.630
+but will make use of
+your internet browser
+
+12
+00:00:24.630 --> 00:00:26.970
+instead of using the
+graphical libraries needed
+
+13
+00:00:26.970 --> 00:00:28.890
+by mplotqueries.
+
+14
+00:00:28.890 --> 00:00:30.360
+Let's take a look.
+
+15
+00:00:30.360 --> 00:00:34.220
+First I'll ssh into
+my Vagrant box.
+
+16
+00:00:34.220 --> 00:00:35.490
+Great.
+
+17
+00:00:35.490 --> 00:00:39.280
+Next I'll go into
+my shared folder.
+
+18
+00:00:39.280 --> 00:00:43.320
+OK, all of these tools need log
+files and I've got one here.
+
+19
+00:00:43.320 --> 00:00:45.570
+This is actual data from
+one of our customers,
+
+20
+00:00:45.570 --> 00:00:47.940
+but the databases,
+collections, and field names
+
+21
+00:00:47.940 --> 00:00:50.010
+have been replaced
+by animal names,
+
+22
+00:00:50.010 --> 00:00:53.780
+while the text values are
+replaced by random strings.
+
+23
+00:00:53.780 --> 00:00:55.410
+Let's start with
+the simplest tool.
+
+24
+00:00:55.410 --> 00:00:57.370
+Mloginfo can be used
+for a lot of things.
+
+25
+00:00:57.370 --> 00:01:00.000
+The most common is to
+get the envelope of log,
+
+26
+00:01:00.000 --> 00:01:02.310
+basically figuring out the
+period of time it covers
+
+27
+00:01:02.310 --> 00:01:03.660
+and from which host it comes.
+
+28
+00:01:03.660 --> 00:01:07.620
+
+
+29
+00:01:07.620 --> 00:01:09.540
+We've redacted some of
+the information, which
+
+30
+00:01:09.540 --> 00:01:11.980
+is why it's unknown.
+
+31
+00:01:11.980 --> 00:01:14.730
+However, there is also a
+mode with minus minus queries
+
+32
+00:01:14.730 --> 00:01:17.070
+where it reports all
+the queries by shape
+
+33
+00:01:17.070 --> 00:01:19.320
+ordered by the total amount
+of time that it took.
+
+34
+00:01:19.320 --> 00:01:21.510
+That means if a query took
+two seconds, on average,
+
+35
+00:01:21.510 --> 00:01:23.310
+and appears one million
+times in the log,
+
+36
+00:01:23.310 --> 00:01:26.460
+then the total amount of time
+will be 2 million seconds.
+
+37
+00:01:26.460 --> 00:01:27.840
+By ordering the
+queries that way,
+
+38
+00:01:27.840 --> 00:01:29.970
+we can easily see the
+most expensive query shape
+
+39
+00:01:29.970 --> 00:01:32.970
+at the top and decide if
+it should be optimized.
+
+40
+00:01:32.970 --> 00:01:34.530
+I'm afraid the text is wrapping.
+
+41
+00:01:34.530 --> 00:01:38.790
+I had to do that in order to
+keep it big enough to read.
+
+42
+00:01:38.790 --> 00:01:40.410
+We can see at the
+top of the queries
+
+43
+00:01:40.410 --> 00:01:44.970
+that there is an update
+that has a count of 1203.
+
+44
+00:01:44.970 --> 00:01:47.220
+The update may have been
+run more often than this,
+
+45
+00:01:47.220 --> 00:01:50.040
+but this is the number of
+times it appears in the log,
+
+46
+00:01:50.040 --> 00:01:53.130
+because all those log entries
+were for updates that exceeded
+
+47
+00:01:53.130 --> 00:01:54.840
+the threshold of a
+slow query, which
+
+48
+00:01:54.840 --> 00:01:57.690
+by default is 100 milliseconds.
+
+49
+00:01:57.690 --> 00:02:01.260
+This update takes an
+average of 599 milliseconds,
+
+50
+00:02:01.260 --> 00:02:05.310
+as you can see from
+this mean value column.
+
+51
+00:02:05.310 --> 00:02:07.170
+And obviously, for
+all these queries,
+
+52
+00:02:07.170 --> 00:02:09.280
+we see those are
+not great numbers.
+
+53
+00:02:09.280 --> 00:02:11.610
+And we'd like to look at them.
+
+54
+00:02:11.610 --> 00:02:15.000
+It could be that there is
+no index on hamster.wallaby.
+
+55
+00:02:15.000 --> 00:02:17.690
+And adding the index could
+improve the performance a lot.
+
+56
+00:02:17.690 --> 00:02:20.190
+Not just for this update, but
+also improving the performance
+
+57
+00:02:20.190 --> 00:02:22.500
+of the overall system.
+
+58
+00:02:22.500 --> 00:02:25.970
+The following two lines show
+another query and an update
+
+59
+00:02:25.970 --> 00:02:28.296
+that should also be optimized.
+
+60
+00:02:28.296 --> 00:02:29.670
+The following
+queries and updates
+
+61
+00:02:29.670 --> 00:02:31.710
+are only a fraction
+of the time of those,
+
+62
+00:02:31.710 --> 00:02:34.180
+so they have less of an impact.
+
+63
+00:02:34.180 --> 00:02:37.430
+That's why we care about
+this total time taken.

@@ -1,0 +1,283 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.960
+In this lesson, we'll be talking
+about connection management,
+
+3
+00:00:03.960 --> 00:00:08.540
+especially around closing
+and dropping connections.
+
+4
+00:00:08.540 --> 00:00:11.100
+First we will be
+talking about greed.
+
+5
+00:00:11.100 --> 00:00:13.550
+No, not Wall Street
+kind of greed,
+
+6
+00:00:13.550 --> 00:00:16.370
+that's a matter of discussion
+for another type of class.
+
+7
+00:00:16.370 --> 00:00:19.140
+Today, what we are
+going to be focusing on
+
+8
+00:00:19.140 --> 00:00:22.760
+is discussing how resource
+greedy applications
+
+9
+00:00:22.760 --> 00:00:25.760
+and keeping connections for
+extended periods of time
+
+10
+00:00:25.760 --> 00:00:29.330
+while leaving them idle,
+most importantly, what
+
+11
+00:00:29.330 --> 00:00:33.660
+resource allocation, especially
+memory, will be looking like.
+
+12
+00:00:33.660 --> 00:00:36.440
+We will also be looking
+into how to detect poorly
+
+13
+00:00:36.440 --> 00:00:38.780
+connect configured
+hosts regarding
+
+14
+00:00:38.780 --> 00:00:41.120
+connectivity,
+related pedometers.
+
+15
+00:00:41.120 --> 00:00:42.980
+So we're going to be
+looking into how these
+
+16
+00:00:42.980 --> 00:00:45.350
+can affect your deployment.
+
+17
+00:00:45.350 --> 00:00:47.960
+And finally, we are
+going to be looking
+
+18
+00:00:47.960 --> 00:00:52.040
+into what happens when
+the new primaries election
+
+19
+00:00:52.040 --> 00:00:54.380
+within the replica set.
+
+20
+00:00:54.380 --> 00:00:56.460
+This is not
+necessarily a problem.
+
+21
+00:00:56.460 --> 00:00:58.820
+But once an election
+takes place,
+
+22
+00:00:58.820 --> 00:01:01.730
+what happens to your application
+from the connection perspective
+
+23
+00:01:01.730 --> 00:01:05.030
+and how to then handle
+the subsequent connection
+
+24
+00:01:05.030 --> 00:01:09.730
+operations that will be
+affected by that election.
+
+25
+00:01:09.730 --> 00:01:12.080
+Let's consider
+greedy connections
+
+26
+00:01:12.080 --> 00:01:16.520
+that your applications might
+have or might be configured
+
+27
+00:01:16.520 --> 00:01:19.400
+and how to see their effects.
+
+28
+00:01:19.400 --> 00:01:22.490
+In the hand outs of this lesson,
+you will find a script called,
+
+29
+00:01:22.490 --> 00:01:25.850
+make lots of connections
+to servers.py.
+
+30
+00:01:25.850 --> 00:01:28.190
+If you want to follow
+up with this lesson,
+
+31
+00:01:28.190 --> 00:01:31.700
+you should download this
+into your vagrant environment
+
+32
+00:01:31.700 --> 00:01:33.000
+shared folder.
+
+33
+00:01:33.000 --> 00:01:36.890
+So in my case, I have it
+here for my m312 vagrant
+
+34
+00:01:36.890 --> 00:01:38.510
+environment.
+
+35
+00:01:38.510 --> 00:01:41.810
+Now what this script will do
+is simulate one of the worst
+
+36
+00:01:41.810 --> 00:01:43.250
+scenarios possible.
+
+37
+00:01:43.250 --> 00:01:45.650
+One that creates several
+different connections
+
+38
+00:01:45.650 --> 00:01:48.980
+from an application
+to a database
+
+39
+00:01:48.980 --> 00:01:51.300
+that end up not doing much.
+
+40
+00:01:51.300 --> 00:01:54.260
+And actually in this
+case, we are just creating
+
+41
+00:01:54.260 --> 00:01:55.550
+the connection and that's it.
+
+42
+00:01:55.550 --> 00:01:58.220
+We are not even
+reading anything from
+
+43
+00:01:58.220 --> 00:01:59.910
+this particular application.
+
+44
+00:01:59.910 --> 00:02:03.350
+We're just going to throw a
+bunch of threads or processes,
+
+45
+00:02:03.350 --> 00:02:06.860
+all of them will create a
+bunch of different connections.
+
+46
+00:02:06.860 --> 00:02:10.370
+And they will idle for
+a long period of time.
+
+47
+00:02:10.370 --> 00:02:12.300
+Now first to understand
+what's going on,
+
+48
+00:02:12.300 --> 00:02:14.660
+we will need to use
+a couple of tools.
+
+49
+00:02:14.660 --> 00:02:17.690
+We're going to be using
+Mongostats, that as you know
+
+50
+00:02:17.690 --> 00:02:20.600
+allows us to see what's
+going on from a real time
+
+51
+00:02:20.600 --> 00:02:22.120
+perspective on our server.
+
+52
+00:02:22.120 --> 00:02:23.960
+We'll definitely be
+using serverStatus
+
+53
+00:02:23.960 --> 00:02:26.600
+to get some information
+of a couple of parameters
+
+54
+00:02:26.600 --> 00:02:28.700
+that we're going
+to be looking into.
+
+55
+00:02:28.700 --> 00:02:32.240
+From the OS perspective,
+we're going to be using free.
+
+56
+00:02:32.240 --> 00:02:34.910
+And obviously, you're going
+to be tailing and catting
+
+57
+00:02:34.910 --> 00:02:38.570
+and seeing what the
+log file has to offer
+
+58
+00:02:38.570 --> 00:02:40.400
+in terms of information
+of what's going
+
+59
+00:02:40.400 --> 00:02:43.590
+on when we have such a setup.

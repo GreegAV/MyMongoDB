@@ -1,0 +1,63 @@
+Now let's go ahead and use our last example and actually go ahead and try out this filter.
+
+In this video, we're going to go ahead and build off of the example we saw in the last video and actually try and test out this filter.
+
+If you remember from last time, we created an audit filter where we monitored creating or dropping collections.
+
+Let's go ahead and start the MongoDB for this audit filter.
+
+I still have my configuration file from a previous video, so let's go ahead and just add the audit filter directly into this file.
+
+So here is our configuration file.
+
+We just need to add a line that looks like this where we specify a filter, and then we define the audit filter that we've made.
+
+And now, like before, we can go ahead and just run with --config, our configuration file, and --fork.
+
+Now, I do want to point out, if we didn't use a configuration file, we could use the --auditFilter option, like so, and then just pass a string to this option.
+
+But since we've already specified that, we can just hit enter.
+
+Now we'll go ahead and tail our log.
+
+And you can see that, so far, there's nothing in here.
+
+And now, in our last example, we tried to authenticate, and that showed in the audit log.
+
+So let's first authenticate and make sure that that doesn't show up.
+
+And when I hit Enter, we see that the authentication failed.
+
+And when I go back to log, we shouldn't see it.
+
+And, awesome, we don't see it.
+
+However, if I try to create a collection now, and I run db.createCollection with a test collection, it says, OK.
+
+And, right here, we can see our audit log.
+
+We have an atype of createCollection.
+
+We have our time stamp, our local, our remote.
+
+And then, of course, we actually see the params that are passed in.
+
+So the namespace, or the collection that we're trying to create, was on the test.t database, and it was a collection called "testcoll." Of course, we don't actually have to run the createCollection command.
+
+MongoDB has a flexible schema.
+
+So you'll create a collection on the fly.
+
+You can see here, I can show the collections.
+
+You see our test collection.
+
+And I can also just run db.insert on a collection that doesn't exist yet.
+
+And MongoDB will dynamically run createCollection on our behalf.
+
+And so we should see that in the log.
+
+And we do.
+
+There's our other createCollection.

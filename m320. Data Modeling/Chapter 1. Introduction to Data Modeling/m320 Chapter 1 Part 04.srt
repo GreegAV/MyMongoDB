@@ -1,0 +1,632 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.730
+In this lesson, we will
+discuss why constraints
+
+3
+00:00:02.730 --> 00:00:04.680
+drive the need to model.
+
+4
+00:00:04.680 --> 00:00:07.200
+Did you ever plan on how
+you will get your oxygen
+
+5
+00:00:07.200 --> 00:00:08.550
+for a day of your life?
+
+6
+00:00:08.550 --> 00:00:10.550
+For most of us,
+we don't have to.
+
+7
+00:00:10.550 --> 00:00:12.900
+There is plenty of
+oxygen. And it's available
+
+8
+00:00:12.900 --> 00:00:14.980
+as quickly as
+needed by our lungs.
+
+9
+00:00:14.980 --> 00:00:17.700
+However, if you were an
+astronaut like my friend David,
+
+10
+00:00:17.700 --> 00:00:20.340
+here, your life will depend
+on the careful planning
+
+11
+00:00:20.340 --> 00:00:22.620
+of the supply, the
+estimation of its usage,
+
+12
+00:00:22.620 --> 00:00:26.850
+and securing the oxygen
+from any danger or accident.
+
+13
+00:00:26.850 --> 00:00:30.000
+My point being that if the
+resource is abundant and can
+
+14
+00:00:30.000 --> 00:00:32.030
+be transferred
+without delay, there
+
+15
+00:00:32.030 --> 00:00:35.730
+is not much planning or modeling
+to do about the resource.
+
+16
+00:00:35.730 --> 00:00:37.560
+Unfortunately,
+with computers, we
+
+17
+00:00:37.560 --> 00:00:39.720
+deal with limited
+resources, which
+
+18
+00:00:39.720 --> 00:00:43.560
+are crippled by restrictions
+of size, speed, and cost.
+
+19
+00:00:43.560 --> 00:00:45.870
+For that reason,
+you need to model
+
+20
+00:00:45.870 --> 00:00:48.180
+to make the best of
+the resources available
+
+21
+00:00:48.180 --> 00:00:51.120
+and work around the
+restrictions that you have.
+
+22
+00:00:51.120 --> 00:00:52.920
+Let's start with the hardware.
+
+23
+00:00:52.920 --> 00:00:54.600
+RAM is the fastest
+location where
+
+24
+00:00:54.600 --> 00:00:57.660
+you can put data, besides
+the processor caches.
+
+25
+00:00:57.660 --> 00:00:59.920
+Unfortunately, it
+becomes very expensive
+
+26
+00:00:59.920 --> 00:01:02.070
+if you need a
+humongous amount of it.
+
+27
+00:01:02.070 --> 00:01:04.860
+For that reason, you are likely
+to offload some of the data
+
+28
+00:01:04.860 --> 00:01:08.700
+to disk, which are cheaper
+and have larger capacities.
+
+29
+00:01:08.700 --> 00:01:11.310
+Solid State Drives,
+or SSDs, would
+
+30
+00:01:11.310 --> 00:01:13.320
+be the preferred type of disk.
+
+31
+00:01:13.320 --> 00:01:15.720
+However, the cost of
+high-capacity SSDs
+
+32
+00:01:15.720 --> 00:01:17.820
+may be more than
+you're ready to spend.
+
+33
+00:01:17.820 --> 00:01:20.700
+For this situation, you may
+consider traditional hard disk
+
+34
+00:01:20.700 --> 00:01:21.690
+drives.
+
+35
+00:01:21.690 --> 00:01:24.330
+Those three types of
+hardware that handle data--
+
+36
+00:01:24.330 --> 00:01:27.150
+RAM, SSDs, and HDDs--
+
+37
+00:01:27.150 --> 00:01:29.790
+have a strong correlation
+between their price
+
+38
+00:01:29.790 --> 00:01:31.410
+and their speed.
+
+39
+00:01:31.410 --> 00:01:34.410
+The next type of restriction
+is related to your data.
+
+40
+00:01:34.410 --> 00:01:38.550
+The data you want to keep or
+have might just be impractical.
+
+41
+00:01:38.550 --> 00:01:40.680
+Keeping petabytes
+of data that go back
+
+42
+00:01:40.680 --> 00:01:44.295
+to the beginning of time may
+just not work for your budget.
+
+43
+00:01:44.295 --> 00:01:46.170
+Often you will see
+projects that discriminate
+
+44
+00:01:46.170 --> 00:01:47.880
+between recent
+data that is often
+
+45
+00:01:47.880 --> 00:01:50.220
+used by [? the ?]
+system versus data
+
+46
+00:01:50.220 --> 00:01:52.720
+mostly used by analytic queries.
+
+47
+00:01:52.720 --> 00:01:54.780
+A way to deal with
+this situation
+
+48
+00:01:54.780 --> 00:01:58.170
+is to allocate faster
+resources, like SSDs
+
+49
+00:01:58.170 --> 00:02:01.840
+for the frequently accessed
+data, and HDDs for the data
+
+50
+00:02:01.840 --> 00:02:04.680
+that has fewer
+latency requirements.
+
+51
+00:02:04.680 --> 00:02:08.190
+Other aspects to consider
+are data retention policies
+
+52
+00:02:08.190 --> 00:02:10.740
+and data sovereignty
+regulations that
+
+53
+00:02:10.740 --> 00:02:13.380
+may impact the way you define
+your data model in order
+
+54
+00:02:13.380 --> 00:02:14.460
+to be compliant.
+
+55
+00:02:14.460 --> 00:02:18.660
+And obviously, security has to
+be on your mind when modeling.
+
+56
+00:02:18.660 --> 00:02:22.470
+Giving access to some pieces
+of data and not others
+
+57
+00:02:22.470 --> 00:02:24.390
+will influence how
+you group that data
+
+58
+00:02:24.390 --> 00:02:27.060
+in your documents
+and collections.
+
+59
+00:02:27.060 --> 00:02:31.560
+To cover these concerns, MongoDB
+offers a set of access controls
+
+60
+00:02:31.560 --> 00:02:35.400
+and security checks that we'll
+briefly discuss in this course
+
+61
+00:02:35.400 --> 00:02:39.273
+but are better covered in
+our MongoDB security courses.
+
+62
+00:02:39.273 --> 00:02:41.190
+Your application would
+like to return the data
+
+63
+00:02:41.190 --> 00:02:43.070
+as quickly as possible.
+
+64
+00:02:43.070 --> 00:02:46.170
+However, there are physical
+limits on the network's speed.
+
+65
+00:02:46.170 --> 00:02:47.970
+We can make bigger
+and faster drives.
+
+66
+00:02:47.970 --> 00:02:51.630
+But it may take us a while to
+improve on the speed of light.
+
+67
+00:02:51.630 --> 00:02:54.720
+Modeling for applications
+that are globally distributed
+
+68
+00:02:54.720 --> 00:02:57.510
+and accessed by clients
+in different locations
+
+69
+00:02:57.510 --> 00:02:59.610
+may require a bit more
+thinking about how
+
+70
+00:02:59.610 --> 00:03:02.670
+we can make data accessible
+without compromising service
+
+71
+00:03:02.670 --> 00:03:03.870
+quality.
+
+72
+00:03:03.870 --> 00:03:05.490
+And the last group
+I want to highlight
+
+73
+00:03:05.490 --> 00:03:08.160
+is the limits of
+the database server.
+
+74
+00:03:08.160 --> 00:03:10.230
+In the case of
+MongoDB, a document
+
+75
+00:03:10.230 --> 00:03:12.600
+can't be larger than 16 meg.
+
+76
+00:03:12.600 --> 00:03:14.550
+And with the current
+WiredTiger engine,
+
+77
+00:03:14.550 --> 00:03:16.260
+reading information
+from a document
+
+78
+00:03:16.260 --> 00:03:19.290
+requires the full document
+to be loaded in RAM.
+
+79
+00:03:19.290 --> 00:03:21.690
+Both of those constraints
+may drive your design
+
+80
+00:03:21.690 --> 00:03:24.000
+to split frequently
+accessed data
+
+81
+00:03:24.000 --> 00:03:27.450
+from the rest of the data
+less frequently accessed.
+
+82
+00:03:27.450 --> 00:03:30.360
+As for writes, if you need
+to write too many documents,
+
+83
+00:03:30.360 --> 00:03:33.840
+well, you will use a transaction
+with the traditional tabular
+
+84
+00:03:33.840 --> 00:03:36.420
+databases, which are
+frequently referred
+
+85
+00:03:36.420 --> 00:03:38.430
+as relational databases.
+
+86
+00:03:38.430 --> 00:03:41.040
+However, you can
+simplify your application
+
+87
+00:03:41.040 --> 00:03:44.100
+and avoid using transactions
+by storing all the information
+
+88
+00:03:44.100 --> 00:03:46.530
+that needs to be updated
+in a single document,
+
+89
+00:03:46.530 --> 00:03:49.860
+as a write to a document
+is ACID compliant.
+
+90
+00:03:49.860 --> 00:03:52.470
+In other words,
+transactions are a must-have
+
+91
+00:03:52.470 --> 00:03:54.120
+in tabular databases.
+
+92
+00:03:54.120 --> 00:03:57.090
+However, in a document
+database like MongoDB,
+
+93
+00:03:57.090 --> 00:03:59.080
+you can do well without them.
+
+94
+00:03:59.080 --> 00:04:03.720
+But just to be clear, MongoDB
+does support transactions.
+
+95
+00:04:03.720 --> 00:04:07.050
+We mentioned frequently accessed
+data a few times already.
+
+96
+00:04:07.050 --> 00:04:09.540
+Let's clarify this expression.
+
+97
+00:04:09.540 --> 00:04:11.610
+As you know or may
+have guessed, if you
+
+98
+00:04:11.610 --> 00:04:13.680
+can keep the old
+database in RAM,
+
+99
+00:04:13.680 --> 00:04:15.840
+it will give you very
+good performance.
+
+100
+00:04:15.840 --> 00:04:18.060
+However, it is
+often not practical
+
+101
+00:04:18.060 --> 00:04:19.980
+or may just be a waste of money.
+
+102
+00:04:19.980 --> 00:04:22.140
+What you want to
+aim for is keeping
+
+103
+00:04:22.140 --> 00:04:24.120
+the data that is
+frequently accessed
+
+104
+00:04:24.120 --> 00:04:26.160
+and needs to be
+returned quickly in RAM.
+
+105
+00:04:26.160 --> 00:04:29.350
+We refer to this data
+as the working set.
+
+106
+00:04:29.350 --> 00:04:33.690
+A definition for the working set
+would be the total body of data
+
+107
+00:04:33.690 --> 00:04:38.190
+that the application uses in
+the course of normal operations.
+
+108
+00:04:38.190 --> 00:04:41.670
+In this picture, the
+chunk of data in red
+
+109
+00:04:41.670 --> 00:04:44.640
+are the ones we want to keep
+in memory, while we still
+
+110
+00:04:44.640 --> 00:04:48.930
+have some RAM left to swap
+information that is used less
+
+111
+00:04:48.930 --> 00:04:51.870
+often in and out from the disk.
+
+112
+00:04:51.870 --> 00:04:55.650
+In summary, the frequently
+accessed documents and indexes
+
+113
+00:04:55.650 --> 00:04:59.040
+is their working set, which is
+a set of pages read from this
+
+114
+00:04:59.040 --> 00:05:02.320
+that contain the documents and
+indexes that the system handles
+
+115
+00:05:02.320 --> 00:05:04.120
+pretty often.
+
+116
+00:05:04.120 --> 00:05:07.750
+Before we go, let's just
+spell out some guidelines.
+
+117
+00:05:07.750 --> 00:05:09.700
+Keep the frequently
+used documents
+
+118
+00:05:09.700 --> 00:05:11.560
+and indexes in memory.
+
+119
+00:05:11.560 --> 00:05:13.990
+They are what we just
+described as a working set.
+
+120
+00:05:13.990 --> 00:05:17.410
+Prefer solid state drives
+to hard disk drives.
+
+121
+00:05:17.410 --> 00:05:20.080
+However, if you have a ton
+of historical data, data
+
+122
+00:05:20.080 --> 00:05:22.900
+you don't use very
+often, hard disk drives
+
+123
+00:05:22.900 --> 00:05:26.870
+are cheaper and may just work
+as well for this type of data.
+
+124
+00:05:26.870 --> 00:05:29.690
+Let's recap what we have
+learned in this lesson.
+
+125
+00:05:29.690 --> 00:05:33.220
+The nature of your data set
+and hardware define the need
+
+126
+00:05:33.220 --> 00:05:34.940
+to model your data.
+
+127
+00:05:34.940 --> 00:05:38.470
+It is important to identify
+those exact constraints
+
+128
+00:05:38.470 --> 00:05:41.170
+and their impact to
+create a better model.
+
+129
+00:05:41.170 --> 00:05:44.710
+As your software and the
+technological landscape change,
+
+130
+00:05:44.710 --> 00:05:47.830
+your model should be
+re-evaluated and updated
+
+131
+00:05:47.830 --> 00:05:49.980
+accordingly.

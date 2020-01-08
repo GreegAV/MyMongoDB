@@ -1,0 +1,265 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:01,560
+Hi, I'm Shannon.
+
+3
+00:00:01,560 --> 00:00:03,930
+And I'll be guiding you
+through the basics of MongoDB
+
+4
+00:00:03,930 --> 00:00:06,080
+in this introductory course.
+
+5
+00:00:06,080 --> 00:00:08,490
+MongoDB eliminates a number
+of technical challenges
+
+6
+00:00:08,490 --> 00:00:11,660
+that slow the pace of
+application development.
+
+7
+00:00:11,660 --> 00:00:14,220
+In this course, we'll go
+through the fundamentals
+
+8
+00:00:14,220 --> 00:00:17,730
+so that you can get up
+and running with MongoDB.
+
+9
+00:00:17,730 --> 00:00:20,670
+First, we'll introduce
+you to MongoDB Compass.
+
+10
+00:00:20,670 --> 00:00:23,220
+Compass is a visual
+interface to MongoDB
+
+11
+00:00:23,220 --> 00:00:25,800
+that we'll use for many
+lessons in this course.
+
+12
+00:00:25,800 --> 00:00:27,570
+It allows us to
+configure a database
+
+13
+00:00:27,570 --> 00:00:30,310
+and explore the
+data it contains.
+
+14
+00:00:30,310 --> 00:00:32,740
+We'll use Compass to
+explore a few data-sets
+
+15
+00:00:32,740 --> 00:00:36,430
+and talk about the important
+design features such as support
+
+16
+00:00:36,430 --> 00:00:39,400
+for flexible schemas and
+the range of benefits
+
+17
+00:00:39,400 --> 00:00:42,370
+that it provides to
+application developers.
+
+18
+00:00:42,370 --> 00:00:45,130
+Then we'll dive into the
+MongoDB query language
+
+19
+00:00:45,130 --> 00:00:46,960
+to give you plenty
+of preparation
+
+20
+00:00:46,960 --> 00:00:50,080
+as you begin to think about
+building your own MongoDB
+
+21
+00:00:50,080 --> 00:00:51,556
+application.
+
+22
+00:00:51,556 --> 00:00:52,930
+Throughout the
+course, we'll make
+
+23
+00:00:52,930 --> 00:00:57,220
+use of Atlas, which is MongoDB's
+database as a service offering.
+
+24
+00:00:57,220 --> 00:00:59,350
+We've created a database
+cluster in Atlas
+
+25
+00:00:59,350 --> 00:01:02,080
+specifically for
+use in this course.
+
+26
+00:01:02,080 --> 00:01:04,239
+You'll be connecting
+to and using it
+
+27
+00:01:04,239 --> 00:01:06,310
+for many lessons and labs.
+
+28
+00:01:06,310 --> 00:01:08,230
+As you begin moving
+through this course,
+
+29
+00:01:08,230 --> 00:01:10,630
+please take advantage
+of the discussion forum.
+
+30
+00:01:10,630 --> 00:01:12,460
+Feel free to ask any
+questions you have
+
+31
+00:01:12,460 --> 00:01:15,040
+about lessons or assignments.
+
+32
+00:01:15,040 --> 00:01:18,340
+Many students also ask questions
+about more general MongoDB
+
+33
+00:01:18,340 --> 00:01:21,510
+questions, and that's OK too.
+
+34
+00:01:21,510 --> 00:01:24,360
+We have teaching assistants
+monitoring the discussion forum
+
+35
+00:01:24,360 --> 00:01:26,230
+to help you.
+
+36
+00:01:26,230 --> 00:01:28,570
+In addition, other
+students frequently
+
+37
+00:01:28,570 --> 00:01:31,300
+jump in with great
+advice and answers
+
+38
+00:01:31,300 --> 00:01:32,980
+if you get stuck on a lab.
+
+39
+00:01:32,980 --> 00:01:34,240
+We're almost ready to begin.
+
+40
+00:01:34,240 --> 00:01:36,700
+But before we do, I wanted to
+make you aware of the MongoDB
+
+41
+00:01:36,700 --> 00:01:38,530
+University app.
+
+42
+00:01:38,530 --> 00:01:40,960
+Many learners like to
+download lesson videos
+
+43
+00:01:40,960 --> 00:01:44,050
+to watch on their commute
+or in other situations
+
+44
+00:01:44,050 --> 00:01:46,870
+where internet
+bandwidth is unreliable.
+
+45
+00:01:46,870 --> 00:01:50,590
+The MongoDB University
+app available on both iOS
+
+46
+00:01:50,590 --> 00:01:53,320
+and Android makes this easy.
+
+47
+00:01:53,320 --> 00:01:57,340
+Search the App Store or Google
+Play for MongoDB University
+
+48
+00:01:57,340 --> 00:01:58,930
+and give the app a try.
+
+49
+00:01:58,930 --> 00:02:01,780
+Most of our learners use it
+for at least some portion
+
+50
+00:02:01,780 --> 00:02:03,340
+of every course.
+
+51
+00:02:03,340 --> 00:02:06,718
+OK, that's all the information
+you need to get started.
+
+52
+00:02:06,718 --> 00:02:09,008
+If you have any questions or
+comments about the course,
+
+53
+00:02:09,008 --> 00:02:11,320
+again, please feel
+free to post something
+
+54
+00:02:11,320 --> 00:02:12,880
+in the discussion forum.
+
+55
+00:02:12,880 --> 00:02:14,770
+We're happy to
+have you on board.
+
+56
+00:02:14,770 --> 00:00:00,000
+Thanks for learning
+with us, and good luck.
+

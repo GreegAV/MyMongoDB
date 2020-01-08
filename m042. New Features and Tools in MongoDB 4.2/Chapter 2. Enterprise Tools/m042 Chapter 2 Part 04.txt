@@ -1,0 +1,121 @@
+Hi, there.
+
+In MongoDB Atlas, you can now easily embed charts in your website or web app.
+
+MongoDB Charts has been designed to make it very easy to create compelling visualizations of data stored in MongoDB.
+
+Up to now, you could only share your visualizations with users who had access to your Atlas project.
+
+MongoDB now provides a quick and easy way for you to embed visualizations of data in your web application.
+
+So that's enough talking about it.
+
+Let's get our hands dirty and embed a chart in our very own website.
+
+So we've loaded sample data into our cluster using the Load Sample Data feature in MongoDB Atlas.
+
+We are going to jump into Charts and create a chart.
+
+So that we can use the data that's in our cluster, we need to create a new data source.
+
+So let's select our cluster here, which is Cluster0.
+
+We'll connect charts to the cluster and just wait a minute for it to connect.
+
+So now the chart is connected to our cluster, we're going to select the collection that we want to work with.
+
+And that is our ListingsAndReviews collection inside the airbnb data set.
+
+So next we need to set permissions.
+
+There are three different permission levels that we can set here.
+
+Viewers can access data from the data source by viewing existing charts and creating new charts with that data source.
+
+Managers can point to another data source by changing the connection string or alias.
+
+And, finally, owners-- in addition to manager privileges, owners can manage permissions on the data source and delete the data source as well.
+
+Great.
+
+So now we've got our data source created.
+
+And our cluster is linked to charts.
+
+So now we can make a dashboard and start making some nice visualizations to embed in our website.
+
+Now that our dashboard has been created, let's add a chart.
+
+So we've selected Geospatial from the drop-down menu.
+
+And we're going to create a heat map.
+
+So let's grab the location field from the address document and put that onto the coordinates.
+
+And then we're going to grab the price field and put that onto our intensity option in the map.
+
+Great.
+
+So you can see here that we've got some pretty interesting detail on the map.
+
+We can zoom in and out.
+
+And we can see where the most expensive properties in our data set are.
+
+But let's try and embed this now in our website.
+
+So, first, we're going to click on the ellipses and click Embed Chart.
+
+There are two options available to us to grant access when embedding a chart.
+
+We can either use an embedding key, which is a shared secret to grant access to the chart, or we can use no authentication.
+
+This means that our chart is visible to anyone in the outside world who has the URL.
+
+For the purposes of this tutorial, we're going to use an unverified payload, which allows anyone to see the chart.
+
+It's worth noting, however, that Charts provides the functionality for you to ensure your data remains secure by passing a shared secret key.
+
+It's also worth noting that the verified signature functionality requires additional coding.
+
+Copying and pasting the HTML snippet will not suffice.
+
+If you want to use authenticated embedding, you can read more about that in our docs, which will be linked the notes for this lesson.
+
+Now let's grab the iframe code and paste it into our HTML file so we can see how it looks embedded in our website.
+
+I'm going to paste the iframe in between these two div tags, save the file.
+
+And let's have a look at our website.
+
+Great.
+
+Our chart's embedded in our site.
+
+It looks pretty cool.
+
+But what if our data changes over time?
+
+We have you covered.
+
+The beauty of Charts is that it's linked directly to your Atlas cluster.
+
+So we can set how often we want the chart to refresh from the chart's UI so that, when people land on our website, they'll see a visualization that's representative of the current state of the source data.
+
+MongoDB Charts provides options to both manually refresh data and configure the dashboard to automatically refresh within a specified interval.
+
+These options allow you to control how current the data displayed on your dashboard is.
+
+And, as analytical queries can be long-running and expensive, we also allow you to specify a read preference for Charts to use when creating your cluster, so that the primary server won't become impacted by long-running queries.
+
+The default read preference is secondary, which you can also specify an analytical node for workload isolation.
+
+So let's recap.
+
+Charts allows you to create real-time visualizations of data in your Atlas cluster.
+
+You can use authentication to control who sees your chart.
+
+And you can also specify a read concern to allow charts about read from secondaries or an analytical node to isolate workload away from your primary.
+
+You can also now embed charts in your website or web app.

@@ -1,0 +1,43 @@
+OK.
+
+So we've seen how vanilla replica sets usually work with the write concern of majority.
+
+With that in mind, what could possibly go wrong?
+
+Not much unless we switch out a secondary for an arbiter.
+
+Now I've only got one path to get my data acknowledged.
+
+This still works, but only as long as nothing goes wrong.
+
+If a partition occurs between my primary and secondary then my primary can't acknowledge any writes until the partition is resolved.
+
+Similarly, if that secondary goes down then my writes won't get acknowledged until that secondary's back up.
+
+Keep this in mind, a replica set with an arbiter in place of a data bearing server is better than an even number of replica set members but it can also cause bad situations when anything else goes wrong.
+
+Let's go back to the situation with three data bearing members but ask what happens with a delayed secondary.
+
+A delayed secondary is only about as good as an arbiter for purposes of ensuring that your W majority rights go through.
+
+That's because you need to add your delay to any time for a write to occur and get acknowledged.
+
+So if a secondary is delayed by five hours then that secondary won't acknowledge any of the writes for 5 hours, which will be a problem if my theoretically up-to-date secondary goes down.
+
+Of course you're always better off with a larger replica set.
+
+So this brings up an interesting point.
+
+You should always go through the routine of calculating how many servers you need at minimum for a majority.
+
+Remember, this is about write concern not your ability to elect a primary.
+
+Don't count an arbiter if you have one, since it can't hold data.
+
+Don't count delayed secondaries.
+
+You want to know how many servers you need to write to before you can get that acknowledged.
+
+And you want to know how many of them can be out of the picture either because they're down or because of network partitions.
+
+Then figure out how robust your system is to your standard servers going down.

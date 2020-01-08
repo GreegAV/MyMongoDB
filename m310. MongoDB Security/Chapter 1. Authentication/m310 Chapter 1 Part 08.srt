@@ -1,0 +1,537 @@
+
+1
+00:00:00.000 --> 00:00:00.240
+
+
+2
+00:00:00.240 --> 00:00:02.020
+Now let's talk about
+how to configure
+
+3
+00:00:02.020 --> 00:00:05.110
+MongoDB to use
+X.509 certificates
+
+4
+00:00:05.110 --> 00:00:06.920
+for authentication.
+
+5
+00:00:06.920 --> 00:00:09.480
+It's important to remember
+that X.509 certificate
+
+6
+00:00:09.480 --> 00:00:13.214
+authentication requires
+a secured TLS connection.
+
+7
+00:00:13.214 --> 00:00:15.130
+So make sure you're
+running a build of MongoDB
+
+8
+00:00:15.130 --> 00:00:17.220
+that has TLS enabled.
+
+9
+00:00:17.220 --> 00:00:19.950
+You can easily tell if your
+version of MongoDB was compiled
+
+10
+00:00:19.950 --> 00:00:22.050
+with TLS support by
+running mongod--version.
+
+11
+00:00:22.050 --> 00:00:25.230
+
+
+12
+00:00:25.230 --> 00:00:29.070
+And as you can tell, we
+have OpenSSL version.
+
+13
+00:00:29.070 --> 00:00:32.540
+When we see OpenSSL here,
+we know yes, this binary
+
+14
+00:00:32.540 --> 00:00:34.580
+was compiled with TLS support.
+
+15
+00:00:34.580 --> 00:00:37.020
+I went ahead, and for the
+purpose of this demonstration,
+
+16
+00:00:37.020 --> 00:00:39.700
+I have already created
+my certificate files.
+
+17
+00:00:39.700 --> 00:00:42.620
+I have the public certificate,
+a MyCertificate authority
+
+18
+00:00:42.620 --> 00:00:44.450
+in the ca.pem file.
+
+19
+00:00:44.450 --> 00:00:47.660
+And then I have pem files for
+both the client and server,
+
+20
+00:00:47.660 --> 00:00:50.110
+each of these containing
+both the public certificate
+
+21
+00:00:50.110 --> 00:00:52.200
+and the corresponding
+private key.
+
+22
+00:00:52.200 --> 00:00:55.990
+Here's the command for running
+MongoDB with X.509 support.
+
+23
+00:00:55.990 --> 00:00:58.685
+If you're familiar with enabling
+TLS on a [? mongod, ?] then
+
+24
+00:00:58.685 --> 00:01:01.250
+you've already seen
+these options before.
+
+25
+00:01:01.250 --> 00:01:04.280
+There is no difference between
+enabling TLS and enabling
+
+26
+00:01:04.280 --> 00:01:07.570
+X.509 authentication,
+because X.509 authentication
+
+27
+00:01:07.570 --> 00:01:09.650
+is enabled by
+default. We just need
+
+28
+00:01:09.650 --> 00:01:11.790
+to set the server to use TLS.
+
+29
+00:01:11.790 --> 00:01:15.290
+So if you look here, you can see
+that I'm specifying an sslMode.
+
+30
+00:01:15.290 --> 00:01:17.350
+And here I'm using
+requireSSL, but you
+
+31
+00:01:17.350 --> 00:01:21.350
+could use any mode that
+isn't, well, just disabled.
+
+32
+00:01:21.350 --> 00:01:25.070
+And here I'm providing the
+sslPEMKeyFile for the server.
+
+33
+00:01:25.070 --> 00:01:27.030
+And this is so that we
+can prove to the client
+
+34
+00:01:27.030 --> 00:01:29.010
+that we are who we say we are.
+
+35
+00:01:29.010 --> 00:01:32.062
+And then I'm specifying
+the sslCAFile.
+
+36
+00:01:32.062 --> 00:01:33.770
+And this is so that
+we know the client is
+
+37
+00:01:33.770 --> 00:01:36.024
+who they say they are.
+
+38
+00:01:36.024 --> 00:01:36.690
+And there we go.
+
+39
+00:01:36.690 --> 00:01:38.380
+We're up and running
+with no errors.
+
+40
+00:01:38.380 --> 00:01:41.212
+Let's go to another shell
+and try and connect.
+
+41
+00:01:41.212 --> 00:01:43.130
+But before we connect
+to the server,
+
+42
+00:01:43.130 --> 00:01:45.690
+we first need to figure out
+what the subject of our client
+
+43
+00:01:45.690 --> 00:01:47.490
+certificate is.
+
+44
+00:01:47.490 --> 00:01:49.720
+Here we have our
+client.pem file.
+
+45
+00:01:49.720 --> 00:01:52.590
+And inside of this pem file, we
+have our private key and public
+
+46
+00:01:52.590 --> 00:01:53.930
+certificate.
+
+47
+00:01:53.930 --> 00:01:56.060
+Inside that certificate,
+there's a subject line
+
+48
+00:01:56.060 --> 00:01:58.740
+that describes who the
+owner of the certificate is,
+
+49
+00:01:58.740 --> 00:02:02.890
+or rather who the
+certificate was issued to.
+
+50
+00:02:02.890 --> 00:02:06.310
+We can run the following command
+to read the subject line.
+
+51
+00:02:06.310 --> 00:02:07.810
+Here we're saying
+that we're dealing
+
+52
+00:02:07.810 --> 00:02:09.919
+with an X.509 certificate.
+
+53
+00:02:09.919 --> 00:02:13.810
+We're providing an in parameter
+of the client.pem file.
+
+54
+00:02:13.810 --> 00:02:17.650
+The input format is PEM,
+we want to get the subject.
+
+55
+00:02:17.650 --> 00:02:22.180
+The nameopt, we're
+going to use RFC2253.
+
+56
+00:02:22.180 --> 00:02:24.790
+This allows us to
+transform the subject name
+
+57
+00:02:24.790 --> 00:02:27.400
+from the representation that
+is stored in the certificate
+
+58
+00:02:27.400 --> 00:02:28.830
+into a string.
+
+59
+00:02:28.830 --> 00:02:31.000
+And then finally we
+say no out, because we
+
+60
+00:02:31.000 --> 00:02:33.360
+want to suppress outputting
+the entire certificate,
+
+61
+00:02:33.360 --> 00:02:34.736
+because we just
+want the subject.
+
+62
+00:02:34.736 --> 00:02:37.151
+And when we run this, we can
+see that here is the subject.
+
+63
+00:02:37.151 --> 00:02:38.250
+It's this right there.
+
+64
+00:02:38.250 --> 00:02:39.405
+Pretty straightforward.
+
+65
+00:02:39.405 --> 00:02:41.280
+We're going to want to
+go ahead and copy this
+
+66
+00:02:41.280 --> 00:02:43.980
+because we're going to use
+the subject line to identify
+
+67
+00:02:43.980 --> 00:02:46.220
+the user when we create
+an account for them
+
+68
+00:02:46.220 --> 00:02:48.200
+in the database.
+
+69
+00:02:48.200 --> 00:02:51.530
+Now we can go ahead and connect
+to the server with the Mongo
+
+70
+00:02:51.530 --> 00:02:52.370
+shell.
+
+71
+00:02:52.370 --> 00:02:57.580
+Here I'm saying --ssl because
+our server is requiring SSL.
+
+72
+00:02:57.580 --> 00:02:59.540
+And specifying the
+PEMKeyFile option
+
+73
+00:02:59.540 --> 00:03:01.350
+so that the server
+knows who we are.
+
+74
+00:03:01.350 --> 00:03:03.021
+And I'm still saying
+the ca because we
+
+75
+00:03:03.021 --> 00:03:04.520
+want to make sure
+that the server is
+
+76
+00:03:04.520 --> 00:03:05.920
+who they say they are.
+
+77
+00:03:05.920 --> 00:03:07.420
+And now that we're
+connected, you'll
+
+78
+00:03:07.420 --> 00:03:10.260
+see that we have unrestricted
+access to the server.
+
+79
+00:03:10.260 --> 00:03:15.160
+And it's because we didn't pass
+the --off option to mongod.
+
+80
+00:03:15.160 --> 00:03:18.490
+So let's go ahead and go back
+here and restart the server
+
+81
+00:03:18.490 --> 00:03:19.070
+with --off.
+
+82
+00:03:19.070 --> 00:03:21.590
+
+
+83
+00:03:21.590 --> 00:03:25.640
+And now if we go back
+here and reconnect,
+
+84
+00:03:25.640 --> 00:03:26.890
+we should be reconnected now.
+
+85
+00:03:26.890 --> 00:03:28.130
+Cool.
+
+86
+00:03:28.130 --> 00:03:30.700
+And now if we do
+show dbs, you'll
+
+87
+00:03:30.700 --> 00:03:34.947
+see that we get "not authorized
+on admin to execute command,"
+
+88
+00:03:34.947 --> 00:03:36.030
+which is what we'd expect.
+
+89
+00:03:36.030 --> 00:03:38.220
+We now have
+authorization enabled.
+
+90
+00:03:38.220 --> 00:03:39.720
+And now we need to
+go ahead and take
+
+91
+00:03:39.720 --> 00:03:41.530
+advantage of the
+local host exception
+
+92
+00:03:41.530 --> 00:03:43.770
+and create our first user.
+
+93
+00:03:43.770 --> 00:03:45.140
+And here's the command.
+
+94
+00:03:45.140 --> 00:03:49.050
+We're going to say,
+db.getSiblingDB, external.
+
+95
+00:03:49.050 --> 00:03:52.990
+And this is because
+X.509 is technically
+
+96
+00:03:52.990 --> 00:03:55.280
+an external
+authentication mechanism
+
+97
+00:03:55.280 --> 00:03:58.420
+just because the credentials
+aren't stored directly
+
+98
+00:03:58.420 --> 00:03:59.394
+in MongoDB.
+
+99
+00:03:59.394 --> 00:04:00.310
+Then we do runCommand.
+
+100
+00:04:00.310 --> 00:04:02.900
+And we say we want
+to create a user.
+
+101
+00:04:02.900 --> 00:04:04.890
+Here is that subject
+line that we had before.
+
+102
+00:04:04.890 --> 00:04:07.390
+And then we're going to go ahead
+and give this user the root
+
+103
+00:04:07.390 --> 00:04:10.050
+role on the admin database.
+
+104
+00:04:10.050 --> 00:04:12.480
+And we can see that
+it ran successfully.
+
+105
+00:04:12.480 --> 00:04:14.060
+And now that our
+user's been created,
+
+106
+00:04:14.060 --> 00:04:16.360
+we can go and authenticate
+them in a similar fashion.
+
+107
+00:04:16.360 --> 00:04:19.360
+Here we're going to use getting
+the external database again.
+
+108
+00:04:19.360 --> 00:04:20.670
+And we run auth.
+
+109
+00:04:20.670 --> 00:04:23.580
+And here I'm passing in
+that subject line again
+
+110
+00:04:23.580 --> 00:04:27.480
+and I'm specifying that
+the mechanism is X.509.
+
+111
+00:04:27.480 --> 00:04:28.470
+And awesome.
+
+112
+00:04:28.470 --> 00:04:30.570
+We have asked successfully
+authenticated using
+
+113
+00:04:30.570 --> 00:04:34.307
+X.509 certificate
+authentication with MongoDB.
+
+114
+00:04:34.307 --> 00:04:34.807

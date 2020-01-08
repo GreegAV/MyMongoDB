@@ -1,0 +1,211 @@
+
+1
+00:00:00.000 --> 00:00:00.112
+
+
+2
+00:00:00.112 --> 00:00:02.570
+In this lesson, we're going to
+be looking at different ways
+
+3
+00:00:02.570 --> 00:00:04.676
+to add an index to a collection.
+
+4
+00:00:04.676 --> 00:00:06.050
+When you get to
+building indexes,
+
+5
+00:00:06.050 --> 00:00:08.187
+you're already pretty
+deep into the process.
+
+6
+00:00:08.187 --> 00:00:09.770
+You've done a good
+job of figuring out
+
+7
+00:00:09.770 --> 00:00:11.060
+that an index is missing.
+
+8
+00:00:11.060 --> 00:00:13.277
+And now it's time
+to fix the problem.
+
+9
+00:00:13.277 --> 00:00:15.110
+However, before we
+start, there is something
+
+10
+00:00:15.110 --> 00:00:16.460
+we have to remind ourselves.
+
+11
+00:00:16.460 --> 00:00:18.860
+Building an index means
+doing a collection scan
+
+12
+00:00:18.860 --> 00:00:21.350
+on the collection you're
+adding the index to.
+
+13
+00:00:21.350 --> 00:00:24.050
+As we all know,
+collection scans are evil
+
+14
+00:00:24.050 --> 00:00:27.920
+and can have a severe impact on
+your performance in production.
+
+15
+00:00:27.920 --> 00:00:29.770
+We're going to try
+to minimize that.
+
+16
+00:00:29.770 --> 00:00:34.010
+First, we could build an index
+on the Primary from the shell.
+
+17
+00:00:34.010 --> 00:00:36.360
+Building on the Primary
+in the foreground is easy.
+
+18
+00:00:36.360 --> 00:00:39.080
+You simply build the
+index and the creation
+
+19
+00:00:39.080 --> 00:00:41.180
+will automatically propagate
+to all other members
+
+20
+00:00:41.180 --> 00:00:43.280
+of the cluster
+through the oplog.
+
+21
+00:00:43.280 --> 00:00:45.410
+The index will build in
+the foreground, which
+
+22
+00:00:45.410 --> 00:00:46.940
+will have the
+drawback of locking
+
+23
+00:00:46.940 --> 00:00:49.070
+your collection for rights.
+
+24
+00:00:49.070 --> 00:00:52.409
+The alternative method is to
+build in the background, which
+
+25
+00:00:52.409 --> 00:00:54.200
+is a non-blocking
+operation for the rights,
+
+26
+00:00:54.200 --> 00:00:55.550
+but it takes a little longer.
+
+27
+00:00:55.550 --> 00:00:57.170
+It's usually
+preferred to building
+
+28
+00:00:57.170 --> 00:00:58.970
+in the foreground for
+a production system,
+
+29
+00:00:58.970 --> 00:01:00.530
+all else being equal.
+
+30
+00:01:00.530 --> 00:01:02.920
+Do note that the default is
+to build in the foreground.
+
+31
+00:01:02.920 --> 00:01:06.140
+So you have to explicitly
+say, build in the background.
+
+32
+00:01:06.140 --> 00:01:07.610
+If you don't want
+to use the shell,
+
+33
+00:01:07.610 --> 00:01:11.420
+you can use Compass to do
+either of the first two methods.
+
+34
+00:01:11.420 --> 00:01:13.940
+The fourth option is
+to build the index
+
+35
+00:01:13.940 --> 00:01:17.480
+on each member separately
+using a rolling upgrade method
+
+36
+00:01:17.480 --> 00:01:18.770
+that we'll see.
+
+37
+00:01:18.770 --> 00:01:22.580
+And the fifth and final
+option, and by far my favorite,
+
+38
+00:01:22.580 --> 00:01:24.590
+is to do the previous
+rolling upgrade
+
+39
+00:01:24.590 --> 00:01:26.780
+procedure without
+getting our hands dirty
+
+40
+00:01:26.780 --> 00:01:29.450
+using Cloud or Ops Manager.
+
+41
+00:01:29.450 --> 00:01:31.880
+If you have a managed
+cluster or replica set,
+
+42
+00:01:31.880 --> 00:01:34.370
+meaning a set of machines
+controlled by automation
+
+43
+00:01:34.370 --> 00:01:36.590
+under a Cloud Manager
+or Ops Manager,
+
+44
+00:01:36.590 --> 00:01:40.030
+you can let those systems
+add the index for you.

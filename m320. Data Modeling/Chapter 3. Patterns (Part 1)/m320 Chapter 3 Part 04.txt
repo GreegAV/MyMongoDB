@@ -1,0 +1,41 @@
+Staleness is about facing a piece of data to a user that may have been out of date.
+
+We now live in a world that has more staleness than a few years ago.
+
+Due to globalization and the world being flatter, systems are now accessed by millions of concurrent users, impacting the ability to display up-to-the-second data to all these users more challenging.
+
+For example, the availability of a product that is shown to a user may still have to be confirmed at checkout time.
+
+The same goes for prices of plane tickets or hotel rooms that change right before you book them.
+
+Why do we get this staleness?
+
+New events come along at such a fast rate that updating data constantly can cause performance issues.
+
+The main concern when solving this issue is data quality and reliability.
+
+We want to be able to trust the data that is stored in the database.
+
+The right question is, for how long can the user tolerate not seeing the most up-to-date value for a specific field.
+
+For example, the user's threshold for seeing if something is still available to buy is lower than knowing how many people view or purchase a given item.
+
+When performing analytic the queries it is often understood that the data may be stale and that the data being analyzed is based on some past snapshot.
+
+Analytic queries are often run on the secondary node, which often may have stale data.
+
+It may be a fraction of a second or a few seconds out of date.
+
+However, it is enough to break any guarantee that we're looking at the latest data recorded by the system.
+
+The solution to resolve staleness in the world of big data is to batch updates.
+
+As long as the updates are run within the acceptable thresholds, staleness is not a significant problem.
+
+So, yes, every piece of data has a threshold for acceptable staleness that goes from 0 to whatever makes sense for given piece of information.
+
+A common a way to refresh stale data is to use a Change Stream to see what has changed in some documents and derive a list of dependent piece of data to be updated.
+
+Change Stream's a new application to access and respond to data changes, either in real time or in a delayed mode.
+
+Please consult our docs for a complete description of this MongoDB feature.

@@ -1,0 +1,31 @@
+Let's get a sense of the tools we're going to be using in this course.
+
+When we look at scenarios going forward, this will be a basic set of MongoDB tools that we'll use to figure out what's going on and what we need to do to fix things.
+
+These tools are the main ones you should go to when a problem arises, and if you'll be diagnosing and debugging problems in MongoDB, you'll want to be familiar with all of them.
+
+First, let's look at the server tools.
+
+When I say server tools, these are some helpware programs that come with MongoDB.
+
+The list includes the following programs-- mongostat, which shows incoming operations in real time; mongotop, which lets us know which collections we're spending time reading from and writing to; mongoreplay, a very useful tool, which is used to monitor, record, and replay network traffic for diagnostic and debugging purposes; and last but not least, mongo, our administrative shell, which is the main command line administration interface of MongoDB.
+
+You've already been using it to learn some of the basics of MongoDB, and we'll be showing you some of the functionality that can help you with diagnostics and debugging, including information about your indexes, the state of the server, and finding and managing long-running operations.
+
+We'll also be using the database profiler, which logs queries for us, as well as MongoDB Compass, our graphical user interface, which can be used to look at the current state of your database, and also has its own tools to help you explore what's happening on your server in terms of real-time performance metrics.
+
+We'll also be using a suite of programs that fall under the name of mtools, a public GitHub repo created by our very own Martin Rueckstiess.
+
+These tools give you the ability to spin-up replica sets and sharded clusters locally for testing purposes, and also include a number of log analysis tools to help you find issues, and workload generation tools that can help with load testing.
+
+Finally, while we won't be able to spend time on them in this course, you should at least be aware of MongoDB Cloud Manager and Ops Manager, the MongoDB solutions for cluster management.
+
+If you're interested, you can take our sister course-- M122.
+
+You'll find a link in the lecture notes.
+
+In this chapter, we're going to give you an overview of these important tools.
+
+Later on, we'll dive deep into each of them while we're exploring simulated issues.
+
+Let's get started.

@@ -1,0 +1,97 @@
+Hello.
+
+In this lesson, we're going to review our application architecture and functionality, as well as some tools that we'll use to build and test the application.
+
+You will be working on MFlix, a service that allows users to browse for their favorite movies, see the movie reviews, and leave their own impressions about a given motion picture for others to see.
+
+To get access to the app and the tickets that you will be working on, please download the handout available for this lesson.
+
+In it, you will find all the material that will be used throughout this course.
+
+At the top level of the MFlix Java handout, you will find a README file, which helps you setup all the necessary components and dependencies that you need for MFlix to function.
+
+When you set everything up, please follow the README carefully.
+
+And if you hit any roadblocks, remember to check out the class online forum.
+
+Before we talk about the front and back-end components, it is important to mention that we will be using Maven to aid in compiling and managing our code, and Spring Boot as the framework for our application.
+
+The files pertaining to Maven are located at the top of the MFlix directory.
+
+They should not be modified for Maven to serve its purpose successfully.
+
+Feel free to take a look at these files.
+
+However, you will not need to change anything.
+
+We will not be covering Spring Boot or Maven in-depth in this course feel free to explore those tools on your own by following the documentation links that are attached to this lesson.
+
+Maven allows you to run commands and most of the necessary tests from the command line.
+
+Simply type mvn test to run all the test files, or type mvn spring-boot:run to run the application.
+
+However, you do not need to run tests or launch MFlix from the command line.
+
+You can use your ID for those tasks just as well.
+
+Keep this functionality in mind as an alternative way to quickly check your progress as you're moving along the tickets in this course.
+
+As you just saw, the Maven files are already complete for you and have full functionality, which is why they are marked in red in this diagram.
+
+That is to signify that they won't require any changes throughout this course.
+
+The entire app infrastructure is built for you under the source within the main directory.
+
+Before we get to look at that, it is important to address the testing of the app functionality that you will be building.
+
+The unit tests are created for you, and are placed in the test folder.
+
+When working on the tickets, first read the ticket description.
+
+Then to verify your understanding, check out the respective unit test in the test java mflix api daos directory.
+
+For every ticket that you complete, there is always a corresponding test file.
+
+You may notice that there is an additional folder called lessons under the test directory.
+
+This folder contains example code that will be used throughout the course during lectures.
+
+You may use the files in this directory to follow along.
+
+Now, we can finally address the front and back-end components of our application.
+
+Follow me along this journey up and back down the directory tree.
+
+We need to get back to source, then get on our merry way to main.
+
+Since your assignments for this course will be tickets that focus on the API implementation and the app to database communication, there will be no need to modify the front-end files, which are all located under the resources in the build directory.
+
+However, you will, at some point, have to make changes to the application properties file, as you hopefully saw in the README.
+
+So where are the tickets?
+
+The files you will be working on to complete the tickets are located under the java mflix api daos directory.
+
+You will see other files and folders along the way.
+
+Pay no attention to them, as they are set in stone, and do not need to be modified for the app to work.
+
+In daos, you will find the Movies.Dao, UsersDao, and other files.
+
+These are the files that you will need to edit to complete your tickets, adding awesome functionality to MFlix, to the delight of its users and yourself.
+
+Once a ticket is complete, remember to extend beyond the unit test and observe the added functionality by using the MFlix user interface.
+
+Given that we're working in Java, it is important to mention how the strongly-typed nature of Java will affect some aspects of our development.
+
+If you're not familiar of the term strongly-typed, feel free to pause this video and follow the linked below to get a brief overview of the term.
+
+As you know, when working with Java, you have to declare a data type for every object that you create, and that object is then bound to the declared data type.
+
+From the previous lesson, you also know that MongDB's almost the exact opposite of that, and almost any field can have different data types as values.
+
+While the difference between types like int and long shouldn't be an issue when parsing data in Java, we might run into issues with other data types.
+
+This is important to keep in mind, and we will certainly be addressing this in a separate lesson down the line.
+
+This is the end of our brief overview of the MFlix architecture.

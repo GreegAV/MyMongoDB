@@ -1,0 +1,77 @@
+In this lesson, we'll examine the type and cardinality of relationships.
+
+Most of the relationships between units of information can be classified as one-to-one, one-to-many, or as many-to-many.
+
+The relation between a customer name and their customer_id is an example of a one-to-one relationship.
+
+A customer has one name, which is associated with only one customer_id, and this customer_id can only be used to identify one customer's name.
+
+The one-to-one relations are often represented by grouping the two pieces of data in the same entity or document.
+
+Invoices associated with the customer are an example of a one-to-many relationship.
+
+A customer has many invoices, and each of these invoices is only associated with one customer.
+
+Finally, an invoice may contain many products, and each of these products is likely present in more invoices than just the one that we were looking at.
+
+This is called a many-to-many relationship.
+
+However, is this the best and complete way to describe data relationships, especially when dealing with Big Data?
+
+Let's say we look at the relationship between a mother and the children she gave birth to.
+
+Well, she may not have children, have one, have two, ten, however, the maximum is pretty limited.
+
+Very often there are two children per family.
+
+A different example is Twitter users.
+
+Some people just started their account and may have zero or one follower, while others may have 20, 100, or up to 100 million if they are a celebrity.
+
+In this case, many-to-many is a very poor way to characterize a relationship.
+
+And this might be true for an increasing number of examples in the world of Big Data.
+
+We could embed the information about the children in the document representing the mother, but it would not make sense to embed 100 million followers into one document.
+
+What we need is a more expressive way to represent the one-to-many relationship so that we know that we are dealing with large numbers and avoid mistakes associated with that distinction.
+
+Looking at earlier examples, we are missing some information.
+
+The fact that the relationship can be a large number isn't reflected clearly with the one-to-many description, the value for the maximum of many is not clear.
+
+The most likely many value for a given one-to-many relationship is also missing.
+
+Let's introduce this additional symbol for the crow foot notation, and call it zillions.
+
+It is based on the many symbol, however, with additional lines.
+
+This relationship would read as from one to zero to zillion.
+
+Or in short, one-to-zillions.
+
+This new symbol addresses the identification of large numbers.
+
+And if we go to the trouble of identifying the maximum number, why not preserve this information in the model?
+
+For this we use a tuple of one to three values, with the following meaning.
+
+Minimum, usually zero or one, most likely value, or the median, and the maximum.
+
+If you have two values they represent the minimum and the maximum.
+
+When a single value is used it means the relationship is fixed to that number.
+
+We will use this notation to describe either arrays or reference between collections in our models.
+
+For example, in this diagram, a movie has a minimum of zero actors and the maximum of 1,000.
+
+The movie has exactly two sets of financial results, likely the forecast and the actuals.
+
+And the movie can receive zero to 100 reviews, with a median of 30.
+
+Let's recap this lesson one-to-one, one-to-many, and many-to-many are the usual cardinalities found in design for tabular or relational databases.
+
+However, these are not enough when dealing with Big Data, so we add the notion of one-to-zillions.
+
+With the use of maximum and most likely values in the tuple form, minimum, most likely, and maximum, you can identify relationships in a more precise way.

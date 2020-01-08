@@ -1,0 +1,373 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.050
+Hello.
+
+3
+00:00:01.050 --> 00:00:02.633
+In this lesson, we're
+going to go over
+
+4
+00:00:02.633 --> 00:00:05.220
+how to use the JSON
+validator tool for the labs
+
+5
+00:00:05.220 --> 00:00:07.877
+for this and the
+following chapters.
+
+6
+00:00:07.877 --> 00:00:09.960
+Please download the handout
+from the lecture notes
+
+7
+00:00:09.960 --> 00:00:11.177
+below this video.
+
+8
+00:00:11.177 --> 00:00:13.260
+Make sure to download the
+handout that corresponds
+
+9
+00:00:13.260 --> 00:00:15.490
+to your operating system.
+
+10
+00:00:15.490 --> 00:00:18.900
+In this case, we're downloading
+the Mac OS X handout,
+
+11
+00:00:18.900 --> 00:00:22.620
+which as the first link in the
+lecture notes below this video.
+
+12
+00:00:22.620 --> 00:00:25.620
+When the download is done, you
+might see a warning message.
+
+13
+00:00:25.620 --> 00:00:28.050
+Select to keep the download.
+
+14
+00:00:28.050 --> 00:00:30.750
+Navigate to the directory
+where the download is stored.
+
+15
+00:00:30.750 --> 00:00:33.630
+Here, we created an m320
+folder for this course,
+
+16
+00:00:33.630 --> 00:00:36.037
+so we moved the
+downloaded file there.
+
+17
+00:00:36.037 --> 00:00:37.620
+Now, the last thing
+that we need to do
+
+18
+00:00:37.620 --> 00:00:39.540
+to be able to start
+validating the upcoming
+
+19
+00:00:39.540 --> 00:00:42.540
+labs in this course is to change
+the permissions in this file
+
+20
+00:00:42.540 --> 00:00:44.580
+to read and execute.
+
+21
+00:00:44.580 --> 00:00:48.510
+You can do that by running this
+command in the command line.
+
+22
+00:00:48.510 --> 00:00:50.310
+If you are using
+Windows, you do not
+
+23
+00:00:50.310 --> 00:00:52.380
+need to perform the operation.
+
+24
+00:00:52.380 --> 00:00:54.660
+From now on, we will be
+able to run this validator
+
+25
+00:00:54.660 --> 00:00:56.850
+from our m320 directory.
+
+26
+00:00:56.850 --> 00:01:00.030
+Here, you will also see
+an example JSON document
+
+27
+00:01:00.030 --> 00:01:02.730
+that we will use to demonstrate
+how our lab validation
+
+28
+00:01:02.730 --> 00:01:04.050
+tool works.
+
+29
+00:01:04.050 --> 00:01:07.170
+Our assignment says that the
+old document structure no longer
+
+30
+00:01:07.170 --> 00:01:10.180
+works for our application and
+that we need to change it.
+
+31
+00:01:10.180 --> 00:01:13.090
+Let's start by creating a
+JSON file with this schema
+
+32
+00:01:13.090 --> 00:01:16.350
+so we can modify it
+as the task requires.
+
+33
+00:01:16.350 --> 00:01:21.570
+We just created a new empty JSON
+file called answer schema JSON.
+
+34
+00:01:21.570 --> 00:01:26.640
+We can now copy the old
+schema and paste it into here.
+
+35
+00:01:26.640 --> 00:01:27.930
+Let's save it.
+
+36
+00:01:27.930 --> 00:01:31.410
+Now, let's run the validator
+to see what happens.
+
+37
+00:01:31.410 --> 00:01:32.855
+Looks like we're
+getting an error.
+
+38
+00:01:32.855 --> 00:01:34.230
+You might want to
+figure out what
+
+39
+00:01:34.230 --> 00:01:37.410
+went wrong without additional
+hints, but you don't have to.
+
+40
+00:01:37.410 --> 00:01:40.380
+To get more details on
+what exactly went wrong,
+
+41
+00:01:40.380 --> 00:01:44.280
+we can add the verbose option,
+which will give us more detail.
+
+42
+00:01:44.280 --> 00:01:48.270
+It says that in-house must be
+one of the following-- bool.
+
+43
+00:01:48.270 --> 00:01:50.070
+Now that we know
+what went wrong,
+
+44
+00:01:50.070 --> 00:01:51.600
+let's do what a
+good student does
+
+45
+00:01:51.600 --> 00:01:54.060
+and read the actual
+assignment carefully.
+
+46
+00:01:54.060 --> 00:01:56.610
+It says here that the updated
+version of the application
+
+47
+00:01:56.610 --> 00:01:58.170
+is expecting to
+receive a Boolean
+
+48
+00:01:58.170 --> 00:02:01.330
+value for the in-house
+field instead of an integer,
+
+49
+00:02:01.330 --> 00:02:04.350
+which seems to match what the
+validator error was returning.
+
+50
+00:02:04.350 --> 00:02:06.940
+Just to make sure that we get
+it right this time around,
+
+51
+00:02:06.940 --> 00:02:09.360
+we're going to click on
+this useful link listing
+
+52
+00:02:09.360 --> 00:02:11.800
+all the valid BSON types.
+
+53
+00:02:11.800 --> 00:02:14.580
+These are the data types from
+the MongoDB query language
+
+54
+00:02:14.580 --> 00:02:16.890
+which happens to also be
+the type that our validator
+
+55
+00:02:16.890 --> 00:02:19.470
+understands and is able
+to process, spelled
+
+56
+00:02:19.470 --> 00:02:23.850
+exactly the way they are, in the
+right column, case sensitive.
+
+57
+00:02:23.850 --> 00:02:26.700
+Looks like we need to spell
+out bool in our solution
+
+58
+00:02:26.700 --> 00:02:28.820
+as the in-house field value.
+
+59
+00:02:28.820 --> 00:02:31.410
+Here, as I'm making
+a change I'll
+
+60
+00:02:31.410 --> 00:02:33.720
+accidentally forget to
+close the curly bracket
+
+61
+00:02:33.720 --> 00:02:37.080
+at the end of the document,
+which results an invalid JSON.
+
+62
+00:02:37.080 --> 00:02:40.580
+Let's see if our validator
+is able to recognize that.
+
+63
+00:02:40.580 --> 00:02:42.440
+Looks like it does-- wonderful.
+
+64
+00:02:42.440 --> 00:02:45.860
+Time to fix this solution
+and get the validation code.
+
+65
+00:02:45.860 --> 00:02:48.810
+Here it is, the curly
+bracket back in the file.
+
+66
+00:02:48.810 --> 00:02:51.230
+Now that I've added the
+curly bracket back in,
+
+67
+00:02:51.230 --> 00:02:53.480
+we have a valid JSON file.
+
+68
+00:02:53.480 --> 00:02:55.280
+Let's run the validator.
+
+69
+00:02:55.280 --> 00:02:56.280
+Success.
+
+70
+00:02:56.280 --> 00:02:58.250
+Here's the validation
+code that we can now
+
+71
+00:02:58.250 --> 00:03:02.340
+copy-paste into the
+submission field in the lab.
+
+72
+00:03:02.340 --> 00:03:05.190
+It is important to note
+that this answer document is
+
+73
+00:03:05.190 --> 00:03:06.960
+a valid JSON document.
+
+74
+00:03:06.960 --> 00:03:10.800
+But it is also a custom
+notation for schema definition,
+
+75
+00:03:10.800 --> 00:03:13.410
+much like JSON schema,
+a link to which you
+
+76
+00:03:13.410 --> 00:03:16.050
+can find in the lecture
+notes below this video.
+
+77
+00:03:16.050 --> 00:03:18.900
+We opted out of using JSON
+schema for this course
+
+78
+00:03:18.900 --> 00:03:22.220
+because it can be too
+verbose for our purposes.

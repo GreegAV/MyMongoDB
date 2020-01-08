@@ -1,0 +1,375 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.020
+Let's start with the
+concern of duplication.
+
+3
+00:00:03.020 --> 00:00:04.760
+Why do we have duplication?
+
+4
+00:00:04.760 --> 00:00:06.980
+It is usually the result
+of embedding information
+
+5
+00:00:06.980 --> 00:00:09.770
+in a given document
+for faster access.
+
+6
+00:00:09.770 --> 00:00:12.260
+The concern is that it
+makes handling changes
+
+7
+00:00:12.260 --> 00:00:14.900
+to duplicated information
+a challenge for correctness
+
+8
+00:00:14.900 --> 00:00:17.630
+and consistency, where
+multiple documents
+
+9
+00:00:17.630 --> 00:00:22.280
+across different collections
+may need to be updated.
+
+10
+00:00:22.280 --> 00:00:24.020
+There is this
+general misconception
+
+11
+00:00:24.020 --> 00:00:26.150
+that duplication
+should not exist.
+
+12
+00:00:26.150 --> 00:00:30.820
+In some cases, duplication is
+better than no duplication.
+
+13
+00:00:30.820 --> 00:00:33.130
+However, not all
+pieces of information
+
+14
+00:00:33.130 --> 00:00:36.340
+are affected in the
+same way by duplication.
+
+15
+00:00:36.340 --> 00:00:38.950
+Let's start with a situation
+where duplicating information
+
+16
+00:00:38.950 --> 00:00:41.410
+is better than not doing it.
+
+17
+00:00:41.410 --> 00:00:44.770
+Let's link orders of products
+to the address of the customer
+
+18
+00:00:44.770 --> 00:00:47.740
+that placed the order by using
+a reference to a customer
+
+19
+00:00:47.740 --> 00:00:49.270
+document.
+
+20
+00:00:49.270 --> 00:00:52.820
+Updating the address for this
+customer updates information
+
+21
+00:00:52.820 --> 00:00:55.380
+for the already
+fulfilled shipments,
+
+22
+00:00:55.380 --> 00:00:58.650
+order that have been already
+delivered to the customer.
+
+23
+00:00:58.650 --> 00:01:00.530
+This is not the
+desired behavior.
+
+24
+00:01:00.530 --> 00:01:02.960
+The shipments were made
+to the customer's address
+
+25
+00:01:02.960 --> 00:01:06.050
+at that point in time, either
+when the order was made
+
+26
+00:01:06.050 --> 00:01:08.250
+or before the customer
+changed their address.
+
+27
+00:01:08.250 --> 00:01:10.490
+So the address reference
+in a given order
+
+28
+00:01:10.490 --> 00:01:12.770
+is unlikely to be changed.
+
+29
+00:01:12.770 --> 00:01:15.830
+Embedding a copy of the address
+within the shipment document
+
+30
+00:01:15.830 --> 00:01:18.170
+will ensure we keep
+the correct value.
+
+31
+00:01:18.170 --> 00:01:21.230
+When the customer moves, we
+add another shipping address
+
+32
+00:01:21.230 --> 00:01:21.770
+on file.
+
+33
+00:01:21.770 --> 00:01:23.960
+Using this new address
+for new orders,
+
+34
+00:01:23.960 --> 00:01:27.800
+does not affect the
+already shipped orders.
+
+35
+00:01:27.800 --> 00:01:30.110
+The next duplication
+situation to consider
+
+36
+00:01:30.110 --> 00:01:33.380
+is when the copy data
+does not ever change.
+
+37
+00:01:33.380 --> 00:01:36.050
+Let's say we want to
+model movies and actors.
+
+38
+00:01:36.050 --> 00:01:40.070
+Movies have many actors and
+actors play in many movies.
+
+39
+00:01:40.070 --> 00:01:43.220
+So this is a typical
+many-to-many relationship.
+
+40
+00:01:43.220 --> 00:01:46.130
+Avoiding duplication in a
+many-to-many relationship
+
+41
+00:01:46.130 --> 00:01:48.350
+requires us to keep
+two collections
+
+42
+00:01:48.350 --> 00:01:51.080
+and create references between
+the documents in the two
+
+43
+00:01:51.080 --> 00:01:53.110
+collections.
+
+44
+00:01:53.110 --> 00:01:55.930
+If we list the actors in
+a given movie document,
+
+45
+00:01:55.930 --> 00:01:57.960
+we are creating duplication.
+
+46
+00:01:57.960 --> 00:02:01.210
+However, once the movie is
+released, the list of actors
+
+47
+00:02:01.210 --> 00:02:02.600
+does not change.
+
+48
+00:02:02.600 --> 00:02:05.470
+So duplication on this
+unchanging information
+
+49
+00:02:05.470 --> 00:02:08.680
+is also perfectly acceptable.
+
+50
+00:02:08.680 --> 00:02:11.440
+This leaves us with the
+last duplication situation,
+
+51
+00:02:11.440 --> 00:02:13.240
+the duplication of a
+piece of information
+
+52
+00:02:13.240 --> 00:02:16.360
+that needs to or may
+change with time.
+
+53
+00:02:16.360 --> 00:02:18.790
+For this example,
+let's use the revenues
+
+54
+00:02:18.790 --> 00:02:21.640
+for a given movie, which
+is stored within the movie,
+
+55
+00:02:21.640 --> 00:02:24.190
+and the revenues
+earned per screening.
+
+56
+00:02:24.190 --> 00:02:27.010
+Oh, yeah, with said duplication
+add to be a single value in two
+
+57
+00:02:27.010 --> 00:02:28.240
+locations.
+
+58
+00:02:28.240 --> 00:02:29.800
+In this case, we
+have duplication
+
+59
+00:02:29.800 --> 00:02:33.040
+between the sum store in the
+movie document and the revenue
+
+60
+00:02:33.040 --> 00:02:38.460
+store in the screening documents
+used to compute the total sum.
+
+61
+00:02:38.460 --> 00:02:41.250
+This type of situation, where
+we must keep multiple values
+
+62
+00:02:41.250 --> 00:02:44.700
+in sync over time, makes
+us ask the question is
+
+63
+00:02:44.700 --> 00:02:47.370
+the benefit of having
+this sum precomputed
+
+64
+00:02:47.370 --> 00:02:50.970
+surpassing the cost and
+trouble of keeping it in sync?
+
+65
+00:02:50.970 --> 00:02:54.030
+If yes, then use this
+computed pattern.
+
+66
+00:02:54.030 --> 00:02:56.630
+If not, don't use it.
+
+67
+00:02:56.630 --> 00:02:59.030
+Here, if we want the
+sum to be synchronized,
+
+68
+00:02:59.030 --> 00:03:01.130
+it may be the responsibility
+of the application
+
+69
+00:03:01.130 --> 00:03:02.480
+to keep it in sync.
+
+70
+00:03:02.480 --> 00:03:04.160
+Meaning, whenever the
+application writes
+
+71
+00:03:04.160 --> 00:03:06.550
+a new document to the
+collection or updates
+
+72
+00:03:06.550 --> 00:03:08.610
+the value of an
+existing document,
+
+73
+00:03:08.610 --> 00:03:10.370
+it must update the sum.
+
+74
+00:03:10.370 --> 00:03:13.580
+Alternatively, we could add
+another application or job
+
+75
+00:03:13.580 --> 00:03:14.870
+to do it.
+
+76
+00:03:14.870 --> 00:03:18.330
+But how often should we
+actually recalculate the sum?
+
+77
+00:03:18.330 --> 00:03:19.970
+This brings us to
+the next concern
+
+78
+00:03:19.970 --> 00:03:24.070
+we must consider when
+using patterns, staleness.

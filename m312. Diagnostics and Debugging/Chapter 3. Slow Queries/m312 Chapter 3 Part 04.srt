@@ -1,0 +1,257 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.380
+OK, sometimes you'll
+be going along,
+
+3
+00:00:02.380 --> 00:00:05.380
+your database is looking great,
+and then all of a sudden things
+
+4
+00:00:05.380 --> 00:00:06.580
+get slow.
+
+5
+00:00:06.580 --> 00:00:09.216
+Queries are taking forever
+and you're not sure why.
+
+6
+00:00:09.216 --> 00:00:11.590
+In this lesson we'll look into
+some of the common reasons
+
+7
+00:00:11.590 --> 00:00:13.540
+why this might have happened.
+
+8
+00:00:13.540 --> 00:00:15.520
+We're going to look
+into long running
+
+9
+00:00:15.520 --> 00:00:19.650
+queries and some possible
+explanations, index builds,
+
+10
+00:00:19.650 --> 00:00:21.297
+and write contention.
+
+11
+00:00:21.297 --> 00:00:23.380
+So the first thing you're
+going to want to look at
+
+12
+00:00:23.380 --> 00:00:24.850
+is, to check to
+see if you're doing
+
+13
+00:00:24.850 --> 00:00:27.190
+a lot of collection scans.
+
+14
+00:00:27.190 --> 00:00:29.560
+Maybe your application has
+just deployed a new query
+
+15
+00:00:29.560 --> 00:00:30.730
+that doesn't use an index.
+
+16
+00:00:30.730 --> 00:00:33.850
+Or maybe that new DBA
+just dropped an index.
+
+17
+00:00:33.850 --> 00:00:35.500
+How do you check
+this hypothesis?
+
+18
+00:00:35.500 --> 00:00:37.390
+You have a few places to look.
+
+19
+00:00:37.390 --> 00:00:40.830
+So the server logs should
+show any long running queries.
+
+20
+00:00:40.830 --> 00:00:44.170
+Db.currentOp will show
+whatever is going on right now,
+
+21
+00:00:44.170 --> 00:00:45.994
+including long running queries.
+
+22
+00:00:45.994 --> 00:00:48.160
+And, of course, you can
+always turn on the profiler.
+
+23
+00:00:48.160 --> 00:00:50.020
+But if the issue is
+performance, that
+
+24
+00:00:50.020 --> 00:00:51.610
+may not be a great
+idea because it's
+
+25
+00:00:51.610 --> 00:00:54.860
+going to slow down your
+system even further.
+
+26
+00:00:54.860 --> 00:00:57.100
+Now once you know it's
+a collection scan,
+
+27
+00:00:57.100 --> 00:00:59.554
+you can simply
+build a new index.
+
+28
+00:00:59.554 --> 00:01:00.970
+But it's also
+possible that you've
+
+29
+00:01:00.970 --> 00:01:02.800
+got a new query
+that uses an index,
+
+30
+00:01:02.800 --> 00:01:04.390
+but it's not using it well.
+
+31
+00:01:04.390 --> 00:01:05.980
+For example, maybe
+your database is
+
+32
+00:01:05.980 --> 00:01:07.810
+doing regex queries
+that are not anchored
+
+33
+00:01:07.810 --> 00:01:09.280
+at the beginning
+of a string field,
+
+34
+00:01:09.280 --> 00:01:12.850
+so it has to do a full
+index scan with every query.
+
+35
+00:01:12.850 --> 00:01:15.002
+This can actually be
+fixed, if you anchor it
+
+36
+00:01:15.002 --> 00:01:16.960
+to the beginning of the
+string, so that it only
+
+37
+00:01:16.960 --> 00:01:19.240
+has to search a
+subset of the index.
+
+38
+00:01:19.240 --> 00:01:22.030
+It's also possible that you're
+looking at inefficient index
+
+39
+00:01:22.030 --> 00:01:22.960
+usage.
+
+40
+00:01:22.960 --> 00:01:24.460
+This is where you're
+using an index,
+
+41
+00:01:24.460 --> 00:01:26.290
+but maybe not
+using it very well.
+
+42
+00:01:26.290 --> 00:01:28.480
+This can be harder to
+find because if logs
+
+43
+00:01:28.480 --> 00:01:32.044
+capture these queries, they
+still show index usage.
+
+44
+00:01:32.044 --> 00:01:34.210
+In this case, you may need
+to go through and explain
+
+45
+00:01:34.210 --> 00:01:35.959
+the queries, to see
+how efficiently you're
+
+46
+00:01:35.959 --> 00:01:37.000
+returning them.
+
+47
+00:01:37.000 --> 00:01:38.950
+So that summarizes how
+to find and respond
+
+48
+00:01:38.950 --> 00:01:40.120
+to long running queries.
+
+49
+00:01:40.120 --> 00:01:42.040
+Again, if you see a
+sudden performance drop,
+
+50
+00:01:42.040 --> 00:01:43.690
+it's probably because
+your application
+
+51
+00:01:43.690 --> 00:01:45.760
+is fielding a new query
+or because someone
+
+52
+00:01:45.760 --> 00:01:46.900
+dropped an index.
+
+53
+00:01:46.900 --> 00:01:48.820
+If you want more details,
+you can find them
+
+54
+00:01:48.820 --> 00:01:52.500
+in M-201, the MongoDB
+performance course.

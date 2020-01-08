@@ -1,0 +1,653 @@
+
+1
+00:00:00.000 --> 00:00:00.210
+
+
+2
+00:00:00.210 --> 00:00:01.860
+In this lesson, we
+are going to connect
+
+3
+00:00:01.860 --> 00:00:05.400
+your newly created Atlas
+cluster to MongoDB Compass
+
+4
+00:00:05.400 --> 00:00:08.400
+and explore some of the
+functionality of Compass.
+
+5
+00:00:08.400 --> 00:00:10.410
+If you don't have
+Compass on your machine,
+
+6
+00:00:10.410 --> 00:00:13.380
+please download it by
+following the link below.
+
+7
+00:00:13.380 --> 00:00:16.590
+First, let's connect
+to our Atlas cluster.
+
+8
+00:00:16.590 --> 00:00:18.390
+After following the
+read me, your cluster
+
+9
+00:00:18.390 --> 00:00:21.080
+should look something like this.
+
+10
+00:00:21.080 --> 00:00:25.460
+In Atlas, hit Connect
+under the cluster name.
+
+11
+00:00:25.460 --> 00:00:29.090
+And then connect
+with MongoDB Compass.
+
+12
+00:00:29.090 --> 00:00:31.680
+If you have Compass open
+when you're doing this,
+
+13
+00:00:31.680 --> 00:00:34.330
+you'll notice a message
+pop-up saying that a MongoDB
+
+14
+00:00:34.330 --> 00:00:36.450
+connection string is detected.
+
+15
+00:00:36.450 --> 00:00:38.870
+If you click on Yes,
+most of the information
+
+16
+00:00:38.870 --> 00:00:41.930
+required for the connection
+will be filled in for you.
+
+17
+00:00:41.930 --> 00:00:44.210
+The only thing that you
+will have to specify
+
+18
+00:00:44.210 --> 00:00:45.540
+is the password.
+
+19
+00:00:45.540 --> 00:00:47.960
+Otherwise, make sure that
+the filled in information
+
+20
+00:00:47.960 --> 00:00:51.860
+corresponds to what is provided
+for you below the video.
+
+21
+00:00:51.860 --> 00:00:53.690
+And hit Connect.
+
+22
+00:00:53.690 --> 00:00:55.850
+Once connected, you
+should be able to see
+
+23
+00:00:55.850 --> 00:00:58.130
+the databases available to you.
+
+24
+00:00:58.130 --> 00:01:01.340
+Admin and local are
+default databases
+
+25
+00:01:01.340 --> 00:01:04.050
+and are already in place
+when you create a cluster.
+
+26
+00:01:04.050 --> 00:01:07.920
+Let's take a look at mflix,
+which we recently imported.
+
+27
+00:01:07.920 --> 00:01:10.800
+You can select the database
+that you're interested in
+
+28
+00:01:10.800 --> 00:01:13.950
+either from the left
+menu, where you can also
+
+29
+00:01:13.950 --> 00:01:16.260
+get the list of the
+collections in the database,
+
+30
+00:01:16.260 --> 00:01:19.020
+or by clicking on the
+database in the right section
+
+31
+00:01:19.020 --> 00:01:20.640
+of the screen.
+
+32
+00:01:20.640 --> 00:01:23.970
+Today, we will explore
+the movies collection.
+
+33
+00:01:23.970 --> 00:01:25.950
+This is the Documents
+tab that gives you
+
+34
+00:01:25.950 --> 00:01:28.950
+a preview of the documents
+in the collection.
+
+35
+00:01:28.950 --> 00:01:32.370
+Here, you can see that there is
+a document with a film titled
+
+36
+00:01:32.370 --> 00:01:35.400
+Carmencita with a
+cast of one person,
+
+37
+00:01:35.400 --> 00:01:41.100
+Carmencita, a poster located
+at the given URL, and so on.
+
+38
+00:01:41.100 --> 00:01:44.100
+Not all documents have all
+the same fields as this one.
+
+39
+00:01:44.100 --> 00:01:47.100
+And various fields contain
+various data types in them.
+
+40
+00:01:47.100 --> 00:01:50.670
+You can explore this tab
+later on your own time.
+
+41
+00:01:50.670 --> 00:01:53.250
+To get a better overview of
+the various data types that
+
+42
+00:01:53.250 --> 00:01:55.230
+are involved in the
+movies collection,
+
+43
+00:01:55.230 --> 00:01:58.050
+we will check out the
+Schema tab in Compass.
+
+44
+00:01:58.050 --> 00:02:01.710
+But, first, let's clarify
+what schema means.
+
+45
+00:02:01.710 --> 00:02:04.020
+Schema is structure.
+
+46
+00:02:04.020 --> 00:02:07.790
+And in case of MongoDB,
+it is document structure.
+
+47
+00:02:07.790 --> 00:02:10.770
+MongoDB is a flexible
+schema database,
+
+48
+00:02:10.770 --> 00:02:12.930
+which simply means that
+the structure isn't
+
+49
+00:02:12.930 --> 00:02:15.330
+enforced unless you tell it so.
+
+50
+00:02:15.330 --> 00:02:19.920
+For example, you can see that
+in this document some fields are
+
+51
+00:02:19.920 --> 00:02:23.130
+present in all documents
+and some aren't.
+
+52
+00:02:23.130 --> 00:02:25.180
+Let's move on to the Schema tab.
+
+53
+00:02:25.180 --> 00:02:26.940
+Hit Analyze Schema.
+
+54
+00:02:26.940 --> 00:02:29.820
+Analyze Schema gives us
+a summary of the document
+
+55
+00:02:29.820 --> 00:02:33.000
+structure based on a
+sample of 1,000 documents
+
+56
+00:02:33.000 --> 00:02:34.380
+in the collection.
+
+57
+00:02:34.380 --> 00:02:37.320
+This allows us to
+explore another aspect
+
+58
+00:02:37.320 --> 00:02:39.660
+of a schema flexible
+database, which
+
+59
+00:02:39.660 --> 00:02:42.420
+is that you can create
+collections with fields that
+
+60
+00:02:42.420 --> 00:02:45.390
+have varying value types
+across different documents
+
+61
+00:02:45.390 --> 00:02:47.250
+without getting an error.
+
+62
+00:02:47.250 --> 00:02:51.180
+The left column represents the
+field names and data types.
+
+63
+00:02:51.180 --> 00:02:54.030
+The right column gives
+us a general summary
+
+64
+00:02:54.030 --> 00:02:56.850
+about the values
+these fields hold.
+
+65
+00:02:56.850 --> 00:02:59.970
+For example, if we look
+at the awards field,
+
+66
+00:02:59.970 --> 00:03:01.500
+we can see that
+some of the values
+
+67
+00:03:01.500 --> 00:03:05.132
+are strings, while
+some are undefined.
+
+68
+00:03:05.132 --> 00:03:06.840
+And if you look at
+the graph on the right
+
+69
+00:03:06.840 --> 00:03:10.140
+and you hover over some
+of the values there,
+
+70
+00:03:10.140 --> 00:03:15.900
+you see that 10% of the
+films have one nomination, 6%
+
+71
+00:03:15.900 --> 00:03:19.590
+have two wins, and so on.
+
+72
+00:03:19.590 --> 00:03:21.570
+The cast field is
+a bit different
+
+73
+00:03:21.570 --> 00:03:23.370
+and seems to be
+mostly array values
+
+74
+00:03:23.370 --> 00:03:25.500
+with a small fraction
+of the values having
+
+75
+00:03:25.500 --> 00:03:27.530
+an undefined type.
+
+76
+00:03:27.530 --> 00:03:30.090
+An array does not
+give us quite enough
+
+77
+00:03:30.090 --> 00:03:31.830
+information about
+the field, which
+
+78
+00:03:31.830 --> 00:03:35.550
+is why underneath that label
+you can see string label, which
+
+79
+00:03:35.550 --> 00:03:37.650
+tells us that the
+values in these arrays
+
+80
+00:03:37.650 --> 00:03:39.240
+are of type string.
+
+81
+00:03:39.240 --> 00:03:43.080
+Clicking from one to another
+gives us a different kind
+
+82
+00:03:43.080 --> 00:03:45.000
+of summary on the right.
+
+83
+00:03:45.000 --> 00:03:48.200
+With array, we get the
+summary about arrays.
+
+84
+00:03:48.200 --> 00:03:52.290
+With string, we get the
+sample of string values.
+
+85
+00:03:52.290 --> 00:03:54.840
+Other interesting data types
+that we can observe here
+
+86
+00:03:54.840 --> 00:03:57.780
+are date, integer, and
+document, which you
+
+87
+00:03:57.780 --> 00:04:00.180
+can explore in a similar way.
+
+88
+00:04:00.180 --> 00:04:01.860
+You can use the
+Schema tab to get
+
+89
+00:04:01.860 --> 00:04:04.170
+an idea of the
+documents and data types
+
+90
+00:04:04.170 --> 00:04:06.450
+that you will be dealing with.
+
+91
+00:04:06.450 --> 00:04:09.750
+Another useful Compass feature
+is located in the Aggregations
+
+92
+00:04:09.750 --> 00:04:10.500
+tab.
+
+93
+00:04:10.500 --> 00:04:12.660
+If you don't have the
+latest version of Compass,
+
+94
+00:04:12.660 --> 00:04:14.790
+but you want to have
+access to this feature,
+
+95
+00:04:14.790 --> 00:04:16.860
+feel free to pause
+this video and update
+
+96
+00:04:16.860 --> 00:04:22.170
+your version of Compass
+to any version above 1.14.
+
+97
+00:04:22.170 --> 00:04:24.510
+Throughout this course,
+you will be exposed to
+
+98
+00:04:24.510 --> 00:04:27.960
+and will work with different
+types of MongoDB queries.
+
+99
+00:04:27.960 --> 00:04:30.120
+The Aggregations
+tab in Compass helps
+
+100
+00:04:30.120 --> 00:04:32.940
+to organize, construct,
+save, and more
+
+101
+00:04:32.940 --> 00:04:35.220
+when working with
+aggregation queries.
+
+102
+00:04:35.220 --> 00:04:37.320
+You will cover the
+details of how exactly
+
+103
+00:04:37.320 --> 00:04:41.070
+an aggregation query works
+later in this course.
+
+104
+00:04:41.070 --> 00:04:42.640
+For the purposes
+of this lecture,
+
+105
+00:04:42.640 --> 00:04:44.580
+I'm going to create a
+simple query looking
+
+106
+00:04:44.580 --> 00:04:48.570
+for all documents whose
+director field value matches
+
+107
+00:04:48.570 --> 00:04:51.660
+Sam Raimi, the great director
+of the Army of Darkness
+
+108
+00:04:51.660 --> 00:04:53.700
+and other masterpieces.
+
+109
+00:04:53.700 --> 00:04:56.970
+What if I wanted to use this
+query in my code somewhere?
+
+110
+00:04:56.970 --> 00:04:58.320
+We can do that, too.
+
+111
+00:04:58.320 --> 00:05:01.620
+Hit the Menu icon on the
+right of SAVE PIPELINE,
+
+112
+00:05:01.620 --> 00:05:03.780
+and select Export To Language.
+
+113
+00:05:03.780 --> 00:05:06.360
+Feel free to look at the
+other options in that drop
+
+114
+00:05:06.360 --> 00:05:08.690
+down menu in your spare time.
+
+115
+00:05:08.690 --> 00:05:11.160
+They are all addressed in
+our documentation in the link
+
+116
+00:05:11.160 --> 00:05:12.120
+below.
+
+117
+00:05:12.120 --> 00:05:14.130
+To use this query
+in your application,
+
+118
+00:05:14.130 --> 00:05:15.900
+you selected Export To Language.
+
+119
+00:05:15.900 --> 00:05:19.950
+And, now, you can select the
+language of your choice, which
+
+120
+00:05:19.950 --> 00:05:21.800
+in our case is Java.
+
+121
+00:05:21.800 --> 00:05:22.740
+Success.
+
+122
+00:05:22.740 --> 00:05:25.410
+You can now copy a
+line of Java code
+
+123
+00:05:25.410 --> 00:05:27.790
+into your Java-based
+application.
+
+124
+00:05:27.790 --> 00:05:30.120
+And if you haven't yet
+import to the libraries
+
+125
+00:05:30.120 --> 00:05:33.460
+necessary for MongoDB
+and Java to communicate,
+
+126
+00:05:33.460 --> 00:05:36.510
+you can select Include
+Import Statements
+
+127
+00:05:36.510 --> 00:05:39.720
+to see which tools are needed
+for this particular query
+
+128
+00:05:39.720 --> 00:05:41.520
+to run successfully.
+
+129
+00:05:41.520 --> 00:05:44.520
+You can then copy, paste this
+in the appropriate section
+
+130
+00:05:44.520 --> 00:05:48.150
+of your application and get
+along with your development.
+
+131
+00:05:48.150 --> 00:05:50.730
+You can check out the
+documentation for this feature
+
+132
+00:05:50.730 --> 00:05:52.830
+by following the linked below.
+
+133
+00:05:52.830 --> 00:05:54.990
+Feel free to experiment
+with these features
+
+134
+00:05:54.990 --> 00:05:57.310
+and try them out on your
+own before moving on
+
+135
+00:05:57.310 --> 00:05:58.830
+to the next lecture.
+
+136
+00:05:58.830 --> 00:06:01.350
+This is the end of our
+Compass Basics lesson.
+
+137
+00:06:01.350 --> 00:06:03.500
+Enjoy what follows.

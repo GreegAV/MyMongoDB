@@ -1,0 +1,273 @@
+
+1
+00:00:00.000 --> 00:00:00.940
+
+
+2
+00:00:00.940 --> 00:00:03.530
+OK, now that we've seen
+this for some small queries,
+
+3
+00:00:03.530 --> 00:00:07.060
+let's do it for a
+whole bunch of queries.
+
+4
+00:00:07.060 --> 00:00:10.670
+Whoops-- ran it too quick.
+
+5
+00:00:10.670 --> 00:00:14.780
+Basically, it finds a single
+query and runs it 100 times.
+
+6
+00:00:14.780 --> 00:00:20.120
+We should see the index stat
+incrementing for each query.
+
+7
+00:00:20.120 --> 00:00:24.530
+And when I look at my
+index stats, there it is.
+
+8
+00:00:24.530 --> 00:00:27.380
+My last name, first
+name index was
+
+9
+00:00:27.380 --> 00:00:30.710
+incremented 100 times
+because we used it
+
+10
+00:00:30.710 --> 00:00:33.470
+for each of those 100 queries.
+
+11
+00:00:33.470 --> 00:00:35.120
+I also want you to
+notice that this
+
+12
+00:00:35.120 --> 00:00:38.120
+used last name and
+first name, and I
+
+13
+00:00:38.120 --> 00:00:40.370
+have an index that's
+only on first name, which
+
+14
+00:00:40.370 --> 00:00:42.380
+could have been used,
+but it's not optimal.
+
+15
+00:00:42.380 --> 00:00:45.205
+But MongoDB only used the other
+index to fulfill the query,
+
+16
+00:00:45.205 --> 00:00:49.160
+so it didn't increment the
+operations on this first name
+
+17
+00:00:49.160 --> 00:00:51.470
+index.
+
+18
+00:00:51.470 --> 00:00:54.020
+So $indexStats is going to
+do a good job of telling us
+
+19
+00:00:54.020 --> 00:00:56.990
+which indexes we're using
+and which ones we're not.
+
+20
+00:00:56.990 --> 00:01:00.110
+By looking at the change in
+that ops field from one time
+
+21
+00:01:00.110 --> 00:01:01.850
+to the next that
+we use $indexStats,
+
+22
+00:01:01.850 --> 00:01:05.209
+we can get a pretty good sense
+of which indexes are never
+
+23
+00:01:05.209 --> 00:01:08.180
+being used, meaning they're
+good candidates for deletion.
+
+24
+00:01:08.180 --> 00:01:09.200
+Why?
+
+25
+00:01:09.200 --> 00:01:12.350
+Well, recall that indexes will
+reduce the speed of inserts
+
+26
+00:01:12.350 --> 00:01:14.450
+because you have to
+insert a document
+
+27
+00:01:14.450 --> 00:01:18.890
+and add an index key for each
+index in that collection.
+
+28
+00:01:18.890 --> 00:01:20.990
+By the way, it's worth
+asking the question,
+
+29
+00:01:20.990 --> 00:01:23.850
+when does it
+increment the field?
+
+30
+00:01:23.850 --> 00:01:25.520
+Notice that, right
+now, my indexes
+
+31
+00:01:25.520 --> 00:01:30.080
+have a value of 0, 2, and 100.
+
+32
+00:01:30.080 --> 00:01:33.590
+Let's insert one
+more document and see
+
+33
+00:01:33.590 --> 00:01:36.480
+what our index stats look like.
+
+34
+00:01:36.480 --> 00:01:39.860
+0, 2, and 100.
+
+35
+00:01:39.860 --> 00:01:42.755
+It did not increment any of
+them from inserting a document.
+
+36
+00:01:42.755 --> 00:01:45.330
+What about an update?
+
+37
+00:01:45.330 --> 00:01:48.110
+OK, I performed a single update.
+
+38
+00:01:48.110 --> 00:01:50.776
+We matched one document
+and modified it.
+
+39
+00:01:50.776 --> 00:01:53.390
+Let's look at our index stats--
+
+40
+00:01:53.390 --> 00:01:56.340
+0, 2, and 101.
+
+41
+00:01:56.340 --> 00:01:59.570
+OK, it used this last
+name, first name index
+
+42
+00:01:59.570 --> 00:02:01.910
+to fulfill that update.
+
+43
+00:02:01.910 --> 00:02:04.205
+That's because an update
+is a combination of a find
+
+44
+00:02:04.205 --> 00:02:07.700
+and a write, and since I used
+the index to find the document,
+
+45
+00:02:07.700 --> 00:02:09.139
+it's incremented.
+
+46
+00:02:09.139 --> 00:02:11.900
+By way, MongoDB will
+increment the ops field
+
+47
+00:02:11.900 --> 00:02:14.020
+even if I don't update anything.
+
+48
+00:02:14.020 --> 00:02:17.209
+I'll run the same update,
+setting the same field,
+
+49
+00:02:17.209 --> 00:02:19.250
+but it will recognize that
+no update is necessary
+
+50
+00:02:19.250 --> 00:02:23.150
+since we're already in the state
+the update is trying to create.
+
+51
+00:02:23.150 --> 00:02:28.180
+Update one set,
+address, same field--
+
+52
+00:02:28.180 --> 00:02:31.085
+matched one document,
+didn't modify it.
+
+53
+00:02:31.085 --> 00:02:36.230
+But when I look at the
+index stats, there we go--
+
+54
+00:02:36.230 --> 00:02:38.630
+incremented the ops field.
+
+55
+00:02:38.630 --> 00:02:41.180
+We had to use the index to find
+the document even though we
+
+56
+00:02:41.180 --> 00:02:42.970
+didn't write to that document.
+
+57
+00:02:42.970 --> 00:02:45.230
+Any time I use the index
+to find a document,
+
+58
+00:02:45.230 --> 00:02:50.140
+MongoDB will increment that
+index counter in the ops field.

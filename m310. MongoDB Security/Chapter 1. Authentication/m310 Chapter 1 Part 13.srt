@@ -1,0 +1,499 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.790
+There are two main components
+that we need to configure.
+
+3
+00:00:03.790 --> 00:00:06.720
+On one side, we're going
+to have our LDAP server.
+
+4
+00:00:06.720 --> 00:00:09.140
+On the other side, we're
+going to have our MongoDB LDAP
+
+5
+00:00:09.140 --> 00:00:10.290
+configuration options.
+
+6
+00:00:10.290 --> 00:00:14.220
+They're going to set in our
+MongoDB configuration file.
+
+7
+00:00:14.220 --> 00:00:19.500
+Let's start by analyzing a
+sample LDAP configuration file.
+
+8
+00:00:19.500 --> 00:00:23.670
+Note that the actual LDAP server
+configuration details are out
+
+9
+00:00:23.670 --> 00:00:25.420
+of scope for this lesson.
+
+10
+00:00:25.420 --> 00:00:27.970
+This is something that
+you need to catch up.
+
+11
+00:00:27.970 --> 00:00:32.369
+To configure LDAP servers,
+we'll be using ldif files.
+
+12
+00:00:32.369 --> 00:00:34.900
+ldif is a standard
+plain data interchange
+
+13
+00:00:34.900 --> 00:00:38.810
+formats for representing LDAP
+directory content and update
+
+14
+00:00:38.810 --> 00:00:43.410
+requests, conveys directory
+content as a set of records,
+
+15
+00:00:43.410 --> 00:00:46.350
+one record for each object.
+
+16
+00:00:46.350 --> 00:00:48.600
+It also represents
+update requests
+
+17
+00:00:48.600 --> 00:00:52.600
+such as heading, modifying,
+deleting, or even renaming
+
+18
+00:00:52.600 --> 00:00:56.060
+operations as a set of records.
+
+19
+00:00:56.060 --> 00:01:00.350
+Now let's assume that we have
+this ldif file as supporting
+
+20
+00:01:00.350 --> 00:01:03.640
+configuration for LDAP servers.
+
+21
+00:01:03.640 --> 00:01:09.190
+We have a set of groups-- in
+this case mongodb.com-- users
+
+22
+00:01:09.190 --> 00:01:11.500
+NDBA.
+
+23
+00:01:11.500 --> 00:01:13.310
+And we're going to also
+have a set of users
+
+24
+00:01:13.310 --> 00:01:18.240
+or a couple of users in
+this case-- Alice and BOB.
+
+25
+00:01:18.240 --> 00:01:20.580
+There are several
+different types
+
+26
+00:01:20.580 --> 00:01:23.060
+of [INAUDIBLE],
+groups, and users
+
+27
+00:01:23.060 --> 00:01:26.750
+that we can define using ldifs.
+
+28
+00:01:26.750 --> 00:01:31.370
+For now, we are just going to be
+using this example for the time
+
+29
+00:01:31.370 --> 00:01:32.200
+being.
+
+30
+00:01:32.200 --> 00:01:35.740
+For MongoDB configuration,
+we have a large set
+
+31
+00:01:35.740 --> 00:01:39.932
+of different options available
+to configure our server.
+
+32
+00:01:39.932 --> 00:01:41.970
+We'll start with
+the LDAP servers,
+
+33
+00:01:41.970 --> 00:01:47.010
+a comma separated string of
+one or more LDAP servers.
+
+34
+00:01:47.010 --> 00:01:49.640
+We're going to have
+LDAP transport security.
+
+35
+00:01:49.640 --> 00:01:52.130
+It's an option whether
+or not to secure
+
+36
+00:01:52.130 --> 00:01:56.110
+the communications between
+LDAP servers and MongoDB.
+
+37
+00:01:56.110 --> 00:02:00.710
+Accepted values are
+going to be TLS or none.
+
+38
+00:02:00.710 --> 00:02:10.030
+ldapAuthzQueryTemplate-- this
+is an rfc4516 formatted URL
+
+39
+00:02:10.030 --> 00:02:14.670
+of the LDAP Quarry to execute
+in order to obtain LDAP groups.
+
+40
+00:02:14.670 --> 00:02:18.260
+In this URL, the placeholder
+token string user
+
+41
+00:02:18.260 --> 00:02:20.890
+will be replaced with
+the queried distinguished
+
+42
+00:02:20.890 --> 00:02:22.540
+name of the user.
+
+43
+00:02:22.540 --> 00:02:27.660
+If not set, MongoDB will not
+use LDAP for authorization.
+
+44
+00:02:27.660 --> 00:02:30.010
+Also have LDAP
+timeout milliseconds,
+
+45
+00:02:30.010 --> 00:02:33.100
+the amount of time that MongoDB
+should wait for an LDP server
+
+46
+00:02:33.100 --> 00:02:35.330
+to respond to a request.
+
+47
+00:02:35.330 --> 00:02:38.300
+The default is 10 seconds.
+
+48
+00:02:38.300 --> 00:02:42.900
+ldapBindSASLMechanisms--
+the SASL mechanisms MongoDB
+
+49
+00:02:42.900 --> 00:02:46.390
+will attempt to authenticate
+with against LDAP server
+
+50
+00:02:46.390 --> 00:02:48.190
+while binding.
+
+51
+00:02:48.190 --> 00:02:50.830
+If MongoDB is using
+SASL authentication,
+
+52
+00:02:50.830 --> 00:02:56.520
+it will bind using DIGEST-MD5
+by default. ldapQueryUser-- this
+
+53
+00:02:56.520 --> 00:02:59.380
+is the LDAP entity
+distinguished name
+
+54
+00:02:59.380 --> 00:03:03.730
+that MongoDB will bind as when
+connecting to an LDAP server.
+
+55
+00:03:03.730 --> 00:03:05.960
+And we're also going to
+have its password set
+
+56
+00:03:05.960 --> 00:03:10.090
+by ldapQueryPassword--
+again, the password which
+
+57
+00:03:10.090 --> 00:03:13.626
+MongoDB will use to bind when
+connecting to that same LDAP
+
+58
+00:03:13.626 --> 00:03:14.820
+server.
+
+59
+00:03:14.820 --> 00:03:16.840
+We also have an
+important one-- LDAP user
+
+60
+00:03:16.840 --> 00:03:19.290
+to distinguish name mapping.
+
+61
+00:03:19.290 --> 00:03:22.510
+This is an adjacent array
+of ordered transformations
+
+62
+00:03:22.510 --> 00:03:25.540
+that MongoDB will apply to
+authenticate MongoDB user
+
+63
+00:03:25.540 --> 00:03:29.450
+names to match their
+distinguished names in LDAP--
+
+64
+00:03:29.450 --> 00:03:32.470
+useful for when we are using
+alternative authentication
+
+65
+00:03:32.470 --> 00:03:36.180
+method or if user names passed
+to MongoDB for authentication
+
+66
+00:03:36.180 --> 00:03:39.390
+do not match the LDAP DN.
+
+67
+00:03:39.390 --> 00:03:41.420
+If not defined,
+MongoDB will directly
+
+68
+00:03:41.420 --> 00:03:45.850
+use whatever username you
+pass it through to the DN.
+
+69
+00:03:45.850 --> 00:03:47.950
+This is intended to
+allow LDAP authorization
+
+70
+00:03:47.950 --> 00:03:50.200
+to work automatically.
+
+71
+00:03:50.200 --> 00:03:52.770
+We're also going to have
+LDAP user cache invalidation
+
+72
+00:03:52.770 --> 00:03:53.810
+interval.
+
+73
+00:03:53.810 --> 00:03:56.720
+MongoDB will hold the cache
+of authenticated users.
+
+74
+00:03:56.720 --> 00:03:58.617
+During this interval,
+it will determine
+
+75
+00:03:58.617 --> 00:04:00.200
+how much time MongoDB
+will [INAUDIBLE]
+
+76
+00:04:00.200 --> 00:04:03.490
+to wait for external user
+caches to be flushed.
+
+77
+00:04:03.490 --> 00:04:06.310
+The default is 30 seconds.
+
+78
+00:04:06.310 --> 00:04:10.570
+ldapBindWithOSDefaults
+will perform queries
+
+79
+00:04:10.570 --> 00:04:13.730
+to the service accounts'
+username and password.
+
+80
+00:04:13.730 --> 00:04:17.649
+It's useful for single sign-on
+on where you are already
+
+81
+00:04:17.649 --> 00:04:19.930
+authenticate against
+your OS and you just
+
+82
+00:04:19.930 --> 00:04:23.250
+want to avoid passing
+your username and password
+
+83
+00:04:23.250 --> 00:04:25.210
+continuously to MongoDB.
+
+84
+00:04:25.210 --> 00:04:28.380
+Although that said, it is
+incompatible with ldapCoreUser
+
+85
+00:04:28.380 --> 00:04:30.670
+and ldapCorePassword.
+
+86
+00:04:30.670 --> 00:04:32.720
+For demo purposes,
+we'll be using
+
+87
+00:04:32.720 --> 00:04:34.870
+a very simple configuration.
+
+88
+00:04:34.870 --> 00:04:37.890
+I'm going to start by defining
+and setting the list of LDAP
+
+89
+00:04:37.890 --> 00:04:40.220
+servers that I'm going to use.
+
+90
+00:04:40.220 --> 00:04:43.350
+We're going to be setting up a
+query template, which is going
+
+91
+00:04:43.350 --> 00:04:45.910
+to be user member of and base.
+
+92
+00:04:45.910 --> 00:04:49.930
+We are going to define user
+distinguish names mapping
+
+93
+00:04:49.930 --> 00:04:52.810
+option with a match,
+regular expression,
+
+94
+00:04:52.810 --> 00:04:55.810
+and its substitution string.
+
+95
+00:04:55.810 --> 00:04:57.660
+In this example,
+we are not going
+
+96
+00:04:57.660 --> 00:05:00.710
+to be using any
+transport security
+
+97
+00:05:00.710 --> 00:05:05.060
+and the binding mechanism is
+going to be set to simple.
+
+98
+00:05:05.060 --> 00:05:08.320
+And since we are using
+LDAP for both authorization
+
+99
+00:05:08.320 --> 00:05:11.730
+and authentication, I'm setting
+the authentication mechanism
+
+100
+00:05:11.730 --> 00:05:13.970
+to plain, which is the
+respective authentication
+
+101
+00:05:13.970 --> 00:05:16.550
+mechanism for LDAP.
+
+102
+00:05:16.550 --> 00:05:18.590
+Once we have this
+configuration in place,
+
+103
+00:05:18.590 --> 00:05:21.870
+both on LDAP and MongoDB
+configuration files,
+
+104
+00:05:21.870 --> 00:05:25.170
+it will be time to
+validate this setup.
+
+105
+00:05:25.170 --> 00:05:28.580
+But let's talk about that
+in the following lesson.

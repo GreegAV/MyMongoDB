@@ -1,0 +1,746 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.320
+In this lesson, we
+are going to check out
+
+3
+00:00:02.320 --> 00:00:05.800
+how to perform deletes and
+remove documents that match
+
+4
+00:00:05.800 --> 00:00:08.470
+a particular query predicate.
+
+5
+00:00:08.470 --> 00:00:09.940
+For the purpose of
+this lesson, I'm
+
+6
+00:00:09.940 --> 00:00:12.970
+going to go ahead and create a
+sample collection, in my test
+
+7
+00:00:12.970 --> 00:00:15.310
+database, called sports.
+
+8
+00:00:15.310 --> 00:00:18.260
+And I instantiate it here.
+
+9
+00:00:18.260 --> 00:00:21.010
+And then I'll go ahead and
+populate the sports collection
+
+10
+00:00:21.010 --> 00:00:24.410
+with a few examples of
+sports, things like football,
+
+11
+00:00:24.410 --> 00:00:27.470
+basketball, F1, and whatnot.
+
+12
+00:00:27.470 --> 00:00:30.350
+The first thing to understand
+is that a delete operation
+
+13
+00:00:30.350 --> 00:00:33.020
+is in fact a write
+in database world.
+
+14
+00:00:33.020 --> 00:00:34.130
+Confused?
+
+15
+00:00:34.130 --> 00:00:38.330
+What I mean by this
+that when a delete takes
+
+16
+00:00:38.330 --> 00:00:41.150
+place of a document
+from our database,
+
+17
+00:00:41.150 --> 00:00:43.490
+we are actually
+executing a state change
+
+18
+00:00:43.490 --> 00:00:47.240
+in the data that implies
+a database write.
+
+19
+00:00:47.240 --> 00:00:50.750
+Deletes imply that several
+different things will happen.
+
+20
+00:00:50.750 --> 00:00:52.460
+Collection data will be changed.
+
+21
+00:00:52.460 --> 00:00:54.380
+Indexes will be updated.
+
+22
+00:00:54.380 --> 00:00:57.350
+And entries in our oplog,
+the replication mechanism,
+
+23
+00:00:57.350 --> 00:00:58.910
+will be added.
+
+24
+00:00:58.910 --> 00:01:01.220
+All the same operations
+that an insert or an update
+
+25
+00:01:01.220 --> 00:01:02.960
+will originate.
+
+26
+00:01:02.960 --> 00:01:05.120
+But let's go ahead
+and see this in action
+
+27
+00:01:05.120 --> 00:01:07.610
+with a single document delete.
+
+28
+00:01:07.610 --> 00:01:09.740
+Before I start deleting
+data from my collection,
+
+29
+00:01:09.740 --> 00:01:12.320
+I'm going to count the number
+of documents in the sports
+
+30
+00:01:12.320 --> 00:01:13.100
+collection.
+
+31
+00:01:13.100 --> 00:01:14.900
+And I'm going to place
+it in this variable
+
+32
+00:01:14.900 --> 00:01:17.150
+here, nSportsBefore.
+
+33
+00:01:17.150 --> 00:01:20.630
+Now that I know how many sports
+documents my collection holds,
+
+34
+00:01:20.630 --> 00:01:22.610
+I'm going to just delete one.
+
+35
+00:01:22.610 --> 00:01:26.060
+First, I need to define a query
+predicate or a query filter.
+
+36
+00:01:26.060 --> 00:01:29.600
+In this case, I'm going to
+just specify one that is empty,
+
+37
+00:01:29.600 --> 00:01:32.870
+which will be similar to
+running the db.DeleteOne
+
+38
+00:01:32.870 --> 00:01:36.710
+without any query predicate
+at all from the MongoDB shell.
+
+39
+00:01:36.710 --> 00:01:38.810
+Once I execute the
+deleteOne method,
+
+40
+00:01:38.810 --> 00:01:41.570
+I can get a
+DeleteResults object.
+
+41
+00:01:41.570 --> 00:01:43.430
+We can verify that
+the delete was
+
+42
+00:01:43.430 --> 00:01:46.460
+successful by checking the
+number of deleted documents
+
+43
+00:01:46.460 --> 00:01:50.750
+in our DeleteResult object, the
+resulting object of the delete.
+
+44
+00:01:50.750 --> 00:01:54.680
+By asserting that the number
+of deleted count is equal to 1,
+
+45
+00:01:54.680 --> 00:01:59.690
+we can verify that at least one
+document was in fact deleted.
+
+46
+00:01:59.690 --> 00:02:01.880
+If I now count the
+number of documents,
+
+47
+00:02:01.880 --> 00:02:05.390
+I can see that it has
+been decreased by 1.
+
+48
+00:02:05.390 --> 00:02:10.100
+If I execute db.countDocuments
+and subtract minus 1
+
+49
+00:02:10.100 --> 00:02:15.050
+to nSportsBefore, I can see
+that this search matches.
+
+50
+00:02:15.050 --> 00:02:17.060
+Wait, but which
+document did I just
+
+51
+00:02:17.060 --> 00:02:18.740
+remove from the collection?
+
+52
+00:02:18.740 --> 00:02:20.420
+Well, in this case,
+MongoDB will select
+
+53
+00:02:20.420 --> 00:02:23.750
+the first $natural document it
+encounters in the collection
+
+54
+00:02:23.750 --> 00:02:25.460
+and delete that one.
+
+55
+00:02:25.460 --> 00:02:28.490
+Given that the insertMany
+inserts documents in order,
+
+56
+00:02:28.490 --> 00:02:30.140
+the document that
+I had just deleted
+
+57
+00:02:30.140 --> 00:02:32.720
+will be the one with
+the "name" = "football,"
+
+58
+00:02:32.720 --> 00:02:35.120
+which makes me very sad.
+
+59
+00:02:35.120 --> 00:02:38.410
+Let's just run this test
+altogether to see the results.
+
+60
+00:02:38.410 --> 00:02:40.980
+
+
+61
+00:02:40.980 --> 00:02:42.730
+And as we can see,
+one of those certs
+
+62
+00:02:42.730 --> 00:02:46.139
+matches and our test passes.
+
+63
+00:02:46.139 --> 00:02:48.430
+A delete that takes the first
+element of the collection
+
+64
+00:02:48.430 --> 00:02:51.630
+$natural order tends to
+be a less than usual thing
+
+65
+00:02:51.630 --> 00:02:54.250
+that you will be doing
+in your application.
+
+66
+00:02:54.250 --> 00:02:57.000
+So let's use something a
+little bit more elaborate.
+
+67
+00:02:57.000 --> 00:02:59.160
+Let's say that I'd like
+to delete a document that
+
+68
+00:02:59.160 --> 00:03:01.260
+matches a particular name.
+
+69
+00:03:01.260 --> 00:03:03.600
+Let's delete the first
+sport where the fieldName
+
+70
+00:03:03.600 --> 00:03:06.220
+starts with a string "bas".
+
+71
+00:03:06.220 --> 00:03:08.610
+To do that, I can express
+a single regex pattern
+
+72
+00:03:08.610 --> 00:03:12.270
+in string format and call
+the Filters.regex method.
+
+73
+00:03:12.270 --> 00:03:14.070
+The query in the
+MongoDB shell should
+
+74
+00:03:14.070 --> 00:03:17.940
+be something like the following,
+where db.sports.delete = name
+
+75
+00:03:17.940 --> 00:03:23.960
+and the expression of our
+regex that matches that name.
+
+76
+00:03:23.960 --> 00:03:28.070
+To do that, I can just, again,
+use the filters.regex, bassing,
+
+77
+00:03:28.070 --> 00:03:31.110
+the name of the field,
+and the pattern.
+
+78
+00:03:31.110 --> 00:03:35.790
+Once we execute it, we get the
+results on the DeleteResults.
+
+79
+00:03:35.790 --> 00:03:37.740
+After running the delete
+method and capturing
+
+80
+00:03:37.740 --> 00:03:40.020
+the DeleteResults,
+we can confirm
+
+81
+00:03:40.020 --> 00:03:42.600
+that one sport was
+deleted by asserting
+
+82
+00:03:42.600 --> 00:03:45.580
+the delete count matches 1.
+
+83
+00:03:45.580 --> 00:03:48.040
+Now, which one
+did I just delete?
+
+84
+00:03:48.040 --> 00:03:50.350
+Again, the same logic
+will be applied.
+
+85
+00:03:50.350 --> 00:03:52.990
+The first element that can be
+found in the collection that
+
+86
+00:03:52.990 --> 00:03:57.400
+matches the query predicate
+will be the one to get deleted.
+
+87
+00:03:57.400 --> 00:04:00.040
+That means that our dear
+"basketball" no longer
+
+88
+00:04:00.040 --> 00:04:02.680
+resides in the collection
+after this delete.
+
+89
+00:04:02.680 --> 00:04:05.200
+And we can Assert for
+that by trying to find it
+
+90
+00:04:05.200 --> 00:04:10.600
+and actually getting no
+from the iterator tryNext.
+
+91
+00:04:10.600 --> 00:04:12.400
+This actually raises
+an important aspect
+
+92
+00:04:12.400 --> 00:04:17.260
+about deleting one element of
+a multi-document match query.
+
+93
+00:04:17.260 --> 00:04:18.940
+To run this operation
+safely, this
+
+94
+00:04:18.940 --> 00:04:22.240
+means deleting the exact
+document we are looking for.
+
+95
+00:04:22.240 --> 00:04:24.790
+The match should be done
+using the primary key
+
+96
+00:04:24.790 --> 00:04:26.410
+of the documents.
+
+97
+00:04:26.410 --> 00:04:28.150
+Otherwise, you will
+be deleting documents
+
+98
+00:04:28.150 --> 00:04:31.360
+based on their initial
+insert/update order, which
+
+99
+00:04:31.360 --> 00:04:35.400
+can be very, very widely.
+
+100
+00:04:35.400 --> 00:04:37.620
+Obviously, deleting
+one single document
+
+101
+00:04:37.620 --> 00:04:39.570
+at a time when
+what we want to do
+
+102
+00:04:39.570 --> 00:04:42.110
+is delete all documents
+that match a query predicate
+
+103
+00:04:42.110 --> 00:04:43.590
+will be very slow.
+
+104
+00:04:43.590 --> 00:04:45.510
+Therefore, MongoDB
+also allows you
+
+105
+00:04:45.510 --> 00:04:49.650
+to delete all documents
+that match a given criteria.
+
+106
+00:04:49.650 --> 00:04:53.490
+This time around, I would like
+to delete all documents that
+
+107
+00:04:53.490 --> 00:04:54.990
+have a particular field.
+
+108
+00:04:54.990 --> 00:04:56.880
+Not interested in
+the kind of value
+
+109
+00:04:56.880 --> 00:05:00.060
+that they represented with,
+but more with the leading
+
+110
+00:05:00.060 --> 00:05:02.250
+all documents that
+have such field.
+
+111
+00:05:02.250 --> 00:05:05.400
+If the field exists,
+the document has to go.
+
+112
+00:05:05.400 --> 00:05:08.420
+Something similar to this
+will be expressed in a shell,
+
+113
+00:05:08.420 --> 00:05:11.490
+where "note," for
+example, "$exists" = 1.
+
+114
+00:05:11.490 --> 00:05:15.360
+Let's create the delete criteria
+where if the field note exists,
+
+115
+00:05:15.360 --> 00:05:18.060
+we want to delete
+all those documents.
+
+116
+00:05:18.060 --> 00:05:22.710
+Using the Filters builder,
+that will be done like this.
+
+117
+00:05:22.710 --> 00:05:27.450
+Bson criteria = Filters.exists
+and the fieldName.
+
+118
+00:05:27.450 --> 00:05:31.170
+Running the deleteMany
+method with this criteria
+
+119
+00:05:31.170 --> 00:05:35.550
+will result in three
+documents being deleted.
+
+120
+00:05:35.550 --> 00:05:39.790
+So let's run it to make sure
+that this is exactly correct.
+
+121
+00:05:39.790 --> 00:05:40.470
+And it is.
+
+122
+00:05:40.470 --> 00:05:43.360
+All of our tests pass.
+
+123
+00:05:43.360 --> 00:05:46.060
+One last method that allows
+us to remove documents
+
+124
+00:05:46.060 --> 00:05:49.570
+from our collection is
+our findAndDelete method.
+
+125
+00:05:49.570 --> 00:05:51.550
+Comparing this with
+deleteOne method,
+
+126
+00:05:51.550 --> 00:05:53.320
+the difference will
+reside in the what
+
+127
+00:05:53.320 --> 00:05:56.410
+object is returned
+by the method.
+
+128
+00:05:56.410 --> 00:05:58.720
+In the case of
+deleteOne, we get back
+
+129
+00:05:58.720 --> 00:06:02.080
+the DeleteResult
+object that tells us
+
+130
+00:06:02.080 --> 00:06:04.360
+if the command was
+acknowledged and the number
+
+131
+00:06:04.360 --> 00:06:05.980
+of documents deleted.
+
+132
+00:06:05.980 --> 00:06:08.890
+In the case of findAndDeleteOne,
+what we get back
+
+133
+00:06:08.890 --> 00:06:12.130
+is the document that
+was just deleted.
+
+134
+00:06:12.130 --> 00:06:14.620
+This method might be
+very useful in cases
+
+135
+00:06:14.620 --> 00:06:17.500
+where we need to return
+back the last state
+
+136
+00:06:17.500 --> 00:06:19.540
+of the document
+for post-processing
+
+137
+00:06:19.540 --> 00:06:20.860
+by the application.
+
+138
+00:06:20.860 --> 00:06:22.900
+Think about Q's or
+something that needs
+
+139
+00:06:22.900 --> 00:06:26.680
+to be done with that document
+after it's gotten deleted.
+
+140
+00:06:26.680 --> 00:06:29.320
+If we tried to delete
+the sport with the named
+
+141
+00:06:29.320 --> 00:06:33.820
+"table tennis" Using the
+findOneAndDelete method,
+
+142
+00:06:33.820 --> 00:06:36.220
+expressing the
+query predicate, we
+
+143
+00:06:36.220 --> 00:06:40.120
+get back a document,
+which is the deletedSport.
+
+144
+00:06:40.120 --> 00:06:43.120
+We can assert that
+it's NotNull and we
+
+145
+00:06:43.120 --> 00:06:49.210
+can assert that the ObjectId
+will be set in this object.
+
+146
+00:06:49.210 --> 00:06:53.890
+If we run the tests, we can
+see that everything is green,
+
+147
+00:06:53.890 --> 00:06:56.290
+just like we like it.
+
+148
+00:06:56.290 --> 00:06:57.400
+Well, let's recap.
+
+149
+00:06:57.400 --> 00:07:00.580
+Deleting data is just another
+write operation database.
+
+150
+00:07:00.580 --> 00:07:04.300
+We can delete one document
+at a time with deleteOne.
+
+151
+00:07:04.300 --> 00:07:07.270
+Or we can deleteMany
+documents in one go.
+
+152
+00:07:07.270 --> 00:07:09.730
+The method
+findAndDeleteOne returns
+
+153
+00:07:09.730 --> 00:07:12.190
+the state of the document
+before the delete command
+
+154
+00:07:12.190 --> 00:07:15.050
+got executed.
+
+155
+00:07:15.050 --> 00:07:17.820
+And running all the
+tests in this lesson,
+
+156
+00:07:17.820 --> 00:07:20.270
+we see that everything passes.

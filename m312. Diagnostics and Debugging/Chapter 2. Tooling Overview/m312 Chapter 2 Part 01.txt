@@ -1,0 +1,129 @@
+Let's talk about the server logs.
+
+Imagine that something goes wrong and you suspect the problem is with your deployment.
+
+Maybe your query is just taking unexpectedly long to answer, or maybe you're suddenly missing a collection, or a server goes down and you're not sure why.
+
+The server logs are going to be the first place you look once you're aware of a problem.
+
+They're taken continuously, and with them, you can look into the past to figure out what went wrong.
+
+When people contact our technical services team asking for help with a problem, this is typically the first thing we ask for.
+
+Let's jump in and see what the logs look like.
+
+I haven't been running this mongod very long, but that's OK.
+
+From the moment the server starts up, it begins recording its story in the logs.
+
+It starts by telling us that it is starting up and logs some information.
+
+You can see this in the messages on the right.
+
+MongoDB starting.
+
+Here's my process ID.
+
+Here's the port I'm listening on.
+
+Here's my path.
+
+Here's some information that I was built from.
+
+These logs are the story our database tells about itself and its environment.
+
+And already, you have a sense of the basic format.
+
+On the left, you see a time stamp.
+
+It's in ISO 8601 local format for those of you who are curious.
+
+Next, you see the severity.
+
+These are all I, so the severity is "informational." In other words, each of these entries is normal and this is the information that the server records in normal operations.
+
+After that, you have the component.
+
+Starts with control here.
+
+You can see a few of them say storage.
+
+Following that is the context in square brackets.
+
+Finally, on the right, you get the informational message itself.
+
+Let's filter out all the control lines and also the time stamp at the beginning and get to the component.
+
+I can see storage, FTDC, Replication, Network.
+
+Here's the full list-- access, command, control, geo, index, network, query, replication, sharding, storage, journal, and write.
+
+This helps us narrow down what we're looking at.
+
+We'll be looking into these a bit more as they come up during the course, but definitely be aware of the fact that you can use these to filter things down a bit and to figure out what it is exactly you're looking at.
+
+It's also probably worth talking for a moment about the severity.
+
+F is for a fatal error.
+
+This would have to come from an uncaught server exception that crashed the process.
+
+It's pretty hard to trigger.
+
+E is error, an internal uncaught server error that doesn't result in the server crashing.
+
+W is Warning-- something that might indicate a problem, but it doesn't prevent the server from doing its job.
+
+I is informational, which is everything logged by default.
+
+And d is diagnostic.
+
+This comes up when you set the verbosity level above zero, which we don't generally recommend on production databases.
+
+So how can you find the important log entries you might be looking for?
+
+Obviously, if you know when things went wrong, you can find events immediately before or after that event.
+
+Here's our server process.
+
+Let's kill it and see what the logs record-- 9332, 9332.
+
+This is going to be a hard kill signal.
+
+We wouldn't recommend this generally.
+
+And our process is down.
+
+Let's start it up again.
+
+Great.
+
+Let's look at the logs.
+
+Here, we can see that it was moving along doing its normal operations.
+
+And boom-- server restarted.
+
+And if we look for it, we should also be able to find its transition back to primary.
+
+And there it is.
+
+And close by, you can see the things that were happening just before and just afterwards.
+
+Let's go back to the terminal.
+
+And by the way, if you find that you're wanting to capture a lot more, you can always run your system with maximum verbosity.
+
+Now I can see these diagnostic entries appearing in my log.
+
+Usually, this will be overkill, as it'll be doing extra logging for a lot of internal processes.
+
+Our server engineers like this feature when they roll out code changes to the server and they want to make sure everything is working, but we wouldn't recommend doing this by default on your end.
+
+If something is useful, we log it at the default verbosity.
+
+You can find more information in the documentation.
+
+There will be a link in the lecture notes.
+
+We're going to go into more detail with the server logs when we look at individual scenarios, but already, you know how to find your logs and parse a bit of what they're saying.

@@ -1,0 +1,282 @@
+
+1
+00:00:00.000 --> 00:00:00.750
+
+
+2
+00:00:00.750 --> 00:00:03.180
+Now that you have a good,
+high-level understanding
+
+3
+00:00:03.180 --> 00:00:05.250
+of what we can use
+auditing for, we
+
+4
+00:00:05.250 --> 00:00:07.800
+can take a moment to look at
+what auditing logs actually
+
+5
+00:00:07.800 --> 00:00:09.390
+look like.
+
+6
+00:00:09.390 --> 00:00:11.550
+Of course, auditing
+logs are outputted
+
+7
+00:00:11.550 --> 00:00:13.980
+in either JSON or BSON.
+
+8
+00:00:13.980 --> 00:00:18.030
+And here's an example of what
+an audit log will look like.
+
+9
+00:00:18.030 --> 00:00:21.900
+All audit logs will have the
+same eight top-level fields--
+
+10
+00:00:21.900 --> 00:00:29.851
+atype, ts, local, remote,
+users, roles, param, and result.
+
+11
+00:00:29.851 --> 00:00:32.100
+Let's take a moment and break
+each one of these fields
+
+12
+00:00:32.100 --> 00:00:34.920
+down so we know what
+we're dealing with.
+
+13
+00:00:34.920 --> 00:00:36.730
+First we have atype.
+
+14
+00:00:36.730 --> 00:00:37.860
+It's a string.
+
+15
+00:00:37.860 --> 00:00:39.990
+It's short for "action type."
+
+16
+00:00:39.990 --> 00:00:43.070
+We'll talk more about action
+types in a later video,
+
+17
+00:00:43.070 --> 00:00:45.930
+but an example would be
+something like authenticate,
+
+18
+00:00:45.930 --> 00:00:49.647
+create index, create
+user, or add [? shard. ?]
+
+19
+00:00:49.647 --> 00:00:51.480
+These should sound
+familiar, because they're
+
+20
+00:00:51.480 --> 00:00:54.360
+very similar, if not the
+same, as a lot of the commands
+
+21
+00:00:54.360 --> 00:00:56.430
+we run on a regular basis.
+
+22
+00:00:56.430 --> 00:00:59.490
+Next we have ts, which is
+short for "time stamp."
+
+23
+00:00:59.490 --> 00:01:00.480
+It's a document.
+
+24
+00:01:00.480 --> 00:01:03.780
+And, inside of this document,
+it will contain the date and UTC
+
+25
+00:01:03.780 --> 00:01:05.580
+time of the event.
+
+26
+00:01:05.580 --> 00:01:07.455
+Then we have local.
+
+27
+00:01:07.455 --> 00:01:09.750
+Local is another
+embedded document.
+
+28
+00:01:09.750 --> 00:01:12.360
+And inside this document
+will have the local IP
+
+29
+00:01:12.360 --> 00:01:16.050
+address and the port number of
+the running mongod instance.
+
+30
+00:01:16.050 --> 00:01:18.450
+Similar to local,
+we have remote.
+
+31
+00:01:18.450 --> 00:01:20.970
+It's also a document,
+just like local.
+
+32
+00:01:20.970 --> 00:01:23.640
+And it will contain the
+remote IP address and port
+
+33
+00:01:23.640 --> 00:01:26.460
+number of the incoming
+connection associated
+
+34
+00:01:26.460 --> 00:01:27.990
+with this event.
+
+35
+00:01:27.990 --> 00:01:31.000
+Next we have users,
+which is an array.
+
+36
+00:01:31.000 --> 00:01:34.110
+This is an array of user
+identification documents.
+
+37
+00:01:34.110 --> 00:01:36.510
+Because MongoDB allows
+a session to log
+
+38
+00:01:36.510 --> 00:01:39.370
+in with a different
+user per database,
+
+39
+00:01:39.370 --> 00:01:41.820
+this array can have
+more than one user.
+
+40
+00:01:41.820 --> 00:01:44.640
+Each document contains a
+user field for the user name
+
+41
+00:01:44.640 --> 00:01:46.590
+and a db field for
+the authentication
+
+42
+00:01:46.590 --> 00:01:48.880
+database of that user.
+
+43
+00:01:48.880 --> 00:01:51.010
+We also have a roles array.
+
+44
+00:01:51.010 --> 00:01:53.460
+This is an array of
+documents that specifies
+
+45
+00:01:53.460 --> 00:01:56.940
+the roles granted to the user.
+
+46
+00:01:56.940 --> 00:01:59.700
+Each document contains a role
+field for the name of the role
+
+47
+00:01:59.700 --> 00:02:04.440
+and a db field for the database
+associated with that role.
+
+48
+00:02:04.440 --> 00:02:05.940
+Then we have param.
+
+49
+00:02:05.940 --> 00:02:07.470
+This is also a document.
+
+50
+00:02:07.470 --> 00:02:10.110
+This is where the meat of
+our audit log will live.
+
+51
+00:02:10.110 --> 00:02:13.800
+Any specific details
+for the event live here.
+
+52
+00:02:13.800 --> 00:02:16.770
+This is tightly
+associated with the atype.
+
+53
+00:02:16.770 --> 00:02:19.890
+For example, if we have
+an atype of authenticate,
+
+54
+00:02:19.890 --> 00:02:23.490
+then we can expect a param that
+is a document with the fields
+
+55
+00:02:23.490 --> 00:02:27.010
+user, db, and mechanism.
+
+56
+00:02:27.010 --> 00:02:30.120
+And finally, we have a
+result, which is an integer.
+
+57
+00:02:30.120 --> 00:02:31.830
+This is our error code.
+
+58
+00:02:31.830 --> 00:02:35.280
+If our result is non-zero,
+meaning an error,
+
+59
+00:02:35.280 --> 00:02:37.800
+then that error is going
+to be directly related
+
+60
+00:02:37.800 --> 00:02:41.450
+to the atype associated with
+the event that we're logging.

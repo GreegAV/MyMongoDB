@@ -1,0 +1,613 @@
+
+1
+00:00:00.000 --> 00:00:01.050
+
+
+2
+00:00:01.050 --> 00:00:03.540
+In this lesson, we will
+go over a methodology
+
+3
+00:00:03.540 --> 00:00:05.640
+to help you through
+the old process of data
+
+4
+00:00:05.640 --> 00:00:08.220
+modeling for MongoDB.
+
+5
+00:00:08.220 --> 00:00:11.590
+The methodology we use is
+composed of three phases.
+
+6
+00:00:11.590 --> 00:00:14.100
+The first phase is to
+describe the workload.
+
+7
+00:00:14.100 --> 00:00:15.750
+In other terms,
+it means gathering
+
+8
+00:00:15.750 --> 00:00:17.430
+everything there is
+to know about how
+
+9
+00:00:17.430 --> 00:00:19.140
+you would be using your data.
+
+10
+00:00:19.140 --> 00:00:21.660
+The second phase is to
+identify the relationships
+
+11
+00:00:21.660 --> 00:00:23.490
+between the different
+entities you
+
+12
+00:00:23.490 --> 00:00:27.210
+need to handle and choose how
+to model those relationships.
+
+13
+00:00:27.210 --> 00:00:30.420
+And the third phase is
+to apply design patterns
+
+14
+00:00:30.420 --> 00:00:32.910
+or transformation
+to the current model
+
+15
+00:00:32.910 --> 00:00:36.070
+to address performance
+requirements.
+
+16
+00:00:36.070 --> 00:00:38.730
+Let's describe each
+phase a little bit more.
+
+17
+00:00:38.730 --> 00:00:42.660
+As for the details, example, and
+actions required in each phase,
+
+18
+00:00:42.660 --> 00:00:44.160
+those will be part
+of the following
+
+19
+00:00:44.160 --> 00:00:47.700
+lessons in this course.
+
+20
+00:00:47.700 --> 00:00:49.460
+Let's start at the beginning.
+
+21
+00:00:49.460 --> 00:00:52.820
+Your goal is to create a data
+model, what is often referred
+
+22
+00:00:52.820 --> 00:00:56.030
+to as your MongoDB schema.
+
+23
+00:00:56.030 --> 00:00:58.470
+A few things may be
+available to you.
+
+24
+00:00:58.470 --> 00:01:01.670
+For example, you may have
+a requirements document
+
+25
+00:01:01.670 --> 00:01:06.120
+listing the scenarios the
+system needs to support.
+
+26
+00:01:06.120 --> 00:01:08.760
+Alternatively, or
+in complement, you
+
+27
+00:01:08.760 --> 00:01:11.370
+may have an expert on the
+domain, who can advise
+
+28
+00:01:11.370 --> 00:01:14.530
+on what needs to be done.
+
+29
+00:01:14.530 --> 00:01:17.820
+You may be migrating from
+a relational database,
+
+30
+00:01:17.820 --> 00:01:20.820
+or you are evolving an
+existing MongoDB database.
+
+31
+00:01:20.820 --> 00:01:24.090
+In both cases, logs,
+stats, et cetera,
+
+32
+00:01:24.090 --> 00:01:26.550
+give you additional information
+about the current state
+
+33
+00:01:26.550 --> 00:01:27.720
+of the system.
+
+34
+00:01:27.720 --> 00:01:31.150
+If they exist, you
+want to use them.
+
+35
+00:01:31.150 --> 00:01:34.320
+Finally, someone needs to
+assemble this information
+
+36
+00:01:34.320 --> 00:01:36.570
+together in the schema.
+
+37
+00:01:36.570 --> 00:01:39.060
+This is done by the
+data modeling expert.
+
+38
+00:01:39.060 --> 00:01:42.670
+This will be you by
+the end of this course.
+
+39
+00:01:42.670 --> 00:01:45.060
+So the first phase is
+to look at the documents
+
+40
+00:01:45.060 --> 00:01:48.390
+that you have in your input
+and create some artifacts out
+
+41
+00:01:48.390 --> 00:01:49.830
+of them.
+
+42
+00:01:49.830 --> 00:01:51.810
+You should be able to
+size the amount of data
+
+43
+00:01:51.810 --> 00:01:55.290
+your system will have
+initially, in few months,
+
+44
+00:01:55.290 --> 00:01:56.910
+and in few years.
+
+45
+00:01:56.910 --> 00:01:59.580
+Obviously, you will
+get those number wrong.
+
+46
+00:01:59.580 --> 00:02:00.360
+Don't worry.
+
+47
+00:02:00.360 --> 00:02:02.230
+Practice makes perfect.
+
+48
+00:02:02.230 --> 00:02:04.290
+So give it your best try.
+
+49
+00:02:04.290 --> 00:02:06.150
+The action of
+recording those numbers
+
+50
+00:02:06.150 --> 00:02:10.410
+will permit you to observe any
+major deviations in your system
+
+51
+00:02:10.410 --> 00:02:12.930
+once it's in operation.
+
+52
+00:02:12.930 --> 00:02:15.480
+Those differences will
+be a good indicator
+
+53
+00:02:15.480 --> 00:02:19.800
+that you may have to iterate
+again over your schema.
+
+54
+00:02:19.800 --> 00:02:22.410
+The same applies to the
+operations, the reads
+
+55
+00:02:22.410 --> 00:02:23.160
+and the writes.
+
+56
+00:02:23.160 --> 00:02:26.670
+You should be able to tell how
+many are run per unit of time
+
+57
+00:02:26.670 --> 00:02:29.090
+and if each query has
+additional requirements in terms
+
+58
+00:02:29.090 --> 00:02:32.400
+of execution time, the latency
+from the application, tolerance
+
+59
+00:02:32.400 --> 00:02:35.400
+to staleness, et cetera.
+
+60
+00:02:35.400 --> 00:02:37.260
+For each of these
+operation requirements,
+
+61
+00:02:37.260 --> 00:02:40.070
+record your thoughts
+and assumptions.
+
+62
+00:02:40.070 --> 00:02:41.490
+They will also be
+a good indicator
+
+63
+00:02:41.490 --> 00:02:44.040
+to see whether you need to
+reevaluate the model again
+
+64
+00:02:44.040 --> 00:02:45.930
+later.
+
+65
+00:02:45.930 --> 00:02:49.830
+In our second phase, we start
+with a piece of information
+
+66
+00:02:49.830 --> 00:02:51.600
+that were identified.
+
+67
+00:02:51.600 --> 00:02:55.260
+Each piece has a relationship
+with another one.
+
+68
+00:02:55.260 --> 00:02:57.720
+The ones that have a
+one-to-one relationship
+
+69
+00:02:57.720 --> 00:03:01.830
+tend to be grouped together in
+the same table or collection.
+
+70
+00:03:01.830 --> 00:03:04.030
+In modeling for a
+relational database,
+
+71
+00:03:04.030 --> 00:03:06.990
+you would probably have come
+up with those three entities--
+
+72
+00:03:06.990 --> 00:03:10.650
+actors, movies, and reviews.
+
+73
+00:03:10.650 --> 00:03:12.270
+And place the piece
+of information
+
+74
+00:03:12.270 --> 00:03:15.450
+inside the appropriate entity.
+
+75
+00:03:15.450 --> 00:03:19.290
+For example, a movie title
+has a one-to-many relationship
+
+76
+00:03:19.290 --> 00:03:22.320
+to the reviews for the
+movie, while the money earned
+
+77
+00:03:22.320 --> 00:03:25.530
+by the movie has a one-to-one
+relationship with the movie
+
+78
+00:03:25.530 --> 00:03:27.450
+title.
+
+79
+00:03:27.450 --> 00:03:29.610
+So the movie title
+and its revenues
+
+80
+00:03:29.610 --> 00:03:31.830
+are in the same
+entity or collection,
+
+81
+00:03:31.830 --> 00:03:36.770
+while the reviews are in
+a separate collection.
+
+82
+00:03:36.770 --> 00:03:38.990
+With MongoDB, you
+follow the same process
+
+83
+00:03:38.990 --> 00:03:41.270
+of identifying the
+relationships between the pieces
+
+84
+00:03:41.270 --> 00:03:42.760
+of information.
+
+85
+00:03:42.760 --> 00:03:46.280
+However, you need to decide
+if you embed information
+
+86
+00:03:46.280 --> 00:03:48.620
+or keep it separate.
+
+87
+00:03:48.620 --> 00:03:50.150
+How do you decide?
+
+88
+00:03:50.150 --> 00:03:52.820
+This is where you start
+using the knowledge you
+
+89
+00:03:52.820 --> 00:03:55.100
+will acquire in this class.
+
+90
+00:03:55.100 --> 00:03:56.810
+At the end of this
+process, you will
+
+91
+00:03:56.810 --> 00:03:59.870
+have a list of entities
+with their fields, some
+
+92
+00:03:59.870 --> 00:04:03.890
+of them grouped together
+inside the common collection.
+
+93
+00:04:03.890 --> 00:04:08.040
+Our last phase is to apply
+schema design patterns.
+
+94
+00:04:08.040 --> 00:04:09.560
+This is where you
+will get to make
+
+95
+00:04:09.560 --> 00:04:12.920
+your model more performant
+or more clear by applying
+
+96
+00:04:12.920 --> 00:04:15.170
+some transformations.
+
+97
+00:04:15.170 --> 00:04:18.800
+We will cover this phase of the
+methodology in a future chapter
+
+98
+00:04:18.800 --> 00:04:20.899
+by giving you a
+number of recipes
+
+99
+00:04:20.899 --> 00:04:24.440
+you can apply to your model.
+
+100
+00:04:24.440 --> 00:04:27.110
+You may need to iteratively
+improve your solution,
+
+101
+00:04:27.110 --> 00:04:28.550
+and this is fine.
+
+102
+00:04:28.550 --> 00:04:31.520
+If any of the input information
+on the left changes,
+
+103
+00:04:31.520 --> 00:04:34.610
+you need to assess the impact
+on the decision you've made
+
+104
+00:04:34.610 --> 00:04:37.820
+in their corresponding phase.
+
+105
+00:04:37.820 --> 00:04:40.880
+For example, if you discover
+another reported query,
+
+106
+00:04:40.880 --> 00:04:43.160
+get more data about the
+size of your problem,
+
+107
+00:04:43.160 --> 00:04:47.170
+or run benchmarks on your
+current solution, all that
+
+108
+00:04:47.170 --> 00:04:53.430
+known information, with feedback
+as the input to the model.
+
+109
+00:04:53.430 --> 00:04:56.370
+Any successful application
+will undergo modifications
+
+110
+00:04:56.370 --> 00:04:58.800
+at some point in
+its lifetime, so
+
+111
+00:04:58.800 --> 00:05:01.410
+be ready to get new
+inputs at some point.
+
+112
+00:05:01.410 --> 00:05:04.500
+If you track why you
+made some decision
+
+113
+00:05:04.500 --> 00:05:06.790
+and what were the
+assumptions in the past,
+
+114
+00:05:06.790 --> 00:05:09.045
+it will be much easier to
+apply the needed changes.
+
+115
+00:05:09.045 --> 00:05:11.580
+
+
+116
+00:05:11.580 --> 00:05:14.640
+Let's recap what we have
+learned in this lesson.
+
+117
+00:05:14.640 --> 00:05:17.980
+There are three phases
+in our methodology.
+
+118
+00:05:17.980 --> 00:05:20.190
+The first addresses
+the workload.
+
+119
+00:05:20.190 --> 00:05:22.660
+You want to identify
+the size of your data,
+
+120
+00:05:22.660 --> 00:05:25.410
+the important reads and
+writes of the system,
+
+121
+00:05:25.410 --> 00:05:30.280
+and possibly quantify and
+qualify those operations.
+
+122
+00:05:30.280 --> 00:05:32.760
+The second phase regards
+the identification
+
+123
+00:05:32.760 --> 00:05:34.500
+of the relationships.
+
+124
+00:05:34.500 --> 00:05:36.570
+Coming out of that
+step, you should
+
+125
+00:05:36.570 --> 00:05:39.780
+have a list of collection with
+the decision of whether you
+
+126
+00:05:39.780 --> 00:05:43.480
+embed or link the
+relationships between them.
+
+127
+00:05:43.480 --> 00:05:47.040
+Finally, the third step is to
+apply schema design patterns
+
+128
+00:05:47.040 --> 00:05:49.200
+to your model to
+address the performance
+
+129
+00:05:49.200 --> 00:05:53.870
+requirements by applying
+the needed optimizations.

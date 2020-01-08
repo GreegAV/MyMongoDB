@@ -1,0 +1,35 @@
+Hi, my name is Sam, and I'm going to talk to you about an exciting new tool for MongoDB called MongoDB Compass.
+
+Compass was developed with one goal in mind-- to give you a powerful user interface for understanding, exploring, and editing your MongoDB data, and providing you with insights into your current server and query performance.
+
+Let's jump right in and take a look.
+
+MongoDB Compass was originally designed and developed with the intention of being a full graphical shell replacement for MongoDB.
+
+Once you've downloaded and opened MongoDB Compass, this is the first window you're going to see, the Connect screen.
+
+There's a bunch of options that we can fill out in order to get connected to a MongoDB instance, and the first one is the host name and the port of where that instance is listening to.
+
+So I'm actually going to use one of my recent connections and connect to this IP on this port.
+
+I also have the ability to connect to MongoDBs that are running with authentication enabled, such as a username and password, Kerberos or LDAP, or whether they're enabled with SSL, or simply I must use an SSH tunnel to connect to them.
+
+Right here I just have a test instance running on a test machine, and I don't have any authentication, SSL, or SSH tunneling enabled, so I can just go ahead and hit Connect.
+
+Now once I've connected to my MongoDB instance, what you'll immediately see is a list presented to me of the database names within the MongoDB instance itself.
+
+In this case you'll see I have three-- admin, local, and MongoDB.
+
+You'll see I have some other information here, such as the storage size of the databases, a number of collections within those databases, and the number of indexes on those collections.
+
+If I do want to add a new database, I can do so from this screen.
+
+I simply just hit Create Database.
+
+And what I'll need to do is fill in a new database name and a new collection name, and then I have the option of making it a capped collection or not.
+
+And when I'm ready, I can go ahead and Create Database.
+
+And you'll see that gets added to the list here.
+
+If I do decide that I actually want to delete that database, I can do that through the Compass interface by clicking on the trash can icon and simply typing in the name of the database that I want to drop.

@@ -1,0 +1,561 @@
+
+1
+00:00:00.000 --> 00:00:00.610
+
+
+2
+00:00:00.610 --> 00:00:04.130
+In this lesson, we will dig
+into how much you should model--
+
+3
+00:00:04.130 --> 00:00:06.100
+in other words, how
+many steps should
+
+4
+00:00:06.100 --> 00:00:09.910
+be done in the three
+phases of our methodology.
+
+5
+00:00:09.910 --> 00:00:12.010
+The main trade
+that you will face
+
+6
+00:00:12.010 --> 00:00:14.290
+is simplicity
+versus performance,
+
+7
+00:00:14.290 --> 00:00:18.160
+prioritizing one over the
+other or trying to find
+
+8
+00:00:18.160 --> 00:00:20.800
+a balance between the two.
+
+9
+00:00:20.800 --> 00:00:24.760
+Modeling for simplicity means we
+will avoid any complexity that
+
+10
+00:00:24.760 --> 00:00:28.360
+could slow down the development
+of the system by our engineers.
+
+11
+00:00:28.360 --> 00:00:31.360
+The most typical case would
+be developing an application
+
+12
+00:00:31.360 --> 00:00:35.140
+quickly with one or
+few software engineers.
+
+13
+00:00:35.140 --> 00:00:37.570
+Frequently, for those
+kind of projects,
+
+14
+00:00:37.570 --> 00:00:41.140
+there are limited expectations
+and small requirements in term
+
+15
+00:00:41.140 --> 00:00:43.990
+of CPU, disk, I/O, memory.
+
+16
+00:00:43.990 --> 00:00:47.390
+Things are generally
+small and simple.
+
+17
+00:00:47.390 --> 00:00:50.140
+You should start by identifying
+the most important operations
+
+18
+00:00:50.140 --> 00:00:52.180
+for the system.
+
+19
+00:00:52.180 --> 00:00:54.220
+And you will need to
+establish the relationships
+
+20
+00:00:54.220 --> 00:00:56.740
+between the entities and fields.
+
+21
+00:00:56.740 --> 00:01:00.070
+To keep the model simple,
+you are likely to group
+
+22
+00:01:00.070 --> 00:01:03.790
+a lot of those pieces
+inside a few collection
+
+23
+00:01:03.790 --> 00:01:07.420
+using sub-documents
+or arrays to represent
+
+24
+00:01:07.420 --> 00:01:11.170
+the one-to-one, one-to-many,
+too many-to-many
+
+25
+00:01:11.170 --> 00:01:13.390
+many relationships.
+
+26
+00:01:13.390 --> 00:01:16.090
+By keeping the modeling
+steps to the minimum,
+
+27
+00:01:16.090 --> 00:01:18.730
+we can remain very
+agile, with the ability
+
+28
+00:01:18.730 --> 00:01:23.200
+to quickly iterate on our
+application, reflecting
+
+29
+00:01:23.200 --> 00:01:26.060
+these changes back into
+the model if needed.
+
+30
+00:01:26.060 --> 00:01:28.940
+If you model for
+simplicity, as a result,
+
+31
+00:01:28.940 --> 00:01:32.110
+you will likely see fewer
+collection in your design
+
+32
+00:01:32.110 --> 00:01:36.070
+where each document contains
+more information and maps very
+
+33
+00:01:36.070 --> 00:01:39.658
+well to the object you have
+in your application code--
+
+34
+00:01:39.658 --> 00:01:41.950
+the objects being represented
+in your favorite language
+
+35
+00:01:41.950 --> 00:01:46.780
+as hashes, maps, dictionary,
+or nested objects.
+
+36
+00:01:46.780 --> 00:01:49.510
+Finally, as a result of
+having larger documents
+
+37
+00:01:49.510 --> 00:01:52.450
+with embedded documents
+in them, the application
+
+38
+00:01:52.450 --> 00:01:55.090
+is likely to do
+less disk accesses
+
+39
+00:01:55.090 --> 00:01:57.250
+to retrieve the information.
+
+40
+00:01:57.250 --> 00:02:00.150
+These three collection
+embedded into one,
+
+41
+00:02:00.150 --> 00:02:03.710
+a single read will be sufficient
+to retrieve the information
+
+42
+00:02:03.710 --> 00:02:05.450
+instead of four.
+
+43
+00:02:05.450 --> 00:02:10.090
+At other end of our axis, we
+have the performance criteria.
+
+44
+00:02:10.090 --> 00:02:12.070
+In this scenario,
+resources are likely to be
+
+45
+00:02:12.070 --> 00:02:14.950
+used to the maximum
+I like to compare
+
+46
+00:02:14.950 --> 00:02:18.790
+this situation to an engine
+running at the red line.
+
+47
+00:02:18.790 --> 00:02:21.025
+Project that makes
+use of sharding
+
+48
+00:02:21.025 --> 00:02:23.740
+to scatter horizontally
+are likely to fall
+
+49
+00:02:23.740 --> 00:02:27.340
+into this category, because
+you often shard your database
+
+50
+00:02:27.340 --> 00:02:29.290
+because there is
+not enough resources
+
+51
+00:02:29.290 --> 00:02:32.380
+available with a
+simple replica set.
+
+52
+00:02:32.380 --> 00:02:36.490
+The system may require very
+fast read or writes operation,
+
+53
+00:02:36.490 --> 00:02:40.035
+or it may have to support
+a ton of operations.
+
+54
+00:02:40.035 --> 00:02:41.410
+Although situations
+are demanding
+
+55
+00:02:41.410 --> 00:02:44.230
+a model for performance.
+
+56
+00:02:44.230 --> 00:02:48.340
+More complex projects are
+often done by larger teams.
+
+57
+00:02:48.340 --> 00:02:50.890
+And those larger teams
+will require a little bit
+
+58
+00:02:50.890 --> 00:02:53.260
+more modeling upfront.
+
+59
+00:02:53.260 --> 00:02:56.680
+When you model for performance
+or have more complexity
+
+60
+00:02:56.680 --> 00:03:00.430
+to handle, you want to
+go over all the steps
+
+61
+00:03:00.430 --> 00:03:02.440
+of the methodology.
+
+62
+00:03:02.440 --> 00:03:06.230
+Again, you start by identifying
+the important operations,
+
+63
+00:03:06.230 --> 00:03:08.980
+but also quantify those
+in terms of metrics
+
+64
+00:03:08.980 --> 00:03:12.730
+like operation per
+second, required latency,
+
+65
+00:03:12.730 --> 00:03:14.890
+and pinning some
+quality attributes
+
+66
+00:03:14.890 --> 00:03:17.290
+on those queries such as--
+
+67
+00:03:17.290 --> 00:03:19.120
+can the application
+work with data
+
+68
+00:03:19.120 --> 00:03:22.060
+that's a little stale,
+are those operations parts
+
+69
+00:03:22.060 --> 00:03:24.860
+of the large analytic query?
+
+70
+00:03:24.860 --> 00:03:28.570
+If you model for performance you
+will often see more collection
+
+71
+00:03:28.570 --> 00:03:31.100
+in your design.
+
+72
+00:03:31.100 --> 00:03:33.820
+You will also need to apply
+a series of schema design
+
+73
+00:03:33.820 --> 00:03:36.190
+patterns to ensure the
+best usage of resources
+
+74
+00:03:36.190 --> 00:03:38.860
+like CPU, disk, bandwidth.
+
+75
+00:03:38.860 --> 00:03:41.890
+And in between, well,
+you have project
+
+76
+00:03:41.890 --> 00:03:45.130
+that have more of a balance
+or trade between those two
+
+77
+00:03:45.130 --> 00:03:46.880
+criteria.
+
+78
+00:03:46.880 --> 00:03:49.030
+For example, you may
+have a project that
+
+79
+00:03:49.030 --> 00:03:51.970
+needs to be developed
+quickly, but you will also
+
+80
+00:03:51.970 --> 00:03:53.770
+need to apply some
+transformations
+
+81
+00:03:53.770 --> 00:03:57.925
+and optimization to meet
+performance requirements.
+
+82
+00:03:57.925 --> 00:04:00.370
+Here you will need to
+identify what seems
+
+83
+00:04:00.370 --> 00:04:02.570
+important for this project.
+
+84
+00:04:02.570 --> 00:04:06.070
+Positioning your project on this
+axis is a little bit of an art.
+
+85
+00:04:06.070 --> 00:04:09.880
+My advice is it is easier
+to find optimization
+
+86
+00:04:09.880 --> 00:04:14.260
+later on than to remove
+complexity from an application.
+
+87
+00:04:14.260 --> 00:04:18.620
+So prior to rise simplicity
+over performance.
+
+88
+00:04:18.620 --> 00:04:21.579
+Let's look again at the steps
+you may do for each phase based
+
+89
+00:04:21.579 --> 00:04:23.930
+on your requirements.
+
+90
+00:04:23.930 --> 00:04:25.750
+Regardless of your
+project, you will
+
+91
+00:04:25.750 --> 00:04:29.020
+need to start by
+identifying your workload.
+
+92
+00:04:29.020 --> 00:04:31.660
+It can go from a simple
+identification of the most
+
+93
+00:04:31.660 --> 00:04:34.660
+important operations to
+an exhaustive and complete
+
+94
+00:04:34.660 --> 00:04:38.570
+description of the read
+and write operations.
+
+95
+00:04:38.570 --> 00:04:42.220
+Then, you need to choose
+between embedding or linking
+
+96
+00:04:42.220 --> 00:04:44.890
+the model, the relationship.
+
+97
+00:04:44.890 --> 00:04:48.340
+Simplicity will favor embedding.
+
+98
+00:04:48.340 --> 00:04:51.310
+In the final phase, the more
+performance requirements
+
+99
+00:04:51.310 --> 00:04:56.060
+you have, the more likely
+patterns will be applied.
+
+100
+00:04:56.060 --> 00:04:59.050
+Let's recap what we've
+learned this lesson.
+
+101
+00:04:59.050 --> 00:05:02.810
+MongoDB makes the development
+of applications much faster
+
+102
+00:05:02.810 --> 00:05:05.185
+than traditional
+relational databases.
+
+103
+00:05:05.185 --> 00:05:06.560
+And we don't want
+the methodology
+
+104
+00:05:06.560 --> 00:05:09.170
+to slow things down either.
+
+105
+00:05:09.170 --> 00:05:11.840
+Doing the right thing
+first and having a way
+
+106
+00:05:11.840 --> 00:05:14.090
+to share information
+between the team members
+
+107
+00:05:14.090 --> 00:05:17.270
+is important for having
+a successful project.
+
+108
+00:05:17.270 --> 00:05:20.000
+First of all,
+recognize the trade off
+
+109
+00:05:20.000 --> 00:05:24.080
+between modeling for
+simplicity and performance.
+
+110
+00:05:24.080 --> 00:05:28.150
+Secondly, use the methodology
+in a flexible fashion.
+
+111
+00:05:28.150 --> 00:05:30.200
+Select the step
+within a phase that
+
+112
+00:05:30.200 --> 00:05:32.530
+makes sense for your project.
+
+113
+00:05:32.530 --> 00:05:36.350
+Finally, regardless of
+how much you will model,
+
+114
+00:05:36.350 --> 00:05:40.040
+you need to start by describing
+the workload of your project.
+
+115
+00:05:40.040 --> 00:05:43.080
+Identifying the important
+operations correctly
+
+116
+00:05:43.080 --> 00:05:45.847
+will get you started
+on the right path.
+
+117
+00:05:45.847 --> 00:05:46.347

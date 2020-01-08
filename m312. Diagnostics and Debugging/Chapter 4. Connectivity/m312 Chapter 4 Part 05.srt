@@ -1,0 +1,723 @@
+
+1
+00:00:00.000 --> 00:00:00.510
+
+
+2
+00:00:00.510 --> 00:00:04.247
+Apart from the make lots of
+connections to servers file,
+
+3
+00:00:04.247 --> 00:00:05.830
+in the handouts of
+this lesson, you're
+
+4
+00:00:05.830 --> 00:00:09.960
+also going to see this CFG file,
+connections_singlenode file.
+
+5
+00:00:09.960 --> 00:00:12.150
+Make sure you also
+place that into shared,
+
+6
+00:00:12.150 --> 00:00:16.650
+so we can use it from
+our m312-vagrant-env box.
+
+7
+00:00:16.650 --> 00:00:18.990
+Once you have it,
+the next step to do
+
+8
+00:00:18.990 --> 00:00:22.620
+is basically connect
+to our bigger machine.
+
+9
+00:00:22.620 --> 00:00:26.550
+Once we are in our vagrant box,
+let's just spin up a mongod,
+
+10
+00:00:26.550 --> 00:00:30.150
+passing on as parameter,
+then -f and the configuration
+
+11
+00:00:30.150 --> 00:00:33.810
+file that we recently downloaded
+from the lessons handout.
+
+12
+00:00:33.810 --> 00:00:37.590
+Now, what this script
+does is sets up a mongod
+
+13
+00:00:37.590 --> 00:00:40.613
+that listens on port 27000--
+
+14
+00:00:40.613 --> 00:00:42.750
+27,000.
+
+15
+00:00:42.750 --> 00:00:46.860
+Now, it's time to connect
+our super inefficient file,
+
+16
+00:00:46.860 --> 00:00:51.030
+our make lots of
+connections to servers.py,
+
+17
+00:00:51.030 --> 00:00:55.140
+which, in turn, takes a
+few parameters to operate.
+
+18
+00:00:55.140 --> 00:00:58.240
+As you can see here, we need
+to specify a host, the ports,
+
+19
+00:00:58.240 --> 00:01:02.370
+and if we were using a
+replica set name, and then
+
+20
+00:01:02.370 --> 00:01:04.870
+a number of connections.
+
+21
+00:01:04.870 --> 00:01:07.470
+OK, we can do that.
+
+22
+00:01:07.470 --> 00:01:10.830
+But before we do that,
+let's open another tab,
+
+23
+00:01:10.830 --> 00:01:15.930
+and within our mongo
+m312 vagrant box,
+
+24
+00:01:15.930 --> 00:01:19.530
+let's start our mongostat
+to start capturing
+
+25
+00:01:19.530 --> 00:01:21.680
+some traffic on this box.
+
+26
+00:01:21.680 --> 00:01:25.470
+So we know that our mongod
+is listening on port 27000.
+
+27
+00:01:25.470 --> 00:01:27.960
+And we know that
+mongostat can do that.
+
+28
+00:01:27.960 --> 00:01:31.410
+Now, this is pretty,
+pretty noisy over here,
+
+29
+00:01:31.410 --> 00:01:35.340
+so there's a lot of
+different statistics being
+
+30
+00:01:35.340 --> 00:01:38.130
+collected that I'm probably
+not that interested in.
+
+31
+00:01:38.130 --> 00:01:41.670
+Let's filter out some of that
+by just outputting a few,
+
+32
+00:01:41.670 --> 00:01:45.780
+like the number of commands,
+the number of dirty memory,
+
+33
+00:01:45.780 --> 00:01:49.020
+used memory, virtual size,
+residence size, connections,
+
+34
+00:01:49.020 --> 00:01:51.300
+and the time stamp.
+
+35
+00:01:51.300 --> 00:01:55.020
+Once we do that, we are going to
+get a much, much cleaner output
+
+36
+00:01:55.020 --> 00:01:56.360
+of our mongostat.
+
+37
+00:01:56.360 --> 00:01:59.220
+OK, let me jump
+back to our main tab
+
+38
+00:01:59.220 --> 00:02:02.130
+where I can go ahead
+and run my script,
+
+39
+00:02:02.130 --> 00:02:04.490
+my make_lots_of_connections
+script.
+
+40
+00:02:04.490 --> 00:02:07.500
+We're going to connect
+27000, and we're
+
+41
+00:02:07.500 --> 00:02:09.769
+going to launch 100
+different connections.
+
+42
+00:02:09.769 --> 00:02:11.310
+Actually, we're
+going to be launching
+
+43
+00:02:11.310 --> 00:02:16.312
+100 different processes of
+this make lots of connections
+
+44
+00:02:16.312 --> 00:02:17.970
+to servers script.
+
+45
+00:02:17.970 --> 00:02:22.250
+Once I run this, and if I
+go back to our mongo stats,
+
+46
+00:02:22.250 --> 00:02:26.790
+we will see that our dirty and
+used memory are pretty low,
+
+47
+00:02:26.790 --> 00:02:28.650
+around 0%.
+
+48
+00:02:28.650 --> 00:02:32.040
+This is because we are not
+really allocating any data
+
+49
+00:02:32.040 --> 00:02:33.180
+into our cache.
+
+50
+00:02:33.180 --> 00:02:36.370
+We're basically just
+connecting to the instance.
+
+51
+00:02:36.370 --> 00:02:40.560
+However, on the virtual
+size and the residence size
+
+52
+00:02:40.560 --> 00:02:42.930
+we do see a bit of a bump.
+
+53
+00:02:42.930 --> 00:02:45.280
+Once this script finishes,
+and I can see here
+
+54
+00:02:45.280 --> 00:02:49.050
+is a drop between 102
+connections to 2 connections,
+
+55
+00:02:49.050 --> 00:02:51.870
+there's been a slight
+drop on the virtual size.
+
+56
+00:02:51.870 --> 00:02:55.090
+The residence size, however,
+continues to be allocated.
+
+57
+00:02:55.090 --> 00:02:59.380
+We're going to see about
+that in just a few moments.
+
+58
+00:02:59.380 --> 00:03:02.250
+So we've seen that there's
+a bump on virtual size
+
+59
+00:03:02.250 --> 00:03:03.390
+and residence size.
+
+60
+00:03:03.390 --> 00:03:06.420
+Obviously, as well in the
+number of connections.
+
+61
+00:03:06.420 --> 00:03:09.160
+So let's play around with
+this a little bit more.
+
+62
+00:03:09.160 --> 00:03:11.370
+Let's go ahead,
+instead of connecting
+
+63
+00:03:11.370 --> 00:03:15.570
+to 100 different processes,
+let's put 200 in place.
+
+64
+00:03:15.570 --> 00:03:21.060
+Once I do that, I can see that
+now I have a significant bump
+
+65
+00:03:21.060 --> 00:03:22.650
+again on my virtual size.
+
+66
+00:03:22.650 --> 00:03:26.130
+So connections do
+occupy space in memory,
+
+67
+00:03:26.130 --> 00:03:29.910
+especially in virtual size,
+but also in my residence size.
+
+68
+00:03:29.910 --> 00:03:33.390
+So there is, in
+fact, an increase
+
+69
+00:03:33.390 --> 00:03:36.720
+in the amount of
+memory that I need
+
+70
+00:03:36.720 --> 00:03:41.870
+to allocate some incoming
+connections of my system.
+
+71
+00:03:41.870 --> 00:03:44.950
+So let's increase it
+once more, the number
+
+72
+00:03:44.950 --> 00:03:47.980
+of processes and
+connections that I'm
+
+73
+00:03:47.980 --> 00:03:50.410
+going to do to my server.
+
+74
+00:03:50.410 --> 00:03:53.120
+Let's bring it up to 600.
+
+75
+00:03:53.120 --> 00:03:56.980
+And here is something a little
+bit odd that is happening.
+
+76
+00:03:56.980 --> 00:04:00.290
+Although I have
+requested for 600,
+
+77
+00:04:00.290 --> 00:04:05.540
+the number of connections that
+I see established to my mongod
+
+78
+00:04:05.540 --> 00:04:07.940
+does not increase more than 200.
+
+79
+00:04:07.940 --> 00:04:09.200
+Why is that?
+
+80
+00:04:09.200 --> 00:04:10.430
+What is going on?
+
+81
+00:04:10.430 --> 00:04:12.580
+Why such a low value?
+
+82
+00:04:12.580 --> 00:04:17.269
+By default, MongoDB allows
+incoming connections up
+
+83
+00:04:17.269 --> 00:04:20.570
+to 65,536.
+
+84
+00:04:20.570 --> 00:04:23.180
+This is the maximum
+amount of connections
+
+85
+00:04:23.180 --> 00:04:26.000
+that a single node
+can establish.
+
+86
+00:04:26.000 --> 00:04:29.090
+But 200 is far from this value.
+
+87
+00:04:29.090 --> 00:04:31.340
+So what is going on?
+
+88
+00:04:31.340 --> 00:04:35.790
+Why my connections
+value is only 200?
+
+89
+00:04:35.790 --> 00:04:39.266
+Let's get out of my mongostat,
+and let's tail my log file.
+
+90
+00:04:39.266 --> 00:04:40.850
+OK?
+
+91
+00:04:40.850 --> 00:04:42.740
+I see that a lot of
+connections ended.
+
+92
+00:04:42.740 --> 00:04:47.570
+Let's bring back our process
+to life, again, to see
+
+93
+00:04:47.570 --> 00:04:49.430
+and capture what's going on.
+
+94
+00:04:49.430 --> 00:04:52.640
+All right, now my logs
+are telling me a couple
+
+95
+00:04:52.640 --> 00:04:55.100
+of important messages here.
+
+96
+00:04:55.100 --> 00:04:57.650
+First of all, I'm
+starting new threads,
+
+97
+00:04:57.650 --> 00:05:00.830
+and I'm getting
+connections being refused.
+
+98
+00:05:00.830 --> 00:05:03.170
+This comes with a
+nice message saying
+
+99
+00:05:03.170 --> 00:05:07.670
+that I'm refusing
+connections because I may not
+
+100
+00:05:07.670 --> 00:05:09.650
+open more than 200.
+
+101
+00:05:09.650 --> 00:05:13.790
+Now, we know that the default
+allows us to go to 65,000-plus
+
+102
+00:05:13.790 --> 00:05:15.260
+connections.
+
+103
+00:05:15.260 --> 00:05:18.260
+We probably can't afford to do
+that on this virtual machine.
+
+104
+00:05:18.260 --> 00:05:19.490
+That's fine.
+
+105
+00:05:19.490 --> 00:05:22.790
+But 200 is still
+a very low value.
+
+106
+00:05:22.790 --> 00:05:27.200
+So what can be the root
+cause of this issue?
+
+107
+00:05:27.200 --> 00:05:30.340
+And this brings us
+to a particular set
+
+108
+00:05:30.340 --> 00:05:32.900
+that I would like to
+raise up-- how to detect
+
+109
+00:05:32.900 --> 00:05:35.360
+poorly configured hosts.
+
+110
+00:05:35.360 --> 00:05:38.780
+The first place to look for
+would not be our log file.
+
+111
+00:05:38.780 --> 00:05:41.280
+It will probably be
+our configuration file.
+
+112
+00:05:41.280 --> 00:05:44.870
+So let's have a look to
+that /shared/connections
+
+113
+00:05:44.870 --> 00:05:48.980
+singlenode.cfg file that we are
+currently using in our system.
+
+114
+00:05:48.980 --> 00:05:53.000
+Now, as you can see
+here, we are artificially
+
+115
+00:05:53.000 --> 00:05:58.040
+capping the maximum amount of
+incoming connections to 200.
+
+116
+00:05:58.040 --> 00:06:00.110
+So even if we have
+an application trying
+
+117
+00:06:00.110 --> 00:06:04.490
+to establish more than 200
+connections, those plus 200
+
+118
+00:06:04.490 --> 00:06:08.150
+will be refused, which is a
+good thing, because we are
+
+119
+00:06:08.150 --> 00:06:10.320
+specifically saying
+to the system,
+
+120
+00:06:10.320 --> 00:06:15.470
+hey, do not allow more
+than 200 connections.
+
+121
+00:06:15.470 --> 00:06:16.910
+So you might
+consider that what's
+
+122
+00:06:16.910 --> 00:06:21.020
+limiting our ability in this
+particular case of establishing
+
+123
+00:06:21.020 --> 00:06:23.810
+more connections is
+our own configuration.
+
+124
+00:06:23.810 --> 00:06:26.510
+So be aware of this
+value if you're
+
+125
+00:06:26.510 --> 00:06:29.930
+trying to debug why your
+application is not enabled
+
+126
+00:06:29.930 --> 00:06:33.380
+to provide more
+connections than the ones
+
+127
+00:06:33.380 --> 00:06:35.690
+that you are seeing
+through the mongostat.
+
+128
+00:06:35.690 --> 00:06:37.430
+So if we want to
+get rid of that,
+
+129
+00:06:37.430 --> 00:06:41.070
+let's just remove the max
+incoming connections to 200
+
+130
+00:06:41.070 --> 00:06:43.040
+from the configuration file.
+
+131
+00:06:43.040 --> 00:06:46.610
+Let's go into our mongod,
+and let's shut down
+
+132
+00:06:46.610 --> 00:06:52.100
+the server in a clean fashion.
+
+133
+00:06:52.100 --> 00:06:54.050
+And let's bring our
+along with you back again
+
+134
+00:06:54.050 --> 00:06:55.810
+with the new
+configuration place.
+
+135
+00:06:55.810 --> 00:07:00.050
+Sweet, we now have removed
+that limitation of 200
+
+136
+00:07:00.050 --> 00:07:02.730
+from our configuration file.
+
+137
+00:07:02.730 --> 00:07:05.030
+Let's bring our
+mongostat command
+
+138
+00:07:05.030 --> 00:07:10.550
+back again so we can see that
+now we have our mongod up
+
+139
+00:07:10.550 --> 00:07:11.870
+and running again.
+
+140
+00:07:11.870 --> 00:07:15.860
+And let's try again to
+launch 600 connections
+
+141
+00:07:15.860 --> 00:07:17.210
+from this script.
+
+142
+00:07:17.210 --> 00:07:17.990
+Great!
+
+143
+00:07:17.990 --> 00:07:22.190
+We can see that our mongod
+has 600 new connections
+
+144
+00:07:22.190 --> 00:07:23.320
+established.
+
+145
+00:07:23.320 --> 00:07:26.240
+And we see a bump, as well,
+in the virtual size memory
+
+146
+00:07:26.240 --> 00:07:27.620
+allocation.
+
+147
+00:07:27.620 --> 00:07:29.660
+Now, my question to you guys--
+
+148
+00:07:29.660 --> 00:07:31.520
+is that a good thing?
+
+149
+00:07:31.520 --> 00:07:35.780
+Should we have close
+to a gigabyte of memory
+
+150
+00:07:35.780 --> 00:07:40.400
+allocated for 600 connections
+that literally are not
+
+151
+00:07:40.400 --> 00:07:41.030
+doing much?
+
+152
+00:07:41.030 --> 00:07:42.860
+They're just been established.
+
+153
+00:07:42.860 --> 00:07:46.130
+We're going to talk about
+that on the following lesson.

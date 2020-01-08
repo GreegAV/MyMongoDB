@@ -1,0 +1,286 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.230
+Let's walk through how to
+migrate from MONGODB-CR
+
+3
+00:00:03.230 --> 00:00:04.580
+to SCRAM-SHA-1.
+
+4
+00:00:04.580 --> 00:00:08.000
+SCRAM-SHA-1 is highly
+recommended over MONGODB-CR.
+
+5
+00:00:08.000 --> 00:00:10.280
+And you should
+only ever encounter
+
+6
+00:00:10.280 --> 00:00:14.720
+MONGODB-CR on a system
+something greater than 3.0
+
+7
+00:00:14.720 --> 00:00:20.240
+if that system used to be on
+an order system, less than 3.0,
+
+8
+00:00:20.240 --> 00:00:24.980
+and that system was migrated
+to a 3.0 or greater system.
+
+9
+00:00:24.980 --> 00:00:28.070
+The users that were created
+on that older system
+
+10
+00:00:28.070 --> 00:00:31.430
+will still be using MONGODB-CR
+until you actually migrate them
+
+11
+00:00:31.430 --> 00:00:33.530
+over to SCRAM-SHA-1.
+
+12
+00:00:33.530 --> 00:00:36.950
+All your new users will
+still be using SCRAM-SHA-1
+
+13
+00:00:36.950 --> 00:00:38.900
+on your upgraded system.
+
+14
+00:00:38.900 --> 00:00:41.212
+Many legacy users will
+still be using MONGODB-CR.
+
+15
+00:00:41.212 --> 00:00:42.920
+So in this video,
+we're going to walk you
+
+16
+00:00:42.920 --> 00:00:46.280
+through the process of how to
+migrate those old MONGODB-CR
+
+17
+00:00:46.280 --> 00:00:49.220
+users over to using
+SCRAM-SHA-1, which
+
+18
+00:00:49.220 --> 00:00:52.231
+is the much more recommended
+authentication mechanism.
+
+19
+00:00:52.231 --> 00:00:53.980
+It's important to point
+out that upgrading
+
+20
+00:00:53.980 --> 00:00:57.350
+from MONGODB-CR to
+SCRAM-SHA-1 might require
+
+21
+00:00:57.350 --> 00:00:59.630
+you to upgrade your drivers.
+
+22
+00:00:59.630 --> 00:01:01.070
+Just make sure
+that you understand
+
+23
+00:01:01.070 --> 00:01:03.397
+what version of drivers
+you're currently using
+
+24
+00:01:03.397 --> 00:01:05.480
+and what authentication
+mechanisms those currently
+
+25
+00:01:05.480 --> 00:01:06.279
+support.
+
+26
+00:01:06.279 --> 00:01:08.570
+It's just a good thing to
+keep in the back of your mind
+
+27
+00:01:08.570 --> 00:01:10.740
+when going through this process.
+
+28
+00:01:10.740 --> 00:01:13.400
+Let's go ahead and connect
+to our MONGOD instance
+
+29
+00:01:13.400 --> 00:01:15.470
+and walk you through
+the process of how
+
+30
+00:01:15.470 --> 00:01:18.030
+to migrate over
+your old MONGODB-CR
+
+31
+00:01:18.030 --> 00:01:20.930
+users to SCRAM-SHA-1.
+
+32
+00:01:20.930 --> 00:01:22.880
+On this computer, I
+was recently running
+
+33
+00:01:22.880 --> 00:01:26.270
+a version of MongoDB 2.6.
+
+34
+00:01:26.270 --> 00:01:29.720
+On the 2.6 server, I
+created a user called Kirby
+
+35
+00:01:29.720 --> 00:01:31.850
+whose password is password.
+
+36
+00:01:31.850 --> 00:01:35.660
+I then upgraded
+the server to 3.2.
+
+37
+00:01:35.660 --> 00:01:40.770
+So we should now have a user
+in this 3.2 server's database
+
+38
+00:01:40.770 --> 00:01:44.330
+that is currently using
+MONGODB-CR, which is not cool.
+
+39
+00:01:44.330 --> 00:01:47.150
+We would much rather it
+be using SCRAM-SHA-1.
+
+40
+00:01:47.150 --> 00:01:50.480
+Let's go ahead and switch
+to the admin database
+
+41
+00:01:50.480 --> 00:01:52.130
+and authenticate.
+
+42
+00:01:52.130 --> 00:01:53.510
+I'm now authenticated.
+
+43
+00:01:53.510 --> 00:01:56.390
+Let's go ahead and verify
+that this user is still
+
+44
+00:01:56.390 --> 00:01:59.070
+using MONGODB-CR.
+
+45
+00:01:59.070 --> 00:02:03.980
+In the system.users collection,
+we can run find and see
+
+46
+00:02:03.980 --> 00:02:08.199
+that the Kirby user is
+still using MONGODB-CR.
+
+47
+00:02:08.199 --> 00:02:10.850
+In order to migrate
+over all these users--
+
+48
+00:02:10.850 --> 00:02:13.568
+in this case just one user--
+over to using SCRAM-SHA-1,
+
+49
+00:02:13.568 --> 00:02:15.568
+we just need to run the
+command db.adminCommand(
+
+50
+00:02:15.568 --> 00:02:20.480
+{authSechemaUpgrade: 1}).
+
+51
+00:02:20.480 --> 00:02:23.750
+And in running so, it says done.
+
+52
+00:02:23.750 --> 00:02:24.750
+OK.
+
+53
+00:02:24.750 --> 00:02:27.470
+And if we look at
+our users, we can
+
+54
+00:02:27.470 --> 00:02:30.290
+see that Kirby is no
+longer using MONGODB-CR,
+
+55
+00:02:30.290 --> 00:02:32.640
+but is rather using SCRAM-SHA-1.
+
+56
+00:02:32.640 --> 00:02:35.870
+And that's how you migrate
+users from using MONGODB-CR
+
+57
+00:02:35.870 --> 00:02:37.610
+to SCRAM-SHA-1.
+
+58
+00:02:37.610 --> 00:02:40.340
+As a result of this,
+MONGODB-CR is now
+
+59
+00:02:40.340 --> 00:02:42.260
+completely disabled
+on this database.
+
+60
+00:02:42.260 --> 00:02:45.250
+It is impossible to
+create users that use
+
+61
+00:02:45.250 --> 00:02:48.460
+MONGODB-CR on this database.

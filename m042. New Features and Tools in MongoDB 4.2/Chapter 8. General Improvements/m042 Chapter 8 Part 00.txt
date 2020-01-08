@@ -1,0 +1,47 @@
+Hi there.
+
+In this lesson, we're going to look at the new traffic recorder feature which we've introduced in MongoDB 4.2.
+
+The traffic recorder feature allows you to inspect and record commands sent to a MongoDB instance and then replay those commands back onto another host at a later time.
+
+So why would you want to do this, I hear you ask?
+
+And that's a great question.
+
+Replaying operations can help you preview how your MongoDB deployments will perform on a production workload in a brand new environment, such as with a hardware migration, a new storage engine, or a system reconfiguration.
+
+To explain why we made this change in 4.2, let's have a look at what we had available in previous releases to capture network traffic.
+
+There are obviously tools we can use like Wireshark and TCP Dump, however, those did not capture network traffic specific to MongoDB.
+
+And it don't provide us with the ability to replay the MongoDB commands at a later date.
+
+Prior to 4.2, if users wished to capture network traffic between a client and a MongoDB instance, they needed to use mongoreplay.
+
+This worked well, but if you were following best practices and had your network traffic secured over the wire using TLS, mongoreplay could not capture this traffic.
+
+So by moving the traffic capture functionality to the mongod itself, we can capture traffic, whether it's encrypted or not.
+
+The new traffic recorder writes to a traffic recorder log which can then be leveraged by mongoreplay which takes the traffic recorder log and replays the operations on a mongod.
+
+In order to capture traffic on the mongod process, the mongod needs to be started with the traffic recording directory parameter.
+
+If you don't set this parameter, the command to start to traffic recorder from the shell will fail.
+
+Once the mongod is started with this option, we can start capturing traffic directly from the mongo shell with the start recording traffic command.
+
+So once you issue the command, the traffic recorder will record all incoming network traffic on the mongod side.
+
+This network traffic is all written to the traffic recorder log which can then be leveraged by the latest version of mongoreplay to be replayed on a mongod.
+
+So let's recap.
+
+Replaying traffic is useful for testing.
+
+You can replay traffic to simulate production workloads, to test a new environment, or to inspect database operations.
+
+Previous releases didn't support the capture of network traffic which was encrypted over the wire.
+
+The traffic recorder captures traffic on the mongod side to allow you to capture any unencrypted traffic.
+
+And that's a brief introduction to our new traffic recorder feature in MongoDB 4.2.

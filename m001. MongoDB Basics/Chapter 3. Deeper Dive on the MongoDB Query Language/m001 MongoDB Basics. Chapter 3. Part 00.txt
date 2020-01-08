@@ -1,0 +1,15 @@
+In this chapter, we're going to talk about some more advanced MongoDB query language concepts.
+
+The MongoDB query language provides extensive support for filtering documents of all shapes and sizes, even those with complex schemas We'll look at the variety of query operators available and how to use them.
+
+Note that because all four types of CRUD operations-- create, read, update, and delete-- require a filter, our query operators may be used in your filters for any of the query language methods we have discussed.
+
+You can find a complete list, with links to reference material for all query operators, in the MongoDB documentation.
+
+We're going to do an overview of each type of operator with some very concrete examples.
+
+The best way to learn is to get your hands dirty.
+
+as part of this chapter, we'll have you do a number of quizzes and labs to give you quite a bit of experience with these operators.
+
+Let's get started.

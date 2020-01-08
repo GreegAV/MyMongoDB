@@ -1,0 +1,461 @@
+
+1
+00:00:00.000 --> 00:00:02.760
+Our rule of thumb says
+that we should always
+
+2
+00:00:02.760 --> 00:00:06.630
+have enough memory to
+allocate our indexes.
+
+3
+00:00:06.630 --> 00:00:08.760
+But there are some edge cases--
+
+4
+00:00:08.760 --> 00:00:11.100
+like, for example,
+the occasional reports
+
+5
+00:00:11.100 --> 00:00:13.050
+that our beyond
+tools and reporting
+
+6
+00:00:13.050 --> 00:00:16.560
+mechanisms do perform, and
+they might need an index
+
+7
+00:00:16.560 --> 00:00:18.510
+to support those queries.
+
+8
+00:00:18.510 --> 00:00:20.430
+And also situations
+where we would
+
+9
+00:00:20.430 --> 00:00:23.230
+have a right-end-side
+index increment.
+
+10
+00:00:23.230 --> 00:00:25.760
+Let's have a look
+into both of these
+
+11
+00:00:25.760 --> 00:00:27.990
+and what kind of other
+solutions we have
+
+12
+00:00:27.990 --> 00:00:31.260
+for these type of edge cases.
+
+13
+00:00:31.260 --> 00:00:34.740
+Apart from the obvious
+situation where indexes are not
+
+14
+00:00:34.740 --> 00:00:38.700
+being utilized should
+not be created or not
+
+15
+00:00:38.700 --> 00:00:41.940
+present in a production
+environment anyway,
+
+16
+00:00:41.940 --> 00:00:44.700
+there are two edge
+cases that do not
+
+17
+00:00:44.700 --> 00:00:51.360
+need to have the full extent
+of the index size in RAM.
+
+18
+00:00:51.360 --> 00:00:54.330
+Most of our queries
+are to support
+
+19
+00:00:54.330 --> 00:00:56.280
+operational functionality--
+
+20
+00:00:56.280 --> 00:00:59.820
+means they are recurrently
+getting information and using
+
+21
+00:00:59.820 --> 00:01:03.650
+those indexes to support
+operational workload.
+
+22
+00:01:03.650 --> 00:01:06.300
+That means, as well,
+that any index that
+
+23
+00:01:06.300 --> 00:01:10.230
+supports a particular query
+should be in RAM because we
+
+24
+00:01:10.230 --> 00:01:13.440
+know that that data will
+be utilized to respond
+
+25
+00:01:13.440 --> 00:01:15.600
+to an operational query.
+
+26
+00:01:15.600 --> 00:01:20.280
+But let's imagine our reporting
+or BI tool mechanisms.
+
+27
+00:01:20.280 --> 00:01:26.580
+If we do have indexes to support
+those queries, which we should,
+
+28
+00:01:26.580 --> 00:01:29.850
+chances that you need this
+information to be always
+
+29
+00:01:29.850 --> 00:01:35.070
+allocated in memory are very
+small because the recurrency
+
+30
+00:01:35.070 --> 00:01:37.890
+by which these
+tools operate is not
+
+31
+00:01:37.890 --> 00:01:43.320
+in the same amount or degree
+that our operational workload.
+
+32
+00:01:43.320 --> 00:01:48.510
+One way of mitigating the
+effect of these particular tools
+
+33
+00:01:48.510 --> 00:01:52.260
+is instead of running the
+queries in our primaries
+
+34
+00:01:52.260 --> 00:01:55.950
+and having the indexes
+created on those primaries,
+
+35
+00:01:55.950 --> 00:02:00.820
+we can have our secondaries be
+replying to requests of our BI
+
+36
+00:02:00.820 --> 00:02:05.130
+tools, and therefore
+having the indexes
+
+37
+00:02:05.130 --> 00:02:09.630
+that support those
+queries been created only
+
+38
+00:02:09.630 --> 00:02:12.670
+on designated nodes.
+
+39
+00:02:12.670 --> 00:02:16.890
+Another situation where the
+full amount of our indexes
+
+40
+00:02:16.890 --> 00:02:21.810
+does not necessarily requires
+to be fully allocated in memory
+
+41
+00:02:21.810 --> 00:02:28.080
+is when we have indexes on
+fields that grow monotonically,
+
+42
+00:02:28.080 --> 00:02:32.580
+like counters, dates,
+and incremental IDs.
+
+43
+00:02:32.580 --> 00:02:37.020
+If you take in consideration
+the index structures--
+
+44
+00:02:37.020 --> 00:02:41.580
+naively represented by this tree
+over here, which is a petrie.
+
+45
+00:02:41.580 --> 00:02:44.370
+If we have monotonically
+increasing data,
+
+46
+00:02:44.370 --> 00:02:47.070
+chances are that our
+index will eventually
+
+47
+00:02:47.070 --> 00:02:52.570
+become unbalanced on the
+right-hand side of that index.
+
+48
+00:02:52.570 --> 00:02:55.370
+Therefore, it will
+grow accordingly
+
+49
+00:02:55.370 --> 00:02:57.340
+with the new data coming in.
+
+50
+00:02:57.340 --> 00:03:03.360
+So if you have an incremental
+ID, you start with 0,
+
+51
+00:03:03.360 --> 00:03:06.810
+and you end up
+with 100 every time
+
+52
+00:03:06.810 --> 00:03:12.000
+that you add a new
+element to your data set.
+
+53
+00:03:12.000 --> 00:03:14.760
+You only grow positively.
+
+54
+00:03:14.760 --> 00:03:16.410
+That means that the
+tree will always
+
+55
+00:03:16.410 --> 00:03:18.330
+grow in the right-hand side.
+
+56
+00:03:18.330 --> 00:03:21.060
+If we add to that
+fact that we only
+
+57
+00:03:21.060 --> 00:03:25.320
+need to query on the
+most recent data,
+
+58
+00:03:25.320 --> 00:03:30.060
+then the amount of index that
+actually needs to be in RAM
+
+59
+00:03:30.060 --> 00:03:34.170
+is always going to be the
+right-end side of your index.
+
+60
+00:03:34.170 --> 00:03:37.170
+So here, in terms
+of memory allocation
+
+61
+00:03:37.170 --> 00:03:39.360
+for this particular
+index, we only
+
+62
+00:03:39.360 --> 00:03:42.300
+need to care about
+how much data--
+
+63
+00:03:42.300 --> 00:03:44.660
+from the recently added data--
+
+64
+00:03:44.660 --> 00:03:49.060
+how are we going to be needing
+to access all the time?
+
+65
+00:03:49.060 --> 00:03:52.890
+This is a typical scenario
+of IOT kind of use cases
+
+66
+00:03:52.890 --> 00:03:57.060
+where new data being
+created in index
+
+67
+00:03:57.060 --> 00:04:01.590
+will be either time based or
+incremental data that always
+
+68
+00:04:01.590 --> 00:04:05.710
+going to grow positively in our
+right-hand side of our index.
+
+69
+00:04:05.710 --> 00:04:08.100
+Therefore, if your
+total index size
+
+70
+00:04:08.100 --> 00:04:12.530
+is 10 gigabytes, but the
+most recent access data--
+
+71
+00:04:12.530 --> 00:04:14.940
+the one that we are using
+the index to query on--
+
+72
+00:04:14.940 --> 00:04:17.490
+is only 2 gigabytes
+of information,
+
+73
+00:04:17.490 --> 00:04:20.430
+then that's the amount
+of size that you
+
+74
+00:04:20.430 --> 00:04:26.220
+need to allocate a memory
+to support those queries.
+
+75
+00:04:26.220 --> 00:04:28.230
+A typical case is,
+for example, when
+
+76
+00:04:28.230 --> 00:04:31.290
+you have something
+like a checkout,
+
+77
+00:04:31.290 --> 00:04:34.230
+that you have a
+field, and an ISODate.
+
+78
+00:04:34.230 --> 00:04:37.710
+You create an index to
+support queries on date.
+
+79
+00:04:37.710 --> 00:04:40.590
+And the queries that you
+operate from the application
+
+80
+00:04:40.590 --> 00:04:43.650
+is looking to that
+date, like doing
+
+81
+00:04:43.650 --> 00:04:47.340
+the exact same moment
+in time now, and sorting
+
+82
+00:04:47.340 --> 00:04:49.110
+by date descending.
+
+83
+00:04:49.110 --> 00:04:53.550
+So you are getting always the
+latest results on your query.
+
+84
+00:04:53.550 --> 00:04:57.780
+Therefore, it is admissible
+that in these situations
+
+85
+00:04:57.780 --> 00:04:59.890
+you might not need to
+allocate the full extent
+
+86
+00:04:59.890 --> 00:05:02.500
+of your supporting index.
+
+87
+00:05:02.500 --> 00:05:05.800
+To wrap it up, when thinking
+about the resource allocation
+
+88
+00:05:05.800 --> 00:05:08.920
+for your indexes, and
+when dealing with indexes,
+
+89
+00:05:08.920 --> 00:05:11.680
+we cannot forget about that
+these data structures do
+
+90
+00:05:11.680 --> 00:05:13.870
+require a lot of resources.
+
+91
+00:05:13.870 --> 00:05:17.830
+They are part of your
+database working sets,
+
+92
+00:05:17.830 --> 00:05:20.770
+and we need to take
+them in consideration
+
+93
+00:05:20.770 --> 00:05:24.970
+in our original sizing
+and maintenance practices.
+
+94
+00:05:24.970 --> 00:05:28.420
+And this is all you need
+to know about resource
+
+95
+00:05:28.420 --> 00:05:30.750
+allocation for indexes.

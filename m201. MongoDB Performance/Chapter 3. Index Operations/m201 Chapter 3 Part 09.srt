@@ -1,0 +1,580 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.360
+Now, most of these
+tools can be run by you
+
+3
+00:00:03.360 --> 00:00:05.400
+or you can just review
+the published results.
+
+4
+00:00:05.400 --> 00:00:07.590
+That's all fine.
+
+5
+00:00:07.590 --> 00:00:09.900
+You can pick a tool of
+choice and run tests
+
+6
+00:00:09.900 --> 00:00:12.430
+on MongoDB or any
+other database.
+
+7
+00:00:12.430 --> 00:00:15.630
+But let's make sure that you
+understand the conditions
+
+8
+00:00:15.630 --> 00:00:20.950
+by which those tools and those
+tests are going to be run.
+
+9
+00:00:20.950 --> 00:00:25.280
+Again, majority of the tooling
+for benchmarking existing today
+
+10
+00:00:25.280 --> 00:00:28.550
+had been built with
+relational systems in mind.
+
+11
+00:00:28.550 --> 00:00:33.150
+And those conditions not
+always apply to MongoDB
+
+12
+00:00:33.150 --> 00:00:36.150
+and other modern databases.
+
+13
+00:00:36.150 --> 00:00:40.620
+Now, if you're only interested
+on doing a small set of testing
+
+14
+00:00:40.620 --> 00:00:42.930
+using read and write
+ratios from MongoDB,
+
+15
+00:00:42.930 --> 00:00:45.930
+my good friend, John Page,
+this young, attractive fellow
+
+16
+00:00:45.930 --> 00:00:49.290
+over here, built the POC driver.
+
+17
+00:00:49.290 --> 00:00:51.150
+It's a small project
+written in Java
+
+18
+00:00:51.150 --> 00:00:53.340
+that allows you to put
+to test your MondoDB
+
+19
+00:00:53.340 --> 00:00:56.400
+cluster to a set of
+conditions and a set
+
+20
+00:00:56.400 --> 00:01:00.900
+of different variations that
+you can set by yourself.
+
+21
+00:01:00.900 --> 00:01:02.620
+All of the previous are great.
+
+22
+00:01:02.620 --> 00:01:03.870
+You can run it yourself.
+
+23
+00:01:03.870 --> 00:01:07.590
+You can just run the tests
+which are genetically available
+
+24
+00:01:07.590 --> 00:01:11.910
+online, or even use
+John Page's POC driver.
+
+25
+00:01:11.910 --> 00:01:15.510
+But sometimes they are
+not really what we need,
+
+26
+00:01:15.510 --> 00:01:20.370
+perhaps because they do not
+capture the essence of your use
+
+27
+00:01:20.370 --> 00:01:23.700
+case or they are missing out
+on some specific functionality
+
+28
+00:01:23.700 --> 00:01:25.890
+of MongoDB that you
+are interested in.
+
+29
+00:01:25.890 --> 00:01:29.610
+But let's not forget about
+benchmarking anti-patterns.
+
+30
+00:01:29.610 --> 00:01:32.230
+Because if you're running
+you're testing yourself,
+
+31
+00:01:32.230 --> 00:01:34.320
+let's make sure you do it right.
+
+32
+00:01:34.320 --> 00:01:38.460
+Now, those anti-patterns can
+be things like database swap
+
+33
+00:01:38.460 --> 00:01:39.540
+replace.
+
+34
+00:01:39.540 --> 00:01:42.300
+Let's say, for example, that
+we are comparing MongoDB
+
+35
+00:01:42.300 --> 00:01:45.690
+with a relational system where
+your relational system would
+
+36
+00:01:45.690 --> 00:01:49.680
+be something like this where
+you have some sort of relations
+
+37
+00:01:49.680 --> 00:01:53.350
+and tables and the relationships
+between those tables.
+
+38
+00:01:53.350 --> 00:01:59.640
+Now, if you are expecting to
+replace the exact same schema
+
+39
+00:01:59.640 --> 00:02:04.860
+from your relational world
+to MongoDB collection world,
+
+40
+00:02:04.860 --> 00:02:08.100
+probably a one-by-one
+one relationship
+
+41
+00:02:08.100 --> 00:02:11.130
+between tables and
+collections might not
+
+42
+00:02:11.130 --> 00:02:13.560
+be the best way to go forward.
+
+43
+00:02:13.560 --> 00:02:17.190
+This may not be reflecting
+MongoDB's capabilities
+
+44
+00:02:17.190 --> 00:02:20.520
+and, therefore, will not
+be a truly comparison
+
+45
+00:02:20.520 --> 00:02:22.740
+between two different systems.
+
+46
+00:02:22.740 --> 00:02:24.390
+You need to think
+a little bit more
+
+47
+00:02:24.390 --> 00:02:27.140
+about how you're
+going to operate data,
+
+48
+00:02:27.140 --> 00:02:29.970
+how are you going to insert,
+how are you going to read,
+
+49
+00:02:29.970 --> 00:02:32.110
+how you're going to
+structure your documents.
+
+50
+00:02:32.110 --> 00:02:38.160
+All of that will be a great deal
+of concern if you do not do so.
+
+51
+00:02:38.160 --> 00:02:43.620
+Also, using MongoDB tools to
+test performance of MongoDB
+
+52
+00:02:43.620 --> 00:02:46.440
+is probably not a great idea.
+
+53
+00:02:46.440 --> 00:02:49.140
+If you're building your
+application on top of the mongo
+
+54
+00:02:49.140 --> 00:02:52.410
+shell, for example, where
+all requests of your code
+
+55
+00:02:52.410 --> 00:02:56.300
+invoke the mongo shell and
+perform an operation, then yes.
+
+56
+00:02:56.300 --> 00:02:58.530
+Then that will be
+the ideal scenario
+
+57
+00:02:58.530 --> 00:03:02.280
+to test the performance
+using the mongo shell.
+
+58
+00:03:02.280 --> 00:03:05.910
+And by that we mean by testing
+these sort of things where
+
+59
+00:03:05.910 --> 00:03:09.990
+you can run some sort of
+cycle inside of mongo shell,
+
+60
+00:03:09.990 --> 00:03:12.270
+insert a bunch of
+documents, and then you
+
+61
+00:03:12.270 --> 00:03:17.760
+get a response at the end saying
+how much time did it execute.
+
+62
+00:03:17.760 --> 00:03:20.550
+If that's your use case, where
+you invoke the mongo shell
+
+63
+00:03:20.550 --> 00:03:23.610
+from your application,
+then go ahead.
+
+64
+00:03:23.610 --> 00:03:26.110
+That's a good way
+of benchmarking.
+
+65
+00:03:26.110 --> 00:03:30.610
+But I'm not really sure that
+that's exactly what you want.
+
+66
+00:03:30.610 --> 00:03:36.990
+Also, using mongoimports to test
+write response of your MondoDB
+
+67
+00:03:36.990 --> 00:03:41.340
+installation is also
+kind of dubious in terms
+
+68
+00:03:41.340 --> 00:03:45.300
+of what you are really
+trying to achieve there.
+
+69
+00:03:45.300 --> 00:03:47.670
+Your laptop might be great.
+
+70
+00:03:47.670 --> 00:03:50.310
+I'm pretty sure
+it's a nice machine
+
+71
+00:03:50.310 --> 00:03:52.630
+with a bunch of stickers
+on it and all of that.
+
+72
+00:03:52.630 --> 00:03:56.490
+But assuming that any
+performance testing
+
+73
+00:03:56.490 --> 00:04:00.510
+that you run from your laptop,
+aside from any unit tests
+
+74
+00:04:00.510 --> 00:04:03.150
+or development testing that
+you might be interested on,
+
+75
+00:04:03.150 --> 00:04:06.060
+might not be the
+best way to assess
+
+76
+00:04:06.060 --> 00:04:08.640
+if MongoDB or any
+database by that matter
+
+77
+00:04:08.640 --> 00:04:12.720
+actually performs accordingly
+with your expectations.
+
+78
+00:04:12.720 --> 00:04:16.950
+Please use a purpose
+server to run your tests.
+
+79
+00:04:16.950 --> 00:04:22.410
+And, finally, using MongoDB
+out-of-the-box parameters
+
+80
+00:04:22.410 --> 00:04:26.310
+probably is not what you're
+going to find in production.
+
+81
+00:04:26.310 --> 00:04:30.330
+That means that if you're
+going to run your application
+
+82
+00:04:30.330 --> 00:04:33.450
+with MongoDB installed
+on it and the only thing
+
+83
+00:04:33.450 --> 00:04:36.780
+that you do is download
+the binary and boot it up,
+
+84
+00:04:36.780 --> 00:04:37.720
+that's great.
+
+85
+00:04:37.720 --> 00:04:39.600
+That's how MongoDB works.
+
+86
+00:04:39.600 --> 00:04:42.090
+But you might want to consider
+things like authentication.
+
+87
+00:04:42.090 --> 00:04:44.220
+Now you may want
+to consider, how
+
+88
+00:04:44.220 --> 00:04:47.610
+do you going to be dealing
+with the high availability.
+
+89
+00:04:47.610 --> 00:04:51.870
+And testing, especially
+benchmarking for performance
+
+90
+00:04:51.870 --> 00:04:54.070
+without those
+conditions in place,
+
+91
+00:04:54.070 --> 00:04:56.520
+will be shooting
+yourselves in the foot.
+
+92
+00:04:56.520 --> 00:04:59.240
+So be careful about that.
+
+93
+00:04:59.240 --> 00:05:02.360
+And that drives to the
+benchmarking conditions.
+
+94
+00:05:02.360 --> 00:05:04.400
+Make sure you're fair,
+you're fair in terms
+
+95
+00:05:04.400 --> 00:05:06.620
+of the comparisons
+that you do concerning
+
+96
+00:05:06.620 --> 00:05:09.830
+the hardware that you're
+utilizing the type of clients
+
+97
+00:05:09.830 --> 00:05:12.290
+and the type of operations
+that you're doing,
+
+98
+00:05:12.290 --> 00:05:15.560
+and the kind of load that
+you're going to be subjecting
+
+99
+00:05:15.560 --> 00:05:17.060
+your systems to.
+
+100
+00:05:17.060 --> 00:05:18.980
+Either different systems
+or different versions
+
+101
+00:05:18.980 --> 00:05:20.750
+of the systems that
+you are testing,
+
+102
+00:05:20.750 --> 00:05:26.540
+they should have a fair ground
+in all those three dimensions.
+
+103
+00:05:26.540 --> 00:05:28.690
+Let's recap this lesson.
+
+104
+00:05:28.690 --> 00:05:31.460
+So, in this lesson, we talked
+about the different types
+
+105
+00:05:31.460 --> 00:05:34.100
+of benchmarking that
+you can do, either using
+
+106
+00:05:34.100 --> 00:05:37.740
+publicly-available data sets
+and tools or building your own.
+
+107
+00:05:37.740 --> 00:05:41.390
+There's different types
+like low-level, high-level,
+
+108
+00:05:41.390 --> 00:05:44.750
+distributed, load, a
+bunch of different ones.
+
+109
+00:05:44.750 --> 00:05:48.110
+You can even do your own
+specific benchmarking.
+
+110
+00:05:48.110 --> 00:05:50.030
+There's obviously
+different public tools
+
+111
+00:05:50.030 --> 00:05:52.430
+available out there that
+benchmark databases.
+
+112
+00:05:52.430 --> 00:05:55.100
+But make sure that you
+are using the one that
+
+113
+00:05:55.100 --> 00:05:57.260
+is more suited to
+the database that you
+
+114
+00:05:57.260 --> 00:05:59.480
+are interested in testing.
+
+115
+00:05:59.480 --> 00:06:01.280
+And don't forget about
+the anti-patterns
+
+116
+00:06:01.280 --> 00:06:04.130
+of MongoDB benchmarking.
+
+117
+00:06:04.130 --> 00:06:06.440
+These are very, very
+important to for you
+
+118
+00:06:06.440 --> 00:06:10.520
+to get a truthful view of
+how the system is actually
+
+119
+00:06:10.520 --> 00:06:12.530
+going to be behaving.
+
+120
+00:06:12.530 --> 00:06:16.810
+And that's all we have
+for basic benchmarking.

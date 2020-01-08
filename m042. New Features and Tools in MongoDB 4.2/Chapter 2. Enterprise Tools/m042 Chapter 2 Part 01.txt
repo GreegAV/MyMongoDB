@@ -1,0 +1,65 @@
+Now that we understand how data lake works, let's see how we can use it.
+
+So we'll start by creating a data lake called Atlas Data Lake.
+
+To do this we're going to select the Data Lake option on the left-hand side in the Atlas UI, and then we're going to click Configure A Data Lake and follow the onscreen commands.
+
+As we've mentioned in the previous lesson, our data lake tutorial steps you through this process.
+
+This is what our data looks like inside our s3 bucket.
+
+We have a JSON folder with six sub-directories containing JSON files.
+
+For this example we're using uncompressed JSON files.
+
+We've added the link to the s3 bucket in the lecture notes.
+
+For this example, we're going to configure the databases and collection for a data lake through the Mongo shell.
+
+We configure our JSON data files with the storage set config command.
+
+Remember we need a MongoDB database user with Atlas admin privileges to configure our s3 files into databases and collections.
+
+The stores object defines each data store associated with the data lake.
+
+In this example we've defined an s3 bucket as the data store, we've named a single data store and we've call it s3 store, we've provided the name of the AWS region where the s3 bucket is located.
+
+We've also defined our database name as sampleDB, and here we're using the star wildcard operator for the collection name.
+
+And the reason we're doing that is because we're using the collection name function to define our collection names here.
+
+What this means is that the data lake will actually generate the collection names from all some directories underneath this JSON directory.
+
+What this gives us is a database called sampleDB and six collections within that database.
+
+So let's have a look at what we've done so far.
+
+We've created a data lake, we've configured it by the Mongo shell, and we've configured our database and collections.
+
+Now we're ready to go and run some analytic queries against our raw s3 data.
+
+Let's start by searching the sample airbnb collection, which contains property reviews for short-term rentals in a range of cities.
+
+Now, let's say we want to find properties in New York which got a high rating from guests.
+
+To make it meaningful, we're going to exclude any properties with less than five reviews.
+
+You may notice that the syntax here is the same standard Mongo query language.
+
+We can run queries and aggregations just as we would run them against a standard MongoDB replica set or shard or cluster.
+
+The find command should return output in this format.
+
+Note that this s3 bucket holds the same data as our Atlas load sample data.
+
+More details on that data can be found in our docs page, which we've linked in the lecture notes.
+
+So let's recap what we've done.
+
+We built a data lake in the Atlas UI.
+
+As part of the process, we created a new IAM role and we gave this role read-only access to our s3 bucket.
+
+We configured our data stores from our s3 data through the Mongo shell using the new storage set config command.
+
+And then when our data is stored and configured, we can run queries and aggregations as normal through the shell, compass, or a MongoDB driver.

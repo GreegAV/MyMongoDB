@@ -1,0 +1,78 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:01.740
+Welcome to Chapter 4.
+
+3
+00:00:01.740 --> 00:00:03.570
+We are almost there.
+
+4
+00:00:03.570 --> 00:00:05.490
+Before we start
+uncorking the champagne
+
+5
+00:00:05.490 --> 00:00:07.650
+and celebrating your course
+completion certificate,
+
+6
+00:00:07.650 --> 00:00:10.380
+we need to go through the
+last chapter of this course.
+
+7
+00:00:10.380 --> 00:00:12.720
+This chapter is all about
+application resilience
+
+8
+00:00:12.720 --> 00:00:13.890
+and robustness.
+
+9
+00:00:13.890 --> 00:00:15.360
+We will be looking
+to how to make
+
+10
+00:00:15.360 --> 00:00:18.990
+your applications resilient to a
+variety of different situations
+
+11
+00:00:18.990 --> 00:00:21.450
+that may impact the
+performance and availability
+
+12
+00:00:21.450 --> 00:00:22.620
+of your system.
+
+13
+00:00:22.620 --> 00:00:25.409
+Don't forget, we are living in
+a distributive database world,
+
+14
+00:00:25.409 --> 00:00:27.450
+and therefore, we need to
+prepare our application
+
+15
+00:00:27.450 --> 00:00:30.420
+to be robust and performant,
+as well as scalable.
+
+16
+00:00:30.420 --> 00:00:31.080
+Hang tight.
+
+17
+00:00:31.080 --> 00:00:33.140
+This is going to be fun.

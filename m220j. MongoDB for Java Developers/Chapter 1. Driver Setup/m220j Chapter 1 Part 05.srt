@@ -1,0 +1,536 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.800
+In this lesson, we're going
+to use the builders that
+
+3
+00:00:03.800 --> 00:00:06.080
+are included in the
+MongoDB Java Driver
+
+4
+00:00:06.080 --> 00:00:10.680
+to greatly ease the composition
+and structure of our queries.
+
+5
+00:00:10.680 --> 00:00:13.820
+There are several builder
+classes to help us.
+
+6
+00:00:13.820 --> 00:00:18.860
+They are filters, projections,
+sorts, aggregation, updates,
+
+7
+00:00:18.860 --> 00:00:20.570
+and indexes.
+
+8
+00:00:20.570 --> 00:00:25.700
+In this lesson, we'll go
+over filters and projections.
+
+9
+00:00:25.700 --> 00:00:27.110
+Let's get started.
+
+10
+00:00:27.110 --> 00:00:29.390
+Let's find the movie
+with Salma Hayek
+
+11
+00:00:29.390 --> 00:00:33.620
+in it composing a query
+directly with the document
+
+12
+00:00:33.620 --> 00:00:37.300
+and an identical query
+with filters builders.
+
+13
+00:00:37.300 --> 00:00:39.156
+In the shell, this
+would be db.movies.find
+
+14
+00:00:39.156 --> 00:00:40.280
+cast: Salma Hayek, limit 1.
+
+15
+00:00:40.280 --> 00:00:45.360
+
+
+16
+00:00:45.360 --> 00:00:49.230
+First, we'll look at what the
+raw document looks like where
+
+17
+00:00:49.230 --> 00:00:53.070
+we create a new document and
+specify that the cast should
+
+18
+00:00:53.070 --> 00:00:55.480
+equal Salma Hayek.
+
+19
+00:00:55.480 --> 00:00:57.540
+given what we know
+from the data set,
+
+20
+00:00:57.540 --> 00:01:03.660
+the title should be Roadracers,
+and the expected year is 1994.
+
+21
+00:01:03.660 --> 00:01:06.420
+And now with the
+filters API, notice
+
+22
+00:01:06.420 --> 00:01:10.630
+that we've made the
+switch from document Bson.
+
+23
+00:01:10.630 --> 00:01:13.830
+Here, we're using
+the equal filter,
+
+24
+00:01:13.830 --> 00:01:19.560
+specifying that the field name
+cast should equal Salma Hayek.
+
+25
+00:01:19.560 --> 00:01:22.140
+We issue our query the same way.
+
+26
+00:01:22.140 --> 00:01:27.180
+And the result here and the
+result here should match.
+
+27
+00:01:27.180 --> 00:01:29.480
+Great, we got the same results.
+
+28
+00:01:29.480 --> 00:01:31.980
+Now, I don't know about
+you, but this feels
+
+29
+00:01:31.980 --> 00:01:35.230
+like a much better API to me.
+
+30
+00:01:35.230 --> 00:01:37.290
+Let's look at a
+query where we want
+
+31
+00:01:37.290 --> 00:01:41.160
+to find movies with both
+Salma Hayek and Johnny Depp
+
+32
+00:01:41.160 --> 00:01:43.060
+as cast members.
+
+33
+00:01:43.060 --> 00:01:45.570
+So in the shell, this
+would be db.movie.find cast
+
+34
+00:01:45.570 --> 00:01:46.820
+$all: Salma Hayek Johnny Depp.
+
+35
+00:01:46.820 --> 00:01:52.830
+
+
+36
+00:01:52.830 --> 00:01:55.890
+And here's how we do
+it with a raw document.
+
+37
+00:01:55.890 --> 00:01:59.460
+Cast, and then a
+new document $all.
+
+38
+00:01:59.460 --> 00:02:04.950
+And specifying a list,
+Salma Hayek and Johnny Depp.
+
+39
+00:02:04.950 --> 00:02:07.950
+We'll issue our query
+and store our results.
+
+40
+00:02:07.950 --> 00:02:10.770
+There should be only one result.
+
+41
+00:02:10.770 --> 00:02:14.220
+Now let's look how to
+do this with filters.
+
+42
+00:02:14.220 --> 00:02:17.330
+Again, we used the Bson class.
+
+43
+00:02:17.330 --> 00:02:22.430
+And this time, we
+specify all, cast, values
+
+44
+00:02:22.430 --> 00:02:25.320
+Salma Hayek, Johnny Depp.
+
+45
+00:02:25.320 --> 00:02:29.550
+We issue our query and
+assert that the results here
+
+46
+00:02:29.550 --> 00:02:32.460
+will equal the results here.
+
+47
+00:02:32.460 --> 00:02:34.020
+And they do.
+
+48
+00:02:34.020 --> 00:02:39.960
+Now, I'd argue that this
+query is much cleaner.
+
+49
+00:02:39.960 --> 00:02:44.420
+Filters contains all of the
+operators you may be used to.
+
+50
+00:02:44.420 --> 00:02:48.710
+Now, let's issue a query
+that's slightly more complex.
+
+51
+00:02:48.710 --> 00:02:52.820
+We'll find all movies where Tom
+Hanks is a cast member released
+
+52
+00:02:52.820 --> 00:02:59.850
+after 1990 but before 2005 with
+a minimum metacritic of 80.
+
+53
+00:02:59.850 --> 00:03:04.820
+So here, we specify
+equal cast Tom Hanks.
+
+54
+00:03:04.820 --> 00:03:11.780
+Greater than where the year
+is 1990, less than year 2005.
+
+55
+00:03:11.780 --> 00:03:16.790
+And gte, or greater than
+or equal to, metacritic
+
+56
+00:03:16.790 --> 00:03:19.480
+with a value of 80.
+
+57
+00:03:19.480 --> 00:03:21.880
+Here, we issue our
+query and store them
+
+58
+00:03:21.880 --> 00:03:24.340
+into our results array list.
+
+59
+00:03:24.340 --> 00:03:29.320
+And we should get four results
+back with the titles Forrest
+
+60
+00:03:29.320 --> 00:03:35.110
+Gump, Toy Story, Toy Story
+2, and Saving Private Ryan.
+
+61
+00:03:35.110 --> 00:03:36.640
+Perfect.
+
+62
+00:03:36.640 --> 00:03:40.780
+Filters are powerful and
+easier to work with compared
+
+63
+00:03:40.780 --> 00:03:42.700
+to assembling a document.
+
+64
+00:03:42.700 --> 00:03:46.100
+We highly recommend
+you use them.
+
+65
+00:03:46.100 --> 00:03:48.010
+Let's move onto projections.
+
+66
+00:03:48.010 --> 00:03:51.130
+Projections are very
+succinct and expressive,
+
+67
+00:03:51.130 --> 00:03:53.740
+allowing us to say what we mean.
+
+68
+00:03:53.740 --> 00:03:56.200
+Let's look at an example.
+
+69
+00:03:56.200 --> 00:03:59.530
+In this projection, we'll
+specify that we only
+
+70
+00:03:59.530 --> 00:04:01.990
+want the title and year fields.
+
+71
+00:04:01.990 --> 00:04:06.490
+And we'll forget to
+project away the _id field.
+
+72
+00:04:06.490 --> 00:04:09.267
+In the shell, this will look
+like db.movies.find cast: Salma
+
+73
+00:04:09.267 --> 00:04:09.767
+Hayek.
+
+74
+00:04:09.767 --> 00:04:12.445
+
+
+75
+00:04:12.445 --> 00:04:16.779
+and we project title 1, year 1.
+
+76
+00:04:16.779 --> 00:04:19.149
+Here, we assemble
+our query using
+
+77
+00:04:19.149 --> 00:04:23.590
+a raw document and a projection
+using a raw document.
+
+78
+00:04:23.590 --> 00:04:28.740
+title 1, and we append year 1.
+
+79
+00:04:28.740 --> 00:04:30.570
+We should have three keys--
+
+80
+00:04:30.570 --> 00:04:34.720
+title, year, and _ID.
+
+81
+00:04:34.720 --> 00:04:40.240
+Now, with projections, it takes
+on a slightly different form.
+
+82
+00:04:40.240 --> 00:04:43.090
+Here, we're using
+a filter builder
+
+83
+00:04:43.090 --> 00:04:48.040
+saying where the cast
+should equal Salma Hayek.
+
+84
+00:04:48.040 --> 00:04:49.630
+We issue our query.
+
+85
+00:04:49.630 --> 00:04:54.550
+And this time in the projection,
+we just specify the fields
+
+86
+00:04:54.550 --> 00:04:56.230
+that we'd like to include--
+
+87
+00:04:56.230 --> 00:04:57.880
+title and year.
+
+88
+00:04:57.880 --> 00:05:03.030
+And this result should
+equal the previous result.
+
+89
+00:05:03.030 --> 00:05:07.590
+Now, let's say we want
+to exclude the _ID field.
+
+90
+00:05:07.590 --> 00:05:09.840
+Well, we issue the same query.
+
+91
+00:05:09.840 --> 00:05:13.230
+And this time in the projections
+we specified fields to
+
+92
+00:05:13.230 --> 00:05:16.990
+include as well as exclude.
+
+93
+00:05:16.990 --> 00:05:17.830
+Perfect.
+
+94
+00:05:17.830 --> 00:05:23.630
+The results from the old
+style the new style matched.
+
+95
+00:05:23.630 --> 00:05:26.930
+If we only wanted to
+exclude the _ID field,
+
+96
+00:05:26.930 --> 00:05:29.420
+there is a convenience
+method to do so--
+
+97
+00:05:29.420 --> 00:05:32.120
+excludeId.
+
+98
+00:05:32.120 --> 00:05:34.670
+Here, we specify our find.
+
+99
+00:05:34.670 --> 00:05:39.080
+And in projection, the fields
+we include are title and year.
+
+100
+00:05:39.080 --> 00:05:44.430
+And we've specified that
+we'd like to exclude the _ID.
+
+101
+00:05:44.430 --> 00:05:47.880
+And this result should match
+our previous result where we
+
+102
+00:05:47.880 --> 00:05:52.280
+manually specified
+to remove the _ID.
+
+103
+00:05:52.280 --> 00:05:53.990
+Great.
+
+104
+00:05:53.990 --> 00:05:56.720
+This concludes our
+lesson on builders.
+
+105
+00:05:56.720 --> 00:05:58.400
+Let's summarize.
+
+106
+00:05:58.400 --> 00:06:01.700
+Builders allow us to be
+extremely expressive.
+
+107
+00:06:01.700 --> 00:06:04.430
+They include all of the query
+operators and projection
+
+108
+00:06:04.430 --> 00:06:07.880
+operators to allow us to
+fine-tune our queries.
+
+109
+00:06:07.880 --> 00:06:10.820
+Here are a few things
+to keep in mind.
+
+110
+00:06:10.820 --> 00:06:15.870
+Filters can be composed
+together for robust queries.
+
+111
+00:06:15.870 --> 00:06:20.880
+Projections offers methods
+such as include, exclude,
+
+112
+00:06:20.880 --> 00:06:22.160
+and exclude _ID.
+
+113
+00:06:22.160 --> 00:06:26.630
+Projections also
+includes methods
+
+114
+00:06:26.630 --> 00:06:31.730
+for every other projection
+operation supported by MongoDB.
+
+115
+00:06:31.730 --> 00:06:33.797
+And that's our
+lesson on builders.
+
+116
+00:06:33.797 --> 00:06:34.297

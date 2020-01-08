@@ -1,0 +1,67 @@
+Now that you have a good, high-level understanding of what we can use auditing for, we can take a moment to look at what auditing logs actually look like.
+
+Of course, auditing logs are outputted in either JSON or BSON.
+
+And here's an example of what an audit log will look like.
+
+All audit logs will have the same eight top-level fields-- atype, ts, local, remote, users, roles, param, and result.
+
+Let's take a moment and break each one of these fields down so we know what we're dealing with.
+
+First we have atype.
+
+It's a string.
+
+It's short for "action type." We'll talk more about action types in a later video, but an example would be something like authenticate, create index, create user, or add [?
+
+shard.
+
+?] These should sound familiar, because they're very similar, if not the same, as a lot of the commands we run on a regular basis.
+
+Next we have ts, which is short for "time stamp." It's a document.
+
+And, inside of this document, it will contain the date and UTC time of the event.
+
+Then we have local.
+
+Local is another embedded document.
+
+And inside this document will have the local IP address and the port number of the running mongod instance.
+
+Similar to local, we have remote.
+
+It's also a document, just like local.
+
+And it will contain the remote IP address and port number of the incoming connection associated with this event.
+
+Next we have users, which is an array.
+
+This is an array of user identification documents.
+
+Because MongoDB allows a session to log in with a different user per database, this array can have more than one user.
+
+Each document contains a user field for the user name and a db field for the authentication database of that user.
+
+We also have a roles array.
+
+This is an array of documents that specifies the roles granted to the user.
+
+Each document contains a role field for the name of the role and a db field for the database associated with that role.
+
+Then we have param.
+
+This is also a document.
+
+This is where the meat of our audit log will live.
+
+Any specific details for the event live here.
+
+This is tightly associated with the atype.
+
+For example, if we have an atype of authenticate, then we can expect a param that is a document with the fields user, db, and mechanism.
+
+And finally, we have a result, which is an integer.
+
+This is our error code.
+
+If our result is non-zero, meaning an error, then that error is going to be directly related to the atype associated with the event that we're logging.

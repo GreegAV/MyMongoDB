@@ -1,0 +1,529 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,010
+Much of our interaction
+with MongoDB
+
+3
+00:00:03,010 --> 00:00:06,260
+will require an
+understanding of JSON.
+
+4
+00:00:06,260 --> 00:00:08,770
+MongoDB is a document
+database, and we frequently
+
+5
+00:00:08,770 --> 00:00:12,070
+discuss data models looking
+at JSON representations
+
+6
+00:00:12,070 --> 00:00:13,720
+of documents.
+
+7
+00:00:13,720 --> 00:00:16,300
+In addition, the
+MongoDB query language,
+
+8
+00:00:16,300 --> 00:00:18,490
+and much of the
+administration of MongoDB,
+
+9
+00:00:18,490 --> 00:00:21,790
+requires some level of
+understanding of JSON.
+
+10
+00:00:21,790 --> 00:00:24,970
+JSON, which is an acronym for
+JavaScript Object Notation,
+
+11
+00:00:24,970 --> 00:00:27,400
+is a popular format for
+representing documents.
+
+12
+00:00:27,400 --> 00:00:29,860
+As an example,
+here is a document
+
+13
+00:00:29,860 --> 00:00:32,350
+representing a popular movie.
+
+14
+00:00:32,350 --> 00:00:34,240
+When discussing
+MongoDB, we typically
+
+15
+00:00:34,240 --> 00:00:38,440
+use the term JSON document
+to refer to such structures.
+
+16
+00:00:38,440 --> 00:00:41,500
+But JSON object is
+equally correct.
+
+17
+00:00:41,500 --> 00:00:44,050
+JSON is a widely
+used data format
+
+18
+00:00:44,050 --> 00:00:45,580
+because it is both
+easy for humans
+
+19
+00:00:45,580 --> 00:00:49,210
+to read and edit and easy for
+computers to parse and output.
+
+20
+00:00:49,210 --> 00:00:53,620
+JSON documents begin and
+end with curly braces.
+
+21
+00:00:53,620 --> 00:00:56,380
+They're composed of
+fields, and each field
+
+22
+00:00:56,380 --> 00:00:59,110
+has a key and a value.
+
+23
+00:00:59,110 --> 00:01:02,050
+In other programming
+languages, JSON documents
+
+24
+00:01:02,050 --> 00:01:07,090
+are analogous to objects,
+structs, maps, or dictionaries.
+
+25
+00:01:07,090 --> 00:01:09,370
+One big advantage
+of using MongoDB
+
+26
+00:01:09,370 --> 00:01:12,280
+is that the data model
+used by the database
+
+27
+00:01:12,280 --> 00:01:13,840
+closely resembles
+the data structures
+
+28
+00:01:13,840 --> 00:01:16,940
+you work with in your
+programming language of choice.
+
+29
+00:01:16,940 --> 00:01:18,550
+This has a number
+of advantages, which
+
+30
+00:01:18,550 --> 00:01:21,520
+we discuss at some
+length in other lessons.
+
+31
+00:01:21,520 --> 00:01:23,500
+Returning to our
+example document,
+
+32
+00:01:23,500 --> 00:01:30,460
+we can see that there are
+fields for title, year, cast,
+
+33
+00:01:30,460 --> 00:01:35,830
+viewer rating, and plot, in
+addition to a number of others.
+
+34
+00:01:35,830 --> 00:01:39,370
+This example illustrates a
+few additional requirements
+
+35
+00:01:39,370 --> 00:01:40,900
+of the JSON grammar.
+
+36
+00:01:40,900 --> 00:01:44,470
+The first is that all keys must
+be surrounded in double quotes.
+
+37
+00:01:44,470 --> 00:01:47,980
+You can see that all keys here
+have double quotes around them.
+
+38
+00:01:47,980 --> 00:01:50,620
+Keys and values must
+be separated by colons.
+
+39
+00:01:50,620 --> 00:01:53,890
+And again, we see that
+for each field here.
+
+40
+00:01:53,890 --> 00:01:56,230
+Fields are separated
+from one another
+
+41
+00:01:56,230 --> 00:02:01,220
+by commas, as we see at the end
+of each field in this document.
+
+42
+00:02:01,220 --> 00:02:04,570
+JSON documents support
+a number of value types.
+
+43
+00:02:04,570 --> 00:02:08,050
+There are strings, which must
+be surrounded by double quotes.
+
+44
+00:02:08,050 --> 00:02:11,380
+Also, note that inside
+strings is the only time
+
+45
+00:02:11,380 --> 00:02:15,520
+when white space is significant
+within a JSON document.
+
+46
+00:02:15,520 --> 00:02:20,140
+New lines and other white
+space outside of quotes
+
+47
+00:02:20,140 --> 00:02:22,900
+is not really part
+of the JSON document.
+
+48
+00:02:22,900 --> 00:02:24,940
+In addition to
+strings, JSON values
+
+49
+00:02:24,940 --> 00:02:30,070
+can be floating point
+numbers, Boolean values,
+
+50
+00:02:30,070 --> 00:02:32,270
+and the null value.
+
+51
+00:02:32,270 --> 00:02:38,560
+Finally, arrays and objects
+can themselves be values
+
+52
+00:02:38,560 --> 00:02:41,080
+and nested in any combination.
+
+53
+00:02:41,080 --> 00:02:44,500
+JSON arrays are defined
+by square brackets.
+
+54
+00:02:44,500 --> 00:02:49,510
+Arrays contain an ordered,
+comma separated list of values.
+
+55
+00:02:49,510 --> 00:02:53,380
+JSON arrays are analogous
+to arrays lists, vectors,
+
+56
+00:02:53,380 --> 00:02:56,230
+or sequences found in other
+programming languages,
+
+57
+00:02:56,230 --> 00:03:00,010
+such as Java,
+Python, C Sharp, etc.
+
+58
+00:03:00,010 --> 00:03:03,010
+This example happens
+to include an array
+
+59
+00:03:03,010 --> 00:03:06,190
+as the value for the cast field.
+
+60
+00:03:06,190 --> 00:03:10,300
+This array contains one element
+for each cast member of note
+
+61
+00:03:10,300 --> 00:03:12,370
+in this movie or, I should
+say, each cast member
+
+62
+00:03:12,370 --> 00:03:15,910
+captured in this
+particular collection.
+
+63
+00:03:15,910 --> 00:03:18,880
+Note that three of the
+elements are strings,
+
+64
+00:03:18,880 --> 00:03:21,740
+but the fourth is actually
+an embedded document.
+
+65
+00:03:21,740 --> 00:03:23,830
+This records the stage
+name of Billy Zane
+
+66
+00:03:23,830 --> 00:03:26,530
+as well as his birth name.
+
+67
+00:03:26,530 --> 00:03:28,810
+This array illustrates
+the last thing about JSON
+
+68
+00:03:28,810 --> 00:03:30,700
+that I really want
+you to walk away with,
+
+69
+00:03:30,700 --> 00:03:32,680
+that being that Jason
+documents support
+
+70
+00:03:32,680 --> 00:03:35,410
+any level of hierarchy
+that is appropriate to
+
+71
+00:03:35,410 --> 00:03:37,900
+your application's data model.
+
+72
+00:03:37,900 --> 00:03:41,370
+MongoDB is designed from the
+ground up to support this.
+
+73
+00:03:41,370 --> 00:03:44,350
+The query language, indexes,
+and internal data structures
+
+74
+00:03:44,350 --> 00:03:48,500
+are designed to support a
+wide variety of data models.
+
+75
+00:03:48,500 --> 00:03:50,980
+Now, let's take a look at
+the Compass representation
+
+76
+00:03:50,980 --> 00:03:53,140
+for documents such as these.
+
+77
+00:03:53,140 --> 00:03:55,780
+Here we're looking at the
+video.movies collection
+
+78
+00:03:55,780 --> 00:03:58,520
+and the Documents tab
+for this collection.
+
+79
+00:03:58,520 --> 00:04:00,360
+And if we scroll
+through here, we
+
+80
+00:04:00,360 --> 00:04:02,800
+can see a number of
+documents in this collection.
+
+81
+00:04:02,800 --> 00:04:05,290
+Using the filter
+functionality and Compass,
+
+82
+00:04:05,290 --> 00:04:08,470
+we can construct a filter that
+will find all movies where
+
+83
+00:04:08,470 --> 00:04:10,540
+the title is Titanic.
+
+84
+00:04:10,540 --> 00:04:15,190
+Applying this filter, we'll see
+that we have eight documents
+
+85
+00:04:15,190 --> 00:04:17,170
+with the title Titanic.
+
+86
+00:04:17,170 --> 00:04:19,300
+Scrolling down, we
+can find the document
+
+87
+00:04:19,300 --> 00:04:22,480
+we were just looking at
+it in its raw JSON form
+
+88
+00:04:22,480 --> 00:04:24,700
+as it's represented in Compass.
+
+89
+00:04:24,700 --> 00:04:26,330
+Now, unlike the schema
+view in Compass,
+
+90
+00:04:26,330 --> 00:04:28,002
+this is not a summary
+representation
+
+91
+00:04:28,002 --> 00:04:30,460
+of the data in this collection
+but the individual documents
+
+92
+00:04:30,460 --> 00:04:31,450
+themselves.
+
+93
+00:04:31,450 --> 00:04:33,820
+For the sake of a cleaner
+UI, compass does not
+
+94
+00:04:33,820 --> 00:04:35,590
+depict documents as JSON.
+
+95
+00:04:35,590 --> 00:04:39,280
+Rather, for each document,
+it simply lists the fields.
+
+96
+00:04:39,280 --> 00:04:42,460
+For aggregate values, such as
+arrays and embedded documents,
+
+97
+00:04:42,460 --> 00:04:44,590
+it shows a tree view
+that you can click on
+
+98
+00:04:44,590 --> 00:04:48,710
+to expand the value of the
+field, as we see for cast.
+
+99
+00:04:48,710 --> 00:04:51,160
+It uses this mechanism
+for any level of hierarchy
+
+100
+00:04:51,160 --> 00:04:52,720
+within documents.
+
+101
+00:04:52,720 --> 00:04:55,270
+You can expand successive
+values to drive down
+
+102
+00:04:55,270 --> 00:04:57,130
+into any documents you wish.
+
+103
+00:04:57,130 --> 00:05:00,760
+Here, we'll expand the Billy
+Zane element of this array
+
+104
+00:05:00,760 --> 00:05:04,270
+to see the full document
+or object as it's
+
+105
+00:05:04,270 --> 00:05:06,830
+stored in this document.
+
+106
+00:05:06,830 --> 00:05:09,640
+And with that, we've
+concluded our overview of JSON
+
+107
+00:05:09,640 --> 00:05:11,750
+and it's importance in MongoDB.
+
+108
+00:05:11,750 --> 00:05:14,260
+For more information about
+the JSON document format,
+
+109
+00:05:14,260 --> 00:05:18,072
+feel free to read about
+it in detail www.JSON.org.
+
+110
+00:05:18,072 --> 00:00:00,000
+
+

@@ -1,0 +1,761 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.370
+So in my system here,
+I can see that there's
+
+3
+00:00:02.370 --> 00:00:04.780
+been a normal flow
+of connections,
+
+4
+00:00:04.780 --> 00:00:10.800
+then a spike in this place here,
+and then another spike here.
+
+5
+00:00:10.800 --> 00:00:12.690
+Now, connection
+spikes are generally
+
+6
+00:00:12.690 --> 00:00:16.120
+correlated with something
+that the application is doing.
+
+7
+00:00:16.120 --> 00:00:17.970
+New connections
+being established
+
+8
+00:00:17.970 --> 00:00:21.330
+means that you might have
+new clients or new threads
+
+9
+00:00:21.330 --> 00:00:25.250
+of those clients establishing
+connections to do some work.
+
+10
+00:00:25.250 --> 00:00:27.375
+There are a couple of
+things that also can provoke
+
+11
+00:00:27.375 --> 00:00:29.880
+this which are not that good.
+
+12
+00:00:29.880 --> 00:00:32.400
+Well, exhausting
+connection pools
+
+13
+00:00:32.400 --> 00:00:36.330
+is probably an indicator
+and a direct correlation
+
+14
+00:00:36.330 --> 00:00:39.300
+between how your
+driver's configured
+
+15
+00:00:39.300 --> 00:00:42.930
+and how connections have you
+been enabling your system
+
+16
+00:00:42.930 --> 00:00:43.850
+to work with.
+
+17
+00:00:43.850 --> 00:00:47.880
+The drivers will try to reuse
+as many connections as possible
+
+18
+00:00:47.880 --> 00:00:50.010
+by maintaining a
+connection pool.
+
+19
+00:00:50.010 --> 00:00:52.110
+If those connections
+pools are exhausted,
+
+20
+00:00:52.110 --> 00:00:54.270
+they will have
+specific configuration
+
+21
+00:00:54.270 --> 00:00:56.430
+to allow you to establish
+new connections.
+
+22
+00:00:56.430 --> 00:00:58.520
+But once the connection
+pool is exhausted,
+
+23
+00:00:58.520 --> 00:01:00.600
+it will try to connect
+more and more and more.
+
+24
+00:01:00.600 --> 00:01:05.370
+So seeing exactly why
+there's some exhaustion
+
+25
+00:01:05.370 --> 00:01:07.500
+of your connection pools
+might be a good indicator
+
+26
+00:01:07.500 --> 00:01:09.060
+from debugging
+perspective to see
+
+27
+00:01:09.060 --> 00:01:12.480
+if your application is actually
+doing what it should be doing.
+
+28
+00:01:12.480 --> 00:01:15.060
+There can also be occasional
+incorrect connections
+
+29
+00:01:15.060 --> 00:01:16.632
+to your production environment.
+
+30
+00:01:16.632 --> 00:01:18.090
+Let's say, for
+example, that we are
+
+31
+00:01:18.090 --> 00:01:21.750
+running a long-lasting tests
+that inadvertently connects
+
+32
+00:01:21.750 --> 00:01:23.460
+to your production environment.
+
+33
+00:01:23.460 --> 00:01:26.850
+Those can also be identified
+in terms of connection
+
+34
+00:01:26.850 --> 00:01:29.190
+spikes in your system.
+
+35
+00:01:29.190 --> 00:01:31.635
+And obviously, there's the
+analytical workload load
+
+36
+00:01:31.635 --> 00:01:32.790
+and reporting tools.
+
+37
+00:01:32.790 --> 00:01:34.740
+If they are supposed
+to connect your system,
+
+38
+00:01:34.740 --> 00:01:36.660
+you eventually see the
+spikes in the numbers
+
+39
+00:01:36.660 --> 00:01:39.330
+of connections and some
+specific operations
+
+40
+00:01:39.330 --> 00:01:41.310
+that those tools will do.
+
+41
+00:01:41.310 --> 00:01:45.540
+Now, if your connections
+keep increasing but not
+
+42
+00:01:45.540 --> 00:01:49.700
+a lot of work or workload is
+associated with that increase,
+
+43
+00:01:49.700 --> 00:01:53.370
+that might be provoked by
+two different situations,
+
+44
+00:01:53.370 --> 00:01:56.700
+either stale operations
+or incorrect credentials
+
+45
+00:01:56.700 --> 00:01:58.830
+used by the application.
+
+46
+00:01:58.830 --> 00:02:00.370
+In this case in
+particular, for us
+
+47
+00:02:00.370 --> 00:02:05.970
+to analyze exactly what happened
+in terms of number of workload,
+
+48
+00:02:05.970 --> 00:02:09.840
+we need to see if the number
+of connections, especially
+
+49
+00:02:09.840 --> 00:02:12.750
+in these two setups
+here, [? did ?]
+
+50
+00:02:12.750 --> 00:02:16.410
+actually correlated with
+more operations per second.
+
+51
+00:02:16.410 --> 00:02:18.840
+We can see that there's
+a small spike in number
+
+52
+00:02:18.840 --> 00:02:22.420
+of operations per second
+here, especially commands.
+
+53
+00:02:22.420 --> 00:02:25.710
+There are some queries going
+on, not a lot of get mores.
+
+54
+00:02:25.710 --> 00:02:27.880
+So there's something
+going on here.
+
+55
+00:02:27.880 --> 00:02:30.300
+And there's some document
+metrics as well--
+
+56
+00:02:30.300 --> 00:02:34.670
+some operations that are
+related with return documents
+
+57
+00:02:34.670 --> 00:02:36.030
+per queries.
+
+58
+00:02:36.030 --> 00:02:37.690
+But the connections
+keeping increasing
+
+59
+00:02:37.690 --> 00:02:40.560
+at a completely different
+pace than the number of
+
+60
+00:02:40.560 --> 00:02:42.750
+returned documents
+and the number
+
+61
+00:02:42.750 --> 00:02:44.610
+of operations per second.
+
+62
+00:02:44.610 --> 00:02:46.440
+That might not be
+a very good sign.
+
+63
+00:02:46.440 --> 00:02:49.800
+Actually, it's not at all
+a extremely good sign.
+
+64
+00:02:49.800 --> 00:02:52.500
+For us to understand
+exactly what's going on,
+
+65
+00:02:52.500 --> 00:02:56.910
+we also need to see the
+number of cursors open.
+
+66
+00:02:56.910 --> 00:02:59.340
+Now, if I need more cursors--
+
+67
+00:02:59.340 --> 00:03:01.530
+and here, I can totally
+see that there's
+
+68
+00:03:01.530 --> 00:03:05.730
+been an increase once we jumped
+the first level of number
+
+69
+00:03:05.730 --> 00:03:08.730
+of connections in the
+number of cursors open.
+
+70
+00:03:08.730 --> 00:03:12.030
+But once I increase it
+again a second time,
+
+71
+00:03:12.030 --> 00:03:15.000
+no more curses were
+needed to be opened.
+
+72
+00:03:15.000 --> 00:03:17.250
+So that means that the
+database is actually
+
+73
+00:03:17.250 --> 00:03:21.300
+being able to fulfill
+the number of requests
+
+74
+00:03:21.300 --> 00:03:23.490
+that these new connections
+are establishing
+
+75
+00:03:23.490 --> 00:03:25.960
+with the same number of cursors.
+
+76
+00:03:25.960 --> 00:03:30.120
+Now, this can be correlated with
+a particular situation where
+
+77
+00:03:30.120 --> 00:03:34.440
+we have very, very,
+very bad queries.
+
+78
+00:03:34.440 --> 00:03:39.100
+And for that, we need to analyze
+this particular metric here,
+
+79
+00:03:39.100 --> 00:03:41.810
+which is query targeting.
+
+80
+00:03:41.810 --> 00:03:43.800
+Query targeting will
+allow us to identify
+
+81
+00:03:43.800 --> 00:03:46.380
+long-lasting
+non-indexed queries,
+
+82
+00:03:46.380 --> 00:03:49.170
+which as you all know
+from this chapter,
+
+83
+00:03:49.170 --> 00:03:51.430
+that's a very bad thing.
+
+84
+00:03:51.430 --> 00:03:54.750
+So identifying them--
+it's our mission.
+
+85
+00:03:54.750 --> 00:03:58.170
+Here, I can tell you
+right now that this is not
+
+86
+00:03:58.170 --> 00:04:00.760
+an ideal scenario for
+a couple of reasons.
+
+87
+00:04:00.760 --> 00:04:02.070
+Let's look in more detail.
+
+88
+00:04:02.070 --> 00:04:04.860
+The query targeting metric
+allows us to see two different
+
+89
+00:04:04.860 --> 00:04:08.640
+ratios, the number of scans
+per returned documents--
+
+90
+00:04:08.640 --> 00:04:11.970
+so number of scan
+entries in an index--
+
+91
+00:04:11.970 --> 00:04:13.470
+and the number of
+returned documents
+
+92
+00:04:13.470 --> 00:04:16.160
+consecutive to that
+number of scans.
+
+93
+00:04:16.160 --> 00:04:20.290
+As you can see here, it's
+pretty much flat to almost 0--
+
+94
+00:04:20.290 --> 00:04:24.120
+so very little index
+scanning going on here.
+
+95
+00:04:24.120 --> 00:04:29.880
+The other ratio is the scanned
+objects per returned documents.
+
+96
+00:04:29.880 --> 00:04:32.850
+This gives us the information
+on how many documents
+
+97
+00:04:32.850 --> 00:04:36.660
+we are scanning divided by the
+number of documents returned.
+
+98
+00:04:36.660 --> 00:04:41.070
+Now, as you can see here,
+this is looking pretty bad.
+
+99
+00:04:41.070 --> 00:04:41.670
+Why?
+
+100
+00:04:41.670 --> 00:04:45.510
+Well, we are scanning a
+lot of different documents
+
+101
+00:04:45.510 --> 00:04:48.030
+and returning a
+very small amount
+
+102
+00:04:48.030 --> 00:04:50.760
+of those documents in return.
+
+103
+00:04:50.760 --> 00:04:53.040
+This is basically
+clear indication
+
+104
+00:04:53.040 --> 00:04:55.770
+that the queries
+that our clients are
+
+105
+00:04:55.770 --> 00:04:58.920
+doing in this
+particular stage here
+
+106
+00:04:58.920 --> 00:05:01.810
+are all non-indexed queries.
+
+107
+00:05:01.810 --> 00:05:05.790
+Once you target such a
+thing and correlate it back
+
+108
+00:05:05.790 --> 00:05:07.290
+with the number of
+connections being
+
+109
+00:05:07.290 --> 00:05:10.990
+increasing constantly and
+not a lot of document metrics
+
+110
+00:05:10.990 --> 00:05:13.600
+being returned, for
+example, and not
+
+111
+00:05:13.600 --> 00:05:16.300
+a lot of different
+operations per second,
+
+112
+00:05:16.300 --> 00:05:19.520
+you might want to go back
+to your developers and ask,
+
+113
+00:05:19.520 --> 00:05:22.780
+why do we need so many
+clients, or why are we
+
+114
+00:05:22.780 --> 00:05:25.960
+launching so many
+requests to our system
+
+115
+00:05:25.960 --> 00:05:28.480
+if the total amount
+of work in our system
+
+116
+00:05:28.480 --> 00:05:32.350
+is actually pretty
+much not significant?
+
+117
+00:05:32.350 --> 00:05:35.317
+Now, once you have clearly
+identified the situations,
+
+118
+00:05:35.317 --> 00:05:37.150
+apart from going back
+to your developer team
+
+119
+00:05:37.150 --> 00:05:40.210
+and start doing some
+questions about why did we
+
+120
+00:05:40.210 --> 00:05:44.020
+launch at this point and this
+point and again at this point
+
+121
+00:05:44.020 --> 00:05:45.970
+so many different
+connections, you
+
+122
+00:05:45.970 --> 00:05:49.540
+should also analyze the
+logs of these machines
+
+123
+00:05:49.540 --> 00:05:52.930
+to pinpoint what
+kind of queries are
+
+124
+00:05:52.930 --> 00:05:55.660
+being done by these clients.
+
+125
+00:05:55.660 --> 00:05:59.250
+So you'll have much
+more clear information
+
+126
+00:05:59.250 --> 00:06:03.130
+of what kind of queries
+are our system doing.
+
+127
+00:06:03.130 --> 00:06:06.190
+And for that, we will
+need tools like mlogvis
+
+128
+00:06:06.190 --> 00:06:11.590
+or just analyzing the logs
+of your mongod instance.
+
+129
+00:06:11.590 --> 00:06:14.420
+So just to recap what
+we've learned, keeping
+
+130
+00:06:14.420 --> 00:06:16.300
+an historical monitoring data--
+
+131
+00:06:16.300 --> 00:06:20.410
+it's quite important to
+analyze how the system is doing
+
+132
+00:06:20.410 --> 00:06:23.080
+and how we can predict the
+system application will
+
+133
+00:06:23.080 --> 00:06:25.450
+be doing in the future.
+
+134
+00:06:25.450 --> 00:06:27.640
+Watching out for spikes
+in connections or spikes
+
+135
+00:06:27.640 --> 00:06:30.010
+in the number of operations
+per second, cursors,
+
+136
+00:06:30.010 --> 00:06:34.230
+and so on will allow us to
+correlate values between them.
+
+137
+00:06:34.230 --> 00:06:37.780
+And if they out
+of sync, you need
+
+138
+00:06:37.780 --> 00:06:42.190
+to come back to your developers
+and ask educated questions.
+
+139
+00:06:42.190 --> 00:06:44.740
+Make sure you use
+mlogvis and other tools
+
+140
+00:06:44.740 --> 00:06:47.470
+to understand exactly what
+those connections are doing,
+
+141
+00:06:47.470 --> 00:06:49.840
+what those clients are doing.
+
+142
+00:06:49.840 --> 00:06:54.050
+Do not forget that some spikes
+might skew out your data.
+
+143
+00:06:54.050 --> 00:06:56.990
+So make sure you know
+what you're looking for.
+
+144
+00:06:56.990 --> 00:06:59.290
+And obviously,
+don't forget to spot
+
+145
+00:06:59.290 --> 00:07:02.260
+long-lasting queries
+or non-indexed queries
+
+146
+00:07:02.260 --> 00:07:05.980
+to understand how those can
+affect your overall performance
+
+147
+00:07:05.980 --> 00:07:10.030
+of the system and get to
+the bottom of why they exist
+
+148
+00:07:10.030 --> 00:07:11.680
+and why they are present.
+
+149
+00:07:11.680 --> 00:07:15.220
+Now, changes, if
+notified and controlled,
+
+150
+00:07:15.220 --> 00:07:18.160
+will still be observed
+by the monitoring tools.
+
+151
+00:07:18.160 --> 00:07:21.430
+Make sure you keep an eye on a
+change log of your application.
+
+152
+00:07:21.430 --> 00:07:25.750
+Ask your team to keep you
+up-to-date on incoming changes.
+
+153
+00:07:25.750 --> 00:07:29.320
+If they don't, given that
+you have all this information
+
+154
+00:07:29.320 --> 00:07:31.630
+and the detailed
+information of mlogvis,
+
+155
+00:07:31.630 --> 00:07:33.910
+the profiler, the
+explain commands,
+
+156
+00:07:33.910 --> 00:07:37.090
+you'll be able to go back
+with a great deal of detail
+
+157
+00:07:37.090 --> 00:07:40.740
+and help them solve
+some potential issues.

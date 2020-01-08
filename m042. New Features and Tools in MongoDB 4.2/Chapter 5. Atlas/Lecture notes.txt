@@ -1,0 +1,1 @@
+The two URI options required to connect to an Atlas Analytics node are readPreference=secondary and readPreferenceTags=nodeType:ANALYTICS.

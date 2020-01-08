@@ -1,0 +1,512 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.230
+Let's talk about
+the server logs.
+
+3
+00:00:02.230 --> 00:00:03.670
+Imagine that
+something goes wrong
+
+4
+00:00:03.670 --> 00:00:06.160
+and you suspect the problem
+is with your deployment.
+
+5
+00:00:06.160 --> 00:00:09.910
+Maybe your query is just taking
+unexpectedly long to answer,
+
+6
+00:00:09.910 --> 00:00:12.700
+or maybe you're suddenly
+missing a collection,
+
+7
+00:00:12.700 --> 00:00:15.370
+or a server goes down
+and you're not sure why.
+
+8
+00:00:15.370 --> 00:00:18.130
+The server logs are going to
+be the first place you look
+
+9
+00:00:18.130 --> 00:00:19.664
+once you're aware of a problem.
+
+10
+00:00:19.664 --> 00:00:21.580
+They're taken continuously,
+and with them, you
+
+11
+00:00:21.580 --> 00:00:24.610
+can look into the past to
+figure out what went wrong.
+
+12
+00:00:24.610 --> 00:00:26.769
+When people contact our
+technical services team
+
+13
+00:00:26.769 --> 00:00:28.810
+asking for help with a
+problem, this is typically
+
+14
+00:00:28.810 --> 00:00:30.670
+the first thing we ask for.
+
+15
+00:00:30.670 --> 00:00:33.220
+Let's jump in and see
+what the logs look like.
+
+16
+00:00:33.220 --> 00:00:35.170
+I haven't been running
+this mongod very long,
+
+17
+00:00:35.170 --> 00:00:36.100
+but that's OK.
+
+18
+00:00:36.100 --> 00:00:37.810
+From the moment the
+server starts up,
+
+19
+00:00:37.810 --> 00:00:40.360
+it begins recording
+its story in the logs.
+
+20
+00:00:40.360 --> 00:00:42.610
+It starts by telling us
+that it is starting up
+
+21
+00:00:42.610 --> 00:00:44.140
+and logs some information.
+
+22
+00:00:44.140 --> 00:00:46.480
+You can see this in the
+messages on the right.
+
+23
+00:00:46.480 --> 00:00:47.980
+MongoDB starting.
+
+24
+00:00:47.980 --> 00:00:49.330
+Here's my process ID.
+
+25
+00:00:49.330 --> 00:00:51.010
+Here's the port
+I'm listening on.
+
+26
+00:00:51.010 --> 00:00:52.820
+Here's my path.
+
+27
+00:00:52.820 --> 00:00:55.250
+Here's some information
+that I was built from.
+
+28
+00:00:55.250 --> 00:00:58.520
+These logs are the story our
+database tells about itself
+
+29
+00:00:58.520 --> 00:00:59.810
+and its environment.
+
+30
+00:00:59.810 --> 00:01:03.090
+And already, you have a
+sense of the basic format.
+
+31
+00:01:03.090 --> 00:01:05.340
+On the left, you
+see a time stamp.
+
+32
+00:01:05.340 --> 00:01:08.760
+It's in ISO 8601 local
+format for those of you
+
+33
+00:01:08.760 --> 00:01:09.750
+who are curious.
+
+34
+00:01:09.750 --> 00:01:12.090
+Next, you see the severity.
+
+35
+00:01:12.090 --> 00:01:14.910
+These are all I, so the
+severity is "informational."
+
+36
+00:01:14.910 --> 00:01:17.370
+In other words, each of
+these entries is normal
+
+37
+00:01:17.370 --> 00:01:19.200
+and this is the
+information that the server
+
+38
+00:01:19.200 --> 00:01:21.180
+records in normal operations.
+
+39
+00:01:21.180 --> 00:01:23.700
+After that, you
+have the component.
+
+40
+00:01:23.700 --> 00:01:25.290
+Starts with control here.
+
+41
+00:01:25.290 --> 00:01:27.390
+You can see a few
+of them say storage.
+
+42
+00:01:27.390 --> 00:01:31.140
+Following that is the
+context in square brackets.
+
+43
+00:01:31.140 --> 00:01:34.740
+Finally, on the right, you
+get the informational message
+
+44
+00:01:34.740 --> 00:01:35.670
+itself.
+
+45
+00:01:35.670 --> 00:01:38.730
+Let's filter out all the control
+lines and also the time stamp
+
+46
+00:01:38.730 --> 00:01:41.110
+at the beginning and
+get to the component.
+
+47
+00:01:41.110 --> 00:01:47.550
+I can see storage, FTDC,
+Replication, Network.
+
+48
+00:01:47.550 --> 00:01:48.960
+Here's the full list--
+
+49
+00:01:48.960 --> 00:01:54.660
+access, command, control,
+geo, index, network, query,
+
+50
+00:01:54.660 --> 00:01:59.670
+replication, sharding,
+storage, journal, and write.
+
+51
+00:01:59.670 --> 00:02:01.920
+This helps us narrow down
+what we're looking at.
+
+52
+00:02:01.920 --> 00:02:03.810
+We'll be looking into these
+a bit more as they come up
+
+53
+00:02:03.810 --> 00:02:06.120
+during the course, but
+definitely be aware of the fact
+
+54
+00:02:06.120 --> 00:02:08.203
+that you can use these to
+filter things down a bit
+
+55
+00:02:08.203 --> 00:02:11.370
+and to figure out what it is
+exactly you're looking at.
+
+56
+00:02:11.370 --> 00:02:13.470
+It's also probably worth
+talking for a moment
+
+57
+00:02:13.470 --> 00:02:15.850
+about the severity.
+
+58
+00:02:15.850 --> 00:02:18.340
+F is for a fatal error.
+
+59
+00:02:18.340 --> 00:02:21.490
+This would have to come from an
+uncaught server exception that
+
+60
+00:02:21.490 --> 00:02:22.720
+crashed the process.
+
+61
+00:02:22.720 --> 00:02:24.590
+It's pretty hard to trigger.
+
+62
+00:02:24.590 --> 00:02:28.300
+E is error, an internal
+uncaught server
+
+63
+00:02:28.300 --> 00:02:30.910
+error that doesn't result
+in the server crashing.
+
+64
+00:02:30.910 --> 00:02:34.270
+W is Warning-- something that
+might indicate a problem,
+
+65
+00:02:34.270 --> 00:02:37.430
+but it doesn't prevent the
+server from doing its job.
+
+66
+00:02:37.430 --> 00:02:41.470
+I is informational, which is
+everything logged by default.
+
+67
+00:02:41.470 --> 00:02:43.030
+And d is diagnostic.
+
+68
+00:02:43.030 --> 00:02:45.670
+This comes up when you set the
+verbosity level above zero,
+
+69
+00:02:45.670 --> 00:02:47.110
+which we don't
+generally recommend
+
+70
+00:02:47.110 --> 00:02:49.210
+on production databases.
+
+71
+00:02:49.210 --> 00:02:51.670
+So how can you find the
+important log entries
+
+72
+00:02:51.670 --> 00:02:53.320
+you might be looking for?
+
+73
+00:02:53.320 --> 00:02:55.480
+Obviously, if you know
+when things went wrong,
+
+74
+00:02:55.480 --> 00:02:59.600
+you can find events immediately
+before or after that event.
+
+75
+00:02:59.600 --> 00:03:01.000
+Here's our server process.
+
+76
+00:03:01.000 --> 00:03:04.080
+Let's kill it and see
+what the logs record--
+
+77
+00:03:04.080 --> 00:03:07.768
+9332, 9332.
+
+78
+00:03:07.768 --> 00:03:10.030
+This is going to be
+a hard kill signal.
+
+79
+00:03:10.030 --> 00:03:11.980
+We wouldn't recommend
+this generally.
+
+80
+00:03:11.980 --> 00:03:13.860
+And our process is down.
+
+81
+00:03:13.860 --> 00:03:15.340
+Let's start it up again.
+
+82
+00:03:15.340 --> 00:03:15.940
+Great.
+
+83
+00:03:15.940 --> 00:03:17.530
+Let's look at the logs.
+
+84
+00:03:17.530 --> 00:03:19.750
+Here, we can see that it
+was moving along doing
+
+85
+00:03:19.750 --> 00:03:21.820
+its normal operations.
+
+86
+00:03:21.820 --> 00:03:24.449
+And boom-- server restarted.
+
+87
+00:03:24.449 --> 00:03:25.990
+And if we look for
+it, we should also
+
+88
+00:03:25.990 --> 00:03:28.820
+be able to find its
+transition back to primary.
+
+89
+00:03:28.820 --> 00:03:29.830
+And there it is.
+
+90
+00:03:29.830 --> 00:03:32.590
+And close by, you can see the
+things that were happening just
+
+91
+00:03:32.590 --> 00:03:35.020
+before and just afterwards.
+
+92
+00:03:35.020 --> 00:03:36.820
+Let's go back to the terminal.
+
+93
+00:03:36.820 --> 00:03:39.034
+And by the way, if
+you find that you're
+
+94
+00:03:39.034 --> 00:03:40.450
+wanting to capture
+a lot more, you
+
+95
+00:03:40.450 --> 00:03:45.130
+can always run your system
+with maximum verbosity.
+
+96
+00:03:45.130 --> 00:03:48.790
+Now I can see these diagnostic
+entries appearing in my log.
+
+97
+00:03:48.790 --> 00:03:50.770
+Usually, this will
+be overkill, as it'll
+
+98
+00:03:50.770 --> 00:03:54.040
+be doing extra logging for
+a lot of internal processes.
+
+99
+00:03:54.040 --> 00:03:56.590
+Our server engineers like this
+feature when they roll out
+
+100
+00:03:56.590 --> 00:03:58.060
+code changes to
+the server and they
+
+101
+00:03:58.060 --> 00:03:59.740
+want to make sure
+everything is working,
+
+102
+00:03:59.740 --> 00:04:02.240
+but we wouldn't recommend doing
+this by default on your end.
+
+103
+00:04:02.240 --> 00:04:05.890
+If something is useful, we log
+it at the default verbosity.
+
+104
+00:04:05.890 --> 00:04:08.016
+You can find more information
+in the documentation.
+
+105
+00:04:08.016 --> 00:04:09.765
+There will be a link
+in the lecture notes.
+
+106
+00:04:09.765 --> 00:04:11.200
+We're going to go
+into more detail
+
+107
+00:04:11.200 --> 00:04:13.690
+with the server logs when we
+look at individual scenarios,
+
+108
+00:04:13.690 --> 00:04:15.640
+but already, you know
+how to find your logs
+
+109
+00:04:15.640 --> 00:04:18.329
+and parse a bit of
+what they're saying.

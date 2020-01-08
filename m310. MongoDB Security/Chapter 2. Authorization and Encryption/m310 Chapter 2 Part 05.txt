@@ -1,0 +1,51 @@
+In This video, we're going to talk about resources.
+
+We already know that resources are the other half of privileges in MongoDB.
+
+They're the subjects of our actions.
+
+Resources will eventually have their state or behavior changed in some form by an action.
+
+MongoDB has four resources, collections, databases, clusters, and the special any resource resource.
+
+All of these resources will be defined by a resource document.
+
+Let's look at how to define each of these with a resource document.
+
+First, we'll check out collections and databases.
+
+So here's the generic template that is used to define a collection or a database.
+
+Through this document, we can actually describe a few different scenarios.
+
+First, we can specify a specific database.
+
+In this case, the products database.
+
+It's important to note that we always have both the db and the collection keys.
+
+If we want to specify a specific database, we must use an empty string as a value for the collection key.
+
+This resource document would allow anyone to perform the associated action for this resource on any collection within the products database.
+
+Conversely, if we want to grant someone the ability to perform an action on a specific collection across any database, then we use this syntax, here specifying the empty string for the db field and then specifying an actual collection name for a collection.
+
+And of course, we can specify a specific collection for a specific database for any action to be performed on.
+
+Finally, if we'd like to give someone access to perform their action on any non-system collection on all databases, then we can just pass an empty string to both the db field and the collection field.
+
+As far as the cluster resource is concerned, there's really just one document and it looks just like this.
+
+We just specify the cluster field to be true, simple as that.
+
+And finally, we have the any resource document, which of course allows an action to be performed on any resource in the database.
+
+This is what it looks like.
+
+We just pass in any resource key, a true value, and this is the resource document for any resource.
+
+Again, this resource is for internal usage only.
+
+Avoid its use at all cost.
+
+And those are the different resources in MongoDB.

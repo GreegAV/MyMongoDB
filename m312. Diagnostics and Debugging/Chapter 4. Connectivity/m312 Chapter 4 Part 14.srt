@@ -1,0 +1,615 @@
+
+1
+00:00:00.000 --> 00:00:00.510
+
+
+2
+00:00:00.510 --> 00:00:01.050
+OK.
+
+3
+00:00:01.050 --> 00:00:02.424
+Let's talk about
+some issues that
+
+4
+00:00:02.424 --> 00:00:04.747
+can arise in the
+context of sharding.
+
+5
+00:00:04.747 --> 00:00:06.330
+The most obvious
+thing to keep in mind
+
+6
+00:00:06.330 --> 00:00:09.510
+is that after MongoDB 3.4,
+you can have up to one
+
+7
+00:00:09.510 --> 00:00:13.230
+migration per pair of shards,
+one sourcing the chunk and one
+
+8
+00:00:13.230 --> 00:00:14.400
+receiving it.
+
+9
+00:00:14.400 --> 00:00:17.580
+Here, we can see
+exactly that happening.
+
+10
+00:00:17.580 --> 00:00:20.610
+And, if you have six
+shards, you could
+
+11
+00:00:20.610 --> 00:00:24.840
+have as many as three
+chunks in flight.
+
+12
+00:00:24.840 --> 00:00:26.940
+If three of your servers
+have too many chunks
+
+13
+00:00:26.940 --> 00:00:30.960
+and the other three have too
+few, one problem that can arise
+
+14
+00:00:30.960 --> 00:00:33.720
+is if you end up
+getting jumbo chunks.
+
+15
+00:00:33.720 --> 00:00:36.060
+If a chunk grows large
+enough without being split,
+
+16
+00:00:36.060 --> 00:00:37.410
+it becomes a jumbo chunk.
+
+17
+00:00:37.410 --> 00:00:39.150
+The sharded cluster
+won't try to move it
+
+18
+00:00:39.150 --> 00:00:42.150
+as the chunk could be
+in flight for too long.
+
+19
+00:00:42.150 --> 00:00:45.300
+MongoDB will also stop
+trying to split the chunk.
+
+20
+00:00:45.300 --> 00:00:47.340
+Jumbo chunks often
+come from having
+
+21
+00:00:47.340 --> 00:00:49.570
+a shard key with
+insufficient cardinality,
+
+22
+00:00:49.570 --> 00:00:52.800
+meaning that there is no shard
+key value it can split on.
+
+23
+00:00:52.800 --> 00:00:54.300
+By default, in a
+sharded cluster,
+
+24
+00:00:54.300 --> 00:00:57.690
+the chunks should be
+split at 64 megabytes.
+
+25
+00:00:57.690 --> 00:00:59.470
+Let's do an example.
+
+26
+00:00:59.470 --> 00:01:01.830
+We're setting up a sharded
+cluster with three shards.
+
+27
+00:01:01.830 --> 00:01:04.890
+Each shard is a replica
+set with three members.
+
+28
+00:01:04.890 --> 00:01:05.530
+Great.
+
+29
+00:01:05.530 --> 00:01:09.300
+Let's connect and
+shard a collection.
+
+30
+00:01:09.300 --> 00:01:13.110
+We'll enable sharding and shard
+on last name comma first name
+
+31
+00:01:13.110 --> 00:01:17.350
+for the example collection.
+
+32
+00:01:17.350 --> 00:01:18.350
+Great!
+
+33
+00:01:18.350 --> 00:01:20.930
+Let's look at sh.status.
+
+34
+00:01:20.930 --> 00:01:24.650
+So all of my data, such as
+it is, is in a single chunk
+
+35
+00:01:24.650 --> 00:01:26.540
+but that chunk is empty.
+
+36
+00:01:26.540 --> 00:01:28.280
+Let's insert a
+bunch of documents
+
+37
+00:01:28.280 --> 00:01:32.209
+all with the same shard key
+and create a jumbo chunk.
+
+38
+00:01:32.209 --> 00:01:34.250
+I'm going to make the
+documents one megabyte each
+
+39
+00:01:34.250 --> 00:01:37.220
+by creating a string that's
+one megabyte in length.
+
+40
+00:01:37.220 --> 00:01:40.981
+
+
+41
+00:01:40.981 --> 00:01:41.480
+OK.
+
+42
+00:01:41.480 --> 00:01:44.240
+So all of my data is
+now in a single chunk
+
+43
+00:01:44.240 --> 00:01:46.100
+and it can't be
+split because it all
+
+44
+00:01:46.100 --> 00:01:48.090
+has the same shard key values.
+
+45
+00:01:48.090 --> 00:01:49.880
+Let's look at sh.status.
+
+46
+00:01:49.880 --> 00:01:52.400
+There it is, one chunk.
+
+47
+00:01:52.400 --> 00:01:54.350
+Obviously, this
+is a bad shard key
+
+48
+00:01:54.350 --> 00:01:57.050
+if I can do this, but let's
+deal with some of the fallout.
+
+49
+00:01:57.050 --> 00:01:59.990
+We'll try adding some more data,
+this time on a different value.
+
+50
+00:01:59.990 --> 00:02:01.430
+We'll use the name
+Norberto Leite.
+
+51
+00:02:01.430 --> 00:02:03.990
+
+
+52
+00:02:03.990 --> 00:02:04.490
+OK.
+
+53
+00:02:04.490 --> 00:02:08.570
+So now I have 200 documents
+of about a megabyte each
+
+54
+00:02:08.570 --> 00:02:11.390
+and if I look at
+sh.status, I can
+
+55
+00:02:11.390 --> 00:02:15.500
+see that I've still only
+got one chunk on one shard.
+
+56
+00:02:15.500 --> 00:02:18.290
+All of my reads and writes are
+going to hit this one shard
+
+57
+00:02:18.290 --> 00:02:21.080
+and none of them will hit
+either of the other shards,
+
+58
+00:02:21.080 --> 00:02:22.835
+so I've got an imbalance.
+
+59
+00:02:22.835 --> 00:02:24.710
+Let's see what's going
+on in our server logs.
+
+60
+00:02:24.710 --> 00:02:27.670
+
+
+61
+00:02:27.670 --> 00:02:28.330
+OK.
+
+62
+00:02:28.330 --> 00:02:31.780
+I can see the sharded
+cluster is starting out,
+
+63
+00:02:31.780 --> 00:02:34.330
+request split points.
+
+64
+00:02:34.330 --> 00:02:38.440
+If I scroll down
+a bit, request it,
+
+65
+00:02:38.440 --> 00:02:42.970
+possible low cardinality key
+detected in m312.example,
+
+66
+00:02:42.970 --> 00:02:46.431
+key is last name
+Cross, first name Will.
+
+67
+00:02:46.431 --> 00:02:46.930
+OK.
+
+68
+00:02:46.930 --> 00:02:50.350
+So the server already knows
+I have a bad shard key.
+
+69
+00:02:50.350 --> 00:02:52.120
+Now I've got a couple
+of choices here,
+
+70
+00:02:52.120 --> 00:02:56.110
+I can try to manually split
+the chunks, say with sh.splitAt
+
+71
+00:02:56.110 --> 00:02:58.380
+or I can increase
+the chunk size.
+
+72
+00:02:58.380 --> 00:03:00.070
+First, I'm going to
+split it manually.
+
+73
+00:03:00.070 --> 00:03:05.220
+
+
+74
+00:03:05.220 --> 00:03:05.890
+Great.
+
+75
+00:03:05.890 --> 00:03:09.720
+Let's look at sh.status.
+
+76
+00:03:09.720 --> 00:03:10.220
+OK.
+
+77
+00:03:10.220 --> 00:03:14.780
+So now I have two chunks,
+each of them are 100 megabytes
+
+78
+00:03:14.780 --> 00:03:16.880
+and I'm still not
+balancing them.
+
+79
+00:03:16.880 --> 00:03:19.490
+They're both just
+staying on my one shard.
+
+80
+00:03:19.490 --> 00:03:22.670
+To fix this issue, I'm going to
+try to move a chunk manually.
+
+81
+00:03:22.670 --> 00:03:28.280
+
+
+82
+00:03:28.280 --> 00:03:32.250
+And MongoDB is telling me
+no, the chunk is too big.
+
+83
+00:03:32.250 --> 00:03:32.750
+OK.
+
+84
+00:03:32.750 --> 00:03:34.610
+Let's try to increase
+the chunk size.
+
+85
+00:03:34.610 --> 00:03:37.280
+We can do this by modifying
+the chunk size directly.
+
+86
+00:03:37.280 --> 00:03:39.030
+Usually, when we do
+things like this,
+
+87
+00:03:39.030 --> 00:03:42.300
+we would use a helper function
+but as of this recording,
+
+88
+00:03:42.300 --> 00:03:44.630
+we need to actually
+modify the configdb.
+
+89
+00:03:44.630 --> 00:03:46.640
+Something that isn't to
+be done lightly but it
+
+90
+00:03:46.640 --> 00:03:47.960
+is necessary in this case.
+
+91
+00:03:47.960 --> 00:03:50.890
+
+
+92
+00:03:50.890 --> 00:03:54.940
+I'm going to set the
+value at 150 megabytes.
+
+93
+00:03:54.940 --> 00:03:56.240
+Good.
+
+94
+00:03:56.240 --> 00:03:57.980
+Once again, let's
+look at sh.status.
+
+95
+00:03:57.980 --> 00:04:01.170
+
+
+96
+00:04:01.170 --> 00:04:03.710
+My chunks still
+haven't migrated.
+
+97
+00:04:03.710 --> 00:04:06.530
+Let's do one more split to
+wake it up and get it going.
+
+98
+00:04:06.530 --> 00:04:09.050
+
+
+99
+00:04:09.050 --> 00:04:12.200
+And we'll look at sh.status.
+
+100
+00:04:12.200 --> 00:04:14.240
+OK.
+
+101
+00:04:14.240 --> 00:04:18.950
+And if I do that again, great,
+three chunks and they're
+
+102
+00:04:18.950 --> 00:04:20.260
+distributed.
+
+103
+00:04:20.260 --> 00:04:24.260
+Now just to be clear, one of
+those chunks contains no data
+
+104
+00:04:24.260 --> 00:04:26.840
+and I was able to
+migrate my jumbo chunks
+
+105
+00:04:26.840 --> 00:04:28.725
+by changing my chunk size.
+
+106
+00:04:28.725 --> 00:04:31.100
+This isn't going to help if
+I have a bad shard key like I
+
+107
+00:04:31.100 --> 00:04:33.597
+do here because I'll just
+continue adding documents
+
+108
+00:04:33.597 --> 00:04:35.930
+to the shard key values, but
+that's something you can do
+
+109
+00:04:35.930 --> 00:04:38.882
+in cases where you get stuck.
+
+110
+00:04:38.882 --> 00:04:40.340
+Now, let's create
+a bunch of chunks
+
+111
+00:04:40.340 --> 00:04:42.050
+and let the cluster
+distribute them.
+
+112
+00:04:42.050 --> 00:04:45.340
+
+
+113
+00:04:45.340 --> 00:04:54.700
+Sh.status Whole lot of chunks
+and it's distributing them.
+
+114
+00:04:54.700 --> 00:04:58.210
+And after a few moments, I
+have a nicely balanced cluster
+
+115
+00:04:58.210 --> 00:05:01.990
+with 10, 9, and 9
+chunks respectively
+
+116
+00:05:01.990 --> 00:05:04.780
+on each of those shards.
+
+117
+00:05:04.780 --> 00:05:08.587
+But of course, my data
+isn't evenly distributed.
+
+118
+00:05:08.587 --> 00:05:10.420
+There's a great helper
+function in the shell
+
+119
+00:05:10.420 --> 00:05:13.460
+to assist us with looking
+at our data distribution.
+
+120
+00:05:13.460 --> 00:05:15.370
+It's called
+db.collection.getshard
+
+121
+00:05:15.370 --> 00:05:16.469
+distribution.
+
+122
+00:05:16.469 --> 00:05:17.260
+Let's check it out.
+
+123
+00:05:17.260 --> 00:05:19.910
+
+
+124
+00:05:19.910 --> 00:05:23.170
+OK, so what am I looking at?
+
+125
+00:05:23.170 --> 00:05:31.310
+Shard02 seems to have 200
+megabytes, shard03 none,
+
+126
+00:05:31.310 --> 00:05:35.960
+total 200 megabytes, 200
+chunks, there you go.
+
+127
+00:05:35.960 --> 00:05:41.720
+Shard02 contains 100% of
+the data in the cluster.
+
+128
+00:05:41.720 --> 00:05:43.610
+I can use this
+information to figure out
+
+129
+00:05:43.610 --> 00:05:46.030
+if I need to split
+chunks on my own,
+
+130
+00:05:46.030 --> 00:05:49.790
+figure it out if I've got a
+problem with my shard key, etc.
+
+131
+00:05:49.790 --> 00:05:53.090
+And that's how to look for
+and fix some basic issues
+
+132
+00:05:53.090 --> 00:05:55.360
+in a sharded cluster.

@@ -1,0 +1,419 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.180
+In this lesson, we'll examine
+the type and cardinality
+
+3
+00:00:03.180 --> 00:00:04.870
+of relationships.
+
+4
+00:00:04.870 --> 00:00:07.650
+Most of the relationships
+between units of information
+
+5
+00:00:07.650 --> 00:00:11.790
+can be classified as
+one-to-one, one-to-many,
+
+6
+00:00:11.790 --> 00:00:13.860
+or as many-to-many.
+
+7
+00:00:13.860 --> 00:00:17.700
+The relation between a customer
+name and their customer_id
+
+8
+00:00:17.700 --> 00:00:20.820
+is an example of a
+one-to-one relationship.
+
+9
+00:00:20.820 --> 00:00:25.290
+A customer has one name, which
+is associated with only one
+
+10
+00:00:25.290 --> 00:00:27.120
+customer_id, and
+this customer_id
+
+11
+00:00:27.120 --> 00:00:30.530
+can only be used to identify
+one customer's name.
+
+12
+00:00:30.530 --> 00:00:33.270
+The one-to-one
+relations are often
+
+13
+00:00:33.270 --> 00:00:36.270
+represented by grouping
+the two pieces of data
+
+14
+00:00:36.270 --> 00:00:39.240
+in the same entity or document.
+
+15
+00:00:39.240 --> 00:00:42.100
+Invoices associated
+with the customer
+
+16
+00:00:42.100 --> 00:00:45.320
+are an example of a
+one-to-many relationship.
+
+17
+00:00:45.320 --> 00:00:49.620
+A customer has many invoices,
+and each of these invoices
+
+18
+00:00:49.620 --> 00:00:52.530
+is only associated
+with one customer.
+
+19
+00:00:52.530 --> 00:00:55.860
+Finally, an invoice may
+contain many products,
+
+20
+00:00:55.860 --> 00:00:58.200
+and each of these
+products is likely
+
+21
+00:00:58.200 --> 00:01:00.570
+present in more invoices
+than just the one
+
+22
+00:01:00.570 --> 00:01:02.340
+that we were looking at.
+
+23
+00:01:02.340 --> 00:01:05.489
+This is called a
+many-to-many relationship.
+
+24
+00:01:05.489 --> 00:01:07.830
+However, is this the
+best and complete
+
+25
+00:01:07.830 --> 00:01:11.100
+way to describe data
+relationships, especially when
+
+26
+00:01:11.100 --> 00:01:12.738
+dealing with Big Data?
+
+27
+00:01:12.738 --> 00:01:14.280
+Let's say we look
+at the relationship
+
+28
+00:01:14.280 --> 00:01:17.010
+between a mother and the
+children she gave birth to.
+
+29
+00:01:17.010 --> 00:01:21.610
+Well, she may not have
+children, have one, have two,
+
+30
+00:01:21.610 --> 00:01:25.380
+ten, however, the maximum
+is pretty limited.
+
+31
+00:01:25.380 --> 00:01:29.250
+Very often there are
+two children per family.
+
+32
+00:01:29.250 --> 00:01:31.560
+A different example
+is Twitter users.
+
+33
+00:01:31.560 --> 00:01:33.360
+Some people just
+started their account
+
+34
+00:01:33.360 --> 00:01:35.880
+and may have zero
+or one follower,
+
+35
+00:01:35.880 --> 00:01:40.480
+while others may have 20,
+100, or up to 100 million
+
+36
+00:01:40.480 --> 00:01:41.910
+if they are a celebrity.
+
+37
+00:01:41.910 --> 00:01:45.120
+In this case, many-to-many
+is a very poor way
+
+38
+00:01:45.120 --> 00:01:47.190
+to characterize a relationship.
+
+39
+00:01:47.190 --> 00:01:50.100
+And this might be true for an
+increasing number of examples
+
+40
+00:01:50.100 --> 00:01:52.330
+in the world of Big Data.
+
+41
+00:01:52.330 --> 00:01:54.690
+We could embed the
+information about the children
+
+42
+00:01:54.690 --> 00:01:56.940
+in the document
+representing the mother,
+
+43
+00:01:56.940 --> 00:02:00.210
+but it would not make sense
+to embed 100 million followers
+
+44
+00:02:00.210 --> 00:02:02.040
+into one document.
+
+45
+00:02:02.040 --> 00:02:03.900
+What we need is a
+more expressive way
+
+46
+00:02:03.900 --> 00:02:07.710
+to represent the one-to-many
+relationship so that we know
+
+47
+00:02:07.710 --> 00:02:09.720
+that we are dealing
+with large numbers
+
+48
+00:02:09.720 --> 00:02:13.770
+and avoid mistakes associated
+with that distinction.
+
+49
+00:02:13.770 --> 00:02:17.490
+Looking at earlier examples, we
+are missing some information.
+
+50
+00:02:17.490 --> 00:02:20.280
+The fact that the relationship
+can be a large number
+
+51
+00:02:20.280 --> 00:02:23.670
+isn't reflected clearly with
+the one-to-many description,
+
+52
+00:02:23.670 --> 00:02:27.360
+the value for the maximum
+of many is not clear.
+
+53
+00:02:27.360 --> 00:02:31.440
+The most likely many value for
+a given one-to-many relationship
+
+54
+00:02:31.440 --> 00:02:33.550
+is also missing.
+
+55
+00:02:33.550 --> 00:02:36.480
+Let's introduce this additional
+symbol for the crow foot
+
+56
+00:02:36.480 --> 00:02:38.820
+notation, and call it zillions.
+
+57
+00:02:38.820 --> 00:02:42.660
+It is based on the many symbol,
+however, with additional lines.
+
+58
+00:02:42.660 --> 00:02:47.850
+This relationship would read
+as from one to zero to zillion.
+
+59
+00:02:47.850 --> 00:02:51.000
+Or in short, one-to-zillions.
+
+60
+00:02:51.000 --> 00:02:53.430
+This new symbol addresses
+the identification
+
+61
+00:02:53.430 --> 00:02:54.790
+of large numbers.
+
+62
+00:02:54.790 --> 00:02:57.960
+And if we go to the trouble of
+identifying the maximum number,
+
+63
+00:02:57.960 --> 00:03:01.260
+why not preserve this
+information in the model?
+
+64
+00:03:01.260 --> 00:03:05.010
+For this we use a tuple
+of one to three values,
+
+65
+00:03:05.010 --> 00:03:06.690
+with the following meaning.
+
+66
+00:03:06.690 --> 00:03:11.820
+Minimum, usually zero or
+one, most likely value,
+
+67
+00:03:11.820 --> 00:03:15.490
+or the median, and the maximum.
+
+68
+00:03:15.490 --> 00:03:18.120
+If you have two
+values they represent
+
+69
+00:03:18.120 --> 00:03:20.040
+the minimum and the maximum.
+
+70
+00:03:20.040 --> 00:03:23.670
+When a single value is used
+it means the relationship
+
+71
+00:03:23.670 --> 00:03:25.740
+is fixed to that number.
+
+72
+00:03:25.740 --> 00:03:27.990
+We will use this
+notation to describe
+
+73
+00:03:27.990 --> 00:03:30.960
+either arrays or reference
+between collections
+
+74
+00:03:30.960 --> 00:03:32.850
+in our models.
+
+75
+00:03:32.850 --> 00:03:34.590
+For example, in this
+diagram, a movie
+
+76
+00:03:34.590 --> 00:03:38.460
+has a minimum of zero actors
+and the maximum of 1,000.
+
+77
+00:03:38.460 --> 00:03:41.970
+The movie has exactly two sets
+of financial results, likely
+
+78
+00:03:41.970 --> 00:03:43.980
+the forecast and the actuals.
+
+79
+00:03:43.980 --> 00:03:47.160
+And the movie can receive
+zero to 100 reviews,
+
+80
+00:03:47.160 --> 00:03:49.950
+with a median of 30.
+
+81
+00:03:49.950 --> 00:03:54.330
+Let's recap this lesson
+one-to-one, one-to-many,
+
+82
+00:03:54.330 --> 00:03:57.000
+and many-to-many are
+the usual cardinalities
+
+83
+00:03:57.000 --> 00:04:01.200
+found in design for tabular
+or relational databases.
+
+84
+00:04:01.200 --> 00:04:05.020
+However, these are not enough
+when dealing with Big Data,
+
+85
+00:04:05.020 --> 00:04:08.430
+so we add the notion
+of one-to-zillions.
+
+86
+00:04:08.430 --> 00:04:11.400
+With the use of maximum
+and most likely values
+
+87
+00:04:11.400 --> 00:04:15.300
+in the tuple form, minimum,
+most likely, and maximum,
+
+88
+00:04:15.300 --> 00:04:19.430
+you can identify relationships
+in a more precise way.

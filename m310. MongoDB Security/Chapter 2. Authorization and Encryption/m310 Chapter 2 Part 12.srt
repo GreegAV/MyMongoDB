@@ -1,0 +1,380 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.000
+Now it's time to create an
+account for Dan, our intern.
+
+3
+00:00:04.000 --> 00:00:06.960
+Dan will be working
+on the NASA database.
+
+4
+00:00:06.960 --> 00:00:10.190
+So he's going to need to be
+able to query the NASA database.
+
+5
+00:00:10.190 --> 00:00:12.070
+But since he's an
+intern, he doesn't need
+
+6
+00:00:12.070 --> 00:00:13.647
+to be able do anything else.
+
+7
+00:00:13.647 --> 00:00:15.980
+He shouldn't be able to write
+or change data in any way.
+
+8
+00:00:15.980 --> 00:00:18.550
+Let's go ahead and log in with
+Alice on the admin database
+
+9
+00:00:18.550 --> 00:00:19.720
+and create this user.
+
+10
+00:00:19.720 --> 00:00:20.410
+Great.
+
+11
+00:00:20.410 --> 00:00:21.816
+Now we're logged in.
+
+12
+00:00:21.816 --> 00:00:24.440
+First we're gonna need to get an
+instance of the NASA database.
+
+13
+00:00:24.440 --> 00:00:26.430
+That's because Dan
+is only allowed
+
+14
+00:00:26.430 --> 00:00:30.620
+to read on the NASA database.
+
+15
+00:00:30.620 --> 00:00:31.130
+Great.
+
+16
+00:00:31.130 --> 00:00:33.380
+Now we can go ahead and
+create the user using the NASA
+
+17
+00:00:33.380 --> 00:00:35.090
+database.
+
+18
+00:00:35.090 --> 00:00:35.840
+And here we go.
+
+19
+00:00:35.840 --> 00:00:37.330
+On the NASA
+database, we're going
+
+20
+00:00:37.330 --> 00:00:41.130
+to run createUser with
+the user name of intern,
+
+21
+00:00:41.130 --> 00:00:46.040
+a password of slacker, and give
+Dan the read role on the NASA
+
+22
+00:00:46.040 --> 00:00:47.040
+database.
+
+23
+00:00:47.040 --> 00:00:47.580
+Awesome.
+
+24
+00:00:47.580 --> 00:00:49.660
+Our user has been
+successfully added.
+
+25
+00:00:49.660 --> 00:00:50.880
+So if we now want to
+make sure that everything
+
+26
+00:00:50.880 --> 00:00:53.480
+is up and running correctly,
+let's go ahead and authenticate
+
+27
+00:00:53.480 --> 00:00:54.440
+against this new user.
+
+28
+00:00:54.440 --> 00:00:54.940
+Wait.
+
+29
+00:00:54.940 --> 00:00:55.710
+What?
+
+30
+00:00:55.710 --> 00:00:58.290
+Why can't we authenticate
+with this user?
+
+31
+00:00:58.290 --> 00:01:01.960
+Well, that's because we created
+the user on the NASA database,
+
+32
+00:01:01.960 --> 00:01:04.129
+not on the admin database.
+
+33
+00:01:04.129 --> 00:01:06.420
+That means that this account
+needs to authenticate
+
+34
+00:01:06.420 --> 00:01:08.430
+against the NASA database.
+
+35
+00:01:08.430 --> 00:01:09.410
+Here we go.
+
+36
+00:01:09.410 --> 00:01:11.494
+We've now successfully
+switched the NASA database.
+
+37
+00:01:11.494 --> 00:01:13.618
+And by running this command,
+we should successfully
+
+38
+00:01:13.618 --> 00:01:14.460
+authenticate.
+
+39
+00:01:14.460 --> 00:01:15.110
+Awesome.
+
+40
+00:01:15.110 --> 00:01:17.780
+At this point, we have
+a database called NASA.
+
+41
+00:01:17.780 --> 00:01:19.920
+And it has one user-- intern.
+
+42
+00:01:19.920 --> 00:01:22.269
+And this intern
+user can only read.
+
+43
+00:01:22.269 --> 00:01:23.810
+Now this is a problem,
+since we don't
+
+44
+00:01:23.810 --> 00:01:25.970
+have any data in the database.
+
+45
+00:01:25.970 --> 00:01:28.620
+To make sure the intern
+can actually do some reads,
+
+46
+00:01:28.620 --> 00:01:30.910
+we need to create a user
+that is capable of importing
+
+47
+00:01:30.910 --> 00:01:33.150
+a data set to this database.
+
+48
+00:01:33.150 --> 00:01:35.600
+Let's create a user
+called bot loader that
+
+49
+00:01:35.600 --> 00:01:39.060
+has the capabilities of
+writing on the admin database.
+
+50
+00:01:39.060 --> 00:01:40.120
+Here we go.
+
+51
+00:01:40.120 --> 00:01:42.670
+Here we're creating a
+user called botLoader,
+
+52
+00:01:42.670 --> 00:01:44.790
+whose password is bolts.
+
+53
+00:01:44.790 --> 00:01:47.670
+And we're going to give them
+the read role on the admin
+
+54
+00:01:47.670 --> 00:01:50.801
+database, and the readWrite
+role on the NASA database.
+
+55
+00:01:50.801 --> 00:01:52.800
+And then we're also going
+to give write majority
+
+56
+00:01:52.800 --> 00:01:55.410
+in a write time amount of 300.
+
+57
+00:01:55.410 --> 00:01:56.140
+Awesome.
+
+58
+00:01:56.140 --> 00:01:58.210
+Our user has been
+successfully added.
+
+59
+00:01:58.210 --> 00:02:01.820
+Let's go ahead and load our
+NASA meteorites.JSON file
+
+60
+00:02:01.820 --> 00:02:03.390
+into the NASA database.
+
+61
+00:02:03.390 --> 00:02:05.490
+Here I'm using the
+mongoimport command,
+
+62
+00:02:05.490 --> 00:02:08.873
+specifying our username of
+botLoader, password of bolts,
+
+63
+00:02:08.873 --> 00:02:11.039
+saying that the collection
+will be called meteorites
+
+64
+00:02:11.039 --> 00:02:12.510
+on the NASA database.
+
+65
+00:02:12.510 --> 00:02:15.720
+And then I have our NASA
+meteorites.JSON file
+
+66
+00:02:15.720 --> 00:02:17.650
+that's provided as a handout.
+
+67
+00:02:17.650 --> 00:02:18.330
+Wait.
+
+68
+00:02:18.330 --> 00:02:19.200
+What?
+
+69
+00:02:19.200 --> 00:02:20.640
+Why isn't this working?
+
+70
+00:02:20.640 --> 00:02:22.970
+Did we not create
+our user correctly?
+
+71
+00:02:22.970 --> 00:02:23.742
+Well, no.
+
+72
+00:02:23.742 --> 00:02:25.200
+Unfortunately, what
+is happening is
+
+73
+00:02:25.200 --> 00:02:27.760
+that we're trying to
+insert data into a database
+
+74
+00:02:27.760 --> 00:02:30.346
+for a user that's created
+on another database.
+
+75
+00:02:30.346 --> 00:02:31.970
+For these situations
+we need to specify
+
+76
+00:02:31.970 --> 00:02:34.410
+the dash dash
+authentication database
+
+77
+00:02:34.410 --> 00:02:36.940
+option in providing the
+name of the database
+
+78
+00:02:36.940 --> 00:02:39.060
+that we want to
+authenticate with.
+
+79
+00:02:39.060 --> 00:02:40.690
+Now when we run
+this, it should work.
+
+80
+00:02:40.690 --> 00:02:42.060
+Connected to localhost.
+
+81
+00:02:42.060 --> 00:02:42.880
+Awesome.
+
+82
+00:02:42.880 --> 00:02:45.370
+We can see that we've
+imported 45,000 documents.
+
+83
+00:02:45.370 --> 00:02:48.640
+And our intern should be
+able to run his queries.

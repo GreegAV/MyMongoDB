@@ -1,0 +1,785 @@
+	
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.244
+In this lesson, we're going to
+talk about building indexes.
+
+3
+00:00:03.244 --> 00:00:05.410
+Specifically, we're going
+to spend some time talking
+
+4
+00:00:05.410 --> 00:00:08.500
+about the trade offs between
+foreground and background
+
+5
+00:00:08.500 --> 00:00:09.970
+indexes.
+
+6
+00:00:09.970 --> 00:00:13.720
+We'll also talk about how we
+can use background indexes,
+
+7
+00:00:13.720 --> 00:00:15.850
+and under what conditions
+we would do so.
+
+8
+00:00:15.850 --> 00:00:18.940
+And finally, we're going to
+look at currentOp and killOp,
+
+9
+00:00:18.940 --> 00:00:21.490
+and see how they relate
+to building indexes.
+
+10
+00:00:21.490 --> 00:00:23.860
+Now we want to give some
+special consideration
+
+11
+00:00:23.860 --> 00:00:27.610
+to the process of creating an
+index for a few key reasons.
+
+12
+00:00:27.610 --> 00:00:30.220
+Most of what we'll cover
+here is of primary concern
+
+13
+00:00:30.220 --> 00:00:32.560
+in production
+MongoDB deployments,
+
+14
+00:00:32.560 --> 00:00:34.540
+because you'll want to
+ensure minimal impact
+
+15
+00:00:34.540 --> 00:00:36.850
+on your application users.
+
+16
+00:00:36.850 --> 00:00:39.130
+MongoDB provides the
+option of creating an index
+
+17
+00:00:39.130 --> 00:00:41.950
+in either the foreground
+or the background.
+
+18
+00:00:41.950 --> 00:00:44.410
+Foreground indexes
+are very fast,
+
+19
+00:00:44.410 --> 00:00:47.920
+but they block operations
+to the database.
+
+20
+00:00:47.920 --> 00:00:50.480
+Specifically, an index
+built in the foreground
+
+21
+00:00:50.480 --> 00:00:52.720
+will block all
+incoming operations
+
+22
+00:00:52.720 --> 00:00:55.330
+to the database containing
+the collection on which you're
+
+23
+00:00:55.330 --> 00:00:57.286
+building the index.
+
+24
+00:00:57.286 --> 00:00:58.660
+This means that
+the database that
+
+25
+00:00:58.660 --> 00:01:01.840
+holds the collection is not
+available to application
+
+26
+00:01:01.840 --> 00:01:04.959
+reads or writes until the
+index build is complete.
+
+27
+00:01:04.959 --> 00:01:08.890
+This is unacceptable for
+production MongoDB deployments,
+
+28
+00:01:08.890 --> 00:01:11.950
+except possibly during
+a maintenance window.
+
+29
+00:01:11.950 --> 00:01:15.130
+As an alternative, MongoDB
+provides the option
+
+30
+00:01:15.130 --> 00:01:17.050
+of a background index build.
+
+31
+00:01:17.050 --> 00:01:20.350
+The trade off is that, while
+background indexes don't
+
+32
+00:01:20.350 --> 00:01:24.272
+block operations, they
+take longer to complete.
+
+33
+00:01:24.272 --> 00:01:26.230
+How much longer is going
+to depend on your read
+
+34
+00:01:26.230 --> 00:01:29.860
+write load in the foreground,
+as well as other factors,
+
+35
+00:01:29.860 --> 00:01:32.380
+like whether the index will
+fit entirely into memory.
+
+36
+00:01:32.380 --> 00:01:34.660
+Both background and
+foreground indexes
+
+37
+00:01:34.660 --> 00:01:37.480
+are going to impose
+load on your database.
+
+38
+00:01:37.480 --> 00:01:39.040
+Building an index
+in the background
+
+39
+00:01:39.040 --> 00:01:41.260
+will still have some
+impact on query performance
+
+40
+00:01:41.260 --> 00:01:43.420
+while the index is
+being built. In a system
+
+41
+00:01:43.420 --> 00:01:45.640
+with sufficient resources,
+a background index
+
+42
+00:01:45.640 --> 00:01:47.710
+is probably preferrable
+if you don't want
+
+43
+00:01:47.710 --> 00:01:49.381
+to impose a maintenance window.
+
+44
+00:01:49.381 --> 00:01:50.880
+We're going to use
+a new restaurants
+
+45
+00:01:50.880 --> 00:01:52.630
+dataset for this lesson.
+
+46
+00:01:52.630 --> 00:01:55.150
+You can import it here with
+the mongoimport command.
+
+47
+00:01:55.150 --> 00:01:57.370
+We're going to pretend
+that this dataset is
+
+48
+00:01:57.370 --> 00:01:58.990
+used for a production
+application
+
+49
+00:01:58.990 --> 00:02:01.540
+where we need to
+add a new feature.
+
+50
+00:02:01.540 --> 00:02:04.090
+This is going to give us an
+example of the consideration
+
+51
+00:02:04.090 --> 00:02:06.589
+that you're going to want to
+take into account when building
+
+52
+00:02:06.589 --> 00:02:07.930
+an index in production.
+
+53
+00:02:07.930 --> 00:02:10.780
+This new feature will require
+us to build a new compound
+
+54
+00:02:10.780 --> 00:02:12.580
+index on this dataset.
+
+55
+00:02:12.580 --> 00:02:14.500
+Here I'm using MongoDB
+Compass to take
+
+56
+00:02:14.500 --> 00:02:17.660
+a look at our new
+restaurants collection.
+
+57
+00:02:17.660 --> 00:02:19.270
+Here's the schema
+view, where I can
+
+58
+00:02:19.270 --> 00:02:21.310
+look at all of the
+different fields
+
+59
+00:02:21.310 --> 00:02:23.290
+of a sampling of our documents.
+
+60
+00:02:23.290 --> 00:02:25.510
+I have the ability to
+look at the cardinality
+
+61
+00:02:25.510 --> 00:02:28.270
+of the different fields,
+as well as drill down
+
+62
+00:02:28.270 --> 00:02:30.040
+into different
+embedded documents
+
+63
+00:02:30.040 --> 00:02:33.310
+and see what kind of
+values these fields hold.
+
+64
+00:02:33.310 --> 00:02:35.740
+Briefly, let's take a look
+at an example document
+
+65
+00:02:35.740 --> 00:02:37.900
+in the document view
+inside of Compass.
+
+66
+00:02:37.900 --> 00:02:40.870
+Here, we can see that this
+data set describes restaurants
+
+67
+00:02:40.870 --> 00:02:42.360
+in the United States.
+
+68
+00:02:42.360 --> 00:02:44.470
+Here is a restaurant
+called Redhill Station
+
+69
+00:02:44.470 --> 00:02:48.190
+that serves Mediterranean
+food, has 3.4 four stars,
+
+70
+00:02:48.190 --> 00:02:50.089
+and it's in North Carolina.
+
+71
+00:02:50.089 --> 00:02:51.880
+Suppose our new feature
+is going to require
+
+72
+00:02:51.880 --> 00:02:55.150
+us to build a compound index
+so that we can support queries
+
+73
+00:02:55.150 --> 00:02:59.860
+where we sort by name, where we
+specify a particular cuisine,
+
+74
+00:02:59.860 --> 00:03:02.290
+and we specify a
+range of zip codes.
+
+75
+00:03:02.290 --> 00:03:04.900
+Given the number of
+documents in this collection,
+
+76
+00:03:04.900 --> 00:03:07.510
+we think that this is going to
+take a decent amount of time
+
+77
+00:03:07.510 --> 00:03:09.580
+to create this index.
+
+78
+00:03:09.580 --> 00:03:13.009
+How long is going to depend on
+the cardinality of the fields,
+
+79
+00:03:13.009 --> 00:03:14.800
+as well as how much
+load is on the database
+
+80
+00:03:14.800 --> 00:03:17.600
+server from other operations.
+
+81
+00:03:17.600 --> 00:03:19.270
+Here's an overview
+of the requirements
+
+82
+00:03:19.270 --> 00:03:22.600
+that we're going to have
+for adding this new index.
+
+83
+00:03:22.600 --> 00:03:25.422
+We want to make sure that we
+add a new compound index, which
+
+84
+00:03:25.422 --> 00:03:27.130
+we think is going to
+take some time given
+
+85
+00:03:27.130 --> 00:03:29.680
+the number of documents
+in our collection.
+
+86
+00:03:29.680 --> 00:03:32.210
+We really don't want to
+schedule a maintenance window.
+
+87
+00:03:32.210 --> 00:03:34.420
+So we want to do this
+with no downtime.
+
+88
+00:03:34.420 --> 00:03:36.830
+And we think that our new
+index will fit into RAM.
+
+89
+00:03:36.830 --> 00:03:39.430
+A background index build
+is a great option here.
+
+90
+00:03:39.430 --> 00:03:42.280
+Let's go ahead and do
+it from the Mongo shell.
+
+91
+00:03:42.280 --> 00:03:44.320
+To create our index
+in the background,
+
+92
+00:03:44.320 --> 00:03:46.360
+here's the command
+that we'll issue.
+
+93
+00:03:46.360 --> 00:03:48.866
+You can see, here's the index
+that we talked about building.
+
+94
+00:03:48.866 --> 00:03:50.615
+But I've also added
+this special argument,
+
+95
+00:03:50.615 --> 00:03:53.260
+where I'm saying that
+background is going to be true.
+
+96
+00:03:53.260 --> 00:03:55.460
+By default, background
+is set to false,
+
+97
+00:03:55.460 --> 00:03:58.020
+so that's why we're
+using the special option.
+
+98
+00:03:58.020 --> 00:04:00.240
+We can use this approach
+to build indexes
+
+99
+00:04:00.240 --> 00:04:02.420
+in the background on
+a standalone MongoDB,
+
+100
+00:04:02.420 --> 00:04:06.840
+or on the primary or
+secondaries in our replica set.
+
+101
+00:04:06.840 --> 00:04:10.200
+Now, background index operations
+run in the background,
+
+102
+00:04:10.200 --> 00:04:12.460
+so that other database
+operations can run
+
+103
+00:04:12.460 --> 00:04:14.270
+while we're creating the index.
+
+104
+00:04:14.270 --> 00:04:17.200
+However, you'll see that
+the Mongo shell is still
+
+105
+00:04:17.200 --> 00:04:19.846
+blocked until the index
+build is complete.
+
+106
+00:04:19.846 --> 00:04:21.970
+We'll know that the index
+build has completed, when
+
+107
+00:04:21.970 --> 00:04:24.280
+the connection is
+no longer blocked
+
+108
+00:04:24.280 --> 00:04:27.800
+and we see an output
+indicating the outcome of our
+
+109
+00:04:27.800 --> 00:04:29.200
+build operation.
+
+110
+00:04:29.200 --> 00:04:31.469
+To continue issuing
+commands to the database,
+
+111
+00:04:31.469 --> 00:04:33.260
+we're going to open up
+another mongo shell,
+
+112
+00:04:33.260 --> 00:04:35.260
+and we can do that right now.
+
+113
+00:04:35.260 --> 00:04:36.970
+So our build has been
+running for a bit,
+
+114
+00:04:36.970 --> 00:04:38.511
+and you might be
+wondering whether we
+
+115
+00:04:38.511 --> 00:04:41.620
+can check in on how our build
+process is coming along.
+
+116
+00:04:41.620 --> 00:04:43.120
+And we absolutely can.
+
+117
+00:04:43.120 --> 00:04:45.570
+To see the status of
+our build operation,
+
+118
+00:04:45.570 --> 00:04:49.150
+we can use the db.currentOp
+command from the Mongo shell.
+
+119
+00:04:49.150 --> 00:04:50.780
+We can take this
+command a bit further
+
+120
+00:04:50.780 --> 00:04:54.940
+and specify a filter to see
+what specific current operations
+
+121
+00:04:54.940 --> 00:04:56.650
+we want to look at.
+
+122
+00:04:56.650 --> 00:05:00.070
+Here I'm using the OR
+operator to look for commands
+
+123
+00:05:00.070 --> 00:05:04.510
+that are creating indexes, or
+if we're inserting documents
+
+124
+00:05:04.510 --> 00:05:07.144
+into the system.indexes
+collection.
+
+125
+00:05:07.144 --> 00:05:08.560
+And here you can
+see the operation
+
+126
+00:05:08.560 --> 00:05:09.829
+for building our index.
+
+127
+00:05:09.829 --> 00:05:11.620
+Here we can see that
+we're creating indexes
+
+128
+00:05:11.620 --> 00:05:14.590
+on the restaurants
+collection, and here the keys
+
+129
+00:05:14.590 --> 00:05:17.050
+that specify the index
+that we're creating.
+
+130
+00:05:17.050 --> 00:05:20.920
+Notice this field here, opid,
+and this random looking number.
+
+131
+00:05:20.920 --> 00:05:24.700
+This is a unique identifier
+for this specific operation.
+
+132
+00:05:24.700 --> 00:05:27.040
+And this is the ID that
+we need if for some reason
+
+133
+00:05:27.040 --> 00:05:30.130
+we want to kill the index
+build before it finishes.
+
+134
+00:05:30.130 --> 00:05:33.050
+We can do this using db.killOp.
+
+135
+00:05:33.050 --> 00:05:34.630
+And here's the kill up command.
+
+136
+00:05:34.630 --> 00:05:37.240
+It takes a single parameter
+which is that op ID
+
+137
+00:05:37.240 --> 00:05:38.529
+number that we just looked at.
+
+138
+00:05:38.529 --> 00:05:40.570
+Here I'm just saying one,
+two, three, four, five.
+
+139
+00:05:40.570 --> 00:05:42.944
+But in reality, if we wanted
+to really kill an operation,
+
+140
+00:05:42.944 --> 00:05:45.580
+we would use that opid.
+
+141
+00:05:45.580 --> 00:05:47.080
+And this will kill
+the operation.
+
+142
+00:05:47.080 --> 00:05:50.380
+We're going to take deeper
+dives into currentOp and killOp
+
+143
+00:05:50.380 --> 00:05:53.140
+in other courses, so
+please see those lessons
+
+144
+00:05:53.140 --> 00:05:55.090
+for more detail
+on how to maximize
+
+145
+00:05:55.090 --> 00:05:58.956
+the value of these
+methods for your purposes.
+
+146
+00:05:58.956 --> 00:06:00.580
+And here after a
+little bit of waiting,
+
+147
+00:06:00.580 --> 00:06:03.827
+we can see that our
+index creation completed.
+
+148
+00:06:03.827 --> 00:06:05.410
+We know this because
+we got a response
+
+149
+00:06:05.410 --> 00:06:07.760
+indicating how many
+indexes there were before,
+
+150
+00:06:07.760 --> 00:06:09.820
+and how many there are
+now after our build.
+
+151
+00:06:09.820 --> 00:06:11.542
+Let's recap what we've learned.
+
+152
+00:06:11.542 --> 00:06:13.250
+So in this lesson, we
+discussed the trade
+
+153
+00:06:13.250 --> 00:06:16.900
+offs between foreground and
+background index builds.
+
+154
+00:06:16.900 --> 00:06:19.270
+We looked at under what
+circumstances background
+
+155
+00:06:19.270 --> 00:06:22.330
+indexes are better over
+foreground indexes.
+
+156
+00:06:22.330 --> 00:06:25.000
+We looked at under what
+circumstances background index
+
+157
+00:06:25.000 --> 00:06:27.760
+builds are better than
+foreground index builds.
+
+158
+00:06:27.760 --> 00:06:31.240
+And finally, we touched on the
+currentoOp and killOp methods
+
+159
+00:06:31.240 --> 00:06:33.654
+as tools that you should
+be aware of as you expand
+
+160
+00:06:33.654 --> 00:06:35.320
+your skills of
+understanding performance
+
+161
+00:06:35.320 --> 00:06:37.110
+concerns for
+MongoDB deployments,
+
+162
+00:06:37.110 --> 00:06:40.830
+and how to evaluate and
+address performance problems.

@@ -1,0 +1,565 @@
+1
+00:00:00,000 --> 00:00:00,230
+
+
+2
+00:00:00,230 --> 00:00:02,780
+Right now, we're actually going
+to create our first MongoDB
+
+3
+00:00:02,780 --> 00:00:04,460
+superuser.
+
+4
+00:00:04,460 --> 00:00:07,040
+First, let's take a look
+at our MongoDB server.
+
+5
+00:00:07,040 --> 00:00:11,250
+Let's look at the configuration
+file for my MongoD.
+
+6
+00:00:11,250 --> 00:00:12,960
+Notice this line here?
+
+7
+00:00:12,960 --> 00:00:16,360
+This configuration file
+option does two things.
+
+8
+00:00:16,360 --> 00:00:19,500
+First, it enables role-based
+access control or authorization
+
+9
+00:00:19,500 --> 00:00:21,540
+on my cluster.
+
+10
+00:00:21,540 --> 00:00:25,380
+Second, it implicitly enables
+authentication as well.
+
+11
+00:00:25,380 --> 00:00:28,870
+You cannot have one
+without the other.
+
+12
+00:00:28,870 --> 00:00:31,320
+Now I need to connect
+to my cluster,
+
+13
+00:00:31,320 --> 00:00:34,110
+but this cluster has no
+existing users configured,
+
+14
+00:00:34,110 --> 00:00:36,120
+even though auth is enabled.
+
+15
+00:00:36,120 --> 00:00:38,950
+Since by default MongoDB
+doesn't give you any users,
+
+16
+00:00:38,950 --> 00:00:41,830
+you have to create
+them yourself.
+
+17
+00:00:41,830 --> 00:00:44,335
+Since my server does not yet
+have any configured users,
+
+18
+00:00:44,335 --> 00:00:46,210
+there is no way for me
+to authenticate myself
+
+19
+00:00:46,210 --> 00:00:49,430
+to the server, nor can I be
+authorized to do any work.
+
+20
+00:00:49,430 --> 00:00:51,760
+Instead, I must use
+the localhost exception
+
+21
+00:00:51,760 --> 00:00:53,890
+to connect to the
+server, meaning
+
+22
+00:00:53,890 --> 00:00:56,500
+I must connect to
+the Mongo shell
+
+23
+00:00:56,500 --> 00:00:59,260
+from the same host that is
+running the MongoDB server
+
+24
+00:00:59,260 --> 00:01:00,850
+process.
+
+25
+00:01:00,850 --> 00:01:03,820
+Remember, once you have
+created your first user,
+
+26
+00:01:03,820 --> 00:01:05,830
+the localhost exception closes.
+
+27
+00:01:05,830 --> 00:01:09,430
+So always create a user
+with the administrative role
+
+28
+00:01:09,430 --> 00:01:12,790
+first so you can create other
+users after the localhost
+
+29
+00:01:12,790 --> 00:01:14,960
+exception has closed.
+
+30
+00:01:14,960 --> 00:01:16,854
+So here I am running
+my Mongo shell,
+
+31
+00:01:16,854 --> 00:01:19,270
+and I'm going to connect to
+the server from the same host.
+
+32
+00:01:19,270 --> 00:01:22,620
+In this case, the Vagrant
+box for this course.
+
+33
+00:01:22,620 --> 00:01:25,370
+Notice here that I'm using
+the localhost address.
+
+34
+00:01:25,370 --> 00:01:27,380
+This is also a way for
+you to just double check
+
+35
+00:01:27,380 --> 00:01:28,880
+that you are
+specifically connecting
+
+36
+00:01:28,880 --> 00:01:31,860
+over the localhost interface.
+
+37
+00:01:31,860 --> 00:01:33,320
+Now I'm connected.
+
+38
+00:01:33,320 --> 00:01:36,960
+Let me try to run a
+few commands here.
+
+39
+00:01:36,960 --> 00:01:39,580
+Well, I am connected,
+but I'm not authenticated
+
+40
+00:01:39,580 --> 00:01:42,630
+nor authorized to do anything
+on the MongoDB server.
+
+41
+00:01:42,630 --> 00:01:44,280
+When using the
+localhost exceptions,
+
+42
+00:01:44,280 --> 00:01:47,940
+your privileges on the
+system are very restricted.
+
+43
+00:01:47,940 --> 00:01:51,660
+Now I do have access, so I
+can create my first user.
+
+44
+00:01:51,660 --> 00:01:54,540
+I'm going to create this
+user on the admin database,
+
+45
+00:01:54,540 --> 00:01:57,240
+because this is going to be
+an administrative superuser,
+
+46
+00:01:57,240 --> 00:02:01,250
+and I'm going to use
+the root built-in role.
+
+47
+00:02:01,250 --> 00:02:03,810
+I'm using the
+DB.create user method
+
+48
+00:02:03,810 --> 00:02:06,510
+to create a user on
+the admin database.
+
+49
+00:02:06,510 --> 00:02:10,479
+I've specified the
+username and the password,
+
+50
+00:02:10,479 --> 00:02:14,996
+as well as the role I want to
+be associated to this user.
+
+51
+00:02:14,996 --> 00:02:17,370
+The username and password are
+used for the authentication
+
+52
+00:02:17,370 --> 00:02:18,400
+steps.
+
+53
+00:02:18,400 --> 00:02:21,720
+And this array of roles
+is used for authorization.
+
+54
+00:02:21,720 --> 00:02:23,940
+I've specified the
+built-in role, root,
+
+55
+00:02:23,940 --> 00:02:26,220
+which provides the highest
+level of privileged action
+
+56
+00:02:26,220 --> 00:02:28,980
+across all database resources.
+
+57
+00:02:28,980 --> 00:02:32,850
+I do want to note MongoDB
+3.6 adds some additional user
+
+58
+00:02:32,850 --> 00:02:36,180
+authentication restrictions in
+the form of an IP whitelist,
+
+59
+00:02:36,180 --> 00:02:38,040
+meaning that the roles
+granted to a user
+
+60
+00:02:38,040 --> 00:02:40,195
+depend on what IP
+they connect from.
+
+61
+00:02:40,195 --> 00:02:41,820
+It's a little advanced
+for this course.
+
+62
+00:02:41,820 --> 00:02:43,500
+But if you want to
+learn more, make
+
+63
+00:02:43,500 --> 00:02:46,680
+sure to check our
+documentation on db.createuser
+
+64
+00:02:46,680 --> 00:02:50,140
+or the Create User command.
+
+65
+00:02:50,140 --> 00:02:53,930
+We can see here that I've
+successfully added my new user.
+
+66
+00:02:53,930 --> 00:02:56,620
+Now I have to authenticate
+as my root user to continue.
+
+67
+00:02:56,620 --> 00:02:59,680
+The localhost exception at this
+point in time is exhausted,
+
+68
+00:02:59,680 --> 00:03:01,810
+and I cannot create any
+additional users without
+
+69
+00:03:01,810 --> 00:03:03,700
+authenticating first.
+
+70
+00:03:03,700 --> 00:03:06,940
+Remember, I'm currently using
+an unauthenticated session
+
+71
+00:03:06,940 --> 00:03:08,860
+that I was only
+able to open because
+
+72
+00:03:08,860 --> 00:03:11,140
+of the localhost exception.
+
+73
+00:03:11,140 --> 00:03:13,540
+Now there is a shell
+command db.auth
+
+74
+00:03:13,540 --> 00:03:16,480
+that lets me authenticate
+from this particular session.
+
+75
+00:03:16,480 --> 00:03:18,400
+But let's do this
+via the Mongo shell
+
+76
+00:03:18,400 --> 00:03:21,480
+to simulate how a client
+would normally connect.
+
+77
+00:03:21,480 --> 00:03:26,670
+I've specified my username,
+root, and password, root.
+
+78
+00:03:26,670 --> 00:03:28,380
+Remember, using
+scram so there is
+
+79
+00:03:28,380 --> 00:03:30,750
+a challenge-response
+mechanism here.
+
+80
+00:03:30,750 --> 00:03:32,700
+The authentication
+database parameter
+
+81
+00:03:32,700 --> 00:03:35,370
+tells the MongoDB server which
+database contains my user
+
+82
+00:03:35,370 --> 00:03:36,610
+credentials.
+
+83
+00:03:36,610 --> 00:03:38,580
+Remember, users
+are per database.
+
+84
+00:03:38,580 --> 00:03:41,370
+That means if I have two
+users, Bob at inventory
+
+85
+00:03:41,370 --> 00:03:45,060
+and Bob at sales, those
+are two different users.
+
+86
+00:03:45,060 --> 00:03:46,860
+The authentication
+database dictates
+
+87
+00:03:46,860 --> 00:03:50,880
+which user I authenticate as
+and what privileges I get.
+
+88
+00:03:50,880 --> 00:03:53,280
+I created this user
+on the admin database,
+
+89
+00:03:53,280 --> 00:03:55,710
+so that's where I'm connecting.
+
+90
+00:03:55,710 --> 00:03:57,930
+So now I'm connected,
+and I have the privileges
+
+91
+00:03:57,930 --> 00:04:00,300
+associated with root.
+
+92
+00:04:00,300 --> 00:04:02,580
+Remember, earlier, I could
+not run this command.
+
+93
+00:04:02,580 --> 00:04:04,770
+Now I am authenticated
+and authorized
+
+94
+00:04:04,770 --> 00:04:08,032
+as a user who has
+access to this.
+
+95
+00:04:08,032 --> 00:04:09,990
+So now I'm connected,
+and I have the privileges
+
+96
+00:04:09,990 --> 00:04:11,730
+associated with root.
+
+97
+00:04:11,730 --> 00:04:15,510
+Again, this is the most basic
+implementation of security.
+
+98
+00:04:15,510 --> 00:04:18,390
+You will have to create
+additional users as necessary
+
+99
+00:04:18,390 --> 00:04:21,570
+to fulfill specific
+operational tasks.
+
+100
+00:04:21,570 --> 00:04:24,000
+You don't want everyone
+using this system
+
+101
+00:04:24,000 --> 00:04:26,590
+to have root access.
+
+102
+00:04:26,590 --> 00:04:30,170
+This is a lot of information
+so read through carefully.
+
+103
+00:04:30,170 --> 00:04:31,510
+Let's recap.
+
+104
+00:04:31,510 --> 00:04:34,330
+MongoDB user security
+is an authentication
+
+105
+00:04:34,330 --> 00:04:36,640
+and authorization
+model, so users
+
+106
+00:04:36,640 --> 00:04:39,610
+must provide who they
+are to the server, which
+
+107
+00:04:39,610 --> 00:04:42,550
+decides what they can do based
+on the user they authenticated
+
+108
+00:04:42,550 --> 00:04:44,750
+as.
+
+109
+00:04:44,750 --> 00:04:48,050
+MongoDB supports multiple
+authentication mechanisms,
+
+110
+00:04:48,050 --> 00:04:51,500
+SCRAM and X.509 are the
+community authentication
+
+111
+00:04:51,500 --> 00:04:52,640
+mechanisms.
+
+112
+00:04:52,640 --> 00:04:57,610
+These are also available on the
+enterprise versions of MongoDB.
+
+113
+00:04:57,610 --> 00:05:02,530
+LDAP and KERBEROS our enterprise
+only authentication mechanisms.
+
+114
+00:05:02,530 --> 00:05:05,320
+Each user that you create
+has one or more roles that
+
+115
+00:05:05,320 --> 00:05:08,020
+define their authorized access.
+
+116
+00:05:08,020 --> 00:05:09,970
+And at the very minimum,
+you should always
+
+117
+00:05:09,970 --> 00:05:13,060
+configure SCRAM-SHA-1 with
+a single administrative user
+
+118
+00:05:13,060 --> 00:00:00,000
+protected by a strong password.
+

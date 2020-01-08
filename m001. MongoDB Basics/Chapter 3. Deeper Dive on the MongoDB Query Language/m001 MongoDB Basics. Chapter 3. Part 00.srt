@@ -1,0 +1,109 @@
+1
+00:00:00,110 --> 00:00:01,860
+In this chapter, we're
+going to talk about
+
+2
+00:00:01,860 --> 00:00:05,870
+some more advanced MongoDB
+query language concepts.
+
+3
+00:00:05,870 --> 00:00:09,560
+The MongoDB query language
+provides extensive support
+
+4
+00:00:09,560 --> 00:00:13,000
+for filtering documents
+of all shapes and sizes,
+
+5
+00:00:13,000 --> 00:00:15,240
+even those with
+complex schemas
+
+6
+00:00:15,240 --> 00:00:18,150
+We'll look at the variety
+of query operators available
+
+7
+00:00:18,150 --> 00:00:19,550
+and how to use them.
+
+8
+00:00:19,550 --> 00:00:23,490
+Note that because all four types
+of CRUD operations-- create,
+
+9
+00:00:23,490 --> 00:00:26,080
+read, update, and delete--
+
+10
+00:00:26,080 --> 00:00:28,560
+require a filter,
+our query operators
+
+11
+00:00:28,560 --> 00:00:31,400
+may be used in your filters
+for any of the query language
+
+12
+00:00:31,400 --> 00:00:33,320
+methods we have discussed.
+
+13
+00:00:33,320 --> 00:00:36,120
+You can find a complete
+list, with links
+
+14
+00:00:36,120 --> 00:00:39,170
+to reference material
+for all query operators,
+
+15
+00:00:39,170 --> 00:00:41,201
+in the MongoDB documentation.
+
+16
+00:00:41,201 --> 00:00:43,450
+We're going to do an overview
+of each type of operator
+
+17
+00:00:43,450 --> 00:00:46,190
+with some very
+concrete examples.
+
+18
+00:00:46,190 --> 00:00:48,722
+The best way to learn is
+to get your hands dirty.
+
+19
+00:00:48,722 --> 00:00:50,180
+as part of this
+chapter, we'll have
+
+20
+00:00:50,180 --> 00:00:51,879
+you do a number of
+quizzes and labs
+
+21
+00:00:51,879 --> 00:00:53,420
+to give you quite
+a bit of experience
+
+22
+00:00:53,420 --> 00:00:54,810
+with these operators.
+
+23
+00:00:54,810 --> 00:00:00,000
+Let's get started.
+

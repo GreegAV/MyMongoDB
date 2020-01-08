@@ -1,0 +1,1 @@
+As of MongoDB 3.4, the localhost exception has been extended to include the execution of db.createRole. This is so that users authenticating and authorizing via LDAP are able to create a role inside of MongoDB that maps to a role defined in LDAP.

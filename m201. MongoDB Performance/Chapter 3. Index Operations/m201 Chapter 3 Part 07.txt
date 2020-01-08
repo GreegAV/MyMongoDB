@@ -1,0 +1,57 @@
+Our rule of thumb says that we should always have enough memory to allocate our indexes.
+
+But there are some edge cases-- like, for example, the occasional reports that our beyond tools and reporting mechanisms do perform, and they might need an index to support those queries.
+
+And also situations where we would have a right-end-side index increment.
+
+Let's have a look into both of these and what kind of other solutions we have for these type of edge cases.
+
+Apart from the obvious situation where indexes are not being utilized should not be created or not present in a production environment anyway, there are two edge cases that do not need to have the full extent of the index size in RAM.
+
+Most of our queries are to support operational functionality-- means they are recurrently getting information and using those indexes to support operational workload.
+
+That means, as well, that any index that supports a particular query should be in RAM because we know that that data will be utilized to respond to an operational query.
+
+But let's imagine our reporting or BI tool mechanisms.
+
+If we do have indexes to support those queries, which we should, chances that you need this information to be always allocated in memory are very small because the recurrency by which these tools operate is not in the same amount or degree that our operational workload.
+
+One way of mitigating the effect of these particular tools is instead of running the queries in our primaries and having the indexes created on those primaries, we can have our secondaries be replying to requests of our BI tools, and therefore having the indexes that support those queries been created only on designated nodes.
+
+Another situation where the full amount of our indexes does not necessarily requires to be fully allocated in memory is when we have indexes on fields that grow monotonically, like counters, dates, and incremental IDs.
+
+If you take in consideration the index structures-- naively represented by this tree over here, which is a petrie.
+
+If we have monotonically increasing data, chances are that our index will eventually become unbalanced on the right-hand side of that index.
+
+Therefore, it will grow accordingly with the new data coming in.
+
+So if you have an incremental ID, you start with 0, and you end up with 100 every time that you add a new element to your data set.
+
+You only grow positively.
+
+That means that the tree will always grow in the right-hand side.
+
+If we add to that fact that we only need to query on the most recent data, then the amount of index that actually needs to be in RAM is always going to be the right-end side of your index.
+
+So here, in terms of memory allocation for this particular index, we only need to care about how much data-- from the recently added data-- how are we going to be needing to access all the time?
+
+This is a typical scenario of IOT kind of use cases where new data being created in index will be either time based or incremental data that always going to grow positively in our right-hand side of our index.
+
+Therefore, if your total index size is 10 gigabytes, but the most recent access data-- the one that we are using the index to query on-- is only 2 gigabytes of information, then that's the amount of size that you need to allocate a memory to support those queries.
+
+A typical case is, for example, when you have something like a checkout, that you have a field, and an ISODate.
+
+You create an index to support queries on date.
+
+And the queries that you operate from the application is looking to that date, like doing the exact same moment in time now, and sorting by date descending.
+
+So you are getting always the latest results on your query.
+
+Therefore, it is admissible that in these situations you might not need to allocate the full extent of your supporting index.
+
+To wrap it up, when thinking about the resource allocation for your indexes, and when dealing with indexes, we cannot forget about that these data structures do require a lot of resources.
+
+They are part of your database working sets, and we need to take them in consideration in our original sizing and maintenance practices.
+
+And this is all you need to know about resource allocation for indexes.

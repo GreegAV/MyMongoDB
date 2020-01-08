@@ -1,0 +1,161 @@
+Let's go ahead and create a DDL audit filter.
+
+Let's create a filter audit anytime a user tries to create an index on a specific database.
+
+A great way to figure out what your filter document is going to look like is to just turn auditing on, and then run the type of query that you want to audit for, and then just look at the logs, and see what those kind of audit logs look like.
+
+Let's go and do this now.
+
+I still have my config.yaml file.
+
+Let's go ahead and go in here and remove the filter that we currently have so that we can audit all events.
+
+Now, we can go ahead and restart the server.
+
+Now that our server's up and running, let's go to and connect to it and create an index on a specific database.
+
+So we need to figure out what specific database we want to use.
+
+We could use a test database, but let's do something a little bit more interesting.
+
+Here, I'm going to switch the myApplication database.
+
+And I said that we wanted to audit the creation of indexes.
+
+So let's go ahead and create an index.
+
+Our index has been created.
+
+Let's go ahead and look at the audit logs to see what kind of audit documents were generated.
+
+We have a bunch of output in here.
+
+Let's go through it.
+
+Now, this is for another collection, so that's from our last test.
+
+That means that all of these are actually what we care about.
+
+The first one here is createDatabase.
+
+That's because the myApplication database didn't exist yet.
+
+Makes sense.
+
+Next, we have createCollection, and that's because the products collection did not exist on the myApplication database.
+
+And then, here we go, here's what we really care about, createIndex.
+
+And we have this big param object.
+
+Let's go out and copy this and reformat it so it's a little bit easier to read.
+
+I have copied it into my clipboard.
+
+Now, I'm going to open up the text editor of my choice and just paste it in here.
+
+Let's go ahead and reformat this so it's a little bit easier to read.
+
+Now our document's a lot easier to read.
+
+So what do we want to look for here?
+
+We want to look for the creation of indexes and, also, the specific database, in this case, myApplication.
+
+Well, right off the bat, we can see createIndex, so atype is probably a field we're going to want to keep track of.
+
+I don't see anything important, nothing important.
+
+Scroll down, nothing important.
+
+Oh, here we go.
+
+I see myApplication.
+
+Probably going to want to pay attention to this one.
+
+Don't care about it, don't care about it, don't care about it.
+
+We could care about this, but we're getting the same information for right here, so I guess it doesn't really matter.
+
+Let's go ahead and remove everything except for the things that I mentioned that we want to care about.
+
+Now, we can see a document that describes the kind of thing that we're looking for.
+
+But it isn't quite right.
+
+This would only audit the creation of indexes on the products collection on the myApplication database.
+
+We just want to audit the creation of indexes on the myApplication database.
+
+Well, if you're familiar with the MongoDB query language, you know that it supports regexes.
+
+We can probably just use a regex to define namespaces that include only the myApplication database.
+
+Now, we have a regex that will look at the very beginning of this field and will look for my-application, the database that we care about.
+
+And then it will immediately look for a period signifying that we're switching to now some kind of other namespace, whether it be a collection or some other nested database.
+
+We can simplify this query a little bit by embedding ns inside a param with dot notation.
+
+Fantastic, I think we have our query ready way to go.
+
+Let's try it out.
+
+Let's go and update config.yaml with our new filter.
+
+We just say "filter" and specify our filter document.
+
+You'll notice I'm using single quotes, because I use double quotes within the actual document itself.
+
+Go ahead and save, and restart the server.
+
+We can now connect to the server and test our filter.
+
+First let's try creating and index on a database that isn't my-application.
+
+I'm currently on the test database.
+
+Let's do a collection different than products, just to be fun.
+
+Now, since we're not talking to the myApplication database, we shouldn't see this in the audit logs.
+
+Index was successfully created.
+
+And now let's switch the my-application database.
+
+And from here, let's create indexes on two different collections.
+
+Both of them should be logged.
+
+Success, great.
+
+Let's do it on a different collection.
+
+And here's another index.
+
+So we'd expect to see both of these in the audit log.
+
+I'll just tail the audit log.
+
+And then, here, we can see all of our new logs.
+
+The first one is shutdown.
+
+That was from when I restarted the server.
+
+Create index, my-application on products.
+
+Key was test.
+
+Cool, that was there.
+
+And create index, "bazz" on my application.
+
+Awesome.
+
+I didn't see anything in here about the test database.
+
+I just saw stuff pertaining to myApplication.
+
+It looks like our filter works successfully.

@@ -1,0 +1,57 @@
+Sometimes we're in a situation where we'll need to run a mix of TLS connections and non-TLS connections.
+
+A great example of this is migrating a replica set from one that uses no encryption to one that uses TLS exclusively.
+
+While we'd love to force all of our clients to connect via TLS, sometimes this isn't easy because we might need to update drivers or issue new certificates to each individual client of our database.
+
+In this scenario, we really want to have all of the members in between our ReplSet use TLS.
+
+But we would really like for our clients to choose between using TLS and using an unencrypted connection.
+
+In order to do this, instead of using our regular old require SSL mode, we can use the prefer SSL mode.
+
+And what prefer SSL does is exactly what I just said.
+
+It will allow us to require SSL between all the members of our replica set, but it will allow clients to choose to use SSL or to just connect unencrypted.
+
+Of course, over time as we eventually issue these new certificates to our clients and as they update their drivers or their application logic as necessary, we can then switch from using prefer TLS to using require SSL.
+
+So that all connections to our server, whether it be a member or whether it be a client, will require TLS for all connections.
+
+Let's go ahead and do this.
+
+So this process should be pretty straightforward.
+
+We're essentially using the same command as we did last time, except now we're using preferSSL instead of requireSSL.
+
+We've now started the first member of our replica set.
+
+Here's the command to start the second member of our replica set.
+
+The only thing I changed is the db path, log path, and port.
+
+And finally, here's the third member of our replica set.
+
+Of course just changing the db path, log path, and port again.
+
+And unlike before, now that we're preferring SSL instead of requiring it, I can just run Mongo instead of running Mongo with the SSL options and providing the client certificate.
+
+And you can see that I've now successfully connected to the replica set.
+
+But the replica set hasn't been initiated.
+
+So let's go ahead and initiate the ReplSet with the correct configuration.
+
+And here's the same configuration we did as last time.
+
+I'm still using my encrypted ReplSet and passing in all the members specifying localhost as the host and their respective ports.
+
+And we get an OK.
+
+So now you can see members are all using SSL and clients can choose between using SSL or not using SSL.
+
+Let's go and verify that I can still use SSL to connect to the server.
+
+Server is still running, and now I can go ahead and try and connect actually using SSL.
+
+And now we've successfully connected.

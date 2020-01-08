@@ -1,0 +1,55 @@
+In this video, I want to cover a couple of important issues.
+
+First, the way we use TLS/SSL between MongoDB and LDAP server.
+
+Second one is how LDAP configuration differences between different LDAP providers and how this can affect the MongoDB configuration settings.
+
+Now the use of the TLS between MongoDB and LDAP server is enforced by default.
+
+You can, however, disable it, but we will strongly recommend it to our users to keep it enabled.
+
+We can also bind a node to a given user.
+
+This will mean that all requests exchanged between MongoDB and the LDAP server will be bound to a username password.
+
+You can also define with the bind mechanism which mechanism to use enforcing that bind.
+
+By default, it's set to play.
+
+Now regarding different LDAP servers, we will check the most common used ones-- Active Directory and OpenLDAP.
+
+To simplify our examples-- the ones used in this course-- we have been playing around with OpenLDAP.
+
+The labs, the demonstrations, and some of the configuration code snippets have all been around OpenLDAP.
+
+But there are slight differences in format and configuration options depending on which system we are bound to use.
+
+The most common MongoDB LDAP deployment is using Active Directory as our LDAP server.
+
+This has a set of different variations when compared with OpenLDAP.
+
+The first difference resides on the user definition attributes.
+
+OpenLDAP that assumes that users will be defined by UID attributes, while Active Directory allows users to be configured using a common name-- CN attribute.
+
+This might seem a small, insignificant difference, but can cause some headaches when debugging configuration validation.
+
+The other major significant is around MongoDB configuration option-- security LDAP authz query template.
+
+Active Directory allows us to define the complete distinguished name structure and just replace the username on the user placeholder.
+
+For example, our query template can be something like cn= the placeholder and then the rest of our distinguished name definition.
+
+In OpenLDAP, this is not possible.
+
+We need to use a full replacement and use a full distinguished name.
+
+While in OpenLDAP this is not possible to achieve relying alone on the query template definition, we can still do this by applying a user to DN mapping substitution on a regular expression.
+
+User to DN option matching a substitution and matching regular expression is the way to get it done.
+
+Why this is important?
+
+If we want users to log in to MongoDB just passing a user credential and not the complete LDAP credentials-- like, for example, when we have Alice, or when we have to pass along UID=Alice and so forth in the distinguished name.
+
+Which, as you can imagine, tends to be a much more pleasant usage.

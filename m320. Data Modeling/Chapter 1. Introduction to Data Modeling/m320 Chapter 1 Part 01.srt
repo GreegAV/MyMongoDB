@@ -1,0 +1,154 @@
+
+1
+00:00:00.000 --> 00:00:00.258
+
+
+2
+00:00:00.258 --> 00:00:02.550
+In this lesson, we're going
+to cover the list of things
+
+3
+00:00:02.550 --> 00:00:05.080
+that you'll need to know
+prior to taking this course.
+
+4
+00:00:05.080 --> 00:00:07.950
+If any of the items in this
+lesson are unfamiliar to you,
+
+5
+00:00:07.950 --> 00:00:09.720
+feel free to pause
+this video and fill
+
+6
+00:00:09.720 --> 00:00:12.750
+in those gaps in knowledge
+before proceeding.
+
+7
+00:00:12.750 --> 00:00:14.370
+First and foremost,
+we're looking
+
+8
+00:00:14.370 --> 00:00:16.230
+for database fundamentals.
+
+9
+00:00:16.230 --> 00:00:21.090
+Terms like table, collection,
+database, relationship, schema,
+
+10
+00:00:21.090 --> 00:00:24.780
+entity, and database
+transaction should already
+
+11
+00:00:24.780 --> 00:00:26.880
+be part of your vocabulary.
+
+12
+00:00:26.880 --> 00:00:29.010
+If you're comfortable
+in using and explaining
+
+13
+00:00:29.010 --> 00:00:32.680
+these and other related terms,
+then you're in good shape.
+
+14
+00:00:32.680 --> 00:00:34.560
+You can refresh your
+memory on most of these
+
+15
+00:00:34.560 --> 00:00:37.740
+by following the reference
+links in the lecture notes.
+
+16
+00:00:37.740 --> 00:00:40.650
+Another good thing to know
+about is the entity relationship
+
+17
+00:00:40.650 --> 00:00:44.100
+diagram and the appropriate
+notation that comes with that.
+
+18
+00:00:44.100 --> 00:00:46.110
+Does the image in
+the right make sense?
+
+19
+00:00:46.110 --> 00:00:49.350
+What is the relationship between
+the student and course tables?
+
+20
+00:00:49.350 --> 00:00:51.270
+If you can answer these
+questions comfortably,
+
+21
+00:00:51.270 --> 00:00:53.480
+then you're prepared
+to take this course.
+
+22
+00:00:53.480 --> 00:00:55.320
+Otherwise, check
+out the references
+
+23
+00:00:55.320 --> 00:00:57.150
+in the lecture notes.
+
+24
+00:00:57.150 --> 00:00:59.880
+There is, of course, a softer
+requirement for this course,
+
+25
+00:00:59.880 --> 00:01:00.810
+as well.
+
+26
+00:01:00.810 --> 00:01:03.570
+Using Compass, you'll need to
+be able to connect to the M320
+
+27
+00:01:03.570 --> 00:01:05.850
+MongoDB Atlas cluster
+that was created
+
+28
+00:01:05.850 --> 00:01:07.638
+for the purposes of this course.
+
+29
+00:01:07.638 --> 00:01:09.180
+We will walk you
+through this process
+
+30
+00:01:09.180 --> 00:01:11.610
+in one of the following
+lectures in the meantime, if you
+
+31
+00:01:11.610 --> 00:01:13.860
+want to read up on Atlas,
+feel free to check out
+
+32
+00:01:13.860 --> 00:01:16.850
+the link that's
+attached to this lesson.

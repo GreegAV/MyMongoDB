@@ -1,0 +1,63 @@
+MongoDB supports a query operator that allows us to use regular expressions to match fields with string values.
+
+If you're looking for more comprehensive text search, I encourage you to look at the text operator and full text indexes.
+
+Full text search is outside the scope of this course, but I mention it here because it's related to $regex and may be of interest to you.
+
+Now to use the $regex operator you need to have a fairly good understanding of regular expressions, but it's important you know this operator exists for the situations in which regular expressions make sense for an application.
+
+Now in our movie details collection, the documents have an awards field that has as its value an embedded document with a field called text.
+
+This text describes the awards that a given movie has received.
+
+And for this particular data set given the way it was generated, if a movie has one or was nominated for an Oscar, you'll see that reflected in the first word of this text field.
+
+This field has a certain pattern it follows in reporting on the awards for movies, and we can see that reflected if we just do a bit of projection on the entire collection.
+
+So what I'm going to do is run a find query, and all were running this fine query for is in order to do this projection.
+
+The way we do that is by simply specifying an empty document as our filter.
+
+This empty document will match every document in the collection.
+
+So for Oscar winning movies, we tend to see the word one first and nominated first for Oscar nominated movies.
+
+Now there are some other words that follow the same pattern, but for purposes of this example, let's go ahead and use the fact that Oscar awards are stipulated in this way.
+
+Here we have an example of the use of the $regex operator.
+
+If you're not familiar with regular expressions, this syntax is probably a little bit confusing, but we'll clear that up.
+
+A full explanation of regular expressions is outside the scope of this particular lesson, but essentially these slashes delimit the regular expression.
+
+The caret here means start at the beginning of whatever field we;re matching on, in this case, the awards.text field.
+
+At the very beginning of the value of that field, we want to match exactly a capital W, a lowercase O, a lowercase N.
+
+Then this dot is a wild card character.
+
+It stipulates that we should match any character, and then with the asterisk here we're matching any character any number of times.
+
+So in summary, what this regular expression is matching is the word won at the beginning of the text field for the awards embedded document.
+
+And we don't care what comes after the word won.
+
+It can be anything.
+
+And what I really need to do here is make this just a little bit more precise, and put a space here to indicate that there must be a space after the word won.
+
+I want to ignore for example any documents where the field begins with the word wonder or some other word that has these three letters at the beginning.
+
+So let's take a look at that.
+
+And in fact, let's do this version of it projecting out the title and the awards.text field.
+
+And you can see that we're getting back the kinds of documents that we want, all Oscar winners.
+
+So that's a very simple example of using the $regex operator.
+
+If you have a use case where regular expressions are important, that is where you have a string field, and you want to match documents that have a particular pattern of text in that field, the $regex operator is the one you should use.
+
+And if you have such a use case, I strongly encourage you to dive deeper into the use of this operator.
+
+There's a great deal of flexibility there.

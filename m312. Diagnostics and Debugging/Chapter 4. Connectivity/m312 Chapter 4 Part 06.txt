@@ -1,0 +1,89 @@
+OK.
+
+So we see that there's a correlation between number of connections and virtual size being allocated.
+
+That's fine.
+
+So let's use a system tool, in our case, we're going to be using free command which gives us the indication of how is our memory being used.
+
+A particular command that I really like to use in conjunction with free is watch.
+
+In this case, I'm going to watch this output every two seconds.
+
+So I can see here, what's my current utilization every two seconds of my memory.
+
+Which is great.
+
+Right now, I have nearly four gigabytes in total, I'm using 1.2, and I have 2.73.
+
+Awesome!
+
+Once I run again my system with the 600 different threads in it, and if I watch my free again, I can see that the values increase rapidly and they stick with that increase for a while.
+
+So now instead of a few 1.2 gigabytes of memory, I'm actually allocating three gigabytes of data because everything is running on this same box.
+
+Python will require memory to launch all the processes.
+
+MongoDB also runs on memory, so we also need some memory to be allocated, and then there's the per connection allocation that will be reflected on this increase.
+
+Once the system stops, after a minute, we go back to 1.2 gigabytes of utilization.
+
+Now if you're starting to wonder if this is a good thing or not let me reassure you one thing, this is not the normal behavior for a well written application.
+
+What we need to realize is that for each connection that we establish from our application or from the threads of our application, will require memory.
+
+And since everything in our current demonstration runs on the same box, it will be allocated on both sides, not only on the MongoDB side but also in the application side.
+
+So it's important to determine how many connections you allow your applications to establish considering that each connection require resources and when you have a lot of them, they can add up to a very big number in terms of resource requirements.
+
+But I'm feeling bold so let's not stick around with only 600, let's go ahead and try and push the envelope to 2000 connections and see what happens.
+
+Now obviously our memory keeps on increasing at the dramatic stage, and it would eventually be running into a couple of nasty situations.
+
+Like, for example, our processes not being able to be allocated because there is no memory left.
+
+This will be done on the application side.
+
+So next time we try to fork the process and launch a new process from our main script, the make lots of connection server, the OS will tell my applications a no you cannot do that go away and launches OS error saying that there is no memory available for being allocated.
+
+So if you don't manage it well the requirements in terms of your application resources, especially memory, and if you keep your connections for a long time without releasing them, regardless of the paralyzation that you want to do in your application, you might end up with problems.
+
+Where the server does not have any memory or that your own MongoDB will not be able to allocate more connections than what is feasible for that particular box.
+
+Now, there's a particular setting of your system that also interferes a lot with the number of connections that you will be able to set from your MongoDB and that's your ulimits.
+
+Now MongoDB allows you by default to reach up to 65,536 connections per MongoDB if only your system is actually capable of doing so.
+
+If your ulimits value actually allows you to do so.
+
+Let's check out this particular box that we've been using the ulimits value.
+
+To do that, we just need ulimit-a, give us all the different ulimits that we can set up.
+
+And in particular, one that is quite important, is my ulimits of open files.
+
+And here I can only open up to 1,024 different files in this box for this particular user.
+
+This value will impact the number of allowed connections and the number of collection and indexes that our system will be able to have.
+
+Since every single connection, index, and collection will be a file for MongoDB to operate with or will be considered a file that it needs to work with.
+
+We will reach a limit if we have a bunch of different connections plus a bunch of different collections and a bunch of different indexes operating under the same MongoDB, under the same user with this setting of ulimits.
+
+Now if I connect to my MongoDB and I look for my service status and in particular, the number of connections, I can see a couple different values here.
+
+This MongoDB is allowed to establish up to 800 in 18 different connections.
+
+So the ulimits configuration will affect the number of available connections that your MongoDB will be actually allowing you to set regardless of the default maximum value and regardless of the number of incoming maximum connections that you set.
+
+Given that we have 1,024, my MongoDB will only have available 818 because there's a bunch of other files that MongoDB needs to operate with that also are going to be reducing the number of available connections.
+
+But then again, I think that 818 is a very small number.
+
+So what I'm going to do is shut down my server for a second, bring it down, I'm going to change my ulimit value.
+
+I'm going to set up the number of allowed open files to 2,048 duplicating this amount, I'm going to bring back my MongoDB, and connect to get into that instance.
+
+Once I connect it, If I do my server status again looking for the connections, I can see that my available connections are also immediately increased as a factor of the ulimits value.
+
+So keep track of your ulimits because this might affect a lot the amount of open files that a given process is able to establish and therefore, limit your connectivity of your system.

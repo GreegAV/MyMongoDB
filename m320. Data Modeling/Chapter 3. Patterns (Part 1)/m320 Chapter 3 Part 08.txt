@@ -1,0 +1,107 @@
+When you see a message on your phone or your laptop telling you that you're running out of memory, this is your personal device being very communicative.
+
+However, your database server is unlikely to be that direct.
+
+Also you would expect a database server to do a better management of resources than to simply run out of memory, and reporting such message.
+
+MongoDB tries to optimize the use of RAM by pulling in memory only the document that it needs from the disk through the RAM.
+
+When there is no more memory available, it evicts pages that contains the document it doesn't need anymore to make room for more document it needs to process at the moment.
+
+This [?
+
+mechanism ?] allows to have the hardware configuration that does less RAM than the total size of the data on disk.
+
+As long as the size of your working set fits in RAM, you get good performance.
+
+The working set refers to the amount of space taken by the documents and the portions of indexes that are frequently accessed.
+
+Either if you get into a situation where the working set is larger than RAM-- in this picture, the four red documents that are needed all the time, may not fit in memory.
+
+So the server finds itself often dropping documents.
+
+It will soon have to fetch back from disk.
+
+This process, of constantly ejecting documents that should stay in memory, is bad-- pretty, pretty bad.
+
+The fix can be either one of the following three solution.
+
+A, add more RAM-- In other terms, scale your infrastructure vertically.
+
+B-- either start sharding, or add more shards if you already have a sharded cluster.
+
+Sharding has a similar effect as A, since you provide more RAM to the cluster overall, through adding machines to it.
+
+This is also called scaling horizontally.
+
+Or C-- reduce the size of the working set.
+
+This last solution tries to resolve the problem without throwing money at it.
+
+For the purpose of this lesson, we are going to consider reducing the size of the working set.
+
+The key to that is breaking up huge documents, which we only need a fraction of it.
+
+For Example, let's say we have a system that keeps a lot of movies in memory, and each of these movies is taking a fair amount of memory.
+
+Maybe there are some information that we don't need to use that often in those documents.
+
+For example, most of the time users want to see the top actors and the top reviews, rather than all of them.
+
+As for the fields here at the bottom-- comments, quote, and release-- it's also unlikely that you need all of them, most of the time.
+
+We could keep only 20 of the cast members, the main actors-- and also 20 of each of those comments, quote, release, and reviews.
+
+The rest of the information can go into a separate collection.
+
+It means if you start with a document that has all the info in it, a field that has a one-to-one relationship-- for example, the full script-- could be moved to a new collection.
+
+And you could access this information through the dollar lockup operator.
+
+As for a field that has a one-to-N relationship, you can move most of those objects to another collection and keep only a subset of the N relationship in the main document.
+
+The result on the working set is the following.
+
+Here, each document has been split into the part that is frequently accessed and the part that is rarely accessed.
+
+Now that the documents are smaller, the whole working set can fit in memory.
+
+And we have additional memory to bring in the data we only need to rotate.
+
+Let's organize what we've been describing and illustrating a little bit.
+
+The problem to the subset pattern addresses is that too many frequently use pieces of information-- or I checked it from memory, which can be identified by observing a working set that this too big to fit in memory.
+
+Digging into the majority of documents in memory, we can observe that we only make use of a small subset of information in those documents.
+
+So a large part of those documents is rarely needed.
+
+Our solution is to break apart the documents that are taking too much space in RAM.
+
+We will divide the fields of information into two camps-- the field that are often required by our system, and the ones that are rarely required.
+
+This division is frequently used for one-to-many or many-to-many relationship, for which you only want to keep a subset of the many associated document.
+
+In which type of applications or situation are we likely to apply this pattern?
+
+A list of reviews for a product, a movie, or news articles-- well, anything that can be discussed or reviewed.
+
+List of anything that can be long and carries much more data than anyone can or wants to process or read.
+
+If this list takes a substantial amount of memory, they are good candidates to be offload to another collection.
+
+As a result of applying the subset pattern, our working set will not only be smaller, but it will make retrieving additional documents faster since they will be smaller.
+
+On the other hand, there are some trade-offs.
+
+First, you have more documents to retrieve, which means that you may have to make more round trips between the application and the server.
+
+And second, the fact that you break documents in two and duplicate some info means that the database will require a little bit more space on disk.
+
+However, this is not a big issue as this space is much cheaper than RAM.
+
+That's it.
+
+This is how the subset pattern works.
+
+In summary, the subset pattern is a great pattern to help you reduce the size of your working set by splitting information that you want to keep in memory, versus information that you fetch on demand.

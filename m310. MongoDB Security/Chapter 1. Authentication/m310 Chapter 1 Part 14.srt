@@ -1,0 +1,395 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.090
+Now, configuring your
+MongoDB instance, given
+
+3
+00:00:03.090 --> 00:00:06.460
+the number of different options
+that you have for your MongoDB
+
+4
+00:00:06.460 --> 00:00:10.300
+configuration files to
+properly connect to LDAP,
+
+5
+00:00:10.300 --> 00:00:12.640
+might get a little
+bit tricky, not
+
+6
+00:00:12.640 --> 00:00:14.650
+only because of the number
+of different options,
+
+7
+00:00:14.650 --> 00:00:18.420
+but also considering that the
+confirmation of LDAP servers
+
+8
+00:00:18.420 --> 00:00:22.280
+might be very well-defined
+and very extensive,
+
+9
+00:00:22.280 --> 00:00:25.370
+in terms of number of users and
+different configuration options
+
+10
+00:00:25.370 --> 00:00:26.590
+that it might have.
+
+11
+00:00:26.590 --> 00:00:30.740
+Testing this settings on
+itself comes on handy.
+
+12
+00:00:30.740 --> 00:00:33.210
+It makes this much
+more effective,
+
+13
+00:00:33.210 --> 00:00:38.050
+doing that before setting up
+our MongoDB instance itself.
+
+14
+00:00:38.050 --> 00:00:40.490
+So, for that, with
+3.4 we are shipping
+
+15
+00:00:40.490 --> 00:00:43.020
+a new tool called Mongo LDAP.
+
+16
+00:00:43.020 --> 00:00:48.400
+Now, what Mongo LDAP will do is
+test your configuration options
+
+17
+00:00:48.400 --> 00:00:53.170
+for MongoDB against the running
+LDAP server or set of servers.
+
+18
+00:00:53.170 --> 00:00:54.800
+Let's see how it works.
+
+19
+00:00:54.800 --> 00:00:57.390
+Now, in this particular
+Vagrant machine,
+
+20
+00:00:57.390 --> 00:01:02.030
+here, I have been playing
+around with MongoDB 3.4.
+
+21
+00:01:02.030 --> 00:01:06.790
+I also have a running LDAP
+server on a different machine--
+
+22
+00:01:06.790 --> 00:01:10.020
+here it is-- configured
+with the set of users
+
+23
+00:01:10.020 --> 00:01:13.370
+that we've been looking
+into throughout the course.
+
+24
+00:01:13.370 --> 00:01:15.110
+Now, the first
+thing that I can do
+
+25
+00:01:15.110 --> 00:01:19.300
+is check if Mongo LDAP
+is actually configured.
+
+26
+00:01:19.300 --> 00:01:21.970
+And let's have a look to
+what configuration options
+
+27
+00:01:21.970 --> 00:01:24.850
+we have available for
+this particular tool.
+
+28
+00:01:24.850 --> 00:01:27.710
+Now, the first thing
+I have is the option
+
+29
+00:01:27.710 --> 00:01:30.650
+of setting up a
+configuration file that
+
+30
+00:01:30.650 --> 00:01:34.270
+will allow me to test, given
+a MongoDB configuration
+
+31
+00:01:34.270 --> 00:01:38.280
+file, all the options
+that are LDAP-related.
+
+32
+00:01:38.280 --> 00:01:40.560
+I will tell exactly
+which user I'm
+
+33
+00:01:40.560 --> 00:01:44.090
+going to be trying to
+connect with, its password,
+
+34
+00:01:44.090 --> 00:01:46.550
+and I can even set it in a
+different-colored output, which
+
+35
+00:01:46.550 --> 00:01:47.890
+is lovely.
+
+36
+00:01:47.890 --> 00:01:52.450
+If I don't want to set up any
+configuration file on its own,
+
+37
+00:01:52.450 --> 00:01:56.230
+I can test individual
+LDAP module options.
+
+38
+00:01:56.230 --> 00:02:00.780
+Like, if the LDAP servers are
+up, if the transport security
+
+39
+00:02:00.780 --> 00:02:03.500
+setting, or if I'm
+using TLS or none,
+
+40
+00:02:03.500 --> 00:02:09.130
+is actually set up, or any of
+the other LDAP-related options
+
+41
+00:02:09.130 --> 00:02:10.850
+that MongoDB ships with it.
+
+42
+00:02:10.850 --> 00:02:13.840
+So, in my case, I do
+have a configuration
+
+43
+00:02:13.840 --> 00:02:15.850
+file that I want to test.
+
+44
+00:02:15.850 --> 00:02:18.850
+That configuration file
+has a bunch of options.
+
+45
+00:02:18.850 --> 00:02:21.090
+In this case, I'll
+have a server that I
+
+46
+00:02:21.090 --> 00:02:23.220
+want to connect to--
+this other machine,
+
+47
+00:02:23.220 --> 00:02:25.000
+running on my local host.
+
+48
+00:02:25.000 --> 00:02:26.530
+I have a query template.
+
+49
+00:02:26.530 --> 00:02:30.330
+I'm going to fully replace
+the user for whatever I'm
+
+50
+00:02:30.330 --> 00:02:32.060
+passing on to MongoDB.
+
+51
+00:02:32.060 --> 00:02:34.970
+And also going to have,
+like, the transportSecurity
+
+52
+00:02:34.970 --> 00:02:35.560
+set to "none."
+
+53
+00:02:35.560 --> 00:02:40.650
+I'm not using TLS at the
+moment-- neither a bind method.
+
+54
+00:02:40.650 --> 00:02:43.730
+But I am going to do a
+transformation of the user
+
+55
+00:02:43.730 --> 00:02:46.160
+that I'm receiving to
+a distinguished name.
+
+56
+00:02:46.160 --> 00:02:49.030
+And this is done by
+the userToDNMapping.
+
+57
+00:02:49.030 --> 00:02:52.200
+And I specify, here,
+what's the transformation.
+
+58
+00:02:52.200 --> 00:02:54.020
+I'm going to pick
+up whatever user
+
+59
+00:02:54.020 --> 00:02:55.800
+I'm passing to
+connect to MongoDB
+
+60
+00:02:55.800 --> 00:02:59.090
+and replace it with this
+VN mapping, over here.
+
+61
+00:02:59.090 --> 00:03:01.990
+So, basically, I'm going
+to set uid to whatever I'm
+
+62
+00:03:01.990 --> 00:03:03.610
+passing [? to ?] the user.
+
+63
+00:03:03.610 --> 00:03:09.150
+So let's see if my configuration
+file is correctly set up, given
+
+64
+00:03:09.150 --> 00:03:10.080
+a user.
+
+65
+00:03:10.080 --> 00:03:14.270
+To do that, what I'm going to do
+is basically tell MongoDB that
+
+66
+00:03:14.270 --> 00:03:17.240
+I have a file-- the file that
+I've previously shown you,
+
+67
+00:03:17.240 --> 00:03:22.070
+with all the options, which
+is called "mongod_ldap.cnf."
+
+68
+00:03:22.070 --> 00:03:25.060
+And I'm going to test the
+connection using user "alice"
+
+69
+00:03:25.060 --> 00:03:28.180
+and passing on its
+respective password.
+
+70
+00:03:28.180 --> 00:03:30.980
+Once I run this
+particular process,
+
+71
+00:03:30.980 --> 00:03:35.070
+I'll have the full set
+of steps that MongoD
+
+72
+00:03:35.070 --> 00:03:38.140
+will try to execute, given
+the credentials that I'm
+
+73
+00:03:38.140 --> 00:03:39.710
+passing to connect.
+
+74
+00:03:39.710 --> 00:03:42.520
+It will check if the
+LDAP servers are found,
+
+75
+00:03:42.520 --> 00:03:46.040
+if we can connect to them,
+if the mapping are valid,
+
+76
+00:03:46.040 --> 00:03:49.730
+if we successfully authenticate
+against the LDAP server,
+
+77
+00:03:49.730 --> 00:03:54.060
+if we can get the configuration,
+the query templates, and so on.
+
+78
+00:03:54.060 --> 00:03:58.180
+So, in essence, we are shipping
+MongoDB 3.4 with this utility
+
+79
+00:03:58.180 --> 00:04:00.920
+helper to avoid having
+you drilling down
+
+80
+00:04:00.920 --> 00:04:04.140
+the logs of the normal
+execution of MongoDB
+
+81
+00:04:04.140 --> 00:04:06.720
+to find out any connection
+misconfigurations
+
+82
+00:04:06.720 --> 00:04:09.370
+on your configuration file.

@@ -1,0 +1,99 @@
+In this lesson, we'll be looking into the server status command.
+
+Service status does a lot.
+
+It's used under the hood of several tools and services that help manage and monitor a MongoDB instance.
+
+Tools like Cloud Manager, and Ops Manager, Compass, and MongoStat, all use this command to create snapshots or real time series data of the instance utilization and status.
+
+Server status is a MongoDB administrative command that gives us an overview of the important metrics about our database.
+
+As you can see, it's an absolutely huge document.
+
+But the output of this command can be grouped into a few different sections-- instance information, asserts, connections and network, locking, operation stats, security, replication stats, storage engine stats, and metrics.
+
+These sections span everything from overall information, like the instance in information, to very specific information on operation counters and storage engine stats.
+
+We're going to go on a whirlwind tour, so buckle up.
+
+Since this command gives us so much information, we'll focus on the most relevant data for debugging and diagnostics, like asserts, connections and network, operation stats, locking, and metrics.
+
+Given the server status can be a bit overwhelming, and to minimize the pixel real estate on our screen, we can also suppress any of the root level server status output document fields, much like we would when projecting information in a find query.
+
+You can see that we're going to the admin server and doing run command.
+
+That's what this admin command means.
+
+We do this by running the server status command directly.
+
+In this command, we're removing from the output, all of the replication metrics and WiredTiger information, and explicitly including locks information.
+
+It's still a huge document.
+
+A good way to keep track of the keys for such a huge document is with the object.keys function.
+
+This is just a JavaScript function that tells us what the keys of JSON object are.
+
+OK, let's dig into how server status works.
+
+To provide server status information, the MongoDB process keeps track of a set of counters and statistics, all of them counting up since that very MongoDB server process first started up, potentially quite some time ago.
+
+These counters will be reflected in this command output.
+
+Tools that run this command will be able to plot or provide statistical information, let's say, inserts per second, for a given instance by calculating the difference between two calls to server status.
+
+I'm going to go to another shell connected to the same server.
+
+Here, I'm going to set some inserts running.
+
+I'm telling it to insert 10 documents, then wait one second, and just repeat forever.
+
+Looks like it had to reconnect.
+
+And were good.
+
+Here we're looking at the opcounters.insert field, and the value is 282 inserts that have occurred since the server was started up.
+
+If we run this again, ah, we can see that it's a little higher.
+
+And if I start doing this every second or so, I can see that it's counting up by 10 per second.
+
+Obviously, I'm a bad judge of what a second is, so they aren't totally consistent, but you get the idea.
+
+By finding the difference between the opcounters.insert field one second apart, you can get the inserts that would be shown in MongoStat.
+
+Let's look into some of the information in the output of server status.
+
+We can get the hostname, the version number, the process, which would be either a MongoDB server or a MongoS router, the process ID on the system, and a set of values like how long the server has been running in seconds, milliseconds, and what time the server thinks it is when you ask for server status.
+
+Server status also gathers information on current established connections and the number of available connections.
+
+This value will be related to the Unix ulimit values set for this host.
+
+Ulimits are set at the operating system level, and they control the maximum number of open files.
+
+Unix systems need one open file per connection.
+
+Ulimits isn't the only factor that controls the available connections.
+
+You can also limit it in the configuration of your MongoDB instance where we can control the number of allowed connections by setting the configuration option minus minus max cons.
+
+Let's exit the shell, kill our process, and run it with a lower number of maximum connections.
+
+Here's my MongoD on port 27017.
+
+I have copied the command.
+
+It's process ID is 26620-- killing it-- and starting up with max connections of, let's say, 10.
+
+We'll go back in the shell.
+
+OK, we've become primary again.
+
+And now we have five connections total because we're part of a replica set.
+
+And I'm connected with the shell.
+
+We have five available, and five have been created.
+
+The connections field of server status will be useful when we look at configuration and networking issues.

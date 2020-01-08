@@ -1,0 +1,27 @@
+Let's talk about how transparent encryption works with MongoDB.
+
+Like we said before, transport encryption refers to encrypting the network traffic between the Mongo client and the Mongo server.
+
+More explicitly, we're referring to the use of TLS/SSL to encrypt all the information between the client and server.
+
+TLS and SSL are often used interchangeably.
+
+But TLS is actually the successor to SSL, and it's considered much more secure.
+
+Often though, you'll see the usage of SSL when people are actually referring to TLS.
+
+For the sake of clarity, I'm just gonna use TLS for the remainder of this video.
+
+I don't want to get into the nitty-gritty details of how TLS works, because it isn't directly useful for you to deploy a secure MongoDB deployment.
+
+I will, however, mention that TLS is underpinned by the public/private key encryption algorithm through the utilization of SSL certificates.
+
+This allows the client and server to verify that each other is who they say they are.
+
+And it also provides us with the ability to encrypt messages without ever sending the shared key across the wire.
+
+Because of this, MongoDB uses open SSL libraries to implement TLS.
+
+MongoDB's SSL encryption only allows the use of strong SSL decipherers.
+
+And in our case, that means a minimum of 128-bit length for all connections.

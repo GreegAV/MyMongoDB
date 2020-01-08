@@ -1,0 +1,17 @@
+In this lesson, we're going to talk about the MongoDB shell, also known as Mongo.
+
+It comes with the MongoDB software package.
+
+For this course, we assume that you're familiar with the shell, most likely because you've already been using it to learn about MongoDB.
+
+But in a nutshell, the Mongo shell is our default server command line administration tool.
+
+From the Mongo shell, we can perform any administrative command that MongoDB provides.
+
+This includes things that will be useful from a diagnostics and debugging perspective.
+
+Throughout the course, we'll be using the Mongo shell for many tasks, including things like analyzing queries, enabling profiling, and changing server settings.
+
+Another interesting aspect of the shell is the fact that we can write JavaScript that can be used to automate administrative tasks.
+
+We do have other tools that provide or build on this functionality like Ops Manager, but the Mongo shell remains a powerful low-level tool that can help in finding and solving many of the administrative tasks that you face.

@@ -1,0 +1,596 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.650
+Hi there, and welcome back.
+
+3
+00:00:01.650 --> 00:00:03.942
+We've made some improvements
+to the backup architecture
+
+4
+00:00:03.942 --> 00:00:06.852
+in Ops Manager 4.2 for
+backing up MongoDB 4.2.
+
+5
+00:00:06.852 --> 00:00:08.810
+Before we get into what
+these improvements are,
+
+6
+00:00:08.810 --> 00:00:11.310
+let's have a look at what we
+had in previous versions of Ops
+
+7
+00:00:11.310 --> 00:00:14.160
+Manager, and talk about our
+motivation for these changes.
+
+8
+00:00:14.160 --> 00:00:15.890
+So with previous
+versions of Ops Manager,
+
+9
+00:00:15.890 --> 00:00:17.890
+we maintained a copy of
+the data for the replica
+
+10
+00:00:17.890 --> 00:00:20.030
+set in the form of the head db.
+
+11
+00:00:20.030 --> 00:00:21.920
+The head db standalone
+MongoD which
+
+12
+00:00:21.920 --> 00:00:24.290
+has started to apply
+oplogs that were
+
+13
+00:00:24.290 --> 00:00:26.140
+sent from the backup agent.
+
+14
+00:00:26.140 --> 00:00:27.890
+So this meant that
+during the initial sync
+
+15
+00:00:27.890 --> 00:00:31.490
+phase of the backup process, we
+couldn't generate any snapshots
+
+16
+00:00:31.490 --> 00:00:35.060
+until the head db had caught up
+with the node from which oplog
+
+17
+00:00:35.060 --> 00:00:36.320
+was being sent from.
+
+18
+00:00:36.320 --> 00:00:38.605
+So the steps in the
+process were as follows.
+
+19
+00:00:38.605 --> 00:00:39.980
+So the backup
+agent would open up
+
+20
+00:00:39.980 --> 00:00:41.920
+a tailable cursor on
+the replica set member
+
+21
+00:00:41.920 --> 00:00:43.435
+which it was syncing from.
+
+22
+00:00:43.435 --> 00:00:44.810
+And then it would
+begin to stream
+
+23
+00:00:44.810 --> 00:00:47.630
+oplog entries and documents,
+referred to as oplog slices
+
+24
+00:00:47.630 --> 00:00:52.010
+and sync slices to the oplog
+store and the sync store.
+
+25
+00:00:52.010 --> 00:00:55.250
+Once there was enough oplog
+and sync slices transferred,
+
+26
+00:00:55.250 --> 00:00:56.660
+the head db would
+start and begin
+
+27
+00:00:56.660 --> 00:00:59.540
+to replay oplog operations
+to get the snapshot
+
+28
+00:00:59.540 --> 00:01:01.710
+consistent to a point in time.
+
+29
+00:01:01.710 --> 00:01:03.010
+So the head db is then stopped.
+
+30
+00:01:03.010 --> 00:01:05.510
+And a snapshot is persisted to
+the blockstore or file system
+
+31
+00:01:05.510 --> 00:01:06.290
+store.
+
+32
+00:01:06.290 --> 00:01:09.085
+This process meant that if
+your backups required a resync,
+
+33
+00:01:09.085 --> 00:01:11.210
+you would have to wait for
+the initial sync process
+
+34
+00:01:11.210 --> 00:01:14.390
+to complete before you could
+start taking snapshots again.
+
+35
+00:01:14.390 --> 00:01:17.420
+So in Ops Manager 4.2, we've
+changed the backup architecture
+
+36
+00:01:17.420 --> 00:01:19.670
+to make use of
+WiredTiger checkpoints
+
+37
+00:01:19.670 --> 00:01:22.320
+and remove the need for a
+head db and its associated
+
+38
+00:01:22.320 --> 00:01:23.970
+initial sync process.
+
+39
+00:01:23.970 --> 00:01:26.720
+This only works for
+MongoDB 4.2 being backed up
+
+40
+00:01:26.720 --> 00:01:28.520
+with Ops Manager 4.2.
+
+41
+00:01:28.520 --> 00:01:30.710
+All older versions
+of MongoDB still
+
+42
+00:01:30.710 --> 00:01:33.265
+use the old architecture
+for backups.
+
+43
+00:01:33.265 --> 00:01:34.890
+While outside the
+scope of this lesson,
+
+44
+00:01:34.890 --> 00:01:37.895
+it's important to note that we
+enhanced the checkpoint ability
+
+45
+00:01:37.895 --> 00:01:39.770
+in the WiredTiger storage
+engine to implement
+
+46
+00:01:39.770 --> 00:01:41.360
+this new backup flow.
+
+47
+00:01:41.360 --> 00:01:44.050
+The new feature is
+called the Backup Cursor.
+
+48
+00:01:44.050 --> 00:01:47.480
+WiredTiger uses multi-version
+concurrency control, or MVCC,
+
+49
+00:01:47.480 --> 00:01:49.160
+as it's referred to.
+
+50
+00:01:49.160 --> 00:01:50.840
+At the start of an
+operation, WiredTiger
+
+51
+00:01:50.840 --> 00:01:52.970
+provides a point in time
+checkpoint of the data
+
+52
+00:01:52.970 --> 00:01:54.030
+to that operation.
+
+53
+00:01:54.030 --> 00:01:56.210
+A checkpoint presents
+a consistent view
+
+54
+00:01:56.210 --> 00:01:58.430
+of the database at
+a point in time.
+
+55
+00:01:58.430 --> 00:02:00.950
+When writing to disk,
+WiredTiger writes all the data
+
+56
+00:02:00.950 --> 00:02:03.860
+in a checkpoint to disk in a
+consistent way across all data
+
+57
+00:02:03.860 --> 00:02:04.770
+files.
+
+58
+00:02:04.770 --> 00:02:09.259
+The now durable data acts as a
+checkpoint in the data files.
+
+59
+00:02:09.259 --> 00:02:12.290
+The checkpoint ensures that the
+data files are consistent up to
+
+60
+00:02:12.290 --> 00:02:14.030
+and including the
+last checkpoint,
+
+61
+00:02:14.030 --> 00:02:16.185
+i.e. checkpoints can
+act as recovery points.
+
+62
+00:02:16.185 --> 00:02:17.810
+Let's have a look at
+the changes in how
+
+63
+00:02:17.810 --> 00:02:19.530
+Ops Manager does backups.
+
+64
+00:02:19.530 --> 00:02:21.230
+So now, when a backup
+job is initiated,
+
+65
+00:02:21.230 --> 00:02:24.050
+the backup agent will pick a
+node to take a snapshot from.
+
+66
+00:02:24.050 --> 00:02:26.900
+And this is based on numerous
+factors, such as the priority
+
+67
+00:02:26.900 --> 00:02:28.670
+of the node, as
+we'd ideally like
+
+68
+00:02:28.670 --> 00:02:31.820
+to take a snapshot from a node
+that won't become primary.
+
+69
+00:02:31.820 --> 00:02:34.143
+We need to know if a node
+is primary or secondary.
+
+70
+00:02:34.143 --> 00:02:36.560
+We always prefer to take a
+snapshot from a secondary node,
+
+71
+00:02:36.560 --> 00:02:38.623
+so as not to put additional
+load on the primary.
+
+72
+00:02:38.623 --> 00:02:40.790
+And then we need to know
+where the previous snapshot
+
+73
+00:02:40.790 --> 00:02:44.540
+location was, so which node did
+we take the last snapshot from?
+
+74
+00:02:44.540 --> 00:02:46.760
+A node is then selected
+in order of preference.
+
+75
+00:02:46.760 --> 00:02:48.590
+And the preference
+is as follows.
+
+76
+00:02:48.590 --> 00:02:50.810
+Hidden secondary, a
+secondary we have previously
+
+77
+00:02:50.810 --> 00:02:53.570
+taken a snapshot from,
+any secondary, and then,
+
+78
+00:02:53.570 --> 00:02:57.110
+as a last resort, we'll take
+a snapshot from the primary.
+
+79
+00:02:57.110 --> 00:02:58.580
+So once we've
+decided which node we
+
+80
+00:02:58.580 --> 00:03:00.530
+want to take a snapshot
+from, the backup agent
+
+81
+00:03:00.530 --> 00:03:03.920
+will open up a Backup
+Cursor on that note.
+
+82
+00:03:03.920 --> 00:03:05.420
+This is a new
+aggregation pipeline
+
+83
+00:03:05.420 --> 00:03:08.720
+command that's used by the agent
+for the backup process only.
+
+84
+00:03:08.720 --> 00:03:11.480
+The Backup Cursor command
+will return a cursor
+
+85
+00:03:11.480 --> 00:03:13.758
+to a list of files
+that need to be copied.
+
+86
+00:03:13.758 --> 00:03:15.800
+It's important to note
+that this functionality is
+
+87
+00:03:15.800 --> 00:03:19.320
+only available for
+MongoDB 4.2 Enterprise.
+
+88
+00:03:19.320 --> 00:03:22.070
+So the Backup Cursor will
+preserve the state of the data
+
+89
+00:03:22.070 --> 00:03:24.590
+at that point in time
+in the data directory
+
+90
+00:03:24.590 --> 00:03:26.360
+using WiredTiger checkpoint.
+
+91
+00:03:26.360 --> 00:03:29.030
+This operation does not block
+read or write operations
+
+92
+00:03:29.030 --> 00:03:30.420
+on the database.
+
+93
+00:03:30.420 --> 00:03:32.810
+So the agent will then
+collect all of those files
+
+94
+00:03:32.810 --> 00:03:34.670
+and transfer them to
+the daemon machine,
+
+95
+00:03:34.670 --> 00:03:36.940
+and then to the snapshot
+store you choose.
+
+96
+00:03:36.940 --> 00:03:39.800
+A checkpoint can be written out
+either as blocks to a MongoDB
+
+97
+00:03:39.800 --> 00:03:43.400
+blockstore or as blocks
+to an S3 Bucket in AWS,
+
+98
+00:03:43.400 --> 00:03:46.070
+or any other S3
+compatible storage device.
+
+99
+00:03:46.070 --> 00:03:49.670
+The metadata for those blocks is
+written to the MongoDB database
+
+100
+00:03:49.670 --> 00:03:51.313
+on the Ops Manager server.
+
+101
+00:03:51.313 --> 00:03:53.480
+There are some restrictions
+for this first iteration
+
+102
+00:03:53.480 --> 00:03:55.350
+of the new backup
+flow functionality.
+
+103
+00:03:55.350 --> 00:03:58.410
+The first being that we can't
+back up sharded clusters.
+
+104
+00:03:58.410 --> 00:04:00.090
+This is coming in
+a future release.
+
+105
+00:04:00.090 --> 00:04:02.630
+But at the moment, we can
+only backup replica sets.
+
+106
+00:04:02.630 --> 00:04:04.840
+There is also no point in
+time restore functionality.
+
+107
+00:04:04.840 --> 00:04:06.990
+Again, this will be coming
+in a future release.
+
+108
+00:04:06.990 --> 00:04:09.830
+And queryable restores do not
+work with the new backup flow
+
+109
+00:04:09.830 --> 00:04:11.390
+at this time.
+
+110
+00:04:11.390 --> 00:04:14.720
+And finally, we can
+only backup MongoDB 4.2
+
+111
+00:04:14.720 --> 00:04:16.130
+with the new backup flow.
+
+112
+00:04:16.130 --> 00:04:18.230
+Any other releases
+of MongoDB can still
+
+113
+00:04:18.230 --> 00:04:22.720
+be backed up using a standard
+backup flow in Ops Manager 4.2.
+
+114
+00:04:22.720 --> 00:04:24.260
+Remember, these
+limitations are only
+
+115
+00:04:24.260 --> 00:04:25.897
+for the initial GA release.
+
+116
+00:04:25.897 --> 00:04:27.980
+We'll be incrementally
+rolling layout improvements
+
+117
+00:04:27.980 --> 00:04:30.570
+to new backup flow
+on a monthly basis.
+
+118
+00:04:30.570 --> 00:04:31.760
+So let's recap.
+
+119
+00:04:31.760 --> 00:04:34.760
+We've updated the backup
+flow and Ops Manager 4.2
+
+120
+00:04:34.760 --> 00:04:37.550
+remove the need for the head db.
+
+121
+00:04:37.550 --> 00:04:40.130
+The agent now uses
+WiredTiger snapshots
+
+122
+00:04:40.130 --> 00:04:43.670
+and pushes those snapshots
+directly to the daemon machine,
+
+123
+00:04:43.670 --> 00:04:45.530
+eliminating the
+need for you to wait
+
+124
+00:04:45.530 --> 00:04:48.670
+for the traditional
+initial sync process.

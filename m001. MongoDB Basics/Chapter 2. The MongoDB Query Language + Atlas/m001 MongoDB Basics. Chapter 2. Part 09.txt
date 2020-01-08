@@ -1,0 +1,125 @@
+In many cases, we have multiple documents that we would like to insert at once in some sort of batch operation.
+
+The MongoDB query language has a method for this called Insert Many.
+
+Let's take a look at an example of this command.
+
+I have it here in a text editor.
+
+I'm going to insert a few documents into videos dot movies scratch.
+
+This is just so I can easily do a little bit of noodling around here demonstrating this command, and then just get rid of this collection without corrupting any data that I actually want to maintain, with regard to movies.
+
+See the handouts for this lesson to download the examples here so that you can try them for yourself.
+
+Now instead of passing a single document as the first argument, as we did to Insert One, with Insert Many, we pass an array.
+
+In this example, the array begins here and ends here.
+
+And you can see that the elements are each a document that we would like to insert into this collection.
+
+Now there are additional options for Insert Many.
+
+And we'll take a look at those a little bit later on.
+
+For now, let's run this command.
+
+I'm just going to copy and paste it into our shell.
+
+In this shell, I'm connected to my Sandbox Atlas cluster.
+
+And we can see what happens here is about what you would expect, given our understanding of how inserting documents into MongoDB works.
+
+Let's take a closer look at this operation.
+
+So our command is Insert Many.
+
+And we have 1, 2, 3, 4, 5 documents we're attempting to insert.
+
+Note, however, that these two documents are identical.
+
+With a bulk insert, it's possible that there will be an error or an exception thrown for one of the documents that you're inserting, especially if we're doing something like a data cleaning operation where there is lots of noise in the data or errors of some kind in our data set.
+
+To handle these issues gracefully, there are a couple of different options for Insert Many that you should know about.
+
+You can choose to do either ordered inserts or unordered inserts.
+
+The default is ordered inserts.
+
+This provides a good example, in that we're using IMDB values as our underscore ID for each document in this Insert Many call.
+
+Again, these two documents are identical.
+
+But most importantly, it is their underscore ID values that are identical.
+
+And we know that in an individual collection, the underscore ID values must all be unique.
+
+So if we scroll down and see what happened with this command, we can see that we've got a duplicate key error.
+
+And the error is on the Wrath of Khan movie.
+
+We can also see, if we look a little bit further down in the output, that the number of documents inserted was two, even though we have five documents in this Insert Many call.
+
+And if we go over to Compass and refresh, we see that there's one Star Trek movie and one Wrath of Khan movie in this collection.
+
+So indeed, just two documents got inserted out of the five that we attempted to insert.
+
+Now let's go back to our shell.
+
+As I mentioned, Insert Many does an ordered insert, meaning that as soon as it encounters an error, it will stop inserting documents.
+
+Because it encountered an error here, only these two documents were inserted into this collection with this call.
+
+Now in many applications, we might simply want our app to keep going if it encounters an error, because either we're fine with the documents that errored out not being inserted, or we have a separate process for dealing with them some other way.
+
+To support this use case, we can specify a second argument to our Insert Many method.
+
+So returning to our text editor, the array is the first argument to Insert Many.
+
+As a second argument, I can supply a document that specifies a value of False for the key ordered.
+
+This Options document allows us to change the default behavior.
+
+And in this case, rather than doing an ordered insert, I'm going to do an unordered insert.
+
+Let's go ahead and run this now.
+
+Now here, we actually see three write errors.
+
+There are three duplicate key errors-- one for the Wrath of Khan, one for Star Trek, and another for the Wrath of Khan.
+
+Let's take a look at our query again.
+
+So these three insertions caused a duplicate key error.
+
+Why is that?
+
+Well, if you'll remember, these two were already in the collection from our previous attempt to use Insert Many.
+
+So an attempt to insert this one and this one again got duplicate key errors because of that previous insertion.
+
+This one, of course, has exactly the same idea as this, so fails for the same reason that this document did.
+
+What's interesting here is that rather than just error out and stop executing inserts, Insert Many continued and inserted these two documents-- Star Trek Into Darkness and Star Trek First Contact.
+
+If we go to Compass and refresh our collection view, we can see that now there are four documents in this collection-- Wrath of Khan, Star Trek, Star Trek into Darkness, and Star Trek First Contact.
+
+So by specifying Ordered False, even though there were, in this case, three duplicate key errors, Insert Many continued inserting documents.
+
+And ended up inserting those last two in our list of documents that we passed to Insert Many.
+
+In this lesson, we looked at Insert Many and the ordered and unordered versions of an Insert Many operation.
+
+Insert One and Insert Many are two primary ways in which we can create documents.
+
+There are a couple of other ways in which we can create documents through the use of update operations.
+
+Update commands can result in documents being inserted.
+
+We call these operations Upserts.
+
+We discuss Upserts in detail in another lesson.
+
+So with this, we've discussed, in some detail, the primary ways in which we create documents in MongoDB and hinted at the third way in which data can be inserted into a MongoDB collection.
+
+And with that, we've addressed the Create portion of our CRUD operations.

@@ -1,0 +1,63 @@
+When a user tries to authenticate against MongoDB, we will do a few steps, given the new LDAP authorization mechanism.
+
+The first step is to perform the authentication of those credentials.
+
+Now again, MongoDB has several different ways of authenticating users.
+
+We can use LDAP, Kerberos, X509, and SCRAM one.
+
+But now, we are going to be focusing on the ones that LDAP authorization mechanism allows.
+
+Basically this authentication will be performed via an external authentication mechanism.
+
+And those will be LDAP, Kerberos, and X509.
+
+So in this step, we'll pick up the user credentials and match it against the external mechanism defined for this particular user.
+
+It might be Kerberos server, LDAP server, or even a certificate.
+
+Now, the fact that we are enabling LDAP for authorization does not mean that we have to have an LDAP server for authentication.
+
+Any of the external authentication mechanisms can be used-- authenticate the users, although the LDAP server will be used for the authorization components.
+
+So first step, step number one, authentication of the credentials passed to MongoDB back to the external system in place.
+
+Now, for step number two, we need to consider that we might have different authentication credentials for the authorization component that needs to be transformed to match the ones set for authorization.
+
+So if you think about a very common set up, like having Kerberos server for authentication, validating the users, and having the new configuration of MongoDB that authorizes users using an LDAP server, these users define on the different systems might vary.
+
+They will not have the same formats for Kerberos or for LDAP server.
+
+So a step that needs to be done is to transform the credentials passed along by the user to MongoDB to validate and authenticate to be able to validate against authorization.
+
+So once we get a valid notification, for example, from Kerberos saying that our user is valid, we will need to transform that user so it can be matched against the LDAP server for the authorization component.
+
+By default, the transformation will do nothing and the authentication username will be passed to the LDAP for authorization.
+
+Then step three will be to actually validate the authorization.
+
+Now obviously, if we have the internal authentication mechanism of MongoDB for authorizing, we will not be passing along to an LDAP observer.
+
+But this lesson is all about LDAP server for authorization.
+
+So let's have a look to that.
+
+After we transformed whatever user credential that we received and having it validated by the server that is authenticating it, and only if needed, because not always the authorization mechanism requires a transformation.
+
+By default, it doesn't do that transformation.
+
+But once it has its final stage after transformation or just passing along the direct user, this needs to be sent in a query that will query the LDAP server for retrieving back all the distinguished names related to that user.
+
+Now, our configuration file, we'll find a query template, which will have a curly brackets user token that will replace by the transformed credential to validate against LDAP server.
+
+In this step, MongoDB will do a query to retrieve the LDAP group information.
+
+If the query requests attributes from an entity, the attribute values will be treated as the user groups.
+
+If the query returns entities, these entities and distinguished names will be treated as the user groups.
+
+Our fourth step will determine that if LDAP authorization is enabled, the default behavior determines that each acquired, distinguished name will be treated as the name of a role on the admin database.
+
+Due to the fact that MongoDB supports roles [INAUDIBLE], roles may be created that are entirely made of other roles that a given user may possess.
+
+This will facilitate the creation of access control [INAUDIBLE] for our users and the roles associated with those users.

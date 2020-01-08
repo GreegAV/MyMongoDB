@@ -1,0 +1,115 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.450
+Now that we actually understand
+what authentication is,
+
+3
+00:00:03.450 --> 00:00:06.060
+we can talk about the different
+authentication mechanisms that
+
+4
+00:00:06.060 --> 00:00:08.270
+are supported with MongoDB.
+
+5
+00:00:08.270 --> 00:00:10.930
+We can divide these different
+authentication mechanisms
+
+6
+00:00:10.930 --> 00:00:14.800
+into two categories-- There's
+client and user authentication,
+
+7
+00:00:14.800 --> 00:00:17.650
+which deals with how
+clients of the database
+
+8
+00:00:17.650 --> 00:00:20.000
+authenticate MongoDB.
+
+9
+00:00:20.000 --> 00:00:22.440
+And then there's
+internal authentication,
+
+10
+00:00:22.440 --> 00:00:24.720
+which is how different
+members of a replica
+
+11
+00:00:24.720 --> 00:00:28.500
+set or sharded cluster
+authenticate with one another.
+
+12
+00:00:28.500 --> 00:00:31.020
+Here are all of the different
+authentication mechanisms
+
+13
+00:00:31.020 --> 00:00:33.126
+currently supported
+with MongoDB.
+
+14
+00:00:33.126 --> 00:00:35.180
+In the later video,
+we'll go into each
+
+15
+00:00:35.180 --> 00:00:37.140
+of these with much more detail.
+
+16
+00:00:37.140 --> 00:00:40.840
+Of the five different mechanisms
+that we currently support,
+
+17
+00:00:40.840 --> 00:00:44.850
+three of them are a part of the
+Community version of MongoDB.
+
+18
+00:00:44.850 --> 00:00:47.270
+Whereas, these last
+two, LDAP and Kerberos,
+
+19
+00:00:47.270 --> 00:00:49.500
+are only a part of the
+Enterprise version.
+
+20
+00:00:49.500 --> 00:00:53.490
+Furthermore, SCRAM-SHA-1
+and MONGODB-CR
+
+21
+00:00:53.490 --> 00:00:56.000
+are considered
+challenge-response mechanisms.
+
+22
+00:00:56.000 --> 00:00:59.420
+Whereas, X.509 is
+a certificate-based
+
+23
+00:00:59.420 --> 00:01:01.010
+authentication mechanism.
+
+24
+00:01:01.010 --> 00:01:05.530
+And LDAP and Kerberos are
+both external mechanisms.

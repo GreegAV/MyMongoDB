@@ -1,0 +1,458 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.410
+In this lesson, we are going
+to talk about benchmarking.
+
+3
+00:00:04.410 --> 00:00:07.860
+Now we are not going to be
+going through the full process
+
+4
+00:00:07.860 --> 00:00:08.920
+of benchmarking.
+
+5
+00:00:08.920 --> 00:00:12.000
+But basically just
+highlighting some things
+
+6
+00:00:12.000 --> 00:00:14.170
+that you should take
+in consideration if you
+
+7
+00:00:14.170 --> 00:00:16.890
+are going to benchmark MongoDB.
+
+8
+00:00:16.890 --> 00:00:20.280
+Once we start analyzing
+a given software product
+
+9
+00:00:20.280 --> 00:00:24.690
+like a database, operating
+system, or application server
+
+10
+00:00:24.690 --> 00:00:28.860
+we need to understand the
+benefits that such component
+
+11
+00:00:28.860 --> 00:00:31.090
+brings to our application.
+
+12
+00:00:31.090 --> 00:00:34.700
+And for that we
+use benchmarking.
+
+13
+00:00:34.700 --> 00:00:41.070
+Now there are different types
+how to perform benchmarking.
+
+14
+00:00:41.070 --> 00:00:47.010
+Also, there's the other
+concept of bench marketing.
+
+15
+00:00:47.010 --> 00:00:50.520
+Now there's a big difference
+between benchmarking and bench
+
+16
+00:00:50.520 --> 00:00:51.540
+marketing.
+
+17
+00:00:51.540 --> 00:00:55.010
+Both have related value,
+depending on the audience.
+
+18
+00:00:55.010 --> 00:00:57.810
+But we will be focusing
+on the first one.
+
+19
+00:00:57.810 --> 00:01:00.510
+The one that allows us to
+correlate with performance
+
+20
+00:01:00.510 --> 00:01:02.580
+indicators and
+metrics that we can
+
+21
+00:01:02.580 --> 00:01:06.450
+use to assess if a given product
+is actually good for our system
+
+22
+00:01:06.450 --> 00:01:07.716
+or not.
+
+23
+00:01:07.716 --> 00:01:09.090
+Benchmarking
+assumes that you are
+
+24
+00:01:09.090 --> 00:01:11.310
+going to perform some
+sort of comparison.
+
+25
+00:01:11.310 --> 00:01:15.090
+You can use publicly
+available test suites,
+
+26
+00:01:15.090 --> 00:01:18.030
+and we're going to talk
+about a bunch of those,
+
+27
+00:01:18.030 --> 00:01:21.930
+or you can also perform your
+own private testing that
+
+28
+00:01:21.930 --> 00:01:26.130
+correlates better with your
+use case or application.
+
+29
+00:01:26.130 --> 00:01:31.680
+Now there are different types
+for each kind of performance
+
+30
+00:01:31.680 --> 00:01:36.360
+benchmarking that get more
+specific or more broad
+
+31
+00:01:36.360 --> 00:01:42.180
+aspects of the benchmarking
+that you might be trying to do.
+
+32
+00:01:42.180 --> 00:01:44.640
+So let's have a look
+to a few of them.
+
+33
+00:01:44.640 --> 00:01:48.720
+We can perform low
+level benchmarking.
+
+34
+00:01:48.720 --> 00:01:52.410
+Now what I mean by low level
+benchmarking, our benchmarking
+
+35
+00:01:52.410 --> 00:01:55.380
+that are designed to
+look into file I/O
+
+36
+00:01:55.380 --> 00:01:57.850
+performance, or
+scheduler performance,
+
+37
+00:01:57.850 --> 00:02:01.150
+or even memory allocation
+and transfer speeds.
+
+38
+00:02:01.150 --> 00:02:04.590
+There are benchmarking that
+look into thread performance,
+
+39
+00:02:04.590 --> 00:02:08.400
+database server performance,
+transaction isolation,
+
+40
+00:02:08.400 --> 00:02:11.270
+and multiple of
+other parameters.
+
+41
+00:02:11.270 --> 00:02:16.110
+Tools like sysbench,
+or even iibench
+
+42
+00:02:16.110 --> 00:02:20.730
+are good tools that allow you to
+go very deep into the low level
+
+43
+00:02:20.730 --> 00:02:23.820
+benchmarking kind of testing.
+
+44
+00:02:23.820 --> 00:02:26.620
+Now there's also another
+type of benchmarking,
+
+45
+00:02:26.620 --> 00:02:29.160
+which is the database
+server benchmarking.
+
+46
+00:02:29.160 --> 00:02:33.960
+Now these tests are more
+concerned about things
+
+47
+00:02:33.960 --> 00:02:36.210
+like data set load,
+writes per second,
+
+48
+00:02:36.210 --> 00:02:38.940
+reads per second,
+balanced workloads,
+
+49
+00:02:38.940 --> 00:02:40.650
+read and write ratios.
+
+50
+00:02:40.650 --> 00:02:44.280
+Things that will allow you to
+understand how a database will
+
+51
+00:02:44.280 --> 00:02:48.030
+react with generic
+data sets, but will
+
+52
+00:02:48.030 --> 00:02:53.130
+take into consideration
+the output of a given node,
+
+53
+00:02:53.130 --> 00:02:55.980
+and look into
+metrics to correlate
+
+54
+00:02:55.980 --> 00:02:59.250
+if there's been some sort
+of advantage or disadvantage
+
+55
+00:02:59.250 --> 00:03:02.060
+of using a specific product.
+
+56
+00:03:02.060 --> 00:03:07.740
+Some tools like YCSB,
+originally developed by Yahoo,
+
+57
+00:03:07.740 --> 00:03:13.255
+or even the TCP ones, which are
+industry benchmarks in all it's
+
+58
+00:03:13.255 --> 00:03:17.430
+sorts and different
+variations, are good test base
+
+59
+00:03:17.430 --> 00:03:19.650
+that you can submit
+a database to.
+
+60
+00:03:19.650 --> 00:03:21.930
+Now do not forget that a
+bunch of these tools that
+
+61
+00:03:21.930 --> 00:03:24.840
+do database server
+benchmarking have been original
+
+62
+00:03:24.840 --> 00:03:28.200
+developed for
+relational systems.
+
+63
+00:03:28.200 --> 00:03:31.800
+And if you are testing
+those with MongoDB in mind,
+
+64
+00:03:31.800 --> 00:03:34.800
+some variations might
+need to be applied
+
+65
+00:03:34.800 --> 00:03:38.400
+because a lot of the
+different functionality you
+
+66
+00:03:38.400 --> 00:03:42.400
+might be expecting does
+not behave in the same way.
+
+67
+00:03:42.400 --> 00:03:44.970
+So if you're looking
+for YCSB, make
+
+68
+00:03:44.970 --> 00:03:47.820
+sure that you look
+for a variation that
+
+69
+00:03:47.820 --> 00:03:51.360
+correlates better to
+MongoDB, or does it perfect
+
+70
+00:03:51.360 --> 00:03:56.490
+what MongoDB does to actually
+get some solid results?
+
+71
+00:03:56.490 --> 00:03:58.410
+And then we also
+have distributed
+
+72
+00:03:58.410 --> 00:04:01.740
+systems benchmarking, which
+for MongoDB is a big thing
+
+73
+00:04:01.740 --> 00:04:05.850
+because given that we are
+a distributed database,
+
+74
+00:04:05.850 --> 00:04:08.940
+it is important not only to
+look into a particular node,
+
+75
+00:04:08.940 --> 00:04:12.810
+but also how things react
+under a distributed system.
+
+76
+00:04:12.810 --> 00:04:16.829
+Here, you want to do very, very
+hard tests like linearization,
+
+77
+00:04:16.829 --> 00:04:19.950
+serialization, fault
+tolerance, where
+
+78
+00:04:19.950 --> 00:04:22.950
+we will look into a bunch
+of different perspectives
+
+79
+00:04:22.950 --> 00:04:26.520
+on how things occur over
+time, how we can deal
+
+80
+00:04:26.520 --> 00:04:28.010
+with the serialization
+of requests,
+
+81
+00:04:28.010 --> 00:04:31.230
+the linearization
+of reads and writes.
+
+82
+00:04:31.230 --> 00:04:35.280
+And also, when we have
+different DataNodes.
+
+83
+00:04:35.280 --> 00:04:40.590
+And if those nodes fail, how
+does the overall system behave
+
+84
+00:04:40.590 --> 00:04:43.230
+under those conditions?
+
+85
+00:04:43.230 --> 00:04:46.290
+You can do that your
+own set of testing
+
+86
+00:04:46.290 --> 00:04:48.219
+for distributed systems.
+
+87
+00:04:48.219 --> 00:04:50.010
+Now there are very good
+data sets out there
+
+88
+00:04:50.010 --> 00:04:52.710
+like iBench, which is
+more related to Hadoop
+
+89
+00:04:52.710 --> 00:04:56.040
+environments, and Jepsen,
+which actually does
+
+90
+00:04:56.040 --> 00:04:58.530
+a very nice set of
+reports on how different
+
+91
+00:04:58.530 --> 00:05:03.970
+databases react under a very
+specific setting of conditions.
+
+92
+00:05:03.970 --> 00:05:06.090
+In this case, we
+actually include
+
+93
+00:05:06.090 --> 00:05:09.870
+Jepsen tests in our MongoDB
+build continuous integration
+
+94
+00:05:09.870 --> 00:05:11.400
+tooling.

@@ -1,0 +1,61 @@
+By the way, what about a query that doesn't use the shard key.
+
+Let's create another index and query on it.
+
+We'll create our index on user.phonenumber.
+
+We'll do a little query that doesn't use an index and which gives us a phone number initially.
+
+We'll run a query that counts the number of users with that phone number.
+
+OK, we're going to find a phone number.
+
+There we go.
+
+OK, so we're going to create an index on user.phonenumber.
+
+We're going to find a single phone number.
+
+And we're going to count the number of users with that phone number.
+
+And it's just the one.
+
+All right, let's look at index stats.
+
+Here, I'm querying just for the phone numbers statistics.
+
+And I can see that I have accessed it twice-- one actually in querying that first time to get our phone number, and then a second time for that phone number.
+
+You can see these queries hit all of our shards.
+
+So even though I only wanted one document which is only on one server, the query hit every single one of my servers, which it has to because this query doesn't use the shard key.
+
+It's a scatter gather query.
+
+We don't know which shard has the document.
+
+So for queries that don't use the shard key, you can just count the number of times they appear on any server.
+
+If it hits one, it hits them all.
+
+The moral is that if you're using index stats, you need to keep track of servers, even for a replica set because you want to know when your primary steps down.
+
+For sharded cluster, it's even more complicated, and you really need to be aware of what it is you're measuring.
+
+You have to know, for each query, how many servers it hits.
+
+This is simple for exact match queries on a shard key where it hits only one server.
+
+And it's also simple for scatter gather queries which have to hit all the servers.
+
+Range-based queries on the shard key though can hit one, many, or all servers.
+
+OK, what have we learned?
+
+Well, we've learned how to use index stats and look at the accesses.ops field to see what queries are hitting what indexes.
+
+We've also learned how to be careful of the host field for replica sets.
+
+And we've learned that for charted clusters, a query can be executed by one, several, or all servers.
+
+And that's how you use index stats.

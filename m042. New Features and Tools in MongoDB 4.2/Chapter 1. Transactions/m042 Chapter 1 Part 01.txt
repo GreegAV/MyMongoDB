@@ -1,0 +1,19 @@
+Cross shard distributed transactions will always need to coordinate a commit across shards, incurring more performance costs than if a transaction targeted one shard.
+
+For the most performant workloads, try to optimize your transactions to target one shard.
+
+You can do this by targeting queries with your shard key value included.
+
+If you do not send your shard key value in the query, all shards must be targeted.
+
+Secondly, you can try and co-locate chunks that may be access together within a transaction.
+
+A chunk is a set of documents within a defined range of shard key values.
+
+If you logically have data that is likely to be accessed together, you can leverage zones to co-locate chunks so that it's more likely a transaction will target only one shard.
+
+If your application use case does not allow for co-locating data, try, if possible, to write to only one shard.
+
+Writing to only one shard regardless of the number of shards you read from can save on some of the commit protocols steps.
+
+While writing to one shard within transaction is more performant than writing to several shards, this approach is still not as optimized as only targeting one shard for all reads and writes within the transaction.

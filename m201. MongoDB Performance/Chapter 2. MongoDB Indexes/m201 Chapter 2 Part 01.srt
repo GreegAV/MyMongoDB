@@ -1,0 +1,730 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.490
+Databases tend to have
+this nice feature that
+
+3
+00:00:02.490 --> 00:00:07.150
+allows data to be persisted
+using the server's file system.
+
+4
+00:00:07.150 --> 00:00:08.490
+But how do they do it?
+
+5
+00:00:08.490 --> 00:00:11.400
+Which files do they
+write information to?
+
+6
+00:00:11.400 --> 00:00:13.260
+How these files are organized?
+
+7
+00:00:13.260 --> 00:00:16.470
+How do databases
+collections, indexes, get
+
+8
+00:00:16.470 --> 00:00:19.950
+to get organized within the data
+structures and storage engines
+
+9
+00:00:19.950 --> 00:00:23.590
+that support the persistency
+layer of your database?
+
+10
+00:00:23.590 --> 00:00:27.150
+These are the topics we're
+going to discuss in this lesson.
+
+11
+00:00:27.150 --> 00:00:29.490
+The way that MongoDB
+stores data will
+
+12
+00:00:29.490 --> 00:00:32.189
+differ between the
+different storage engines
+
+13
+00:00:32.189 --> 00:00:33.670
+that MongoDB supports.
+
+14
+00:00:33.670 --> 00:00:38.220
+The particular details of how
+each storage engine organize
+
+15
+00:00:38.220 --> 00:00:42.240
+data in detail are out of
+scope, but let's review
+
+16
+00:00:42.240 --> 00:00:44.790
+at a high level how
+the different storage
+
+17
+00:00:44.790 --> 00:00:47.370
+engines organize data.
+
+18
+00:00:47.370 --> 00:00:51.480
+Now, MongoDB allows us to create
+a few data management objects.
+
+19
+00:00:51.480 --> 00:00:56.520
+We have databases, which are
+logical groups of collections,
+
+20
+00:00:56.520 --> 00:01:00.150
+collections, which
+are operational units
+
+21
+00:01:00.150 --> 00:01:02.510
+that group documents together.
+
+22
+00:01:02.510 --> 00:01:05.280
+We're going to have
+indexes on collections
+
+23
+00:01:05.280 --> 00:01:08.310
+over [INAUDIBLE]
+presence on documents.
+
+24
+00:01:08.310 --> 00:01:10.350
+And obviously,
+we're going to have
+
+25
+00:01:10.350 --> 00:01:13.200
+documents, atomic
+units of information
+
+26
+00:01:13.200 --> 00:01:15.750
+used by applications.
+
+27
+00:01:15.750 --> 00:01:18.690
+But before we jump into
+the overview of the data
+
+28
+00:01:18.690 --> 00:01:23.370
+structures, let's have a
+peek into the dbpath content
+
+29
+00:01:23.370 --> 00:01:25.740
+of our MongoDB directory.
+
+30
+00:01:25.740 --> 00:01:28.380
+Here, I'm going to
+start my mongod,
+
+31
+00:01:28.380 --> 00:01:31.800
+pointing my dbpath to data/db.
+
+32
+00:01:31.800 --> 00:01:35.190
+Now, this is the default
+MongoDB data path.
+
+33
+00:01:35.190 --> 00:01:36.930
+But I just want to
+reinforce the fact
+
+34
+00:01:36.930 --> 00:01:40.650
+that you can change it to
+another alternative dbpath
+
+35
+00:01:40.650 --> 00:01:42.250
+if you wish to do so.
+
+36
+00:01:42.250 --> 00:01:42.750
+All right.
+
+37
+00:01:42.750 --> 00:01:44.640
+I started the process.
+
+38
+00:01:44.640 --> 00:01:48.060
+And this is going to be a
+very short lived instruction,
+
+39
+00:01:48.060 --> 00:01:51.960
+because I'm going to shut
+down the server again.
+
+40
+00:01:51.960 --> 00:01:56.340
+If we ls that data/db
+folder, we can
+
+41
+00:01:56.340 --> 00:01:58.770
+see that immediately
+MongoDB stores and starts
+
+42
+00:01:58.770 --> 00:02:02.940
+writing a bunch of different
+documents in some directories.
+
+43
+00:02:02.940 --> 00:02:08.289
+For each collection, or index,
+the WiredTiger storage engine
+
+44
+00:02:08.289 --> 00:02:11.610
+will write an individual file.
+
+45
+00:02:11.610 --> 00:02:15.750
+We start with a MDB
+catalog file that
+
+46
+00:02:15.750 --> 00:02:18.900
+contains the catalog of
+all different collections
+
+47
+00:02:18.900 --> 00:02:23.750
+and indexes that this
+particular mongod contains.
+
+48
+00:02:23.750 --> 00:02:27.150
+But we can have a little
+bit more elaborate file
+
+49
+00:02:27.150 --> 00:02:33.460
+system in data structures than
+this plain flat organization.
+
+50
+00:02:33.460 --> 00:02:37.980
+Let's go ahead and remove
+that data/db folder,
+
+51
+00:02:37.980 --> 00:02:39.540
+remove all its content.
+
+52
+00:02:39.540 --> 00:02:42.510
+Let's recreate the folder again.
+
+53
+00:02:42.510 --> 00:02:47.250
+And now let's launch the mongod
+with a little with more flavor.
+
+54
+00:02:47.250 --> 00:02:50.760
+I'm going to use the same
+dbpath, the same logpath as
+
+55
+00:02:50.760 --> 00:02:52.440
+well, the same file for logging.
+
+56
+00:02:52.440 --> 00:02:54.556
+I'm also going to
+fork the process.
+
+57
+00:02:54.556 --> 00:02:59.800
+And I'm going to add this
+directoryperdb instruction.
+
+58
+00:02:59.800 --> 00:03:04.200
+Once I do that, I'm also going
+to write a single document
+
+59
+00:03:04.200 --> 00:03:06.060
+on a particular
+new collection that
+
+60
+00:03:06.060 --> 00:03:08.580
+doesn't exist at
+the moment, hello,
+
+61
+00:03:08.580 --> 00:03:11.520
+and inserting it
+on collection a.
+
+62
+00:03:11.520 --> 00:03:16.080
+And then, I'm just going to go
+ahead and shut down the server.
+
+63
+00:03:16.080 --> 00:03:19.260
+If I look into the
+folder, my dbpath again,
+
+64
+00:03:19.260 --> 00:03:22.950
+I can see that now I have a
+slightly different organization
+
+65
+00:03:22.950 --> 00:03:23.850
+of data.
+
+66
+00:03:23.850 --> 00:03:27.590
+I'm going to have these three
+new folders, admin, local,
+
+67
+00:03:27.590 --> 00:03:28.830
+and hello.
+
+68
+00:03:28.830 --> 00:03:33.520
+Admin and local are default
+databases that MongoDB creates.
+
+69
+00:03:33.520 --> 00:03:37.020
+Hello is the newly
+created database
+
+70
+00:03:37.020 --> 00:03:40.830
+that we've created on
+the previous instruction.
+
+71
+00:03:40.830 --> 00:03:44.440
+By specifying dash
+dash directoryperdb,
+
+72
+00:03:44.440 --> 00:03:47.930
+we'll get slightly different
+organization in the way
+
+73
+00:03:47.930 --> 00:03:53.160
+that we are going to have a
+folder for each single database
+
+74
+00:03:53.160 --> 00:03:55.950
+that this mongod raised.
+
+75
+00:03:55.950 --> 00:03:58.650
+If we look into the
+subfolder inside
+
+76
+00:03:58.650 --> 00:04:02.620
+of our dbpath for our
+newly created database,
+
+77
+00:04:02.620 --> 00:04:05.730
+we will see that we are going
+to have one collection and one
+
+78
+00:04:05.730 --> 00:04:06.700
+index file.
+
+79
+00:04:06.700 --> 00:04:10.260
+Collection for our a database
+collection, and obviously you
+
+80
+00:04:10.260 --> 00:04:12.790
+will always have an
+underscore there's ID index.
+
+81
+00:04:12.790 --> 00:04:16.000
+So this is the file
+that we have created.
+
+82
+00:04:16.000 --> 00:04:18.870
+But we can go a little
+bit step forward
+
+83
+00:04:18.870 --> 00:04:23.830
+in terms of organization of our
+data, especially on WiredTiger.
+
+84
+00:04:23.830 --> 00:04:25.890
+I repeated exactly
+the same process.
+
+85
+00:04:25.890 --> 00:04:28.890
+I created, again,
+our hello database.
+
+86
+00:04:28.890 --> 00:04:32.820
+And here, I've shut
+down our mongod again.
+
+87
+00:04:32.820 --> 00:04:35.971
+If we look into our
+database folder, our dbpath,
+
+88
+00:04:35.971 --> 00:04:37.470
+we can see that
+we're still creating
+
+89
+00:04:37.470 --> 00:04:42.270
+one single folder for each
+database that our mongod holds.
+
+90
+00:04:42.270 --> 00:04:45.180
+But if we're looking at
+the hello database now,
+
+91
+00:04:45.180 --> 00:04:47.730
+we're going to have a
+different organization.
+
+92
+00:04:47.730 --> 00:04:52.080
+We're going to have a single
+directory for collections
+
+93
+00:04:52.080 --> 00:04:55.020
+and one for all index files.
+
+94
+00:04:55.020 --> 00:04:58.260
+So that sounds cool
+and all, but what
+
+95
+00:04:58.260 --> 00:05:01.600
+does this have to do
+with performance anyway?
+
+96
+00:05:01.600 --> 00:05:05.720
+Well, if you have several
+disks in your server,
+
+97
+00:05:05.720 --> 00:05:09.700
+this will enable a great
+deal of I/O paralyzation.
+
+98
+00:05:09.700 --> 00:05:13.810
+To do this, we create
+symbolic links to mount points
+
+99
+00:05:13.810 --> 00:05:16.300
+on different physical drives.
+
+100
+00:05:16.300 --> 00:05:20.410
+Every time you write or
+read from our database,
+
+101
+00:05:20.410 --> 00:05:22.780
+we will most likely
+be using the two data
+
+102
+00:05:22.780 --> 00:05:26.080
+structures, the collections
+and the indexes that
+
+103
+00:05:26.080 --> 00:05:30.070
+support our queries, or
+when we need to be updated,
+
+104
+00:05:30.070 --> 00:05:32.320
+we will write the
+data to the collection
+
+105
+00:05:32.320 --> 00:05:34.120
+and to the indexes too.
+
+106
+00:05:34.120 --> 00:05:38.500
+Paralyzation of I/O can
+improve the overall throughput
+
+107
+00:05:38.500 --> 00:05:42.520
+of our persistency layer, and
+therefore, positively impacting
+
+108
+00:05:42.520 --> 00:05:45.590
+the performance of operations.
+
+109
+00:05:45.590 --> 00:05:49.360
+Mongod also offers compression
+while storing information
+
+110
+00:05:49.360 --> 00:05:50.200
+on disc.
+
+111
+00:05:50.200 --> 00:05:52.730
+We instruct our storage
+engine to store data
+
+112
+00:05:52.730 --> 00:05:55.430
+on disk using a
+compression algorithm.
+
+113
+00:05:55.430 --> 00:05:57.490
+This has a direct
+impact on performance
+
+114
+00:05:57.490 --> 00:06:01.510
+by performing smaller
+I/O operations, which
+
+115
+00:06:01.510 --> 00:06:03.915
+means that smaller
+data is faster
+
+116
+00:06:03.915 --> 00:06:07.690
+I/O, at the cost of CPU cycles.
+
+117
+00:06:07.690 --> 00:06:10.900
+Before writing
+data to disk, data
+
+118
+00:06:10.900 --> 00:06:13.120
+will be allocated in memory.
+
+119
+00:06:13.120 --> 00:06:16.390
+Without getting ourselves
+too overwhelmed in details
+
+120
+00:06:16.390 --> 00:06:20.710
+of memory allocation, all data
+is eventually written to this,
+
+121
+00:06:20.710 --> 00:06:22.750
+for persistency reasons.
+
+122
+00:06:22.750 --> 00:06:27.340
+This process will be triggered
+by two main ways, user side,
+
+123
+00:06:27.340 --> 00:06:30.250
+by specifying a
+particular writeConcorn,
+
+124
+00:06:30.250 --> 00:06:33.040
+or forcing an [INAUDIBLE] sync
+operation within administration
+
+125
+00:06:33.040 --> 00:06:37.510
+command, or by the periodical
+internal process that
+
+126
+00:06:37.510 --> 00:06:40.960
+regulates how data needs
+to be flushed and synced
+
+127
+00:06:40.960 --> 00:06:43.100
+into the data file.
+
+128
+00:06:43.100 --> 00:06:45.850
+This is defined by sync periods.
+
+129
+00:06:45.850 --> 00:06:49.330
+Journaling is as well
+an essential component
+
+130
+00:06:49.330 --> 00:06:51.610
+of our persistency mechanism.
+
+131
+00:06:51.610 --> 00:06:54.310
+The journal file
+acts as a safeguard
+
+132
+00:06:54.310 --> 00:06:58.090
+against data corruption caused
+by incomplete data file writes.
+
+133
+00:06:58.090 --> 00:07:02.140
+The system suffers a shut
+down and expected data stored
+
+134
+00:07:02.140 --> 00:07:04.630
+in the journal will
+be used to recover
+
+135
+00:07:04.630 --> 00:07:07.300
+into a consistent correct state.
+
+136
+00:07:07.300 --> 00:07:10.150
+Now, journal has its
+own file structure
+
+137
+00:07:10.150 --> 00:07:13.150
+that include individual
+write operations.
+
+138
+00:07:13.150 --> 00:07:16.300
+To minimize the performance
+impact of journal,
+
+139
+00:07:16.300 --> 00:07:18.970
+the journal flushes our
+performed using group commits
+
+140
+00:07:18.970 --> 00:07:20.470
+in a compressed format.
+
+141
+00:07:20.470 --> 00:07:22.660
+All writes to the
+journal file are atomic,
+
+142
+00:07:22.660 --> 00:07:26.560
+ensuring consistency of
+on this journal files.
+
+143
+00:07:26.560 --> 00:07:28.720
+From the application
+perspective,
+
+144
+00:07:28.720 --> 00:07:31.180
+and taking performance
+of operations in mind,
+
+145
+00:07:31.180 --> 00:07:34.000
+we can also force data
+to be synced to journal
+
+146
+00:07:34.000 --> 00:07:35.980
+before acknowledging a write.
+
+147
+00:07:35.980 --> 00:07:39.970
+This is using j equals
+true in our writeConcern.
+
+148
+00:07:39.970 --> 00:07:42.400
+That said, keep
+in mind that these
+
+149
+00:07:42.400 --> 00:07:44.650
+will have some impact
+in the performance
+
+150
+00:07:44.650 --> 00:07:46.360
+of your application.
+
+151
+00:07:46.360 --> 00:07:49.660
+We will wait till the
+sync is done to disk,
+
+152
+00:07:49.660 --> 00:07:53.740
+and then confirm back that the
+write has been acknowledged.
+
+153
+00:07:53.740 --> 00:07:57.630
+And this is how data
+is stored on disk.

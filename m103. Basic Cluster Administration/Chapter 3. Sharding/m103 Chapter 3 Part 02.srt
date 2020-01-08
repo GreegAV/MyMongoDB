@@ -1,0 +1,493 @@
+
+1
+00:00:00.000 --> 00:00:00.024
+
+
+2
+00:00:00.024 --> 00:00:02.440
+So in this lesson, we're going
+to walk to the architecture
+
+3
+00:00:02.440 --> 00:00:04.420
+of a sharded cluster.
+
+4
+00:00:04.420 --> 00:00:06.670
+The most important aspect
+of a sharded cluster
+
+5
+00:00:06.670 --> 00:00:08.584
+is that we can add
+any number of shards.
+
+6
+00:00:08.584 --> 00:00:10.000
+And because that
+could potentially
+
+7
+00:00:10.000 --> 00:00:12.250
+be a lot of different
+shards, client applications
+
+8
+00:00:12.250 --> 00:00:14.800
+aren't going to communicate
+directly with the shards.
+
+9
+00:00:14.800 --> 00:00:18.400
+Instead, we set up a kind of
+router process called mongos.
+
+10
+00:00:18.400 --> 00:00:20.000
+Then the client
+connects to mongos,
+
+11
+00:00:20.000 --> 00:00:23.290
+and mongos routes queries
+to the correct shards.
+
+12
+00:00:23.290 --> 00:00:25.979
+So how does mongos figure out
+exactly where everything is?
+
+13
+00:00:25.979 --> 00:00:27.520
+Well it has to
+understand exactly how
+
+14
+00:00:27.520 --> 00:00:29.300
+the data is distributed.
+
+15
+00:00:29.300 --> 00:00:31.810
+So, let's say this data
+is on soccer players.
+
+16
+00:00:31.810 --> 00:00:34.570
+Some of you may know
+them as football players.
+
+17
+00:00:34.570 --> 00:00:37.120
+We split our data set on the
+last name of each player.
+
+18
+00:00:37.120 --> 00:00:39.340
+So players with last
+names between A and J
+
+19
+00:00:39.340 --> 00:00:42.100
+are stored in the first
+shard, between K and Q
+
+20
+00:00:42.100 --> 00:00:46.450
+on the second shard, and between
+R and Z on the third shard.
+
+21
+00:00:46.450 --> 00:00:48.460
+Mongos is going to
+need this information
+
+22
+00:00:48.460 --> 00:00:50.660
+to route queries the client.
+
+23
+00:00:50.660 --> 00:00:53.080
+For example, if the
+client sends a query
+
+24
+00:00:53.080 --> 00:00:56.050
+to mongos about
+Luis Suarez, mongos
+
+25
+00:00:56.050 --> 00:00:58.810
+can use the last name
+Suarez to figure out exactly
+
+26
+00:00:58.810 --> 00:01:01.180
+which shard contains
+that player's document,
+
+27
+00:01:01.180 --> 00:01:03.990
+and then route that query
+to the correct shard.
+
+28
+00:01:03.990 --> 00:01:06.180
+We can also have
+multiple mongos processes
+
+29
+00:01:06.180 --> 00:01:08.260
+from high availability
+with mongos,
+
+30
+00:01:08.260 --> 00:01:11.870
+or to service multiple
+applications at once.
+
+31
+00:01:11.870 --> 00:01:14.000
+The mongos processes are
+going to use the metadata
+
+32
+00:01:14.000 --> 00:01:16.458
+around the collections that
+have been sharded to figure out
+
+33
+00:01:16.458 --> 00:01:18.560
+exactly where to route queries.
+
+34
+00:01:18.560 --> 00:01:21.590
+The metadata for this
+collection will look like this.
+
+35
+00:01:21.590 --> 00:01:24.560
+But the data is not
+stored on mongos.
+
+36
+00:01:24.560 --> 00:01:26.660
+Instead, the collection
+metadata gets
+
+37
+00:01:26.660 --> 00:01:28.910
+stored in config
+servers, which constantly
+
+38
+00:01:28.910 --> 00:01:31.964
+keep track of where each piece
+of data lives in the cluster.
+
+39
+00:01:31.964 --> 00:01:34.130
+This is especially important
+because the information
+
+40
+00:01:34.130 --> 00:01:37.360
+contained on each shard
+might change with time.
+
+41
+00:01:37.360 --> 00:01:39.580
+So mongos queries the config
+servers often, in case
+
+42
+00:01:39.580 --> 00:01:41.630
+a piece of data is moved.
+
+43
+00:01:41.630 --> 00:01:43.801
+But why might a piece
+of data have to move?
+
+44
+00:01:43.801 --> 00:01:45.550
+Well, the config servers
+have to make sure
+
+45
+00:01:45.550 --> 00:01:47.258
+that there's an even
+distribution of data
+
+46
+00:01:47.258 --> 00:01:48.762
+across each part.
+
+47
+00:01:48.762 --> 00:01:50.470
+For example, if there
+are a lot of people
+
+48
+00:01:50.470 --> 00:01:52.402
+in our database with
+the last name Smith,
+
+49
+00:01:52.402 --> 00:01:53.860
+the third shard is
+going to contain
+
+50
+00:01:53.860 --> 00:01:56.260
+a disproportionately
+large amount of data.
+
+51
+00:01:56.260 --> 00:01:58.180
+When this happens,
+the config servers
+
+52
+00:01:58.180 --> 00:02:00.610
+have to decide what data
+has to be moved around
+
+53
+00:02:00.610 --> 00:02:03.740
+so the shards have a
+more even distribution.
+
+54
+00:02:03.740 --> 00:02:06.050
+In this example, all the
+names beginning with R
+
+55
+00:02:06.050 --> 00:02:08.389
+hadn't moved to the second
+shard from the third shard,
+
+56
+00:02:08.389 --> 00:02:11.700
+to make room and third shard for
+all those people named Smith.
+
+57
+00:02:11.700 --> 00:02:14.700
+The config servers will then
+update the data they contain,
+
+58
+00:02:14.700 --> 00:02:17.090
+and then send the data
+to the correct shards.
+
+59
+00:02:17.090 --> 00:02:19.050
+There's also a chance
+that a chunk gets too big
+
+60
+00:02:19.050 --> 00:02:20.370
+and needs to be split.
+
+61
+00:02:20.370 --> 00:02:22.860
+In that case, mongos
+would split the chunk.
+
+62
+00:02:22.860 --> 00:02:26.430
+We'll talk more about this
+in the lesson about chunks.
+
+63
+00:02:26.430 --> 00:02:27.930
+In the sharded
+cluster, we also have
+
+64
+00:02:27.930 --> 00:02:30.340
+this notion of a primary shard.
+
+65
+00:02:30.340 --> 00:02:32.574
+Each database will be
+assigned a primary shard,
+
+66
+00:02:32.574 --> 00:02:34.740
+and all the non-sharded
+collections on that database
+
+67
+00:02:34.740 --> 00:02:36.390
+will remain on that shard.
+
+68
+00:02:36.390 --> 00:02:38.100
+Remember, not all
+the collections
+
+69
+00:02:38.100 --> 00:02:40.620
+in a sharded cluster
+need to be distributed.
+
+70
+00:02:40.620 --> 00:02:43.260
+The config servers will assign
+a primary shard to each database
+
+71
+00:02:43.260 --> 00:02:44.400
+once they get created.
+
+72
+00:02:44.400 --> 00:02:46.860
+But we can also change the
+primary shard of a database.
+
+73
+00:02:46.860 --> 00:02:49.170
+We're just not going to
+cover that in this course.
+
+74
+00:02:49.170 --> 00:02:52.020
+The primary shard also has a
+few other responsibilities,
+
+75
+00:02:52.020 --> 00:02:53.760
+specifically around
+merge operations
+
+76
+00:02:53.760 --> 00:02:55.706
+for aggregation commands.
+
+77
+00:02:55.706 --> 00:02:57.580
+So while we're talking
+about merging results,
+
+78
+00:02:57.580 --> 00:02:59.340
+I just to point
+something out here.
+
+79
+00:02:59.340 --> 00:03:02.370
+In our example, the data
+is organized across shards
+
+80
+00:03:02.370 --> 00:03:04.176
+by the name of each player.
+
+81
+00:03:04.176 --> 00:03:05.550
+So if the client
+receives a query
+
+82
+00:03:05.550 --> 00:03:07.590
+about the age of a
+player, it doesn't
+
+83
+00:03:07.590 --> 00:03:09.480
+know exactly where to look.
+
+84
+00:03:09.480 --> 00:03:11.280
+So it's just going
+to check every shard.
+
+85
+00:03:11.280 --> 00:03:13.410
+It's going to send this
+query to every single shard
+
+86
+00:03:13.410 --> 00:03:14.600
+in the cluster.
+
+87
+00:03:14.600 --> 00:03:16.520
+And it might find a
+few documents here,
+
+88
+00:03:16.520 --> 00:03:18.484
+a few documents here.
+
+89
+00:03:18.484 --> 00:03:19.900
+And each individual
+shard is going
+
+90
+00:03:19.900 --> 00:03:21.580
+to send their results
+back to mongos.
+
+91
+00:03:21.580 --> 00:03:25.180
+The mongos will gather results,
+and then maybe sort the results
+
+92
+00:03:25.180 --> 00:03:27.440
+if the query mandated it.
+
+93
+00:03:27.440 --> 00:03:29.090
+This stage is called
+the shard merge,
+
+94
+00:03:29.090 --> 00:03:31.490
+and it takes place
+on the mongos.
+
+95
+00:03:31.490 --> 00:03:33.200
+Once the shard
+merge is complete,
+
+96
+00:03:33.200 --> 00:03:35.900
+the mongos will return the
+results back to the client,
+
+97
+00:03:35.900 --> 00:03:37.820
+but the client won't be
+aware of any of this.
+
+98
+00:03:37.820 --> 00:03:41.320
+It will query this process
+like a regular mongoD.
+
+99
+00:03:41.320 --> 00:03:43.270
+So just to recap,
+in this lesson we
+
+100
+00:03:43.270 --> 00:03:44.740
+covered the basic
+responsibilities
+
+101
+00:03:44.740 --> 00:03:47.560
+of mongos, the metadata
+contained on the contact
+
+102
+00:03:47.560 --> 00:03:51.840
+servers, and we defined the
+concept of a primary shard.

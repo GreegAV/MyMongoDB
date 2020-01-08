@@ -1,0 +1,126 @@
+1
+00:00:00,000 --> 00:00:00,960
+
+
+2
+00:00:00,960 --> 00:00:05,410
+In this video, we're going
+to talk about auditing DDL.
+
+3
+00:00:05,410 --> 00:00:08,109
+With traditional SQL
+databases, SQL statements
+
+4
+00:00:08,109 --> 00:00:10,790
+generally fall under
+one of two categories.
+
+5
+00:00:10,790 --> 00:00:13,900
+A statement is either a DDL--
+a Data Definition Language
+
+6
+00:00:13,900 --> 00:00:17,230
+statement or DML--
+Data Manipulation
+
+7
+00:00:17,230 --> 00:00:19,150
+Language statement.
+
+8
+00:00:19,150 --> 00:00:21,130
+As you can imagine,
+DDL statements
+
+9
+00:00:21,130 --> 00:00:22,990
+are statements
+that make a change
+
+10
+00:00:22,990 --> 00:00:24,850
+to the schema of a database.
+
+11
+00:00:24,850 --> 00:00:27,610
+Whereas, DML statements
+manipulate the actual data
+
+12
+00:00:27,610 --> 00:00:29,100
+within them.
+
+13
+00:00:29,100 --> 00:00:31,900
+While MongoDB has a flexible
+schema, which could potentially
+
+14
+00:00:31,900 --> 00:00:35,590
+imply that there is no DDL,
+the MongoDB query language
+
+15
+00:00:35,590 --> 00:00:39,070
+actually supports
+several DDL operations.
+
+16
+00:00:39,070 --> 00:00:41,920
+Here's a short list
+of a few action types
+
+17
+00:00:41,920 --> 00:00:45,580
+that the auditing system uses
+that would fall under DDL.
+
+18
+00:00:45,580 --> 00:00:48,280
+We have things like
+createIndex, createDatabase,
+
+19
+00:00:48,280 --> 00:00:51,580
+renameCollection,
+dropDatabase, et cetera.
+
+20
+00:00:51,580 --> 00:00:53,470
+If you actually look
+at all the action types
+
+21
+00:00:53,470 --> 00:00:56,320
+that the MongoDB
+auditing system supports,
+
+22
+00:00:56,320 --> 00:00:57,970
+you'll notice most
+of them are actually
+
+23
+00:00:57,970 --> 00:01:02,350
+related to DDL rather
+than DML operations.
+
+24
+00:01:02,350 --> 00:01:05,440
+This is because, for the most
+part, auditing within MongoDB
+
+25
+00:01:05,440 --> 00:01:08,460
+is designed to
+monitor changes made
+
+26
+00:01:08,460 --> 00:00:00,000
+to the actual configuration
+of our databases.
+

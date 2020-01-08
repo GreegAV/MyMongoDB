@@ -1,0 +1,503 @@
+1
+00:00:00,000 --> 00:00:00,171
+
+
+2
+00:00:00,171 --> 00:00:01,670
+In this lesson,
+we're going to cover
+
+3
+00:00:01,670 --> 00:00:03,711
+some of the commands we
+use to gather information
+
+4
+00:00:03,711 --> 00:00:05,004
+about a replica set.
+
+5
+00:00:05,004 --> 00:00:06,420
+You've probably
+noticed that there
+
+6
+00:00:06,420 --> 00:00:07,919
+are a lot of different
+ways to check
+
+7
+00:00:07,919 --> 00:00:10,530
+the status of a replica
+set because each node emits
+
+8
+00:00:10,530 --> 00:00:12,250
+a lot of information.
+
+9
+00:00:12,250 --> 00:00:14,490
+Each replication command
+gives a different subset
+
+10
+00:00:14,490 --> 00:00:16,270
+of this information.
+
+11
+00:00:16,270 --> 00:00:18,890
+The first one we're going
+to cover is rs.status.
+
+12
+00:00:18,890 --> 00:00:21,330
+rs.status is used to report
+on the general health
+
+13
+00:00:21,330 --> 00:00:23,450
+of each node in the set.
+
+14
+00:00:23,450 --> 00:00:25,320
+The data it gets
+from the heartbeat
+
+15
+00:00:25,320 --> 00:00:27,350
+sent in-between
+nodes in the set.
+
+16
+00:00:27,350 --> 00:00:29,540
+Because it relies on
+heartbeats for this data,
+
+17
+00:00:29,540 --> 00:00:32,830
+it may actually be a
+few seconds out of date.
+
+18
+00:00:32,830 --> 00:00:34,580
+This command gives us
+the most information
+
+19
+00:00:34,580 --> 00:00:36,880
+for each specific node.
+
+20
+00:00:36,880 --> 00:00:39,700
+We can see that for a given node
+we get the state of the node.
+
+21
+00:00:39,700 --> 00:00:40,995
+In this case, it's the primary.
+
+22
+00:00:40,995 --> 00:00:43,120
+We have the up time, which
+is the number of seconds
+
+23
+00:00:43,120 --> 00:00:44,714
+this note has been running for.
+
+24
+00:00:44,714 --> 00:00:47,380
+And we have the optime, which is
+the last time this node applied
+
+25
+00:00:47,380 --> 00:00:49,515
+an operation from its oplog.
+
+26
+00:00:49,515 --> 00:00:51,140
+There are heartbeat
+stats for each node
+
+27
+00:00:51,140 --> 00:00:54,650
+as well but not for the node
+that we ran this command on.
+
+28
+00:00:54,650 --> 00:00:56,400
+That's because the
+heartbeat stats are all
+
+29
+00:00:56,400 --> 00:00:59,027
+relative to where
+rs.status was run.
+
+30
+00:00:59,027 --> 00:01:01,110
+We know that it was run
+from this because the self
+
+31
+00:01:01,110 --> 00:01:02,667
+flag in this node is true.
+
+32
+00:01:02,667 --> 00:01:04,500
+We can scroll down to
+one of the other nodes
+
+33
+00:01:04,500 --> 00:01:07,490
+and see that we have some
+heartbeats stats down here.
+
+34
+00:01:07,490 --> 00:01:09,380
+Because we know the
+primary was where
+
+35
+00:01:09,380 --> 00:01:11,370
+this command was run from.
+
+36
+00:01:11,370 --> 00:01:12,860
+We know that last
+heartbeat refers
+
+37
+00:01:12,860 --> 00:01:15,890
+to the last time this
+node successfully received
+
+38
+00:01:15,890 --> 00:01:18,350
+a heartbeat from the primary.
+
+39
+00:01:18,350 --> 00:01:20,690
+Conversely, last
+heartbeat received
+
+40
+00:01:20,690 --> 00:01:23,150
+refers to the last time the
+primary successfully received
+
+41
+00:01:23,150 --> 00:01:25,150
+a heartbeat from this note.
+
+42
+00:01:25,150 --> 00:01:28,310
+We can see the actual frequency
+of heartbeats in this set
+
+43
+00:01:28,310 --> 00:01:30,230
+through a heartbeat
+interval millis.
+
+44
+00:01:30,230 --> 00:01:31,640
+In this case, this
+set is running
+
+45
+00:01:31,640 --> 00:01:33,890
+with the default of
+2,000 milliseconds, which
+
+46
+00:01:33,890 --> 00:01:36,056
+means that the nodes are
+talking to each other about
+
+47
+00:01:36,056 --> 00:01:37,220
+every two seconds.
+
+48
+00:01:37,220 --> 00:01:40,550
+The next command we're going
+to cover is rs.isMaster.
+
+49
+00:01:40,550 --> 00:01:42,260
+This one describes
+the role of the node
+
+50
+00:01:42,260 --> 00:01:43,869
+where we ran this command from.
+
+51
+00:01:43,869 --> 00:01:45,410
+And it also gives
+us some information
+
+52
+00:01:45,410 --> 00:01:47,540
+about the replica set itself.
+
+53
+00:01:47,540 --> 00:01:50,220
+The output is a lot easier
+to read than rs.status
+
+54
+00:01:50,220 --> 00:01:53,452
+just because its output
+is a lot shorter.
+
+55
+00:01:53,452 --> 00:01:54,910
+So as we can see,
+the list of hosts
+
+56
+00:01:54,910 --> 00:01:56,890
+is a lot shorter
+in this command,
+
+57
+00:01:56,890 --> 00:02:00,100
+and we can very easily verify
+if this node is a secondary.
+
+58
+00:02:00,100 --> 00:02:02,350
+In this case, it's not
+because secondary is false.
+
+59
+00:02:02,350 --> 00:02:04,141
+Or if this is the
+primary-- and it's master
+
+60
+00:02:04,141 --> 00:02:05,470
+is true in this case.
+
+61
+00:02:05,470 --> 00:02:08,258
+It also gives us the name of
+the primary node in the set
+
+62
+00:02:08,258 --> 00:02:10,399
+regardless of where we
+ran this command from.
+
+63
+00:02:10,400 --> 00:02:12,910
+In this case, obviously,
+we ran it from the primary,
+
+64
+00:02:12,910 --> 00:02:14,380
+so this primary
+flag is just going
+
+65
+00:02:14,380 --> 00:02:17,579
+to say the same thing as me.
+
+66
+00:02:17,579 --> 00:02:19,120
+So I just want to
+point out here when
+
+67
+00:02:19,120 --> 00:02:21,430
+we type this command with
+parentheses afterward,
+
+68
+00:02:21,430 --> 00:02:22,980
+we're calling this method.
+
+69
+00:02:22,980 --> 00:02:24,370
+But we can remove
+the parentheses
+
+70
+00:02:24,370 --> 00:02:27,820
+to see what's actually
+being run in the background.
+
+71
+00:02:27,820 --> 00:02:30,280
+And we can see that
+rs.isMaster is actually
+
+72
+00:02:30,280 --> 00:02:33,670
+just a wrapper around a
+function called db.isMaster.
+
+73
+00:02:33,670 --> 00:02:36,790
+You're going to notice that a
+lot of the rs.commands in Mongo
+
+74
+00:02:36,790 --> 00:02:40,610
+Shell are actually just
+wrappers around db commands.
+
+75
+00:02:40,610 --> 00:02:42,680
+As a side note,
+this is the command
+
+76
+00:02:42,680 --> 00:02:45,530
+that the drivers use to discover
+each node's role in the replica
+
+77
+00:02:45,530 --> 00:02:46,234
+set.
+
+78
+00:02:46,234 --> 00:02:48,150
+For more on that, you
+can follow the reference
+
+79
+00:02:48,150 --> 00:02:49,736
+in the lecture notes.
+
+80
+00:02:49,736 --> 00:02:53,650
+The next command
+is db.serverStatus.
+
+81
+00:02:53,650 --> 00:02:56,320
+This command gives us a lot of
+information about the Mongo D
+
+82
+00:02:56,320 --> 00:02:58,090
+process, but we're
+just going to look
+
+83
+00:02:58,090 --> 00:02:59,699
+at the section called repl.
+
+84
+00:02:59,699 --> 00:03:01,240
+The output from this
+command is going
+
+85
+00:03:01,240 --> 00:03:04,797
+to be very similar to the
+output of rs.isMaster.
+
+86
+00:03:04,797 --> 00:03:06,630
+So as we can see, the
+output of this command
+
+87
+00:03:06,630 --> 00:03:10,200
+is very similar to the output of
+rs.isMaster with the exception
+
+88
+00:03:10,200 --> 00:03:12,450
+of one field here.
+
+89
+00:03:12,450 --> 00:03:15,799
+The rbid is not
+included in rs.isMaster.
+
+90
+00:03:15,799 --> 00:03:18,090
+And all this does is count
+the number of rollbacks that
+
+91
+00:03:18,090 --> 00:03:19,979
+have occurred on this node.
+
+92
+00:03:19,979 --> 00:03:21,520
+The last command
+we're going to cover
+
+93
+00:03:21,520 --> 00:03:24,340
+is rs.printReplicationInfo.
+
+94
+00:03:24,340 --> 00:03:26,890
+This command only has
+data about the oplog
+
+95
+00:03:26,890 --> 00:03:29,080
+and specifically only
+the oplog for the node
+
+96
+00:03:29,080 --> 00:03:31,030
+we're currently connected to.
+
+97
+00:03:31,030 --> 00:03:34,450
+It'll give us exact time stamps
+for the first and last events
+
+98
+00:03:34,450 --> 00:03:37,330
+that occurred in the
+oplog for that node.
+
+99
+00:03:37,330 --> 00:03:39,960
+So this is a quick report on
+the current length of the oplog
+
+100
+00:03:39,960 --> 00:03:42,130
+in time and in megabytes.
+
+101
+00:03:42,130 --> 00:03:44,260
+And remember that the
+earliest event in the oplog
+
+102
+00:03:44,260 --> 00:03:47,160
+is subject to change because
+the oplog is capped collection,
+
+103
+00:03:47,160 --> 00:03:49,934
+and it's periodically flush
+to make room for new data.
+
+104
+00:03:49,934 --> 00:03:51,600
+In this lesson, we've
+learned that there
+
+105
+00:03:51,600 --> 00:03:54,058
+are several different ways to
+check the status of a replica
+
+106
+00:03:54,058 --> 00:00:00,000
+set, and each one is
+important in its own right.
+

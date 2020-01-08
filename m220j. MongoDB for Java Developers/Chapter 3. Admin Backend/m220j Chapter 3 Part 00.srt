@@ -1,0 +1,66 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.821
+Hello and welcome to Chapter 3
+of the M220 Developer Course.
+
+3
+00:00:03.821 --> 00:00:05.570
+I hope you were
+successfully able to build
+
+4
+00:00:05.570 --> 00:00:08.480
+the user-facing back end
+of the MFlix application.
+
+5
+00:00:08.480 --> 00:00:10.704
+Now we can move on to
+the admin back end.
+
+6
+00:00:10.704 --> 00:00:13.370
+In this chapter, we'll learn how
+to use different read concerns,
+
+7
+00:00:13.370 --> 00:00:15.320
+join collections using
+expressive $lookup,
+
+8
+00:00:15.320 --> 00:00:17.654
+perform bulk operations,
+and clean data.
+
+9
+00:00:17.654 --> 00:00:19.820
+With that you'll be able
+to expand the functionality
+
+10
+00:00:19.820 --> 00:00:21.085
+of your MFlix site.
+
+11
+00:00:21.085 --> 00:00:23.210
+This will include reporting
+on a movie's popularity
+
+12
+00:00:23.210 --> 00:00:24.680
+and listing all reviews.
+
+13
+00:00:24.680 --> 00:00:26.780
+This is going to be a
+great chapter, so good luck
+
+14
+00:00:26.780 --> 00:00:28.690
+and have fun.

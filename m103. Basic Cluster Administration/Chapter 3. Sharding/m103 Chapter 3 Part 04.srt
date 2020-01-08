@@ -1,0 +1,398 @@
+1
+00:00:00,000 --> 00:00:00,140
+
+
+2
+00:00:00,140 --> 00:00:01,080
+All right, so in
+this lesson, we're
+
+3
+00:00:01,080 --> 00:00:03,150
+going to talk about a
+very important database
+
+4
+00:00:03,150 --> 00:00:05,950
+in the sharded cluster,
+the config database.
+
+5
+00:00:05,950 --> 00:00:08,189
+First thing you need to
+know about the config DB
+
+6
+00:00:08,189 --> 00:00:11,460
+is that you should generally
+never write any data to it.
+
+7
+00:00:11,460 --> 00:00:13,500
+It's maintained
+internally by MongoDB,
+
+8
+00:00:13,500 --> 00:00:15,180
+and it's used internally.
+
+9
+00:00:15,180 --> 00:00:17,460
+So, generally, you will
+never need to actually write
+
+10
+00:00:17,460 --> 00:00:18,670
+any data to it.
+
+11
+00:00:18,670 --> 00:00:20,700
+However, it's got some
+useful information in it,
+
+12
+00:00:20,700 --> 00:00:23,220
+so we are going to read from it.
+
+13
+00:00:23,220 --> 00:00:25,890
+So, I'm just connected to mongos
+and I'm running a quick s.h.
+
+14
+00:00:25,890 --> 00:00:28,080
+status on it just
+to see the typology
+
+15
+00:00:28,080 --> 00:00:30,290
+of the sharded cluster.
+
+16
+00:00:30,290 --> 00:00:32,590
+So this is going to give us
+a lot of output about some
+
+17
+00:00:32,590 --> 00:00:35,815
+of the shards, about
+the active mongos's.
+
+18
+00:00:35,815 --> 00:00:38,190
+It's going to give us some
+information about the database
+
+19
+00:00:38,190 --> 00:00:39,690
+in our sharded cluster.
+
+20
+00:00:39,690 --> 00:00:43,150
+But all of this data is actually
+stored in the config DB.
+
+21
+00:00:43,150 --> 00:00:45,660
+Here, and just switching
+over to the config database.
+
+22
+00:00:45,660 --> 00:00:47,576
+I'm going to take a look
+at the collections we
+
+23
+00:00:47,576 --> 00:00:48,504
+have in there already.
+
+24
+00:00:48,504 --> 00:00:50,670
+So these are all the
+collections that we have access
+
+25
+00:00:50,670 --> 00:00:52,440
+to in the config database.
+
+26
+00:00:52,440 --> 00:00:53,940
+The first one we're
+going to look at
+
+27
+00:00:53,940 --> 00:00:56,137
+is the databases collection.
+
+28
+00:00:56,137 --> 00:00:57,720
+So here, I'm just
+printing the results
+
+29
+00:00:57,720 --> 00:01:00,100
+from our databases querie.
+
+30
+00:01:00,100 --> 00:01:02,810
+So this is going to return
+each database in our cluster
+
+31
+00:01:02,810 --> 00:01:04,004
+as one document.
+
+32
+00:01:04,004 --> 00:01:05,630
+It's going to give
+us the primary shard
+
+33
+00:01:05,630 --> 00:01:08,515
+for each database,
+and the partition here
+
+34
+00:01:08,515 --> 00:01:09,890
+is just telling
+us whether or not
+
+35
+00:01:09,890 --> 00:01:11,690
+sharding has been
+enabled on this database.
+
+36
+00:01:11,690 --> 00:01:15,440
+In this case, the m103
+database has sharding enabled.
+
+37
+00:01:15,440 --> 00:01:18,232
+Now, take a look
+at the collections.
+
+38
+00:01:18,232 --> 00:01:20,690
+So this is only going to give
+us information on collections
+
+39
+00:01:20,690 --> 00:01:21,807
+that have been sharded.
+
+40
+00:01:21,807 --> 00:01:24,140
+But for those collections,
+it will tell us the shard key
+
+41
+00:01:24,140 --> 00:01:24,900
+that we used.
+
+42
+00:01:24,900 --> 00:01:27,380
+In this case, the m103
+products collection
+
+43
+00:01:27,380 --> 00:01:29,500
+was sharded on sale price.
+
+44
+00:01:29,500 --> 00:01:32,917
+And it also tell us whether
+or not that key was unique.
+
+45
+00:01:32,917 --> 00:01:34,750
+This one's going to
+tell us about the shards
+
+46
+00:01:34,750 --> 00:01:36,539
+in our cluster.
+
+47
+00:01:36,539 --> 00:01:38,330
+And here, you can see
+the hostname contains
+
+48
+00:01:38,330 --> 00:01:40,490
+the replica set name
+because these shards are
+
+49
+00:01:40,490 --> 00:01:42,806
+deployed as replica sets.
+
+50
+00:01:42,806 --> 00:01:44,180
+The chunks collection
+is possibly
+
+51
+00:01:44,180 --> 00:01:47,540
+the most interesting collection
+in this whole database.
+
+52
+00:01:47,540 --> 00:01:49,670
+So each chunk for every
+collection in this database
+
+53
+00:01:49,670 --> 00:01:52,040
+is returned to us
+as one document.
+
+54
+00:01:52,040 --> 00:01:55,400
+The inclusive minimum
+and the exclusive maximum
+
+55
+00:01:55,400 --> 00:01:58,350
+define the chunk range
+of the shard key values.
+
+56
+00:01:58,350 --> 00:02:01,150
+That means that any document in
+the associated collection who's
+
+57
+00:02:01,150 --> 00:02:03,470
+shard key value falls
+into this chunks range
+
+58
+00:02:03,470 --> 00:02:06,840
+will end up in this chunk,
+and this chunk only.
+
+59
+00:02:06,840 --> 00:02:09,020
+So this collection is
+sharded on sale price.
+
+60
+00:02:09,020 --> 00:02:11,070
+And we see that this
+chunk has documents
+
+61
+00:02:11,070 --> 00:02:15,210
+with values of sale price for
+a minKey key to about $15.
+
+62
+00:02:15,210 --> 00:02:18,070
+MinKey, here, means the
+lowest possible value
+
+63
+00:02:18,070 --> 00:02:20,230
+of sale price or
+negative infinity,
+
+64
+00:02:20,230 --> 00:02:22,620
+if you want to think
+about it that way.
+
+65
+00:02:22,620 --> 00:02:25,050
+This chunk has documents
+with sale prices
+
+66
+00:02:25,050 --> 00:02:29,190
+of at least $14.99,
+but lower than $33.99.
+
+67
+00:02:29,190 --> 00:02:32,280
+For example, if I were to insert
+a document into this collection
+
+68
+00:02:32,280 --> 00:02:36,260
+that had a sale price of $20,
+it would end up in this chunk.
+
+69
+00:02:36,260 --> 00:02:38,210
+The config database
+also some information
+
+70
+00:02:38,210 --> 00:02:41,270
+on the mongos process currently
+connected to this cluster,
+
+71
+00:02:41,270 --> 00:02:44,450
+because we can have
+any number of them.
+
+72
+00:02:44,450 --> 00:02:46,800
+As we can see right
+now, we only have one.
+
+73
+00:02:46,800 --> 00:02:48,930
+But it'll give us a lot
+of information on it,
+
+74
+00:02:48,930 --> 00:02:52,200
+including the mongos version
+that's running on the mongos.
+
+75
+00:02:52,200 --> 00:02:53,689
+So, just to recap,
+in this lesson
+
+76
+00:02:53,689 --> 00:02:55,230
+we've covered the
+collections that we
+
+77
+00:02:55,230 --> 00:02:57,360
+have in the configure
+database, including
+
+78
+00:02:57,360 --> 00:03:01,420
+but not limited to, shards,
+chunks, and the mongos.
+
+79
+00:03:01,420 --> 00:03:04,080
+But remember, never
+write to this database
+
+80
+00:03:04,080 --> 00:03:06,570
+unless instructed to
+by MongoDB support
+
+81
+00:03:06,570 --> 00:03:08,790
+or our official documentation.
+
+82
+00:03:08,790 --> 00:03:11,100
+It has some useful
+information, but it's generally
+
+83
+00:03:11,100 --> 00:00:00,000
+meant for internal
+MongoDB usage only.
+

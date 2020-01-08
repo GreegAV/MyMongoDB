@@ -1,0 +1,322 @@
+
+1
+00:00:00.000 --> 00:00:00.950
+
+
+2
+00:00:00.950 --> 00:00:04.160
+In this chapter, we will cover
+auto express relationships
+
+3
+00:00:04.160 --> 00:00:06.110
+with MongoDB.
+
+4
+00:00:06.110 --> 00:00:09.800
+even if MongoDB is classified
+as a document database,
+
+5
+00:00:09.800 --> 00:00:12.260
+the pieces of information
+stored in the database
+
+6
+00:00:12.260 --> 00:00:15.050
+still have relationships
+between them.
+
+7
+00:00:15.050 --> 00:00:17.210
+Old style databases
+are often referred
+
+8
+00:00:17.210 --> 00:00:19.840
+to as relational databases.
+
+9
+00:00:19.840 --> 00:00:23.240
+However, NoSQL databases
+are also relational,
+
+10
+00:00:23.240 --> 00:00:25.700
+so a better name for
+those legacy databases
+
+11
+00:00:25.700 --> 00:00:31.310
+is Tabular, which highlights a
+notion of columns and tables.
+
+12
+00:00:31.310 --> 00:00:33.470
+Understanding how to
+represent relationships,
+
+13
+00:00:33.470 --> 00:00:36.170
+and deciding between embedding
+and linking relationship
+
+14
+00:00:36.170 --> 00:00:38.820
+information, is crucial.
+
+15
+00:00:38.820 --> 00:00:40.820
+We have seen customers
+embedding large arrays
+
+16
+00:00:40.820 --> 00:00:42.230
+where they should not have.
+
+17
+00:00:42.230 --> 00:00:44.860
+Other customers creating
+too many collections
+
+18
+00:00:44.860 --> 00:00:47.030
+or too few collections.
+
+19
+00:00:47.030 --> 00:00:49.310
+Many of these customers
+with subpar designs
+
+20
+00:00:49.310 --> 00:00:51.215
+ended up having huge
+performance issues.
+
+21
+00:00:51.215 --> 00:00:54.010
+
+
+22
+00:00:54.010 --> 00:00:56.830
+As we said in the
+introduction of this course,
+
+23
+00:00:56.830 --> 00:00:59.230
+having a good model is the
+single most important thing
+
+24
+00:00:59.230 --> 00:01:02.740
+you can do to ensure you
+get good performance.
+
+25
+00:01:02.740 --> 00:01:05.200
+The face of identifying
+and modeling relationships
+
+26
+00:01:05.200 --> 00:01:09.370
+correctly is a step that is not
+optional in the methodology.
+
+27
+00:01:09.370 --> 00:01:11.140
+This chapter will
+give you the knowledge
+
+28
+00:01:11.140 --> 00:01:13.630
+you need to do it right.
+
+29
+00:01:13.630 --> 00:01:17.980
+What are relationships
+in the data model?
+
+30
+00:01:17.980 --> 00:01:21.850
+If you look at any schema
+implementation in MongoDB,
+
+31
+00:01:21.850 --> 00:01:25.840
+or any other database,
+you can observe objects,
+
+32
+00:01:25.840 --> 00:01:28.270
+referred to as entities.
+
+33
+00:01:28.270 --> 00:01:31.300
+The relationships
+represent all the entities
+
+34
+00:01:31.300 --> 00:01:32.980
+and the other piece
+of information
+
+35
+00:01:32.980 --> 00:01:35.900
+are related to each other.
+
+36
+00:01:35.900 --> 00:01:40.150
+For example, a customer
+name and its customer ID
+
+37
+00:01:40.150 --> 00:01:42.440
+have a one to one relationship.
+
+38
+00:01:42.440 --> 00:01:44.410
+We often group this
+type of relationship
+
+39
+00:01:44.410 --> 00:01:46.420
+in a single entity.
+
+40
+00:01:46.420 --> 00:01:49.450
+The relationship between a
+customer and the invoice sent
+
+41
+00:01:49.450 --> 00:01:52.870
+to them is a one to
+many relationship,
+
+42
+00:01:52.870 --> 00:01:55.600
+as one customer
+has many invoice,
+
+43
+00:01:55.600 --> 00:01:59.440
+but each invoice only
+belong to one customer.
+
+44
+00:01:59.440 --> 00:02:01.780
+And the invoices
+and their products
+
+45
+00:02:01.780 --> 00:02:04.450
+have a many to
+many relationship,
+
+46
+00:02:04.450 --> 00:02:07.240
+as the invoice referred
+to many products,
+
+47
+00:02:07.240 --> 00:02:11.680
+and a product is likely
+listed in many invoices.
+
+48
+00:02:11.680 --> 00:02:14.890
+If any of this is
+confusing, don't worry.
+
+49
+00:02:14.890 --> 00:02:17.080
+We'll cover it all in great
+detail in the following
+
+50
+00:02:17.080 --> 00:02:18.690
+lessons.
+
+51
+00:02:18.690 --> 00:02:21.630
+In this chapter, we will go
+over these different type
+
+52
+00:02:21.630 --> 00:02:25.650
+of relationships and their
+implementation in MongoDB.
+
+53
+00:02:25.650 --> 00:02:28.410
+We will start with the different
+types and cardinalities that
+
+54
+00:02:28.410 --> 00:02:30.450
+describe our
+relationships, then we
+
+55
+00:02:30.450 --> 00:02:32.610
+will answer one of the
+essential question when
+
+56
+00:02:32.610 --> 00:02:35.420
+modeling unit of
+information for MongoDB.
+
+57
+00:02:35.420 --> 00:02:39.685
+Should the information be
+embedded or referenced?
+
+58
+00:02:39.685 --> 00:02:42.060
+If you are still feeling a
+little uncomfortable with some
+
+59
+00:02:42.060 --> 00:02:44.010
+of the terminology
+and parallels we
+
+60
+00:02:44.010 --> 00:02:46.710
+make between tabular
+databases and MongoDB,
+
+61
+00:02:46.710 --> 00:02:49.350
+it is a great time to review
+the lists of prerequisites
+
+62
+00:02:49.350 --> 00:02:53.290
+and references we presented at
+the beginning of this course.
+
+63
+00:02:53.290 --> 00:02:56.340
+By the end of this chapter,
+you will have all the knowledge
+
+64
+00:02:56.340 --> 00:02:59.700
+necessary to design
+basic MongoDB models,
+
+65
+00:02:59.700 --> 00:03:01.200
+and you should
+understand why people
+
+66
+00:03:01.200 --> 00:03:04.740
+say that MongoDB is the best
+database for representing
+
+67
+00:03:04.740 --> 00:03:08.540
+relationships between
+units of information.

@@ -1,0 +1,223 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:01,590
+Welcome back.
+
+3
+00:00:01,590 --> 00:00:04,010
+In this lesson, we are going
+to talk about Z standard,
+
+4
+00:00:04,010 --> 00:00:06,840
+or ZSTD for short.
+
+5
+00:00:06,840 --> 00:00:09,680
+This is a fast, loose,
+loose compression algorithm
+
+6
+00:00:09,680 --> 00:00:13,640
+that we added support
+to on MongoDB 4.2.
+
+7
+00:00:13,640 --> 00:00:16,610
+Allowing options to compress
+WiredTiger collections
+
+8
+00:00:16,610 --> 00:00:18,540
+and to compress the journal.
+
+9
+00:00:18,540 --> 00:00:22,010
+It was intended to target real
+time compression scenarios.
+
+10
+00:00:22,010 --> 00:00:25,610
+But at a better compression
+ratio than zlib.
+
+11
+00:00:25,610 --> 00:00:28,970
+The Z standard algorithm
+did compress faster
+
+12
+00:00:28,970 --> 00:00:31,700
+than any of the currently
+available algorithm
+
+13
+00:00:31,700 --> 00:00:34,730
+within the similar or
+better compression ratio.
+
+14
+00:00:34,730 --> 00:00:37,460
+It defers from snappy
+algorithm, as z
+
+15
+00:00:37,460 --> 00:00:42,050
+standard trades compression
+speed for stronger compression
+
+16
+00:00:42,050 --> 00:00:43,550
+ratios.
+
+17
+00:00:43,550 --> 00:00:45,770
+These results show
+that Z standard
+
+18
+00:00:45,770 --> 00:00:48,180
+is the best for
+compression ratio,
+
+19
+00:00:48,180 --> 00:00:52,940
+and performs very well for both
+compression and decompression.
+
+20
+00:00:52,940 --> 00:00:58,230
+The figure shows that disc size
+of our Atlas sample data set--
+
+21
+00:00:58,230 --> 00:01:02,540
+a mix of data sets used for our
+various courses and tutorials
+
+22
+00:01:02,540 --> 00:01:04,340
+in our documentation pages--
+
+23
+00:01:04,340 --> 00:01:05,870
+using various
+different compression
+
+24
+00:01:05,870 --> 00:01:08,060
+algorithms available in MongoDB.
+
+25
+00:01:08,060 --> 00:01:11,690
+In MongoDB 4.2, snappy's
+still the default compressor.
+
+26
+00:01:11,690 --> 00:01:17,040
+With Z standard zlib
+being alternative options.
+
+27
+00:01:17,040 --> 00:01:19,770
+Z standard provides
+the best compression
+
+28
+00:01:19,770 --> 00:01:24,180
+in this small data set of
+five databases with 456,000
+
+29
+00:01:24,180 --> 00:01:25,300
+documents.
+
+30
+00:01:25,300 --> 00:01:28,260
+And internal testing for
+MongoDB 4.2 Z standard
+
+31
+00:01:28,260 --> 00:01:31,020
+shows to give the best
+compression ratio compared
+
+32
+00:01:31,020 --> 00:01:35,700
+to snappy or zlib whilst
+only using a little bit more
+
+33
+00:01:35,700 --> 00:01:37,830
+of overhead than snappy.
+
+34
+00:01:37,830 --> 00:01:39,360
+There are two
+options to configure
+
+35
+00:01:39,360 --> 00:01:41,490
+the use of Z
+standard compression
+
+36
+00:01:41,490 --> 00:01:46,640
+for WiredTiger journal
+and the collections.
+
+37
+00:01:46,640 --> 00:01:48,840
+The config file
+option for collections
+
+38
+00:01:48,840 --> 00:01:53,220
+will only apply to new
+collections created after Z
+
+39
+00:01:53,220 --> 00:01:55,740
+standard is set as an option.
+
+40
+00:01:55,740 --> 00:01:57,840
+We are very excited
+about Z standard,
+
+41
+00:01:57,840 --> 00:02:00,400
+as it offers a great new
+addition to compressing
+
+42
+00:02:00,400 --> 00:02:01,980
+your data in MongoDB--
+
+43
+00:02:01,980 --> 00:02:04,170
+balancing speed of
+compression, decompression
+
+44
+00:02:04,170 --> 00:02:06,420
+vs. compression ratio.
+
+45
+00:02:06,420 --> 00:02:10,410
+But remember snappy is
+still enabled by default.
+
+46
+00:02:10,410 --> 00:02:13,500
+Zlib and Z standard
+are optional algorithms
+
+47
+00:02:13,500 --> 00:00:00,000
+that you can use for both your
+journal and your collections.
+

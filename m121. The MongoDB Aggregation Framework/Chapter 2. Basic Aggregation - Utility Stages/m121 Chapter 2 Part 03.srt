@@ -1,0 +1,497 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.320
+We also have our count stage.
+
+3
+00:00:03.320 --> 00:00:06.280
+The count stage counts
+all incoming documents.
+
+4
+00:00:06.280 --> 00:00:09.850
+The argument to count
+is the field name
+
+5
+00:00:09.850 --> 00:00:12.970
+on which we are going to
+collect that count value.
+
+6
+00:00:12.970 --> 00:00:16.540
+In a document of the results.
+
+7
+00:00:16.540 --> 00:00:19.250
+In this case, I'm going
+to filter our collection
+
+8
+00:00:19.250 --> 00:00:21.190
+so we only look
+at documents that
+
+9
+00:00:21.190 --> 00:00:23.350
+are in terrestrial planets.
+
+10
+00:00:23.350 --> 00:00:25.600
+Here we are
+specifying that match
+
+11
+00:00:25.600 --> 00:00:28.690
+where the type of the
+document will have the value
+
+12
+00:00:28.690 --> 00:00:30.730
+terrestrial planet.
+
+13
+00:00:30.730 --> 00:00:34.870
+Then, from there results from
+match which are then dispatched
+
+14
+00:00:34.870 --> 00:00:38.500
+to the project stage,
+I'm going to filter
+
+15
+00:00:38.500 --> 00:00:42.010
+only name and number
+of moons, removing
+
+16
+00:00:42.010 --> 00:00:44.480
+ID, as we've done before.
+
+17
+00:00:44.480 --> 00:00:47.860
+And from all of the documents
+coming from the pipeline
+
+18
+00:00:47.860 --> 00:00:50.330
+I'm then going to count them.
+
+19
+00:00:50.330 --> 00:00:53.810
+The count will give me
+back a result document,
+
+20
+00:00:53.810 --> 00:00:55.900
+which has a field
+that I specified
+
+21
+00:00:55.900 --> 00:00:58.270
+here, terrestrial
+planets, which contains
+
+22
+00:00:58.270 --> 00:01:01.420
+the value of number
+of documents that are
+
+23
+00:01:01.420 --> 00:01:04.670
+of type terrestrial planets.
+
+24
+00:01:04.670 --> 00:01:07.162
+Now for this particular
+pipeline here,
+
+25
+00:01:07.162 --> 00:01:08.620
+where the end result
+is going to be
+
+26
+00:01:08.620 --> 00:01:11.170
+the count of the number
+of documents, which
+
+27
+00:01:11.170 --> 00:01:13.310
+have a type of
+terrestrial planet,
+
+28
+00:01:13.310 --> 00:01:17.270
+the project stage here is a
+little bit of an annoyance.
+
+29
+00:01:17.270 --> 00:01:21.250
+It doesn't really interfere with
+the end result of the pipeline.
+
+30
+00:01:21.250 --> 00:01:25.060
+So if we would just remove
+it, and we just have a match
+
+31
+00:01:25.060 --> 00:01:26.890
+and then count,
+we can see that I
+
+32
+00:01:26.890 --> 00:01:31.210
+get exactly the same execution
+in exactly the same results,
+
+33
+00:01:31.210 --> 00:01:34.380
+having or not a project
+in between the match
+
+34
+00:01:34.380 --> 00:01:36.040
+and the count.
+
+35
+00:01:36.040 --> 00:01:39.331
+Lastly, let's look at the sort.
+
+36
+00:01:39.331 --> 00:01:42.980
+Sort needs to be supplied with
+the field we want to sort on.
+
+37
+00:01:42.980 --> 00:01:47.240
+In this case, if I'm going
+a project, name, and number
+
+38
+00:01:47.240 --> 00:01:50.060
+of moons, I can
+sort on the fields
+
+39
+00:01:50.060 --> 00:01:55.020
+that I'm collecting from
+the incoming pipeline.
+
+40
+00:01:55.020 --> 00:01:57.850
+So in this case, if I want to
+sort on the number of moons
+
+41
+00:01:57.850 --> 00:02:02.080
+descending, I'll get
+the results as expected,
+
+42
+00:02:02.080 --> 00:02:06.980
+where I get the planet
+which has more moons first,
+
+43
+00:02:06.980 --> 00:02:12.260
+and on that order to till ones
+that have absolutely no moons--
+
+44
+00:02:12.260 --> 00:02:14.480
+like sun, Mercury, and Venus--
+
+45
+00:02:14.480 --> 00:02:16.350
+poor guys.
+
+46
+00:02:16.350 --> 00:02:17.850
+An important aspect
+to refer to here
+
+47
+00:02:17.850 --> 00:02:21.140
+is that the sort
+stage is not limited
+
+48
+00:02:21.140 --> 00:02:24.090
+to just one single field.
+
+49
+00:02:24.090 --> 00:02:26.160
+You will operate on
+multiple different fields
+
+50
+00:02:26.160 --> 00:02:30.450
+in combination, as we
+would do in normal queries
+
+51
+00:02:30.450 --> 00:02:33.600
+and find operations, if you
+want to sort first on one field
+
+52
+00:02:33.600 --> 00:02:35.520
+and then on another,
+that is totally
+
+53
+00:02:35.520 --> 00:02:39.487
+possible in the aggregation
+pipeline stage as well.
+
+54
+00:02:39.487 --> 00:02:41.070
+So let's say here,
+for example, that I
+
+55
+00:02:41.070 --> 00:02:43.520
+have this different
+project where
+
+56
+00:02:43.520 --> 00:02:45.330
+I'm going to project
+as well, apart
+
+57
+00:02:45.330 --> 00:02:49.330
+from name and number of moons,
+the field has magnetic field,
+
+58
+00:02:49.330 --> 00:02:51.470
+which is a pulling field.
+
+59
+00:02:51.470 --> 00:02:53.700
+In the third stage,
+I can specify
+
+60
+00:02:53.700 --> 00:02:57.510
+that I want to sort on as
+magnetic field, descending,
+
+61
+00:02:57.510 --> 00:03:00.220
+and number of moons descending.
+
+62
+00:03:00.220 --> 00:03:03.480
+By executing this
+specific query,
+
+63
+00:03:03.480 --> 00:03:06.650
+we get a very similar
+result as before,
+
+64
+00:03:06.650 --> 00:03:10.650
+where are we going to have
+Jupiter, Saturn, Uranus, and so
+
+65
+00:03:10.650 --> 00:03:11.882
+on.
+
+66
+00:03:11.882 --> 00:03:13.590
+The only difference
+is that, for example,
+
+67
+00:03:13.590 --> 00:03:17.310
+sun and Mercury will
+come before Mars.
+
+68
+00:03:17.310 --> 00:03:18.700
+So how is that possible?
+
+69
+00:03:18.700 --> 00:03:22.410
+Well, the result is being
+sorted first on the field
+
+70
+00:03:22.410 --> 00:03:26.840
+as magnetic field
+equals true, and then
+
+71
+00:03:26.840 --> 00:03:28.410
+on the number of moons.
+
+72
+00:03:28.410 --> 00:03:30.870
+So first I'm going to
+have all the ones that
+
+73
+00:03:30.870 --> 00:03:34.260
+has magnetic field
+is equal to true.
+
+74
+00:03:34.260 --> 00:03:38.760
+And then after that I'm going
+to search on the number of moons
+
+75
+00:03:38.760 --> 00:03:40.790
+for the results.
+
+76
+00:03:40.790 --> 00:03:45.350
+Now if sort is near the
+beginning of our pipeline,
+
+77
+00:03:45.350 --> 00:03:51.260
+in place before a project, and
+unwinds in the group stage,
+
+78
+00:03:51.260 --> 00:03:53.840
+it can take
+advantage of indexes.
+
+79
+00:03:53.840 --> 00:03:58.400
+Otherwise, this sort stage will
+perform an in-memory sort, ,
+
+80
+00:03:58.400 --> 00:04:00.710
+which will greatly increase
+the memory consumption
+
+81
+00:04:00.710 --> 00:04:02.300
+of our server.
+
+82
+00:04:02.300 --> 00:04:04.610
+Sort operations within
+that vision pipeline
+
+83
+00:04:04.610 --> 00:04:09.110
+are limited to 100
+megabytes of RAM by default.
+
+84
+00:04:09.110 --> 00:04:12.420
+To allow handling
+larger data sets,
+
+85
+00:04:12.420 --> 00:04:16.820
+we need to allow DiskUse, which
+is an aggregation pipeline
+
+86
+00:04:16.820 --> 00:04:21.890
+option that we can provide
+to the aggregate function.
+
+87
+00:04:21.890 --> 00:04:24.540
+By doing so, we
+will be performing
+
+88
+00:04:24.540 --> 00:04:27.830
+the excess of 100
+megabytes of memory
+
+89
+00:04:27.830 --> 00:04:32.630
+required to do a sort using
+disk to help us sort out
+
+90
+00:04:32.630 --> 00:04:34.320
+the results.
+
+91
+00:04:34.320 --> 00:04:38.750
+So in short, $sort,
+$skip, $limits, and $count
+
+92
+00:04:38.750 --> 00:04:41.410
+are functionally equivalent
+to the similar named cursor
+
+93
+00:04:41.410 --> 00:04:42.770
+methods.
+
+94
+00:04:42.770 --> 00:04:44.600
+So we can take
+advantage of indexes
+
+95
+00:04:44.600 --> 00:04:47.360
+if it's near the
+beginning of our pipeline,
+
+96
+00:04:47.360 --> 00:04:52.250
+and before a project
+group or unwind stages.
+
+97
+00:04:52.250 --> 00:04:54.710
+By default, the $source
+will only take up
+
+98
+00:04:54.710 --> 00:04:56.810
+to 100 megabytes of RAM.
+
+99
+00:04:56.810 --> 00:05:00.050
+For more than that, we
+will need to provide
+
+100
+00:05:00.050 --> 00:05:04.880
+the allowDiskUse option as
+equal true to our pipeline.
+
+101
+00:05:04.880 --> 00:05:07.400
+If we do not do
+so, the operation
+
+102
+00:05:07.400 --> 00:05:09.760
+will be terminated
+on the server.
+
+103
+00:05:09.760 --> 00:05:13.670
+And that's all we have for
+you in cursor-like stages
+
+104
+00:05:13.670 --> 00:05:16.690
+of the hour
+aggregation pipeline.

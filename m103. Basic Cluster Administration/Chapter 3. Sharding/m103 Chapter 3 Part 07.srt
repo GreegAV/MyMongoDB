@@ -1,0 +1,426 @@
+1
+00:00:00,000 --> 00:00:00,570
+
+
+2
+00:00:00,570 --> 00:00:03,630
+So far, we've only talked
+about the default shard key.
+
+3
+00:00:03,630 --> 00:00:05,970
+However, there's an
+additional type of shard key
+
+4
+00:00:05,970 --> 00:00:08,070
+that is useful for
+certain scenarios.
+
+5
+00:00:08,070 --> 00:00:10,080
+That is the hashed shard key.
+
+6
+00:00:10,080 --> 00:00:13,035
+That is a shard key where the
+underlying index is hashed.
+
+7
+00:00:13,035 --> 00:00:15,620
+
+
+8
+00:00:15,620 --> 00:00:19,370
+Previously, if we had a document
+where, let's say x was 3
+
+9
+00:00:19,370 --> 00:00:21,650
+and the shard key
+was on x, MongoDB
+
+10
+00:00:21,650 --> 00:00:23,450
+would place it into
+the following chunk
+
+11
+00:00:23,450 --> 00:00:28,600
+where the value of 3 falls
+into the trunk range.
+
+12
+00:00:28,600 --> 00:00:33,460
+With a hashed shard key, MongoDB
+first hashes the value 3, then
+
+13
+00:00:33,460 --> 00:00:35,560
+uses that hash value
+to decide which
+
+14
+00:00:35,560 --> 00:00:38,230
+chunk to place the document in.
+
+15
+00:00:38,230 --> 00:00:40,280
+The hash shard key does
+not mean that MongoDB
+
+16
+00:00:40,280 --> 00:00:43,000
+stores your shard key
+values with hashes.
+
+17
+00:00:43,000 --> 00:00:45,340
+The actual data
+remains untouched.
+
+18
+00:00:45,340 --> 00:00:48,310
+Instead, the underlying index
+backing the shard key itself
+
+19
+00:00:48,310 --> 00:00:49,240
+is hashed.
+
+20
+00:00:49,240 --> 00:00:51,280
+And MongoDB uses
+the hashed index
+
+21
+00:00:51,280 --> 00:00:53,710
+for partitioning your
+data, so you end up
+
+22
+00:00:53,710 --> 00:00:55,810
+with a more even
+distribution of your data
+
+23
+00:00:55,810 --> 00:00:58,880
+across the sharded cluster.
+
+24
+00:00:58,880 --> 00:01:01,516
+So when would you want to
+use a hashed shard key?
+
+25
+00:01:01,516 --> 00:01:02,890
+In the previous
+lesson, we talked
+
+26
+00:01:02,890 --> 00:01:06,940
+about monotonically increasing
+or decreasing shard key fields,
+
+27
+00:01:06,940 --> 00:01:09,430
+like dates or time stamps.
+
+28
+00:01:09,430 --> 00:01:10,960
+Because these values
+are constantly
+
+29
+00:01:10,960 --> 00:01:13,180
+increasing or decreasing
+in numeric progression,
+
+30
+00:01:13,180 --> 00:01:15,370
+you get hot spotting.
+
+31
+00:01:15,370 --> 00:01:17,140
+But the output from
+the hash function
+
+32
+00:01:17,140 --> 00:01:19,180
+can change drastically
+between values
+
+33
+00:01:19,180 --> 00:01:21,650
+that are, themselves, similar.
+
+34
+00:01:21,650 --> 00:01:23,530
+For example, if I have
+two documents where
+
+35
+00:01:23,530 --> 00:01:26,410
+the shard key values
+are two and 3,
+
+36
+00:01:26,410 --> 00:01:29,200
+the hashing function might
+output the shard key values
+
+37
+00:01:29,200 --> 00:01:31,540
+as 609,000.
+
+38
+00:01:31,540 --> 00:01:35,350
+Apply that same logic to a time
+stamp, two numerically adjacent
+
+39
+00:01:35,350 --> 00:01:38,406
+timestamps would be hashed
+to very different values
+
+40
+00:01:38,406 --> 00:01:40,030
+and are therefore
+more likely to end up
+
+41
+00:01:40,030 --> 00:01:42,940
+on different chunks
+and different shards.
+
+42
+00:01:42,940 --> 00:01:46,150
+Now there are a few drawbacks
+to using a hashed shard key.
+
+43
+00:01:46,150 --> 00:01:48,370
+Since everything is
+hashed now, documents
+
+44
+00:01:48,370 --> 00:01:49,990
+within a range of
+shard key values
+
+45
+00:01:49,990 --> 00:01:52,000
+are likely to be
+completely distributed
+
+46
+00:01:52,000 --> 00:01:53,710
+across the sharded cluster.
+
+47
+00:01:53,710 --> 00:01:56,320
+So ranged queries on
+the shard key field
+
+48
+00:01:56,320 --> 00:01:58,480
+will now have to hit
+multiple shards, instead of
+
+49
+00:01:58,480 --> 00:01:59,930
+a single shard.
+
+50
+00:01:59,930 --> 00:02:02,170
+Comparatively, a
+non-hash shard key
+
+51
+00:02:02,170 --> 00:02:03,970
+is more likely to
+produce documents
+
+52
+00:02:03,970 --> 00:02:06,310
+that are on a single
+chunk in a single shard,
+
+53
+00:02:06,310 --> 00:02:08,650
+meaning ranged queries are
+more likely to be targeted
+
+54
+00:02:08,650 --> 00:02:11,240
+with a non-hashed shard key.
+
+55
+00:02:11,240 --> 00:02:13,240
+You're going to lose the
+ability to use features
+
+56
+00:02:13,240 --> 00:02:15,610
+like zone sharding for the
+purpose of geographically
+
+57
+00:02:15,610 --> 00:02:17,230
+isolated reads and writes.
+
+58
+00:02:17,230 --> 00:02:19,270
+Again, if everything
+is randomly distributed
+
+59
+00:02:19,270 --> 00:02:20,800
+across every shard
+in the cluster,
+
+60
+00:02:20,800 --> 00:02:22,690
+there's no real
+way to isolate data
+
+61
+00:02:22,690 --> 00:02:25,660
+into groupings like geography.
+
+62
+00:02:25,660 --> 00:02:28,060
+You can't create hashed
+compound indexes.
+
+63
+00:02:28,060 --> 00:02:31,150
+You can only hash a
+single field shard key.
+
+64
+00:02:31,150 --> 00:02:32,830
+That plays into
+why these are best
+
+65
+00:02:32,830 --> 00:02:36,730
+used for monotonically changing
+single fields, like timestamps.
+
+66
+00:02:36,730 --> 00:02:42,400
+Also, the value in the hashed
+index must not be an array.
+
+67
+00:02:42,400 --> 00:02:44,800
+Finally, because the index
+is using hashed values,
+
+68
+00:02:44,800 --> 00:02:46,300
+you're going to
+lose the performance
+
+69
+00:02:46,300 --> 00:02:50,740
+an index can provide for sorting
+documents on the shard key.
+
+70
+00:02:50,740 --> 00:02:53,740
+To create a hashed
+shard, you're going
+
+71
+00:02:53,740 --> 00:02:56,440
+to start by enabling sharding
+on the database using
+
+72
+00:02:56,440 --> 00:02:57,869
+sh.enablesharding.
+
+73
+00:02:57,869 --> 00:02:59,410
+Remember, this does
+not automatically
+
+74
+00:02:59,410 --> 00:03:01,660
+shard your collections.
+
+75
+00:03:01,660 --> 00:03:03,460
+You're still going
+to create an index,
+
+76
+00:03:03,460 --> 00:03:05,500
+but now you're going
+to specify that it
+
+77
+00:03:05,500 --> 00:03:07,780
+is a hashed index
+instead of specifying
+
+78
+00:03:07,780 --> 00:03:12,380
+negative 1 or 1 as the
+value of the indexed field.
+
+79
+00:03:12,380 --> 00:03:14,860
+Finally, you're going to
+use sh.shardcollection,
+
+80
+00:03:14,860 --> 00:03:18,010
+still specifying the
+database and collection,
+
+81
+00:03:18,010 --> 00:03:22,060
+but you're going to specify
+hashed for the shard key value.
+
+82
+00:03:22,060 --> 00:03:25,690
+To recap, hashed shard
+keys provide more even
+
+83
+00:03:25,690 --> 00:03:28,180
+distribution of data of
+a monotonically changing
+
+84
+00:03:28,180 --> 00:03:29,580
+shard key field.
+
+85
+00:03:29,580 --> 00:03:33,160
+Hashed shard key's do not
+support fast sorts, targeted
+
+86
+00:03:33,160 --> 00:03:35,560
+queries on ranges
+of shard key values,
+
+87
+00:03:35,560 --> 00:03:38,140
+or geographically
+isolated workloads.
+
+88
+00:03:38,140 --> 00:03:40,450
+Finally, hashed indexes
+are single fields
+
+89
+00:03:40,450 --> 00:00:00,000
+and do not support arrays.
+

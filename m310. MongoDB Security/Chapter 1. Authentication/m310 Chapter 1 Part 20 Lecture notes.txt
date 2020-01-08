@@ -1,0 +1,5 @@
+In this video Kirby mentions that you might encounter MONGODB-CR users on a 3.0+ deployment of MongoDB. There are two ways this can happen.
+
+If a 2.6 system (with existing user data) was upgraded to a 3.0+ system via the replacement of the mongod binary. In this scenario all old and new users will use MONGODB-CR until db.adminCommand({authSchemaUpgrade: 1}) is ran.
+If a new 3.0+ system imports user data from a 2.6 or older system. In this senario all old users will use MONGODB-CR and all new users will use SCRAM-SHA-1.
+It should also be mentioned that running db.adminCommand({authSchemaUpgrade: 1}) is a destructive process. That is, once you run the authSchemaUpgrade, you cannot get back the original MONGODB-CR credentials. Once you've upgraded to 3.0+, and run this command, you can't go back to 2.6.

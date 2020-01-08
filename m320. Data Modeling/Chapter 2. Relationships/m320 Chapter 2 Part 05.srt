@@ -1,0 +1,265 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.420
+In previous lessons, we used the
+word zillions, and introduced
+
+3
+00:00:03.420 --> 00:00:05.220
+a graphical notation
+for representing
+
+4
+00:00:05.220 --> 00:00:07.800
+the one-to-zillions
+relationships.
+
+5
+00:00:07.800 --> 00:00:09.780
+We extended the
+crow's foot notation
+
+6
+00:00:09.780 --> 00:00:12.360
+by adding fingers the foot
+in order to easily see
+
+7
+00:00:12.360 --> 00:00:14.430
+those zillions sides.
+
+8
+00:00:14.430 --> 00:00:16.020
+We should also use
+the notation used
+
+9
+00:00:16.020 --> 00:00:18.840
+in this course
+for cardinalities.
+
+10
+00:00:18.840 --> 00:00:21.260
+One thing is to identify
+a relationship as one
+
+11
+00:00:21.260 --> 00:00:24.210
+to zillions, but better
+still if you can quantify
+
+12
+00:00:24.210 --> 00:00:26.470
+that same relationship.
+
+13
+00:00:26.470 --> 00:00:29.220
+What is the minimum number
+of associated document?
+
+14
+00:00:29.220 --> 00:00:32.250
+The most likely number
+and the maximum number.
+
+15
+00:00:32.250 --> 00:00:34.230
+The maximum number is
+what we care the most
+
+16
+00:00:34.230 --> 00:00:35.940
+about this relationship.
+
+17
+00:00:35.940 --> 00:00:39.190
+Zillions means something is
+humongous, out of proportion,
+
+18
+00:00:39.190 --> 00:00:41.230
+so watch out for it.
+
+19
+00:00:41.230 --> 00:00:43.110
+The one-to-zillions
+relationship is not
+
+20
+00:00:43.110 --> 00:00:45.150
+that different
+relationship, per se.
+
+21
+00:00:45.150 --> 00:00:48.390
+It is a subcase of the
+one-to-many relationship.
+
+22
+00:00:48.390 --> 00:00:50.280
+If we have a one to
+many relationship
+
+23
+00:00:50.280 --> 00:00:53.310
+and the many's identified
+as 10,000 or more,
+
+24
+00:00:53.310 --> 00:00:56.190
+we call that relationship
+one to zillion.
+
+25
+00:00:56.190 --> 00:00:58.620
+This means we need to be
+mindful of this relationship
+
+26
+00:00:58.620 --> 00:01:01.940
+every place we use
+it in the code.
+
+27
+00:01:01.940 --> 00:01:03.950
+The last thing you want
+the application to do
+
+28
+00:01:03.950 --> 00:01:06.800
+is to retrieve a document
+and its zillions associated
+
+29
+00:01:06.800 --> 00:01:09.830
+documents, then process
+the complete results set,
+
+30
+00:01:09.830 --> 00:01:12.560
+unless this you like
+long coffee breaks.
+
+31
+00:01:12.560 --> 00:01:15.170
+So comment those sections
+of the code with directives
+
+32
+00:01:15.170 --> 00:01:19.880
+on how to handle or reduce the
+result set that comes back.
+
+33
+00:01:19.880 --> 00:01:21.830
+Given the cardinality
+of these relationships
+
+34
+00:01:21.830 --> 00:01:24.200
+and the pressure on
+computational resources
+
+35
+00:01:24.200 --> 00:01:27.020
+to process them, you
+need to be on the lookout
+
+36
+00:01:27.020 --> 00:01:29.390
+for very large arrays
+of subdocuments
+
+37
+00:01:29.390 --> 00:01:32.060
+or unbound arrays of references.
+
+38
+00:01:32.060 --> 00:01:33.650
+Looking back at
+the representation
+
+39
+00:01:33.650 --> 00:01:35.990
+for the one-to-many
+relationships,
+
+40
+00:01:35.990 --> 00:01:37.700
+we have a single one left--
+
+41
+00:01:37.700 --> 00:01:40.220
+
+
+42
+00:01:40.220 --> 00:01:42.740
+the representation where
+we referenced the document
+
+43
+00:01:42.740 --> 00:01:44.450
+on the one side of
+the relationship
+
+44
+00:01:44.450 --> 00:01:47.450
+from the many or zillion side.
+
+45
+00:01:47.450 --> 00:01:50.595
+As you model this relationship,
+make an effort to quantify it.
+
+46
+00:01:50.595 --> 00:01:52.220
+This will become
+important, so that you
+
+47
+00:01:52.220 --> 00:01:54.590
+can understand the impact
+of the maximum value
+
+48
+00:01:54.590 --> 00:01:56.870
+on your resources.
+
+49
+00:01:56.870 --> 00:01:59.550
+To recap the one-to-zillions
+relationship,
+
+50
+00:01:59.550 --> 00:02:03.545
+it is a particular case of
+the one-to-many relationship.
+
+51
+00:02:03.545 --> 00:02:04.920
+The only available
+representation
+
+52
+00:02:04.920 --> 00:02:06.570
+is to reference a
+document on the one
+
+53
+00:02:06.570 --> 00:02:10.020
+side of the relationship
+from the zillion side.
+
+54
+00:02:10.020 --> 00:02:13.200
+And finally, pay extra
+attention to queries and code
+
+55
+00:02:13.200 --> 00:02:16.430
+that handles zillions
+of documents.

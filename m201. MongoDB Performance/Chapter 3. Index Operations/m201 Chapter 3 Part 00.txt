@@ -1,0 +1,141 @@
+In this lesson, we're going to talk about building indexes.
+
+Specifically, we're going to spend some time talking about the trade offs between foreground and background indexes.
+
+We'll also talk about how we can use background indexes, and under what conditions we would do so.
+
+And finally, we're going to look at currentOp and killOp, and see how they relate to building indexes.
+
+Now we want to give some special consideration to the process of creating an index for a few key reasons.
+
+Most of what we'll cover here is of primary concern in production MongoDB deployments, because you'll want to ensure minimal impact on your application users.
+
+MongoDB provides the option of creating an index in either the foreground or the background.
+
+Foreground indexes are very fast, but they block operations to the database.
+
+Specifically, an index built in the foreground will block all incoming operations to the database containing the collection on which you're building the index.
+
+This means that the database that holds the collection is not available to application reads or writes until the index build is complete.
+
+This is unacceptable for production MongoDB deployments, except possibly during a maintenance window.
+
+As an alternative, MongoDB provides the option of a background index build.
+
+The trade off is that, while background indexes don't block operations, they take longer to complete.
+
+How much longer is going to depend on your read write load in the foreground, as well as other factors, like whether the index will fit entirely into memory.
+
+Both background and foreground indexes are going to impose load on your database.
+
+Building an index in the background will still have some impact on query performance while the index is being built.
+
+In a system with sufficient resources, a background index is probably preferrable if you don't want to impose a maintenance window.
+
+We're going to use a new restaurants dataset for this lesson.
+
+You can import it here with the mongoimport command.
+
+We're going to pretend that this dataset is used for a production application where we need to add a new feature.
+
+This is going to give us an example of the consideration that you're going to want to take into account when building an index in production.
+
+This new feature will require us to build a new compound index on this dataset.
+
+Here I'm using MongoDB Compass to take a look at our new restaurants collection.
+
+Here's the schema view, where I can look at all of the different fields of a sampling of our documents.
+
+I have the ability to look at the cardinality of the different fields, as well as drill down into different embedded documents and see what kind of values these fields hold.
+
+Briefly, let's take a look at an example document in the document view inside of Compass.
+
+Here, we can see that this data set describes restaurants in the United States.
+
+Here is a restaurant called Redhill Station that serves Mediterranean food, has 3.4 four stars, and it's in North Carolina.
+
+Suppose our new feature is going to require us to build a compound index so that we can support queries where we sort by name, where we specify a particular cuisine, and we specify a range of zip codes.
+
+Given the number of documents in this collection, we think that this is going to take a decent amount of time to create this index.
+
+How long is going to depend on the cardinality of the fields, as well as how much load is on the database server from other operations.
+
+Here's an overview of the requirements that we're going to have for adding this new index.
+
+We want to make sure that we add a new compound index, which we think is going to take some time given the number of documents in our collection.
+
+We really don't want to schedule a maintenance window.
+
+So we want to do this with no downtime.
+
+And we think that our new index will fit into RAM.
+
+A background index build is a great option here.
+
+Let's go ahead and do it from the Mongo shell.
+
+To create our index in the background, here's the command that we'll issue.
+
+You can see, here's the index that we talked about building.
+
+But I've also added this special argument, where I'm saying that background is going to be true.
+
+By default, background is set to false, so that's why we're using the special option.
+
+We can use this approach to build indexes in the background on a standalone MongoDB, or on the primary or secondaries in our replica set.
+
+Now, background index operations run in the background, so that other database operations can run while we're creating the index.
+
+However, you'll see that the Mongo shell is still blocked until the index build is complete.
+
+We'll know that the index build has completed, when the connection is no longer blocked and we see an output indicating the outcome of our build operation.
+
+To continue issuing commands to the database, we're going to open up another mongo shell, and we can do that right now.
+
+So our build has been running for a bit, and you might be wondering whether we can check in on how our build process is coming along.
+
+And we absolutely can.
+
+To see the status of our build operation, we can use the db.currentOp command from the Mongo shell.
+
+We can take this command a bit further and specify a filter to see what specific current operations we want to look at.
+
+Here I'm using the OR operator to look for commands that are creating indexes, or if we're inserting documents into the system.indexes collection.
+
+And here you can see the operation for building our index.
+
+Here we can see that we're creating indexes on the restaurants collection, and here the keys that specify the index that we're creating.
+
+Notice this field here, opid, and this random looking number.
+
+This is a unique identifier for this specific operation.
+
+And this is the ID that we need if for some reason we want to kill the index build before it finishes.
+
+We can do this using db.killOp.
+
+And here's the kill up command.
+
+It takes a single parameter which is that op ID number that we just looked at.
+
+Here I'm just saying one, two, three, four, five.
+
+But in reality, if we wanted to really kill an operation, we would use that opid.
+
+And this will kill the operation.
+
+We're going to take deeper dives into currentOp and killOp in other courses, so please see those lessons for more detail on how to maximize the value of these methods for your purposes.
+
+And here after a little bit of waiting, we can see that our index creation completed.
+
+We know this because we got a response indicating how many indexes there were before, and how many there are now after our build.
+
+Let's recap what we've learned.
+
+So in this lesson, we discussed the trade offs between foreground and background index builds.
+
+We looked at under what circumstances background indexes are better over foreground indexes.
+
+We looked at under what circumstances background index builds are better than foreground index builds.
+
+And finally, we touched on the currentoOp and killOp methods as tools that you should be aware of as you expand your skills of understanding performance concerns for MongoDB deployments, and how to evaluate and address performance problems.

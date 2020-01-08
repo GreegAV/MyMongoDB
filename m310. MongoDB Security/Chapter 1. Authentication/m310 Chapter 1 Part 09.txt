@@ -1,0 +1,151 @@
+Let's talk about LDAP authentication with the Enterprise version of MongoDB.
+
+LDAP, the Lightweight Directory Access Protocol, is a direct use service protocol commonly used within companies.
+
+With LDAP authentication support, users can authenticate to MongoDB using their LDAP credentials.
+
+MongoDB communicates to an LDAP server via the saslauthd proxy service.
+
+We'll configure saslauthd such that it can connect to our LDAP server.
+
+And that way we'll connect our mongod to the sasl via Unix socket.
+
+It's important to note that MongoDB uses the sasl plane mechanism for communicating with the clients, thus sending and receiving data over plain text.
+
+You can configure how saslauthd communicates to the LDAP server, but by default this will also communicate via plain text.
+
+This means it's in our best interest to run this set up on a trusted channel such as a connection that's encrypted with TLS or over our trusted wired network.
+
+I'm going to assume you already have MongoDB Enterprise installed and have an LDAP server up and running.
+
+I'd like to point out that my LDAP server in mongod will be running on the same machine for this demonstration.
+
+I'm currently SSH'd into an Ubuntu machine, so keep in mind that some of my commands will be slightly different from yours depending on your flavor of Linux.
+
+Let's go ahead and install saslauthd.
+
+Here I'm running apt-get.
+
+And I'm installing saslauth2-bin.
+
+And we're going to say yes.
+
+And this will install saslauthd.
+
+Cool.
+
+Now that that's been installed, we can go ahead and configure saslauthd to talk to LDAP.
+
+Here I'm using vim to modify my saslauthd configuration.
+
+And I'm running vim under sudo.
+
+And that's because we're modifying something that's in the etc directory.
+
+And from here, we need to go ahead and say that we want start to be yes.
+
+And after that, we want to change this mechanism from pam to LDAP.
+
+Awesome.
+
+Now let's go out and save this file.
+
+Now that saslauthd is configured to talk to LDAP, we need to go ahead and specify some specifics about our setup.
+
+Here I'm going to go ahead and create a file called saslauthd.config underneath etc.
+
+And I'm going to, again, need to use sudo because it's under the etc directory.
+
+So in here, we can go ahead and configure some stuff.
+
+So since my LDAP server is loading on a local machine, it's local host, answering on the default port.
+
+And my search space, I'm going to specify it as mongodb.com.
+
+And then for my actual LDAP filter, my users are going to be filtered by UID.
+
+We can go ahead and save this.
+
+And now we can go ahead and start the saslauthd service.
+
+And here's the command to do so.
+
+And now the daemon's been started.
+
+Now that we have our configuration all set up, we can go ahead and do the next thing, which is change the permissions on this folder.
+
+And I had to run sudo, by the way, because this is another special folder.
+
+And this folder is special because there's this file called mux.
+
+And this mux is actually a Unix socket.
+
+And this is the socket that will allow mongod to communicate with saslauthd, which will then forward our messages over to our LDAP server.
+
+So we'll go ahead and run chmod on this folder so that mongod can actually access this mux.
+
+Awesome.
+
+Now that we have changed permissions, we can go ahead and verify that saslauthd can communicate with our LDAP server by running testsaslauthd.
+
+And here I'm going to run saslauthd.
+
+And on my LDAP server, I have a user named Kirby whose password is LDAP.
+
+And then I'm specifying that mux.
+
+And we get, OK, success.
+
+Awesome.
+
+Now that we verified that saslauthd can talk to our LDAP server, let's go ahead and configure MongoDB to talk to this saslauthd.
+
+Now that we have everything configured, we can go ahead and get MongoDB up and running with LDAP authentication enabled.
+
+Here's the command to do so.
+
+We're going to go ahead and enable authorization.
+
+We're going to go ahead and set a parameter.
+
+We can set the authentication mechanism to plain.
+
+Going to set saslauthdPath to the mux we've been using.
+
+And then, of course, dpath, logpath, and fork.
+
+Awesome.
+
+Now that our server is up and running, go ahead and connect to it.
+
+Now we should be able to run show dbs, and get an error.
+
+And we do, as expected.
+
+And now we can go ahead and take advantage of the localhost exception and create our first user.
+
+Here I'm going to use the external database because LDAP is an external authentication mechanism.
+
+And I'm going to create a user called Kirby, because that's the user we were using.
+
+And he's going to be a root on the admin database.
+
+Sweet.
+
+User's been created.
+
+And now we can go ahead and try and authenticate.
+
+I'm first going to try with a password that we know is incorrect.
+
+We know that my passwords LDAP, but I'm going to use the password LDAP2.
+
+And we get authentication failed.
+
+And now I'm going to run it again, but with my correct password being LDAP.
+
+And we see that it ran successfully.
+
+Awesome.
+
+We now have a MongoDB Enterprise server up and running with LDAP authentication enabled.

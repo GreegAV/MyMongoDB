@@ -1,0 +1,147 @@
+Now let's begin to explore some basic CRUD operations concepts.
+
+In MongoDB, we typically talk about create operations as inserting documents, or simply inserts.
+
+Let's look at how to do this with Compass.
+
+So here I am connected to the free tier Atlas cluster I created.
+
+Again, this is a sandbox that's perfect for developing a proof of concept or the type of demonstration and testing I'm doing in this course.
+
+Please follow along in your own cluster.
+
+We're going to create some data in this lesson.
+
+First, I'd like to create a few simple movie documents.
+
+These will mostly be throwaway.
+
+So I'm going to put them in a collection called moviesScratch.
+
+Using the Compass database view, I can create a collection.
+
+If I click on the video database, I can view the collections this database contains.
+
+Note, that the moviesDetails collection we already created is here.
+
+If I want to create a second collection by clicking the Create Collection button.
+
+I name my collection and create it.
+
+If I click through to this collection, I see that it currently has zero documents.
+
+But I can create one by clicking the Insert Document button.
+
+Let's create a document with the title Rocky, the year 1976.
+
+And we'll even supply the Internet Movie Database ID, or IMDB ID of tt0075148.
+
+The Compass UI enables me to tab through the keys and values, so entering this data is actually pretty quick.
+
+Now for the year, I need to change the value type to integer, more specifically Int32.
+
+Now we can click Insert, and we see that this document is now in the collection.
+
+Collection has a total document count of one document.
+
+Let's add another-- title Creed, year 2015.
+
+And for IMDB, the identifier is tt3076658.
+
+Now, I can go back in and edit a document if I need to.
+
+In this case, I forgot to change the type of the year to Int32.
+
+So if I click Edit, I'm right back where I was and can change the value type for year.
+
+I click Update, and my document is updated.
+
+We can perform exactly the same operation in the Mongo shell.
+
+To do that, we'll need to learn our first method in the MongoDB query language.
+
+That method is insertOne.
+
+insertOne is a method on the collection class in MongoDB.
+
+To use it, we need to first specify which database to use.
+
+And we'll use the video database.
+
+Now you see what happened here is that when I first attempted to use the video database, I got a network error.
+
+What happened here is that because I left the shell inactive, it had terminated the connection.
+
+So when I first tried to issue a command that requires a network connection, I get an error.
+
+But the shell also automatically reconnects to the cluster.
+
+So here, where I attempted to use video for a second time, I was successful.
+
+If I show collections, we can see that I have both my moviesDetails collection as well as moviesScratch.
+
+Now let's use insertOne to create another movie document in the moviesScratch collection.
+
+I'm already using the video database, so db refers to the video database.
+
+If I type db.movies, then I'm specifying the full name space for the collection.
+
+And as I said, insertOne is a method on the collection class, so I can call it like this.
+
+Here we'll use insertOne to create yet another document in the moviesScratch collection.
+
+So db.moviesScratch insertOne and we pass it the document we wish to insert.
+
+The response from calling this method is itself a document.
+
+acknowledge true means that we were successful in making the insert.
+
+And note that the unique identifier for this document as created by MongoDB is provided to us as well.
+
+Now, insertOne creates a document in the collection we specify.
+
+This method will also create a collection if the document did not already exist.
+
+Now, let's do a bit of experimentation.
+
+Having inserted the document, we can see in the documents view of Compass that this ID value was created in the document for us.
+
+Here it is, 5956a ba0 at the end, 5956a ba0 at the end.
+
+All documents in MongoDB must contain an underscore ID field.
+
+This is the unique identifier for a given document within a collection.
+
+Therefore, all underscore ID values within a single collection are unique.
+
+If we don't supply an underscore ID, MongoDB or the client we're using will create one for us, as we saw happen here.
+
+If an idea is created for us, it will be of the type object ID.
+
+Due to the way they are created, object IDs are guaranteed to be unique for a given collection and monotonically increasing.
+
+We can also insert a document and provide the ID value ourselves.
+
+Let's do an example of that.
+
+Going back to the shell, rather than let MongoDB create the underscore ID value for us, we'll supply one.
+
+Here, I'm simply going to use the IMDB value for this document.
+
+And I'm going to leave everything else the same, even this field, even the IMDB field for reasons that I think will become clear a little bit later.
+
+If I hit Enter, we see that, again, we get an acknowledgement that the insert was successful.
+
+And we also see that the inserted ID is the one that we supplied rather than one that was automatically created.
+
+Going back to our Compass interface, if we refresh the collection, we can see that we have two documents that have exactly the same data in them but with different underscore ID values.
+
+In practice, you wouldn't actually have two different documents that contain the same data but simply had different underscored values.
+
+And in practice, you'd want to make sure that your underscore ID values were of the same form in a given collection.
+
+So you wouldn't want to have strings as the underscore ID value for some of your documents and object IDs as the underscore ID value for others.
+
+Now in this lesson, we've looked at how to insert documents into MongoDB one document at a time and explored how to do this both in Compass and the Mongo shell.
+
+In another lesson, we'll look at how to do bulk inserts in MongoDB using insertMany.

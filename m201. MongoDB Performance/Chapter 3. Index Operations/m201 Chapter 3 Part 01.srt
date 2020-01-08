@@ -1,0 +1,436 @@
+
+1
+00:00:00.000 --> 00:00:00.170
+
+
+2
+00:00:00.170 --> 00:00:02.499
+In this lesson, we're going
+to talk about query plans.
+
+3
+00:00:02.499 --> 00:00:04.040
+By the end of this
+lesson, you should
+
+4
+00:00:04.040 --> 00:00:08.000
+be familiar with
+what query plans are,
+
+5
+00:00:08.000 --> 00:00:11.120
+how the query optimizer
+works with them,
+
+6
+00:00:11.120 --> 00:00:13.220
+and how they're cashed.
+
+7
+00:00:13.220 --> 00:00:15.704
+Let's go ahead and talk
+about what a query plan is.
+
+8
+00:00:15.704 --> 00:00:17.120
+I think the best
+way to illustrate
+
+9
+00:00:17.120 --> 00:00:19.040
+this is with an example.
+
+10
+00:00:19.040 --> 00:00:21.200
+When a query comes
+into the database,
+
+11
+00:00:21.200 --> 00:00:23.250
+a query plan is formed.
+
+12
+00:00:23.250 --> 00:00:26.820
+Which is a series of stages
+that feed into one another.
+
+13
+00:00:26.820 --> 00:00:30.080
+So in the case of this
+query, for this given index,
+
+14
+00:00:30.080 --> 00:00:33.230
+we'd expect the query
+plan to look like this.
+
+15
+00:00:33.230 --> 00:00:35.800
+Since we have an index
+on zip code and cuisine,
+
+16
+00:00:35.800 --> 00:00:38.600
+we're able to fetch the record
+IDs of the documents that
+
+17
+00:00:38.600 --> 00:00:40.910
+meet our query predicate.
+
+18
+00:00:40.910 --> 00:00:45.122
+From there, those record IDs are
+passed up to the fetch stage.
+
+19
+00:00:45.122 --> 00:00:46.580
+This is where the
+storage engine is
+
+20
+00:00:46.580 --> 00:00:49.225
+going to convert the
+record IDs into documents.
+
+21
+00:00:49.225 --> 00:00:50.600
+And then those
+documents are then
+
+22
+00:00:50.600 --> 00:00:53.660
+passed up to the sort stage,
+where an in-memory sort will
+
+23
+00:00:53.660 --> 00:00:55.860
+be performed on them.
+
+24
+00:00:55.860 --> 00:00:58.200
+This is the only
+reasonable query plan
+
+25
+00:00:58.200 --> 00:01:01.440
+for this query on this index.
+
+26
+00:01:01.440 --> 00:01:04.890
+But for a given query, we can
+have many different query plans
+
+27
+00:01:04.890 --> 00:01:07.270
+based on what indexes
+are available.
+
+28
+00:01:07.270 --> 00:01:10.890
+So if we have an index like
+this, on a cuisine and stars,
+
+29
+00:01:10.890 --> 00:01:13.440
+this could prevent
+an in-memory sort.
+
+30
+00:01:13.440 --> 00:01:15.510
+So we'd have a query
+plan like this.
+
+31
+00:01:15.510 --> 00:01:16.980
+Here we'd do an index scan.
+
+32
+00:01:16.980 --> 00:01:21.480
+Where we fetch the record IDs
+of our documents in store order.
+
+33
+00:01:21.480 --> 00:01:23.130
+We then pass this up
+to the fetch stage
+
+34
+00:01:23.130 --> 00:01:26.370
+where they're converted into
+documents and then returned.
+
+35
+00:01:26.370 --> 00:01:28.500
+So the available
+indexes will determine
+
+36
+00:01:28.500 --> 00:01:33.660
+what possible query plans we
+can use to satisfy our query.
+
+37
+00:01:33.660 --> 00:01:35.880
+Now that we know
+what a query plan is,
+
+38
+00:01:35.880 --> 00:01:39.190
+let's talk a little bit
+about how they're chosen.
+
+39
+00:01:39.190 --> 00:01:41.170
+When a fresh query
+comes into the database
+
+40
+00:01:41.170 --> 00:01:42.790
+for the first
+time, the server is
+
+41
+00:01:42.790 --> 00:01:45.130
+going to look at all
+the available indexes
+
+42
+00:01:45.130 --> 00:01:46.750
+on the collection.
+
+43
+00:01:46.750 --> 00:01:49.600
+From there, it will
+identify which indexes are
+
+44
+00:01:49.600 --> 00:01:51.910
+viable to satisfy the query.
+
+45
+00:01:51.910 --> 00:01:54.730
+We call these candidate indexes.
+
+46
+00:01:54.730 --> 00:01:57.520
+From these candidate
+indexes, the query optimizer
+
+47
+00:01:57.520 --> 00:02:00.520
+can generate candidate plans.
+
+48
+00:02:00.520 --> 00:02:03.160
+Now MongoDB has what is
+called an empirical query
+
+49
+00:02:03.160 --> 00:02:05.410
+planner, which means that
+there is going to be a trial
+
+50
+00:02:05.410 --> 00:02:07.510
+period, where each of
+the candidate plans
+
+51
+00:02:07.510 --> 00:02:10.539
+is executed over a
+short period of time.
+
+52
+00:02:10.539 --> 00:02:14.210
+And the planner will then see
+which plan performed best.
+
+53
+00:02:14.210 --> 00:02:16.520
+I don't want to get too
+into the weeds here,
+
+54
+00:02:16.520 --> 00:02:20.860
+but best can be which plan
+returned all the results first.
+
+55
+00:02:20.860 --> 00:02:24.020
+Or it might be, which returned
+a certain number of documents
+
+56
+00:02:24.020 --> 00:02:25.582
+in store order fastest.
+
+57
+00:02:25.582 --> 00:02:27.790
+There's a lot of different
+ways we can describe best,
+
+58
+00:02:27.790 --> 00:02:30.220
+and the query optimizer will
+do it in different ways,
+
+59
+00:02:30.220 --> 00:02:31.520
+depending on the query.
+
+60
+00:02:31.520 --> 00:02:35.380
+And so for this run,
+this is the winning plan.
+
+61
+00:02:35.380 --> 00:02:37.150
+If we were to run
+explain and look
+
+62
+00:02:37.150 --> 00:02:38.740
+under the winning
+plan field, this
+
+63
+00:02:38.740 --> 00:02:40.450
+is the plan it would
+be talking about.
+
+64
+00:02:40.450 --> 00:02:43.780
+And so these other plans would
+fall under the rejected plans
+
+65
+00:02:43.780 --> 00:02:44.612
+field.
+
+66
+00:02:44.612 --> 00:02:46.570
+Now, it wouldn't make
+much sense to run a trial
+
+67
+00:02:46.570 --> 00:02:49.090
+run for every query that
+came into the database.
+
+68
+00:02:49.090 --> 00:02:50.965
+We're going to have a
+lot of the queries that
+
+69
+00:02:50.965 --> 00:02:53.170
+are going to have the same
+shape and would benefit
+
+70
+00:02:53.170 --> 00:02:54.910
+from the same query plans.
+
+71
+00:02:54.910 --> 00:02:58.180
+Because of this, MongoDB
+caches which plan it
+
+72
+00:02:58.180 --> 00:03:01.060
+should use for a
+given query shape.
+
+73
+00:03:01.060 --> 00:03:02.560
+Now, over time,
+our collection is
+
+74
+00:03:02.560 --> 00:03:05.590
+going to change in some
+[INAUDIBLE] indexes.
+
+75
+00:03:05.590 --> 00:03:08.320
+What this means is, under
+different conditions,
+
+76
+00:03:08.320 --> 00:03:10.600
+the plan cache
+will evict a plan.
+
+77
+00:03:10.600 --> 00:03:13.114
+This can happen if the
+server is restarted.
+
+78
+00:03:13.114 --> 00:03:14.530
+Or if the amount
+of work performed
+
+79
+00:03:14.530 --> 00:03:16.546
+by the first
+portion of the query
+
+80
+00:03:16.546 --> 00:03:18.670
+exceeds the amount of work
+performed by the winning
+
+81
+00:03:18.670 --> 00:03:21.010
+plan by a factor of 10.
+
+82
+00:03:21.010 --> 00:03:23.920
+Plans are also evicted when
+the indexes are rebuilt,
+
+83
+00:03:23.920 --> 00:03:26.740
+or if an index is
+created or dropped.
+
+84
+00:03:26.740 --> 00:03:29.320
+And that should give you a
+good overview of query plans.
+
+85
+00:03:29.320 --> 00:03:31.540
+Let's recap what we've learned.
+
+86
+00:03:31.540 --> 00:03:35.170
+We spent some time talking
+about what query plans are.
+
+87
+00:03:35.170 --> 00:03:37.660
+We also discussed how the
+query optimizer works,
+
+88
+00:03:37.660 --> 00:03:40.150
+and how it determines
+which plan is best.
+
+89
+00:03:40.150 --> 00:03:43.150
+And we also discussed query
+plan caching so that we're not
+
+90
+00:03:43.150 --> 00:03:45.190
+running trial periods
+for every query that
+
+91
+00:03:45.190 --> 00:03:47.340
+comes into the database.

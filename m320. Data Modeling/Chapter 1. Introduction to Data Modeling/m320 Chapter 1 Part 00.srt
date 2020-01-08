@@ -1,0 +1,321 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.140
+Hi.
+
+3
+00:00:01.140 --> 00:00:04.190
+I'm Daniel, one of your
+instructors for this course.
+
+4
+00:00:04.190 --> 00:00:07.010
+Did you ever wonder what is the
+single most important aspect
+
+5
+00:00:07.010 --> 00:00:10.520
+of using MongoDB to
+ensure good performance,
+
+6
+00:00:10.520 --> 00:00:12.680
+maximize the productivity
+of your developers,
+
+7
+00:00:12.680 --> 00:00:15.530
+and minimize the overall
+cost of your solution?
+
+8
+00:00:15.530 --> 00:00:17.630
+Yes-- a good data model.
+
+9
+00:00:17.630 --> 00:00:22.430
+Welcome to M320, the data
+modeling course for MongoDB.
+
+10
+00:00:22.430 --> 00:00:25.540
+In this course, we're going
+to discuss all aspects of data
+
+11
+00:00:25.540 --> 00:00:27.800
+modeling for MongoDB.
+
+12
+00:00:27.800 --> 00:00:30.990
+You'll learn how to gather the
+requirements to create the data
+
+13
+00:00:30.990 --> 00:00:35.240
+model, learn those requirements
+into a basic model,
+
+14
+00:00:35.240 --> 00:00:38.630
+apply powerful transformation
+patterns to optimize your data
+
+15
+00:00:38.630 --> 00:00:42.140
+model, and finally, understand
+how to evolve your data
+
+16
+00:00:42.140 --> 00:00:44.900
+model over time.
+
+17
+00:00:44.900 --> 00:00:46.520
+Armed with that
+knowledge, you'll
+
+18
+00:00:46.520 --> 00:00:49.660
+be able to design schema to
+make the best use of MongoDB.
+
+19
+00:00:49.660 --> 00:00:52.947
+
+
+20
+00:00:52.947 --> 00:00:55.760
+This course is
+five chapters long.
+
+21
+00:00:55.760 --> 00:00:59.390
+With each chapter, there
+is a set of lesson videos.
+
+22
+00:00:59.390 --> 00:01:01.060
+After most of these
+lessons, there
+
+23
+00:01:01.060 --> 00:01:05.060
+is a quiz and labs to assess
+your learning of the material.
+
+24
+00:01:05.060 --> 00:01:08.270
+Let's go over a few
+logistics for the course.
+
+25
+00:01:08.270 --> 00:01:10.590
+What's the target audience?
+
+26
+00:01:10.590 --> 00:01:12.050
+It's an advanced course.
+
+27
+00:01:12.050 --> 00:01:15.170
+It is geared more toward
+architects and developers, then
+
+28
+00:01:15.170 --> 00:01:16.350
+DevOp people.
+
+29
+00:01:16.350 --> 00:01:19.710
+However, everyone
+can benefit from it.
+
+30
+00:01:19.710 --> 00:01:22.770
+If you're used to tabular
+or relational databases,
+
+31
+00:01:22.770 --> 00:01:25.340
+we try to make the
+parallel between MongoDB
+
+32
+00:01:25.340 --> 00:01:29.040
+and these databases.
+
+33
+00:01:29.040 --> 00:01:31.850
+This course has another
+course as a prerequisite,
+
+34
+00:01:31.850 --> 00:01:36.740
+M001, Introduction to MongoDB.
+
+35
+00:01:36.740 --> 00:01:38.280
+If you have not
+done this course,
+
+36
+00:01:38.280 --> 00:01:40.340
+you should be familiar
+with the following--
+
+37
+00:01:40.340 --> 00:01:43.100
+using a cluster
+deploy in Atlas, using
+
+38
+00:01:43.100 --> 00:01:46.460
+Compass to access the cluster,
+and you should also be familiar
+
+39
+00:01:46.460 --> 00:01:50.670
+with database concepts
+and vocabulary,
+
+40
+00:01:50.670 --> 00:01:53.780
+reading an entity relationship
+diagram using the Crow's Foot
+
+41
+00:01:53.780 --> 00:01:55.670
+notation.
+
+42
+00:01:55.670 --> 00:01:59.360
+If you're not, we recommend
+you take our beginners course,
+
+43
+00:01:59.360 --> 00:02:03.440
+M001, and go through the
+additional external resources
+
+44
+00:02:03.440 --> 00:02:05.750
+we reference in the first
+lesson of this course.
+
+45
+00:02:05.750 --> 00:02:08.600
+
+
+46
+00:02:08.600 --> 00:02:10.520
+How does grading work?
+
+47
+00:02:10.520 --> 00:02:13.910
+There are quizzes,
+labs, and a final exam.
+
+48
+00:02:13.910 --> 00:02:16.760
+Quizzes are ungraded and
+exist to make sure that you
+
+49
+00:02:16.760 --> 00:02:18.350
+understand the content.
+
+50
+00:02:18.350 --> 00:02:19.940
+Your grade in the
+class will be based
+
+51
+00:02:19.940 --> 00:02:23.150
+on how well you do on the
+labs and the final exam,
+
+52
+00:02:23.150 --> 00:02:27.940
+each of these being
+worth 50% of your grade.
+
+53
+00:02:27.940 --> 00:02:30.480
+To receive a certificate
+of course completion,
+
+54
+00:02:30.480 --> 00:02:35.050
+you need a passing
+grade of 65% or higher.
+
+55
+00:02:35.050 --> 00:02:37.410
+Finally, we will highly
+encourage you to participate
+
+56
+00:02:37.410 --> 00:02:40.120
+in the discussion forum.
+
+57
+00:02:40.120 --> 00:02:42.810
+We have knowledgeable MongoDB
+employees who are there
+
+58
+00:02:42.810 --> 00:02:46.390
+to help answer your questions.
+
+59
+00:02:46.390 --> 00:02:49.410
+You also have your
+classmates, who can also
+
+60
+00:02:49.410 --> 00:02:51.820
+contribute to
+answering your question
+
+61
+00:02:51.820 --> 00:02:57.630
+and are often beneficial and
+very knowledgeable resources.
+
+62
+00:02:57.630 --> 00:03:01.140
+We've observed that students
+who perform best in the courses
+
+63
+00:03:01.140 --> 00:03:03.810
+are those who are the most
+active in the discussion forum.
+
+64
+00:03:03.810 --> 00:03:06.570
+
+
+65
+00:03:06.570 --> 00:03:08.370
+By the end of this
+course, you should
+
+66
+00:03:08.370 --> 00:03:11.580
+be ready to design schema
+for your applications.
+
+67
+00:03:11.580 --> 00:03:14.070
+With all that said,
+we're excited to have you
+
+68
+00:03:14.070 --> 00:03:16.580
+as a student in this class.

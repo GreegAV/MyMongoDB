@@ -1,0 +1,805 @@
+
+1
+00:00:00.000 --> 00:00:00.820
+
+
+2
+00:00:00.820 --> 00:00:03.760
+Do you still have
+alter table nightmares?
+
+3
+00:00:03.760 --> 00:00:07.630
+Memories of modifying the schema
+of your relational database?
+
+4
+00:00:07.630 --> 00:00:10.050
+Performing complex
+tasks under pressure,
+
+5
+00:00:10.050 --> 00:00:13.420
+so you could limit the amount
+of downtime for your users?
+
+6
+00:00:13.420 --> 00:00:17.090
+If so, welcome to
+your new world.
+
+7
+00:00:17.090 --> 00:00:19.330
+If you did not have
+any nightmares or never
+
+8
+00:00:19.330 --> 00:00:21.910
+updated relational
+databases, welcome too
+
+9
+00:00:21.910 --> 00:00:23.890
+to this bright world.
+
+10
+00:00:23.890 --> 00:00:27.020
+You will love the pattern we
+will cover in this lesson.
+
+11
+00:00:27.020 --> 00:00:29.980
+It makes modifying the schema
+used by your application
+
+12
+00:00:29.980 --> 00:00:32.320
+a much smoother process.
+
+13
+00:00:32.320 --> 00:00:35.500
+The question when
+user database is not,
+
+14
+00:00:35.500 --> 00:00:38.530
+if you will update your schema,
+but when would you update it?
+
+15
+00:00:38.530 --> 00:00:40.480
+Nearly all applications
+in their lifetime
+
+16
+00:00:40.480 --> 00:00:43.570
+will require updates to
+their database schema.
+
+17
+00:00:43.570 --> 00:00:46.720
+Unfortunately, those updates
+take time and require downtime
+
+18
+00:00:46.720 --> 00:00:48.580
+for relational databases.
+
+19
+00:00:48.580 --> 00:00:50.890
+If anything goes wrong when
+you reopen the service,
+
+20
+00:00:50.890 --> 00:00:52.900
+it may be difficult
+to revert back to what
+
+21
+00:00:52.900 --> 00:00:55.270
+you had prior to the migration.
+
+22
+00:00:55.270 --> 00:00:58.450
+The schema versioning pattern is
+based on the [INAUDIBLE] aspect
+
+23
+00:00:58.450 --> 00:00:59.720
+of documents in MongoDB.
+
+24
+00:00:59.720 --> 00:01:02.950
+Because documents can
+have different shapes.
+
+25
+00:01:02.950 --> 00:01:05.260
+By that, I refer to
+having different fields
+
+26
+00:01:05.260 --> 00:01:07.090
+or different types
+for a given field.
+
+27
+00:01:07.090 --> 00:01:10.450
+We construct our applications
+to deal with those variants.
+
+28
+00:01:10.450 --> 00:01:13.390
+Let's say we have Bob White
+as a person in our people
+
+29
+00:01:13.390 --> 00:01:14.470
+collection.
+
+30
+00:01:14.470 --> 00:01:15.970
+Bob was born a
+while ago, and can
+
+31
+00:01:15.970 --> 00:01:21.120
+be reached at home or at work
+through these phone numbers.
+
+32
+00:01:21.120 --> 00:01:24.440
+Then we have Junior,
+Bob White's son.
+
+33
+00:01:24.440 --> 00:01:27.920
+Bob is from a generation
+that got used to cell phones.
+
+34
+00:01:27.920 --> 00:01:30.223
+And we need to add this
+information to his profile,
+
+35
+00:01:30.223 --> 00:01:31.640
+and have our
+application deal with
+
+36
+00:01:31.640 --> 00:01:33.310
+this additional information.
+
+37
+00:01:33.310 --> 00:01:36.260
+I suspect making this
+change was not too painful.
+
+38
+00:01:36.260 --> 00:01:39.020
+It would even be pretty smooth
+with a relational database,
+
+39
+00:01:39.020 --> 00:01:42.320
+as adding a column
+is not a big deal.
+
+40
+00:01:42.320 --> 00:01:44.690
+Now, as the next
+generation of White--
+
+41
+00:01:44.690 --> 00:01:47.750
+Bob III-- does not
+have a phone at home.
+
+42
+00:01:47.750 --> 00:01:50.840
+However, has account with
+Skype, Google Hangouts,
+
+43
+00:01:50.840 --> 00:01:53.610
+Viber, and who knows
+what next week.
+
+44
+00:01:53.610 --> 00:01:56.960
+Well, this is becoming difficult
+to handle in the application.
+
+45
+00:01:56.960 --> 00:01:59.300
+But because the developers
+took the wonderful class
+
+46
+00:01:59.300 --> 00:02:01.430
+Entry 20 on Data
+Modeling, they realized
+
+47
+00:02:01.430 --> 00:02:06.120
+that the attribute pattern
+would be a good fit here.
+
+48
+00:02:06.120 --> 00:02:07.760
+So instead of
+growing the documents
+
+49
+00:02:07.760 --> 00:02:09.560
+with unpredictable
+contact methods,
+
+50
+00:02:09.560 --> 00:02:11.845
+the attribute
+pattern is applied.
+
+51
+00:02:11.845 --> 00:02:13.970
+The application could easily
+handle the differences
+
+52
+00:02:13.970 --> 00:02:15.200
+in the Bob White documents.
+
+53
+00:02:15.200 --> 00:02:17.000
+It just has to know
+the different shapes
+
+54
+00:02:17.000 --> 00:02:18.890
+with different [INAUDIBLE].
+
+55
+00:02:18.890 --> 00:02:22.010
+Here, instead of dealing
+with an additional field,
+
+56
+00:02:22.010 --> 00:02:24.440
+you get to see an array
+of contacts method
+
+57
+00:02:24.440 --> 00:02:27.350
+when you process it accordingly.
+
+58
+00:02:27.350 --> 00:02:29.540
+To help the application
+identify the shape,
+
+59
+00:02:29.540 --> 00:02:32.960
+we will have a version
+field and set it
+
+60
+00:02:32.960 --> 00:02:36.200
+to 2, the non-presence
+of this field
+
+61
+00:02:36.200 --> 00:02:38.090
+being the implicit version 1.
+
+62
+00:02:38.090 --> 00:02:40.920
+Note that this field is
+present in each document.
+
+63
+00:02:40.920 --> 00:02:43.160
+This is in contrast to
+a relational database,
+
+64
+00:02:43.160 --> 00:02:45.740
+where you only have one
+global number to track
+
+65
+00:02:45.740 --> 00:02:47.380
+the version of the schema.
+
+66
+00:02:47.380 --> 00:02:50.930
+Here we have each
+document telling us
+
+67
+00:02:50.930 --> 00:02:54.042
+which version of the
+schema to adhere to.
+
+68
+00:02:54.042 --> 00:02:55.500
+The first thing
+you will need to do
+
+69
+00:02:55.500 --> 00:02:57.180
+is to change the
+application so it
+
+70
+00:02:57.180 --> 00:03:00.840
+can read all the different
+version of the documents.
+
+71
+00:03:00.840 --> 00:03:03.180
+You can use separate
+handlers or function
+
+72
+00:03:03.180 --> 00:03:04.830
+to handle the
+different versions.
+
+73
+00:03:04.830 --> 00:03:06.480
+The field schema
+version makes it
+
+74
+00:03:06.480 --> 00:03:08.610
+easy to decide where
+to send the document.
+
+75
+00:03:08.610 --> 00:03:10.530
+Alternatively,
+reshape the document
+
+76
+00:03:10.530 --> 00:03:13.320
+when you see an old version,
+and then process it.
+
+77
+00:03:13.320 --> 00:03:15.480
+Testing that functionality
+is relatively easy.
+
+78
+00:03:15.480 --> 00:03:17.713
+As you start adding
+documents with the upcoming
+
+79
+00:03:17.713 --> 00:03:19.380
+shape to your test
+environment, and then
+
+80
+00:03:19.380 --> 00:03:23.180
+observe how the application
+deals with those changes.
+
+81
+00:03:23.180 --> 00:03:25.230
+Update your application
+server so they
+
+82
+00:03:25.230 --> 00:03:27.330
+use the modified application.
+
+83
+00:03:27.330 --> 00:03:29.880
+Once the migration of all
+documents is completed,
+
+84
+00:03:29.880 --> 00:03:31.740
+it's up to you to
+decide to remove or not
+
+85
+00:03:31.740 --> 00:03:33.810
+the obsolete code.
+
+86
+00:03:33.810 --> 00:03:37.230
+New documents get written in
+the latest schema version.
+
+87
+00:03:37.230 --> 00:03:39.660
+For existing documents, you
+can piggyback on the fact
+
+88
+00:03:39.660 --> 00:03:43.050
+that you're going to make an
+update to change the shape
+
+89
+00:03:43.050 --> 00:03:45.480
+and write it in the new schema.
+
+90
+00:03:45.480 --> 00:03:47.230
+As a matter of fact,
+I remember a customer
+
+91
+00:03:47.230 --> 00:03:50.760
+that had billions of documents,
+a lot being inactive.
+
+92
+00:03:50.760 --> 00:03:52.810
+And that was their only
+migration strategy.
+
+93
+00:03:52.810 --> 00:03:55.920
+That means that the old obsolete
+documents remained unchanged,
+
+94
+00:03:55.920 --> 00:03:57.690
+because they did not
+want to pay the price
+
+95
+00:03:57.690 --> 00:04:01.080
+to update them with a job
+running for a few weeks.
+
+96
+00:04:01.080 --> 00:04:04.480
+Alternatively to this
+selective update strategy,
+
+97
+00:04:04.480 --> 00:04:06.300
+the most common one is
+to have a background
+
+98
+00:04:06.300 --> 00:04:09.000
+task to do the updates.
+
+99
+00:04:09.000 --> 00:04:10.710
+You can have both
+processes doing
+
+100
+00:04:10.710 --> 00:04:14.210
+the migration of documents,
+and that will still be fine.
+
+101
+00:04:14.210 --> 00:04:16.779
+The thing to understand
+is that while you're
+
+102
+00:04:16.779 --> 00:04:19.540
+updating your application
+server, assuming
+
+103
+00:04:19.540 --> 00:04:23.080
+you have more than one, you
+won't [INAUDIBLE] any downtime.
+
+104
+00:04:23.080 --> 00:04:26.290
+Once done, you can
+take the time you
+
+105
+00:04:26.290 --> 00:04:28.690
+need to update the documents
+by running an updater.
+
+106
+00:04:28.690 --> 00:04:30.943
+And that can be done
+in a few passes.
+
+107
+00:04:30.943 --> 00:04:32.610
+While the documents
+are getting updated,
+
+108
+00:04:32.610 --> 00:04:36.220
+your application servers can
+handle both schema version work
+
+109
+00:04:36.220 --> 00:04:39.310
+well with all documents,
+old and new shapes.
+
+110
+00:04:39.310 --> 00:04:43.360
+At the end, if and once
+all documents are updated,
+
+111
+00:04:43.360 --> 00:04:45.460
+you can remove the code
+to handle the old version
+
+112
+00:04:45.460 --> 00:04:46.720
+in your application.
+
+113
+00:04:46.720 --> 00:04:49.060
+Some users keep it
+there for protection
+
+114
+00:04:49.060 --> 00:04:51.970
+or for keeping the ability
+to reimport documents
+
+115
+00:04:51.970 --> 00:04:53.060
+in the old shape.
+
+116
+00:04:53.060 --> 00:04:55.600
+Anyway, there's a lot
+of possible variations
+
+117
+00:04:55.600 --> 00:04:56.320
+of migration.
+
+118
+00:04:56.320 --> 00:04:58.990
+Just ensure you get a plan.
+
+119
+00:04:58.990 --> 00:05:02.290
+Time to formalize our
+schema versioning pattern.
+
+120
+00:05:02.290 --> 00:05:04.600
+The problem in schema
+versioning pattern addresses
+
+121
+00:05:04.600 --> 00:05:08.100
+is avoiding downtime when
+using a schema update.
+
+122
+00:05:08.100 --> 00:05:10.600
+If you have a small system with
+the ability to bring it down
+
+123
+00:05:10.600 --> 00:05:12.830
+for an acceptable
+period of time,
+
+124
+00:05:12.830 --> 00:05:15.610
+you may just want to do
+that and do your updates
+
+125
+00:05:15.610 --> 00:05:17.680
+the old fashioned way.
+
+126
+00:05:17.680 --> 00:05:21.190
+Updating all documents can
+take a long time-- hours, day,
+
+127
+00:05:21.190 --> 00:05:23.370
+or even weeks when
+dealing with big data.
+
+128
+00:05:23.370 --> 00:05:26.200
+And there is the situation
+where you have so many legacy
+
+129
+00:05:26.200 --> 00:05:28.780
+documents, or any other
+reason for which you don't
+
+130
+00:05:28.780 --> 00:05:31.120
+want to update everything.
+
+131
+00:05:31.120 --> 00:05:33.310
+As illustrated in
+our previous screens,
+
+132
+00:05:33.310 --> 00:05:36.610
+the solution is to use a
+field present in each document
+
+133
+00:05:36.610 --> 00:05:38.800
+to keep the version number.
+
+134
+00:05:38.800 --> 00:05:41.940
+Schema version is suggested,
+but not mandatory.
+
+135
+00:05:41.940 --> 00:05:43.990
+As a matter of fact,
+the field can also
+
+136
+00:05:43.990 --> 00:05:46.150
+be omitted, and have
+the application detect
+
+137
+00:05:46.150 --> 00:05:48.730
+the shape or the version
+based on the list of fields
+
+138
+00:05:48.730 --> 00:05:50.410
+present or missing.
+
+139
+00:05:50.410 --> 00:05:53.110
+However, I prefer
+explicitly using a field
+
+140
+00:05:53.110 --> 00:05:54.790
+to identify the version.
+
+141
+00:05:54.790 --> 00:05:56.740
+Secondly, the
+application should be
+
+142
+00:05:56.740 --> 00:05:59.660
+able to handle the different
+shapes of the documents.
+
+143
+00:05:59.660 --> 00:06:02.890
+And finally, layout the strategy
+to migrate your documents.
+
+144
+00:06:02.890 --> 00:06:04.190
+You are in charge.
+
+145
+00:06:04.190 --> 00:06:07.780
+You have all the time you need
+to do the things correctly.
+
+146
+00:06:07.780 --> 00:06:09.850
+As I said earlier,
+most application--
+
+147
+00:06:09.850 --> 00:06:12.880
+especially the successful ones
+that live for a long time--
+
+148
+00:06:12.880 --> 00:06:15.130
+will require schema changes.
+
+149
+00:06:15.130 --> 00:06:17.350
+Unless you can afford
+downtime, this pattern
+
+150
+00:06:17.350 --> 00:06:20.770
+is likely going to be
+very useful to you.
+
+151
+00:06:20.770 --> 00:06:23.050
+On the benefits side,
+they are pretty evident.
+
+152
+00:06:23.050 --> 00:06:24.550
+You can avoid downtime.
+
+153
+00:06:24.550 --> 00:06:26.200
+You feel in control
+of the migration
+
+154
+00:06:26.200 --> 00:06:29.043
+the whole time, done
+when you want to do it.
+
+155
+00:06:29.043 --> 00:06:30.460
+On the trade-off
+side, if you have
+
+156
+00:06:30.460 --> 00:06:32.380
+an index in the field
+that's not located
+
+157
+00:06:32.380 --> 00:06:34.370
+at the same level
+in the document,
+
+158
+00:06:34.370 --> 00:06:37.840
+you may need to index while
+you're doing the migration.
+
+159
+00:06:37.840 --> 00:06:41.310
+And finally, unlike the fiscal
+debt, the technical debt,
+
+160
+00:06:41.310 --> 00:06:43.900
+and environmental
+debt we are usually
+
+161
+00:06:43.900 --> 00:06:46.260
+leaving to the next
+generation, at least
+
+162
+00:06:46.260 --> 00:06:48.370
+here we can build system
+that should be easier
+
+163
+00:06:48.370 --> 00:06:52.420
+to maintain and migrate
+by your future colleagues.
+
+164
+00:06:52.420 --> 00:06:54.460
+In summary, the schema
+versioning pattern
+
+165
+00:06:54.460 --> 00:06:56.800
+is a great pattern if you
+want to avoid downtime
+
+166
+00:06:56.800 --> 00:06:59.530
+while performing schema
+upgrade and want to stay
+
+167
+00:06:59.530 --> 00:07:02.130
+in control of those upgrades.

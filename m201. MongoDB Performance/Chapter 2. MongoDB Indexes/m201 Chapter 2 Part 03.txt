@@ -1,0 +1,53 @@
+In this video, let's continue talking about single field indexes.
+
+In the last video, we saw how we can create an index on a single field to query on a single value or to use dot notation to query on a single value inside of a subdocument.
+
+In this video, let's talk about using single field indexes to query on ranges of values and querying on several distinct values.
+
+Earlier, we saw how to use an index to get just one value for a social security number.
+
+Here, we're going to try to match for a range of social security numbers.
+
+And if we look at our explain output, as we would expect, we're able to do an index scan.
+
+And by doing this index scan, when we look at execution stats, we can see that we only had to examine 49 documents to return 49 documents.
+
+So we didn't have to look at any superfluous documents, which is really, really awesome, because we were able to use our 49 index keys to directly get those 49 documents.
+
+Rather than using a range, what if I wanted to query on a set of social security numbers?
+
+Well, as you'll see, we're still able to do an index scan as our winning plan.
+
+And you'll see, if we look under executionStats, we only had to examine three documents to find the three documents that matched our set.
+
+We did have to look at six index keys, which is more than we would probably expect, which is a little less efficient than it could be.
+
+But it's still much better than doing a collections scan.
+
+These extra index keys are due to the algorithm the system used, which can involve overshooting the values we're looking for.
+
+I also want to note that I can specify multiple fields in my query.
+
+We can still use an index, even if we're only touching one of the multiple fields.
+
+So when we look our explain output, we can see what's going on here.
+
+And we can see here, by looking at our winningPlan, that what we're doing is, as we're doing an index scan on the social security number, to filter down to the three documents that match our query.
+
+And then from those three documents, we're then filtering on which of those three match our last name predicate.
+
+So if a query is matching documents on two or more fields, but the database only has a single field index for one of them, what will happen is the database will filter using the index and then it will then look at those documents and fetch only the ones that match the other predicates.
+
+Later, you'll see how we can use compound indexes to get even more efficiency in our queries.
+
+But this is the behavior you should expect from single field indexes.
+
+So let's recap what we've learned.
+
+In these last two videos, we've learned that we can use a single field index to query on a single value or to query on a range of values.
+
+We can also use it for dot notation when using subdocuments.
+
+And finally, we've seen that we can use it for several distinct values, as I have a single query.
+
+And that's what you need to know about single field indexes.

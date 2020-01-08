@@ -1,0 +1,83 @@
+In this lesson, we're going to talk about covered queries.
+
+In here, we're going to talk about what covered queries are, how they work, and we'll also spend some time discussing some important caveats associated with them.
+
+Covered queries are a highly performant way to service the queries to our database.
+
+The reason that covered queries are so fast is because they're completely satisfied by our index keys.
+
+This means that the server doesn't actually have to touch any of the documents.
+
+Querying only the index can be much faster than querying documents outside of the index because the index keys are typically smaller than the documents they catalog and index keys are typically available in RAM.
+
+Let's discuss how this works.
+
+Imagine we have a query where we're trying to find all the restaurants that start with l, serve sushi, and have four or more stars.
+
+And we also have an index on those same fields.
+
+Now, if we were to add a projection to this query so that we're only including the fields that we're indexing on omitting the underscore ID field, in this case, then all the information that we expect to get back already exists in the keys of our index.
+
+Because this index contains all the fields required by the results of our query, MongoDB can both match the query conditions and return the results only using the index.
+
+Let's see how this works in practice.
+
+I'm going to go ahead and connect to the m201 database, create an explainable object, and then create the index we were just talking about.
+
+Now, when I run the FIND query from our example, and you'll see that our results have all the same fields as our keys in our index.
+
+All these values exist directly on the index we just created.
+
+And we can easily confirm that this is a covered query by looking at the explain output.
+
+You'll notice that under execution stats we didn't actually have to examine any documents to return our results.
+
+It was also a super fast query.
+
+It only took 10 milliseconds to return almost 3,000 documents.
+
+This is further illustrated by the winning plan.
+
+You can see that we're immediately doing an index scan followed by a projection.
+
+We completely skipped the fetch stage that we would normally see when we turn the record IDs into documents.
+
+I do want to point out an important caveat.
+
+Let's see what happens here when we run this example.
+
+We see the same output as our earlier query when we explicitly said that we wanted name, cuisine, and stars.
+
+Here, we're doing the same thing, except we're just omitting underscore ID and address.
+
+And so we'd expect the same explain output.
+
+Right?
+
+Wrong.
+
+When we go and scroll up to the execution stats, you can see that we're now examining documents.
+
+And this actually makes sense.
+
+When we explicitly omit fields, the query planner has no way of telling what other fields might be present.
+
+We might only have the fields that are index queues, but there also might be documents that have other additional fields.
+
+Because of this, an index covers a query only when both all fields in the query are a part of the index and all the fields are turned in the result are in the same index.
+
+This generally means that we need to filter out underscore ID.
+
+Before we finish this lesson, I want to point out a few other caveats associated with covered queries.
+
+We can't cover a query if our index fields are arrays or embedded documents.
+
+We also can't cover a query against a Mongos if the index does not contain the shard key.
+
+Let's recap what we've learned.
+
+We talked about what covered queries are.
+
+We spent some time looking at how they work.
+
+And we also pointed out some important caveats associated with them.

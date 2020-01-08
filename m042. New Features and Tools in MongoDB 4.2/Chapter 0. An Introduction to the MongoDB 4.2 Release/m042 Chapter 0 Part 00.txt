@@ -1,0 +1,53 @@
+Hi there, and welcome to M042: New Features and Tools in MongoDB 4.2.
+
+One of our classics around here at MongoDB University.
+
+In this course, we'll be looking to all the new features that we have assembled for you in the MongoDB 4.2 server release and the tools that are made available around this release cycle.
+
+And what do we have for you this time around?
+
+Well, a bunch of cool new stuff.
+
+On the server side, the main feature we are going to be releasing is sharded transactions.
+
+Multi-document transaction support across sharded clusters.
+
+You will get a deep dive explanation on how sharded transactions work and the benefits regarding the management of shard keys, for example, that come associated with the support of sharded transactions.
+
+But there is more.
+
+MongoDB 4.2 brings a complete new index built system and a new index type.
+
+MongoDB 4.2 also introduces a more expressive update operator, the new dollar merge aggregation pipeline stage that allows for powerful on-demand materialized view mechanisms, and a set of new aggregation pipeline expressions.
+
+On our tools front, we'll be looking to improvements and advances around Ops Manager backup flows, each agent support, new organizations API access, and the general availability of our MongoDB enterprise Kubernetes Operator for all of you container people out there.
+
+Regarding the cloud offering, we'll be introducing a brand new product that will enable the analysis of data stored in S3 buckets or archive data using the MongoDB query language and the aggregation framework.
+
+Charts got a new set of exciting features like new geospatial charts types and the ability to embed charts directly into your mobile application.
+
+So a lot of new exciting stuff to look for.
+
+But let's talk logistics.
+
+In this course we want to focus your attention on the new features and products and remove away any emphasis on completing homework and assignments.
+
+This means that we are not going to have you go through a final exam or any graded assignments in this course.
+
+We still want you to follow along with lecture material and be able to experiment with all the new server versions and the new release tools.
+
+Therefore, we will be making available a virtual machine supported by Vagrant so you can play around with all of those new exciting features, intellectual material in an isolated environment containing all the necessary dependencies pre-installed.
+
+That said, it is completely optional.
+
+You can, if you choose to, install all the new features and tools in your workstation.
+
+In this lesson lecture notes you will find a full list of dependencies and installation instructions necessary for this course.
+
+The VM is for your convenience only.
+
+The goal of this course is for you to have a clear understanding of all these new features introduced in MongoDB 4.2, have a view of how these new tools help you become more effective, and expand the possible usage of MongoDB across a variety of different use cases.
+
+With all that said, welcome, hope you enjoy and get to learn all the new features and functionality we prepared for you.
+
+And I'll see you in class.

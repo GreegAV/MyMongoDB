@@ -1,0 +1,135 @@
+In this video, I want to talk about single field indexes.
+
+The single field index is the simplest index that MongoDB has to offer.
+
+It will form the foundation for all later indexes that we'll discuss.
+
+And we'll be describing all of those in contrast with the based on behaviors that we'll learn about here.
+
+A single field index is exactly what it sounds like.
+
+It's an index that captures just the keys on a single field, and it has the following key features.
+
+The keys are from only one field.
+
+We can find a single value for that indexed field.
+
+We can find a range of values.
+
+We can use dot notation to index the fields in our subdocuments.
+
+And we can use it to find several distinct values with a single query.
+
+By the end of this section you should be able to create single field indexes, and use them in each of the cases listed here.
+
+Let's go ahead and see what this looks like in the shell.
+
+First, let's go ahead and import some data by using the Mongo import command and, we're going to import the people.json on file.
+
+Let's go ahead and use the Mongo import command.
+
+Import the people.json file.
+
+Now, let's fire up the shell, and run a find query on our new people collection.
+
+So here's the query we're going to run.
+
+We're going to try to find all the documents that have a SSN, which is a social security number, of this value.
+
+And you'll notice I've appended this "explain" function of pass and this execution stats parameter.
+
+And this is so that we can get some extra information about our query.
+
+Now, there's a lot of output here.
+
+In other lessons, we'll dig into this output much more deeply, but for now there's just a few fields we care about.
+
+If I scroll up here, you can see that the query planner says that we're doing a collection scan, which means that we're looking at every document in the database.
+
+And if we scroll down here, we can look at execution stats, and see that we had to examine 50,000 documents.
+
+Which makes sense because there's 50,000 documents in this collection, and since we had a collection scan we had to look at all 50,000 documents.
+
+We had to look at 50,000 documents, even though we only returned one document.
+
+So this is a very bad ratio.
+
+Even though we only had to return one document, we had look at 50,000.
+
+It's not very efficient.
+
+You'll also notice that we looked at zero index keys, and that's because we did a collection scan.
+
+We didn't use an index because we haven't created any indexes yet.
+
+Let's go ahead and do that now.
+
+Here I'm creating an index on the SSN field, and I'm saying one to specify that it's going to be an ascending index.
+
+Now, that I've ran this command, MongoDB built the index.
+
+And by doing that, MongoDB had a look at every single document in the collection.
+
+And then it pulls out the SSN field.
+
+If the SSN field is not present on a document, then that key entry is going to have a null value.
+
+Let's go ahead and run our query again.
+
+I want to show you a cool trick.
+
+Here I'm going to create an explainable object, where instead of putting explain after the find, I'm going to put it directly on a collection.
+
+Now, I can just run "find" on my explainable object.
+
+So I'm running the same query as I did before.
+
+Now, this time when we look at the explain output, we'll notice that the winning plan is now an index scan.
+
+So we're not doing a collection scan anymore.
+
+And if we scroll down to execution stats, we'll see that we returned the same document we did before.
+
+We return one document.
+
+But rather than looking at 50,000 documents, we only had to look at one document.
+
+We only have to look at the one document that we returned, which is awesome.
+
+And that's because we're able to use index keys to find our document.
+
+In this case we had to use one index key.
+
+We immediately found the index key that had the value of our query, and that index key pointed directly to the document that we wanted to return.
+
+This is much more efficient than scanning the entire collection, which is what we do if we don't have an index to use on our query.
+
+Now, if the query predicate of my query doesn't use a field that is indexed on, you'll see from the explain output that we weren't able to use that index.
+
+We had do a collection scan.
+
+So that means that because we didn't use the SSN field, the field that we indexed on, we still had to look at 50,000 documents to return the 10 documents that we wanted.
+
+Now, we know that MongoDB allows us to use dot notation to query inside of a subdocument.
+
+But you can also use dot notation when specifying indexes.
+
+Let's use a simple example to illustrate this.
+
+Here, I'm going to insert a document into the examples collection.
+
+This document will have a field that has a subdocument as its value.
+
+And the subdocument has two keys, One called index field and one called other field.
+
+And I'll go ahead and also insert another document that has similar fields, but with different values.
+
+And like I was saying, we can specify an index that uses dot notation to index on the fields of our embedded document.
+
+And this way, when we use dot notation in our queries, we'll still be able to use an index, as illustrated by our explain output, right here.
+
+By the way, I want to point out that we should never index on the field that points to a subdocument, because doing so we'd have to query on the entire subdocument.
+
+It's much better to use dot notation when querying because we can just query on the fields that we care about in our subdocuments.
+
+If you do need to index on more than one field, you can use a compound index, which we'll learn about in another lesson.

@@ -1,0 +1,523 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.180
+Welcome back.
+
+3
+00:00:01.180 --> 00:00:03.388
+In this lesson, we're going
+to talk about the MongoDB
+
+4
+00:00:03.388 --> 00:00:07.080
+Agent, which is a new agent
+coming to office manager 402
+
+5
+00:00:07.080 --> 00:00:08.580
+and clear manager.
+
+6
+00:00:08.580 --> 00:00:10.800
+We currently have
+three separate agents
+
+7
+00:00:10.800 --> 00:00:12.900
+to monitor, manage and
+backup your deployment
+
+8
+00:00:12.900 --> 00:00:14.322
+in cloud and Ops Manager.
+
+9
+00:00:14.322 --> 00:00:15.780
+We have the monitoring
+agent, which
+
+10
+00:00:15.780 --> 00:00:17.400
+is responsible for
+gathering metrics
+
+11
+00:00:17.400 --> 00:00:18.912
+from your MongoDB deployment.
+
+12
+00:00:18.912 --> 00:00:20.370
+We have the automation
+agent, which
+
+13
+00:00:20.370 --> 00:00:23.100
+is responsible for deploying,
+administering and managing
+
+14
+00:00:23.100 --> 00:00:24.172
+your MongoDB processes.
+
+15
+00:00:24.172 --> 00:00:26.505
+And the backup agent, which
+is responsible for streaming
+
+16
+00:00:26.505 --> 00:00:28.350
+oplog from your
+MongoDB replica set
+
+17
+00:00:28.350 --> 00:00:31.590
+and keeping your
+backups in sync.
+
+18
+00:00:31.590 --> 00:00:34.710
+Up until now, to use each
+individual functionality,
+
+19
+00:00:34.710 --> 00:00:38.070
+you needed to install and
+manage each of these agents.
+
+20
+00:00:38.070 --> 00:00:41.070
+Each agent was a
+separate binary.
+
+21
+00:00:41.070 --> 00:00:42.870
+We've now combined
+the functionality
+
+22
+00:00:42.870 --> 00:00:46.110
+into a brand new agent
+called the MongoDB Agent.
+
+23
+00:00:46.110 --> 00:00:47.820
+This separate agent
+will handle all
+
+24
+00:00:47.820 --> 00:00:49.800
+of the functionality
+of the three agents,
+
+25
+00:00:49.800 --> 00:00:52.680
+without the need to install
+three separate packages.
+
+26
+00:00:52.680 --> 00:00:54.570
+You simply install
+among the MongoDB Agents
+
+27
+00:00:54.570 --> 00:00:57.150
+and activate which
+function you wish to use.
+
+28
+00:00:57.150 --> 00:00:59.350
+It's important to
+note that as before,
+
+29
+00:00:59.350 --> 00:01:02.130
+if you do not have any process
+imported for automation,
+
+30
+00:01:02.130 --> 00:01:05.010
+the MongoDB Agent will not
+automate the processes.
+
+31
+00:01:05.010 --> 00:01:08.430
+Automation is not mandatory,
+but definitely recommended.
+
+32
+00:01:08.430 --> 00:01:11.500
+Let's install the new agent
+and deploy a replica set.
+
+33
+00:01:11.500 --> 00:01:14.190
+OK, so up to this point, the
+entire installation process
+
+34
+00:01:14.190 --> 00:01:17.070
+has been exactly the same as
+it was with previous agents.
+
+35
+00:01:17.070 --> 00:01:19.440
+Let's start the agent
+process and jump into the UI
+
+36
+00:01:19.440 --> 00:01:22.110
+to see if our agent is pinging
+back the Cloud Manager.
+
+37
+00:01:22.110 --> 00:01:22.710
+OK, great.
+
+38
+00:01:22.710 --> 00:01:25.680
+We can see that our agent is
+pinging by the Cloud Manager.
+
+39
+00:01:25.680 --> 00:01:29.190
+Now we need to activate which
+functions we're going to use.
+
+40
+00:01:29.190 --> 00:01:31.240
+As we're using a
+single server here,
+
+41
+00:01:31.240 --> 00:01:34.210
+we're going to activate all
+functions on this server.
+
+42
+00:01:34.210 --> 00:01:37.140
+As you can see, moderating and
+backup are displayed in the UI.
+
+43
+00:01:37.140 --> 00:01:39.000
+And that's because
+automation will not
+
+44
+00:01:39.000 --> 00:01:42.510
+be used unless you explicitly
+manage your deployment.
+
+45
+00:01:42.510 --> 00:01:43.990
+If we were using
+multiple servers,
+
+46
+00:01:43.990 --> 00:01:45.780
+we could activate
+one or more functions
+
+47
+00:01:45.780 --> 00:01:47.520
+on each agent
+based on the needs,
+
+48
+00:01:47.520 --> 00:01:49.348
+and how we have our
+deployment configured.
+
+49
+00:01:49.348 --> 00:01:51.390
+Let's activate backup a
+monitoring on this agent.
+
+50
+00:01:51.390 --> 00:01:59.160
+
+
+51
+00:01:59.160 --> 00:02:02.410
+OK, so our changes are deployed
+and our agent is ready to go.
+
+52
+00:02:02.410 --> 00:02:06.683
+OK, so let's add a new replica
+set from the Deployment page.
+
+53
+00:02:06.683 --> 00:02:08.850
+When you come to the replica
+set configuration page,
+
+54
+00:02:08.850 --> 00:02:11.037
+you can either manually
+enter all the values,
+
+55
+00:02:11.037 --> 00:02:12.870
+or you can use the
+autofill option, which is
+
+56
+00:02:12.870 --> 00:02:14.078
+what we're going to use here.
+
+57
+00:02:14.078 --> 00:02:16.450
+
+
+58
+00:02:16.450 --> 00:02:18.600
+And then we just click
+Create Replica Set.
+
+59
+00:02:18.600 --> 00:02:21.700
+Review and Deploy
+and Confirm Deploy.
+
+60
+00:02:21.700 --> 00:02:23.850
+OK, we can see now that
+our change is successfully
+
+61
+00:02:23.850 --> 00:02:24.730
+deployed.
+
+62
+00:02:24.730 --> 00:02:25.937
+We have a replica set.
+
+63
+00:02:25.937 --> 00:02:26.520
+And that's it.
+
+64
+00:02:26.520 --> 00:02:28.990
+You can now manage,
+monitor and backup MongoDB
+
+65
+00:02:28.990 --> 00:02:30.700
+with a single agent.
+
+66
+00:02:30.700 --> 00:02:33.750
+So what happens if you already
+have the standard agents
+
+67
+00:02:33.750 --> 00:02:34.980
+installed and running?
+
+68
+00:02:34.980 --> 00:02:36.030
+No problem.
+
+69
+00:02:36.030 --> 00:02:39.720
+If you're using managed agents,
+i.e., your agents are currently
+
+70
+00:02:39.720 --> 00:02:43.140
+managed by the automation
+agent, when the MongoDB Agent is
+
+71
+00:02:43.140 --> 00:02:45.750
+available, you will see the
+usual banner notification
+
+72
+00:02:45.750 --> 00:02:47.400
+that your agents
+are out of date.
+
+73
+00:02:47.400 --> 00:02:49.890
+You'll then be guided
+through a process in the UI,
+
+74
+00:02:49.890 --> 00:02:52.120
+and the agents will be
+updated to the MongoDB Agent
+
+75
+00:02:52.120 --> 00:02:54.120
+and assigned the
+correct functions.
+
+76
+00:02:54.120 --> 00:02:57.430
+So at a high level, the
+steps are as follows.
+
+77
+00:02:57.430 --> 00:03:01.010
+The automation agent stops any
+monitoring of backup agents.
+
+78
+00:03:01.010 --> 00:03:03.270
+Then enables
+monitoring and backup
+
+79
+00:03:03.270 --> 00:03:05.610
+on the servers where
+monitoring or backup were
+
+80
+00:03:05.610 --> 00:03:07.170
+running as an agent.
+
+81
+00:03:07.170 --> 00:03:09.450
+It removes the stopped
+monitoring and backup agent
+
+82
+00:03:09.450 --> 00:03:10.320
+binaries.
+
+83
+00:03:10.320 --> 00:03:14.340
+And unlocks the MMS monitoring
+agent or MMS backup agent users
+
+84
+00:03:14.340 --> 00:03:18.090
+in the MongoDB instance, so that
+you can delete them if desired.
+
+85
+00:03:18.090 --> 00:03:21.360
+The MongoDB Agent uses the
+MMS automation agent user
+
+86
+00:03:21.360 --> 00:03:23.420
+to connect to your instances.
+
+87
+00:03:23.420 --> 00:03:26.460
+OK, so if you're using
+self managed agents
+
+88
+00:03:26.460 --> 00:03:28.500
+and manage your agents
+yourself, the process
+
+89
+00:03:28.500 --> 00:03:30.060
+is slightly more involved.
+
+90
+00:03:30.060 --> 00:03:31.565
+The steps are as follows.
+
+91
+00:03:31.565 --> 00:03:33.190
+When the automation
+agent is available,
+
+92
+00:03:33.190 --> 00:03:34.740
+you'll see the
+banner notification
+
+93
+00:03:34.740 --> 00:03:37.350
+that your monitoring and
+backup agent are out of date.
+
+94
+00:03:37.350 --> 00:03:40.050
+When you're ready to update,
+click Update in the banner.
+
+95
+00:03:40.050 --> 00:03:42.450
+A workflow that guides you
+through the update process
+
+96
+00:03:42.450 --> 00:03:43.440
+starts.
+
+97
+00:03:43.440 --> 00:03:46.440
+Once the MongoDB Agent is
+installed on the server,
+
+98
+00:03:46.440 --> 00:03:48.060
+it enables the
+monitoring and backup
+
+99
+00:03:48.060 --> 00:03:50.700
+where they existed as a
+standalone agent before.
+
+100
+00:03:50.700 --> 00:03:53.910
+The MongoDB Agent puts the old
+monitoring and backup agents
+
+101
+00:03:53.910 --> 00:03:57.150
+into standby mode, and no
+longer shows them in the UI.
+
+102
+00:03:57.150 --> 00:04:00.210
+We've created a detailed FAQ
+in our docs, which we've linked
+
+103
+00:04:00.210 --> 00:04:01.890
+in the notes for this lesson.
+
+104
+00:04:01.890 --> 00:04:04.260
+Rest assured, you will be
+supported with the new agent
+
+105
+00:04:04.260 --> 00:04:06.130
+and the upgrade process.
+
+106
+00:04:06.130 --> 00:04:07.210
+So let's recap.
+
+107
+00:04:07.210 --> 00:04:09.690
+We now have one agent which
+is responsible for monitoring,
+
+108
+00:04:09.690 --> 00:04:11.130
+backup and automation.
+
+109
+00:04:11.130 --> 00:04:13.920
+You no longer need to install
+three separate agents to manage
+
+110
+00:04:13.920 --> 00:04:16.640
+your MongoDB deployment.

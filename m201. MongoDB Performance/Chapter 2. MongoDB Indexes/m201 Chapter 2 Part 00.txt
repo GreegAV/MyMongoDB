@@ -1,0 +1,93 @@
+Welcome to the chapter on indexes.
+
+In this chapter, we're going to cover some of the different indexes supported by MongoDB and we'll also discuss the different properties that those indexes have.
+
+In this first video, we're going to examine what indexes are, and how they work.
+
+And to answer this first question, I think it's helpful to ask the question.
+
+What problem do indexes try to solve?
+
+And that is, slow queries.
+
+Let's use a quick analogy to illustrate what I'm talking about.
+
+Let's say we're looking for some content on bedspreads in a book about interior design.
+
+One way that I can find this information is if I went through the book page by page looking for information on bedspreads.
+
+But this would not be very fast.
+
+I could find this information much more quickly if I went to the back of the book to the index, where I can quickly search for the word bedspread because the index is ordered alphabetically.
+
+I'll then find what page talks about bedspreads, and I can go directly to that page.
+
+And this is essentially how database indexes work.
+
+Working off the book analogy, a book, in the context MongoDB, would be a collection.
+
+If you don't use an index when we query our collection, then the database will have to look at every single document.
+
+Creatively we call this a collection scan, which means that as our collection grows in size, we will have to search through more and more documents to satisfy our query.
+
+In computer science we call this an order of N operation, commonly referred to as big O of N, or having a linear running time.
+
+And that's because the running time of our query is linearly proportional to the number of documents-- N-- that we have in our collection.
+
+But we can do much better if we have an index.
+
+Like in the book analogy, we can use an index to limit our search space.
+
+Rather than searching through every document, we can search through the ordered index first.
+
+The MongoDB index keeps a reference to every document in our collection.
+
+Think of this index as a list of key value pairs, where the key is the value of the field that we've indexed on, and the value of the key is the actual document itself.
+
+I like to point out that this means an index is associated with one or more fields.
+
+This means when we create our index, we have to specify which fields on the documents in our collection we want to index on.
+
+For example, _id field is automatically indexed for us.
+
+But if I were to write a query that didn't use the _id field, I wouldn't be able search the _id index and find the reference to my documents.
+
+And it is possible to have many indexes on the same collection.
+
+I might create multiple indexes on different fields if I find that I have different queries for different fields.
+
+Like the index at the back of a book, the index keys are stored in an order.
+
+Because of this, we don't have to look at every single index entry in or to find it.
+
+MongoDB uses a data structure called a b-tree to store its indexes.
+
+B-trees can be used to find target values with very few comparisons.
+
+With a collection scan, each new insertion creates an extra comparison.
+
+But with a b-tree, each new insertion doesn't necessarily mean an extra comparison.
+
+For example, if I was searching for the value of 15, my search wouldn't change if I inserted the value of 5.
+
+We can plot a chart to get an idea of how many fewer documents we need to examine when using an index.
+
+You can see that when we don't have an index, we have a very linear function of number of comparisons.
+
+But when we do have an index, we need to examine far fewer documents.
+
+Before I finish this video, I would to discuss one last topic, which is index overhead.
+
+The awesome query performance gain that we get with indexes doesn't come for free.
+
+With each additional index, we decrease our write speed for a collection.
+
+Every time there's a new document inserted into collection, a collections indexes might need to be updated.
+
+Similarly, if a document were to change, or if it was completely removed, one or more of our b-trees might need to be balanced.
+
+This means that we need to be careful when creating indexes.
+
+We don't want to have too many unnecessary indexes in a collection because there would then be an unnecessary loss in insert, update, and delete performance.
+
+You should have a good idea of what indexes are, their pros and cons, and how they work.

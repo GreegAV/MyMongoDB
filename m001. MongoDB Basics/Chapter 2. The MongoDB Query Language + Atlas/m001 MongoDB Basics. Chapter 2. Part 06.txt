@@ -1,0 +1,121 @@
+Now let's look at loading data into your Atlas sandbox cluster.
+
+So here we have a shell connected to the sandbox cluster.
+
+Let's see what's there.
+
+We can look at what databases are currently in this cluster by typing show dbs.
+
+And we can see that there's an admin database and a local database.
+
+What we'd like to do here is add a video database that will contain a more detailed version of the movie's data-set that we've seen in the class Atlas cluster.
+
+Now again, here, I am connected to my Atlas sandbox cluster, not the class Atlas cluster.
+
+To follow along, you should connect to your own Atlas sandbox cluster.
+
+So in order to make things just a little bit easier, what I'd like to do is encourage you to set up a small folder on your local computer where you can put the handout that we'll use for this lesson.
+
+When you download and unzip the handout for this lesson, you should have a directory titled LoadMovieDetailsDataset.
+
+And it should be in your downloads directory.
+
+The same will be true if you're running on a Windows machine, as we can see here.
+
+What I'd like to encourage you to do is navigate to your home directory and create a new folder called M001.
+
+And then copy that folder, LoadMovieDetailsDataset, into your M001 folder.
+
+When complete, you should see that folder inside the M001 folder in your home directory.
+
+Doing the same thing on Windows looks something like this.
+
+On your local hard drive, look for users and then your home directory.
+
+In this case, it's Shannon, for me.
+
+And what I'm going to do here is create a new folder called M001, and then copy and paste that folder into my new M001 folder.
+
+With this setup, it will be much easier for us to load our data into our Atlast cluster.
+
+Now from here on in this lesson, I'm simply going to use the terminal application here on my Mac.
+
+OK, so what I'm going to do now is I'm going to quit the shell, because I want to navigate to the location where I just saved that movie details data-set.
+
+And I should point out that the directory that I copied over contains a js file that will end up running in the Mongo shell.
+
+Same thing, of course, is true on Windows.
+
+So now, in order to navigate to this directory, when I start up my terminal application, I'm going to be in my home directory.
+
+If I type pwd, this will print the directory I'm currently located in.
+
+And as expected, it's my home directory on the Mac.
+
+If I do a directory listing using the ls command, I can see that M001 directory that I created right here.
+
+And I can cd, or change directory, into M001 by typing cd and then the name of the directory.
+
+Again, doing a directory listing, I can see the Download folder that I put in there.
+
+And again, I can cd into that folder.
+
+And then with a final directory listing, I can see the js file here.
+
+OK, doing something similar on Windows, quitting my shell.
+
+And I can see from the prompt that I'm actually in my home directory here.
+
+Now the way I do a directory listing on Windows is with DIR, which is an abbreviation of directory.
+
+I see M001 here.
+
+As with the terminal application on the Mac and other bash shells, I can change directory, do another directory listing.
+
+And there, I see the same js file.
+
+Now a couple of things to point out.
+
+One is that I've been using tab completion so that I don't have to type the entire directory.
+
+If you type a few characters then hit Tab, if there's only one directory or file with that name-- for example, loa, if I type tab-- because that's the only directory with that name here, the command prompt will complete the name for me so that I don't have to type it.
+
+It's just a convenience.
+
+The exact same thing works in the terminal application on the Mac and in most other shells.
+
+The other thing that I want to point out here is that by using arrow keys, we can go back through the history of commands we've executed, including when we launched the Mongo shell in the command prompt.
+
+And again, exactly the same thing works on the Mac.
+
+Now the cool thing is that if I launch the Mongo shell here from the folder in which I've saved my js file, then when I launch the Mongo shell, the Mongo shell has as its working directory the directory that contains that js file.
+
+Now, the Mongo shell is a fully-functional JavaScript interpreter.
+
+And if I take a look at that js file, I can see that I have a number of JavaScript commands here, including this last one, which loads a bunch of data.
+
+The way we're going to get data into your sandbox cluster is by running this JavaScript file.
+
+But we're going to do it from the Mongo shell.
+
+And I can execute this file using the load command that the shell provides to me.
+
+So, I simply need to type load-- this is a.
+
+Function.
+
+I call the load function.
+
+And in parentheses, I pass it the name of our js file in quotes.
+
+Now remember, currently, we only have admin and local here.
+
+If I run this command, now we can see that a video database has been added.
+
+And if I want to access the data in this database, then I can use the video database and take a look at what collections are there using the show collections command.
+
+You can follow exactly these same steps in Windows to load the data set, because the shell works more or less the same across different platforms.
+
+And if I want to take a look at the data that's here, I can do that by running this command.
+
+And we'll talk a whole lot more about the find command as we dive in to the MongoDB query language.

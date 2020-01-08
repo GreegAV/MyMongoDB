@@ -1,0 +1,506 @@
+
+1
+00:00:00.500 --> 00:00:04.830
+So far we've been analyzing
+graph lookup on self lookups,
+
+2
+00:00:04.830 --> 00:00:08.250
+meaning that we find a
+document then we implement
+
+3
+00:00:08.250 --> 00:00:12.690
+the graph lookup and then we
+find also subsequent documents
+
+4
+00:00:12.690 --> 00:00:14.430
+that match what I intended.
+
+5
+00:00:14.430 --> 00:00:18.090
+And then I do another one on
+the self-join, and so forth,
+
+6
+00:00:18.090 --> 00:00:21.920
+which is nice and fun but we
+can do a lot more than that.
+
+7
+00:00:21.920 --> 00:00:24.840
+As in any other
+ordinary lookup, we
+
+8
+00:00:24.840 --> 00:00:27.300
+can start from one
+initial collection
+
+9
+00:00:27.300 --> 00:00:31.070
+and lookup another collections,
+and doing the recursive
+
+10
+00:00:31.070 --> 00:00:33.480
+lookups as we see fit.
+
+11
+00:00:33.480 --> 00:00:35.070
+Obviously, we don't
+need to restrict
+
+12
+00:00:35.070 --> 00:00:37.680
+to just one original document.
+
+13
+00:00:37.680 --> 00:00:40.590
+We have multiple that
+will follow always
+
+14
+00:00:40.590 --> 00:00:42.480
+the same behavior.
+
+15
+00:00:42.480 --> 00:00:44.440
+For this particular
+demonstration,
+
+16
+00:00:44.440 --> 00:00:47.810
+I'm going to use this air
+database that I have here.
+
+17
+00:00:47.810 --> 00:00:51.240
+So in this air database, what
+I have is two collections,
+
+18
+00:00:51.240 --> 00:00:56.040
+one of them is airlines
+and another one is routes.
+
+19
+00:00:56.040 --> 00:00:57.810
+In a particular
+airline document,
+
+20
+00:00:57.810 --> 00:01:00.030
+it's a pretty flat
+document, where
+
+21
+00:01:00.030 --> 00:01:04.370
+I have all the information I
+need for a particular airline.
+
+22
+00:01:04.370 --> 00:01:09.480
+Its alias, its iata code, the
+country, and where the airline
+
+23
+00:01:09.480 --> 00:01:14.130
+itself is based, basically
+saying which airport is
+
+24
+00:01:14.130 --> 00:01:16.800
+base to this home airline.
+
+25
+00:01:16.800 --> 00:01:18.990
+On collection routes,
+what I can find
+
+26
+00:01:18.990 --> 00:01:22.680
+is information on the airline,
+where does the flight depart
+
+27
+00:01:22.680 --> 00:01:25.850
+from, the source airport,
+where does it reach,
+
+28
+00:01:25.850 --> 00:01:28.770
+the destination airport,
+and some other information,
+
+29
+00:01:28.770 --> 00:01:32.610
+like if it's codeshare, its
+stops, and the type of airplane
+
+30
+00:01:32.610 --> 00:01:35.190
+or the airplane that
+actually is operating
+
+31
+00:01:35.190 --> 00:01:36.660
+this particular route.
+
+32
+00:01:36.660 --> 00:01:40.200
+So in this scenario, I'm going
+to have information on airlines
+
+33
+00:01:40.200 --> 00:01:42.430
+and information on routes.
+
+34
+00:01:42.430 --> 00:01:47.550
+So if you imagine this very
+sketchy map of the world, where
+
+35
+00:01:47.550 --> 00:01:50.010
+we have the blue
+points and identifying
+
+36
+00:01:50.010 --> 00:01:54.750
+the airports, and the routes
+connecting these dots,
+
+37
+00:01:54.750 --> 00:01:58.280
+giving an airline that
+operates certain routes,
+
+38
+00:01:58.280 --> 00:02:02.790
+we can try to identify that
+from a given airport, where
+
+39
+00:02:02.790 --> 00:02:05.640
+the airline is based
+out, where can I
+
+40
+00:02:05.640 --> 00:02:10.380
+go with a maximum, for
+example, of one layover?
+
+41
+00:02:10.380 --> 00:02:13.680
+Say that I want to go from
+this particular place here,
+
+42
+00:02:13.680 --> 00:02:15.150
+where can I go through?
+
+43
+00:02:15.150 --> 00:02:18.370
+I have at least three different
+routes departing here.
+
+44
+00:02:18.370 --> 00:02:22.080
+But from those routes I
+can go multiple other ways,
+
+45
+00:02:22.080 --> 00:02:25.080
+depending on the number of
+layovers that I want to do.
+
+46
+00:02:25.080 --> 00:02:27.750
+If I want a list
+of all connections,
+
+47
+00:02:27.750 --> 00:02:30.030
+and by restricting,
+for example, the number
+
+48
+00:02:30.030 --> 00:02:31.890
+layovers, or
+something like that,
+
+49
+00:02:31.890 --> 00:02:34.680
+we can do that
+using graph lookup.
+
+50
+00:02:34.680 --> 00:02:38.640
+So again, if I want to
+start with TAP Portugal,
+
+51
+00:02:38.640 --> 00:02:42.330
+finding its own base
+airport and knowing
+
+52
+00:02:42.330 --> 00:02:45.720
+every single destination,
+regardless of the airline,
+
+53
+00:02:45.720 --> 00:02:48.330
+that I can go from
+its base airport,
+
+54
+00:02:48.330 --> 00:02:51.750
+in this case, Portugal-- my
+home town, very lovely city--
+
+55
+00:02:51.750 --> 00:02:56.490
+where can I go with a
+maximum of one connection?
+
+56
+00:02:56.490 --> 00:02:59.340
+The full list of
+connected the airports
+
+57
+00:02:59.340 --> 00:03:01.230
+will be given by this query.
+
+58
+00:03:01.230 --> 00:03:03.570
+I can see here that I
+am going all the way
+
+59
+00:03:03.570 --> 00:03:07.860
+to Athens passing through
+Gatwick Airport in London.
+
+60
+00:03:07.860 --> 00:03:10.140
+Now comparing
+maxDepth here, we're
+
+61
+00:03:10.140 --> 00:03:13.230
+using one instead of
+zero, is because we
+
+62
+00:03:13.230 --> 00:03:17.190
+are starting from airlines
+and searching on routes.
+
+63
+00:03:17.190 --> 00:03:23.440
+And maxDepth only will restrict
+the number of recursive lookups
+
+64
+00:03:23.440 --> 00:03:24.540
+on the front collection.
+
+65
+00:03:24.540 --> 00:03:27.760
+So I started my collecting
+the matching document
+
+66
+00:03:27.760 --> 00:03:31.080
+that I want and then I'm
+going to only lookup,
+
+67
+00:03:31.080 --> 00:03:35.040
+or in this case, graph
+lookup twice, the first one
+
+68
+00:03:35.040 --> 00:03:37.890
+and another one, on
+the route's collection.
+
+69
+00:03:37.890 --> 00:03:41.100
+Previously, we used the same
+value for the two levels
+
+70
+00:03:41.100 --> 00:03:45.970
+down since we were doing
+a self-recursive lookup.
+
+71
+00:03:45.970 --> 00:03:49.170
+But let's say that, starting
+from a particular airport
+
+72
+00:03:49.170 --> 00:03:51.720
+and connecting to
+all other airport,
+
+73
+00:03:51.720 --> 00:03:53.910
+regardless of the
+airlines, is not really
+
+74
+00:03:53.910 --> 00:03:55.050
+what I was intending.
+
+75
+00:03:55.050 --> 00:03:59.640
+Not only I want to start from
+the base airport of a given
+
+76
+00:03:59.640 --> 00:04:02.610
+airline, I also
+want to make sure
+
+77
+00:04:02.610 --> 00:04:06.180
+that all flights that
+I'm connecting with
+
+78
+00:04:06.180 --> 00:04:09.450
+are using the
+exactly same airline.
+
+79
+00:04:09.450 --> 00:04:12.990
+So I don't want to
+connect from, for example,
+
+80
+00:04:12.990 --> 00:04:17.190
+Porto to New York
+and then the next hop
+
+81
+00:04:17.190 --> 00:04:18.570
+to be on a different airline.
+
+82
+00:04:18.570 --> 00:04:19.709
+No, not at all.
+
+83
+00:04:19.709 --> 00:04:23.700
+I want to make sure I'm always
+using the same carrier all
+
+84
+00:04:23.700 --> 00:04:25.790
+the way through its network.
+
+85
+00:04:25.790 --> 00:04:30.450
+To do that we can also restrict
+the search with a match.
+
+86
+00:04:30.450 --> 00:04:32.940
+And in this case,
+I want to make sure
+
+87
+00:04:32.940 --> 00:04:37.860
+that the only lookups that
+I'd retrieve match the airline
+
+88
+00:04:37.860 --> 00:04:41.580
+name with the same one that
+I'm originally intending,
+
+89
+00:04:41.580 --> 00:04:43.600
+in this case, TAP Portugal.
+
+90
+00:04:43.600 --> 00:04:44.660
+So what are we doing?
+
+91
+00:04:44.660 --> 00:04:49.170
+Are matching on airlines,
+finding the airline document
+
+92
+00:04:49.170 --> 00:04:51.720
+that matches name
+equals TAP Portugal,
+
+93
+00:04:51.720 --> 00:04:54.240
+We're going to
+graphLookup from routes,
+
+94
+00:04:54.240 --> 00:04:56.980
+setting up the values
+in chain, using
+
+95
+00:04:56.980 --> 00:04:59.400
+as initial value
+of the base airport
+
+96
+00:04:59.400 --> 00:05:01.320
+of this original documents.
+
+97
+00:05:01.320 --> 00:05:03.780
+Connecting the
+destination airport
+
+98
+00:05:03.780 --> 00:05:07.080
+with the source airport, So the
+value of destination airport
+
+99
+00:05:07.080 --> 00:05:10.320
+will be using this recursive
+query over the field source
+
+100
+00:05:10.320 --> 00:05:13.680
+airport with a
+maximum of one hop.
+
+101
+00:05:13.680 --> 00:05:15.990
+So I only want one layover.
+
+102
+00:05:15.990 --> 00:05:19.310
+But always using
+the same airline.
+
+103
+00:05:19.310 --> 00:05:23.610
+Once I do this, I can have the
+full list of all connections
+
+104
+00:05:23.610 --> 00:05:25.740
+that I intended,
+always traveling
+
+105
+00:05:25.740 --> 00:05:27.980
+within the same airline.

@@ -1,0 +1,252 @@
+1
+00:00:00,030 --> 00:00:02,340
+let's look<font color="#E5E5E5"> at MongoDB cloud manager</font>
+
+2
+00:00:02,340 --> 00:00:04,589
+<font color="#E5E5E5">here's the landing page there</font><font color="#CCCCCC"> are a</font>
+
+3
+00:00:04,589 --> 00:00:06,660
+number<font color="#E5E5E5"> of automation monitoring and</font>
+
+4
+00:00:06,660 --> 00:00:08,790
+backup features that cloud manager and
+
+5
+00:00:08,790 --> 00:00:10,830
+ops manager use and as a knowledgeable
+
+6
+00:00:10,830 --> 00:00:14,009
+DBA you should be<font color="#E5E5E5"> aware of them most of</font>
+
+7
+00:00:14,009 --> 00:00:15,690
+<font color="#E5E5E5">the monitoring features by the way are</font>
+
+8
+00:00:15,690 --> 00:00:17,310
+things that you could write a script to
+
+9
+00:00:17,310 --> 00:00:19,289
+do<font color="#E5E5E5"> using server status calls to the</font>
+
+10
+00:00:19,289 --> 00:00:21,199
+database plus some system tools
+
+11
+00:00:21,199 --> 00:00:23,460
+<font color="#CCCCCC">obviously you can also perform your own</font>
+
+12
+00:00:23,460 --> 00:00:27,180
+backups<font color="#E5E5E5"> security</font><font color="#CCCCCC"> etc however</font><font color="#E5E5E5"> all</font><font color="#CCCCCC"> of</font>
+
+13
+00:00:27,180 --> 00:00:29,340
+those are much easier<font color="#CCCCCC"> to</font><font color="#E5E5E5"> do with cloud</font>
+
+14
+00:00:29,340 --> 00:00:31,920
+manager and ops manager<font color="#CCCCCC"> in this lesson</font>
+
+15
+00:00:31,920 --> 00:00:33,840
+<font color="#E5E5E5">I'll be focusing on the monitoring</font>
+
+16
+00:00:33,840 --> 00:00:35,370
+features that<font color="#CCCCCC"> our server</font><font color="#E5E5E5"> management</font>
+
+17
+00:00:35,370 --> 00:00:37,590
+tools provide some of these features<font color="#E5E5E5"> can</font>
+
+18
+00:00:37,590 --> 00:00:39,780
+<font color="#CCCCCC">also help you to</font><font color="#E5E5E5"> see problems</font><font color="#CCCCCC"> before</font>
+
+19
+00:00:39,780 --> 00:00:41,610
+they arrive in this<font color="#E5E5E5"> lesson we're going</font>
+
+20
+00:00:41,610 --> 00:00:43,770
+<font color="#E5E5E5">to do a quick signup and look at what's</font>
+
+21
+00:00:43,770 --> 00:00:45,780
+available so that<font color="#E5E5E5"> you're aware by the</font>
+
+22
+00:00:45,780 --> 00:00:47,460
+way I'll briefly<font color="#CCCCCC"> mention the</font>
+
+23
+00:00:47,460 --> 00:00:49,170
+similarities and<font color="#E5E5E5"> differences between</font>
+
+24
+00:00:49,170 --> 00:00:51,390
+cloud and ops manager<font color="#E5E5E5"> both use</font>
+
+25
+00:00:51,390 --> 00:00:53,489
+monitoring backup and automation<font color="#E5E5E5"> in the</font>
+
+26
+00:00:53,489 --> 00:00:55,590
+<font color="#E5E5E5">same way the only difference is that</font><font color="#CCCCCC"> if</font>
+
+27
+00:00:55,590 --> 00:00:57,420
+you're using cloud manager<font color="#E5E5E5"> MongoDB</font>
+
+28
+00:00:57,420 --> 00:00:59,399
+stores<font color="#E5E5E5"> your encrypted backups and hold</font>
+
+29
+00:00:59,399 --> 00:01:01,320
+your metadata<font color="#E5E5E5"> on a combination</font><font color="#CCCCCC"> of</font><font color="#E5E5E5"> our</font>
+
+30
+00:01:01,320 --> 00:01:04,379
+hosted servers and AWS if you're using
+
+31
+00:01:04,379 --> 00:01:06,630
+ops manager<font color="#E5E5E5"> then</font><font color="#CCCCCC"> you have full</font><font color="#E5E5E5"> control</font>
+
+32
+00:01:06,630 --> 00:01:08,939
+<font color="#E5E5E5">over</font><font color="#CCCCCC"> the data</font><font color="#E5E5E5"> and metadata on your own</font>
+
+33
+00:01:08,939 --> 00:01:11,600
+infrastructure<font color="#E5E5E5"> no one else sees anything</font>
+
+34
+00:01:11,600 --> 00:01:13,590
+<font color="#CCCCCC">ok let's do this</font>
+
+35
+00:01:13,590 --> 00:01:16,080
+here's the landing page I can<font color="#E5E5E5"> sign up</font>
+
+36
+00:01:16,080 --> 00:01:18,950
+<font color="#E5E5E5">for</font><font color="#CCCCCC"> a cloud manager or Atlas here I'll</font>
+
+37
+00:01:18,950 --> 00:01:24,689
+sign<font color="#E5E5E5"> up for a new account once I've put</font>
+
+38
+00:01:24,689 --> 00:01:27,210
+in my<font color="#CCCCCC"> information and agree to</font><font color="#E5E5E5"> the Terms</font>
+
+39
+00:01:27,210 --> 00:01:31,350
+of Service<font color="#CCCCCC"> I can continue</font><font color="#E5E5E5"> I'll create a</font>
+
+40
+00:01:31,350 --> 00:01:36,659
+group name<font color="#CCCCCC"> and it's setting up my</font>
+
+41
+00:01:36,659 --> 00:01:39,390
+account now I can deploy a cluster
+
+42
+00:01:39,390 --> 00:01:41,579
+either on my<font color="#E5E5E5"> hardware or out in the</font>
+
+43
+00:01:41,579 --> 00:01:43,020
+cloud<font color="#CCCCCC"> but I'm going to</font><font color="#E5E5E5"> show you</font><font color="#CCCCCC"> how to</font>
+
+44
+00:01:43,020 --> 00:01:47,430
+<font color="#E5E5E5">do it locally</font><font color="#CCCCCC"> I'll build new deploy</font>
+
+45
+00:01:47,430 --> 00:01:53,210
+locally<font color="#E5E5E5"> and create a replica set I'll</font>
+
+46
+00:01:53,210 --> 00:01:57,180
+name it<font color="#E5E5E5"> and continue so let's talk about</font>
+
+47
+00:01:57,180 --> 00:01:59,880
+<font color="#E5E5E5">backups backups are an important part of</font>
+
+48
+00:01:59,880 --> 00:02:02,189
+the<font color="#E5E5E5"> DBAs job but I'm just looking</font><font color="#CCCCCC"> at</font>
+
+49
+00:02:02,189 --> 00:02:04,530
+<font color="#CCCCCC">Diagnostics and debugging information</font>
+
+50
+00:02:04,530 --> 00:02:07,290
+today so I'm going<font color="#CCCCCC"> to skip that next I'm</font>
+
+51
+00:02:07,290 --> 00:02:09,060
+going<font color="#E5E5E5"> to install an automation agent</font>
+
+52
+00:02:09,060 --> 00:02:11,038
+once running<font color="#CCCCCC"> this agent will spit up my</font>
+
+53
+00:02:11,038 --> 00:02:12,810
+deployment for me<font color="#E5E5E5"> I'm going to do this</font>
+
+54
+00:02:12,810 --> 00:02:13,950
+on my<font color="#E5E5E5"> VM so</font>
+
+55
+00:02:13,950 --> 00:02:18,620
+all download the ubuntu<font color="#E5E5E5"> 14</font>
+
+56
+00:02:21,170 --> 00:02:29,810
+<font color="#CCCCCC">I'll go into the VM install the package</font>
+
+57
+00:02:31,370 --> 00:02:35,030
+edit<font color="#E5E5E5"> the config file</font>
+
+58
+00:02:45,320 --> 00:02:51,780
+create my data directory give it
+
+59
+00:02:51,780 --> 00:02:56,220
+appropriate permissions and start the
+
+60
+00:02:56,220 --> 00:02:59,850
+agent at this point<font color="#E5E5E5"> I click verify agent</font>
+
+61
+00:02:59,850 --> 00:03:01,740
+to be<font color="#E5E5E5"> sure it's connecting to</font><font color="#CCCCCC"> our</font><font color="#E5E5E5"> cloud</font>
+
+62
+00:03:01,740 --> 00:03:05,070
+manager servers and when I see agents
+
+63
+00:03:05,070 --> 00:00:00,000
+verified<font color="#CCCCCC"> I know I'm good to go</font>
+

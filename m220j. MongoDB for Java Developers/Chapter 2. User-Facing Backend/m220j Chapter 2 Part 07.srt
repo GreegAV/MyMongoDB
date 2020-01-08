@@ -1,0 +1,652 @@
+
+1
+00:00:00.000 --> 00:00:00.120
+
+
+2
+00:00:00.120 --> 00:00:01.160
+All right, so in
+this lesson, we're
+
+3
+00:00:01.160 --> 00:00:02.785
+going to discuss
+write concerns and how
+
+4
+00:00:02.785 --> 00:00:05.040
+they can provide a different
+level of write durability
+
+5
+00:00:05.040 --> 00:00:06.017
+in our application.
+
+6
+00:00:06.017 --> 00:00:08.100
+If you're not sure right
+now what write durability
+
+7
+00:00:08.100 --> 00:00:08.860
+is, no worries.
+
+8
+00:00:08.860 --> 00:00:10.240
+We'll cover it in this lesson.
+
+9
+00:00:10.240 --> 00:00:12.870
+So for right now, let's just
+consider a small supermarket
+
+10
+00:00:12.870 --> 00:00:16.140
+application using a replica
+set as its data source.
+
+11
+00:00:16.140 --> 00:00:18.310
+Whenever a customer puts
+an item into their cart,
+
+12
+00:00:18.310 --> 00:00:20.310
+the application will send
+a write statement over
+
+13
+00:00:20.310 --> 00:00:22.200
+to MongoDB, and
+that write will be
+
+14
+00:00:22.200 --> 00:00:24.589
+received for that primary
+node of the replica set.
+
+15
+00:00:24.589 --> 00:00:26.130
+So the first thing
+the primary node's
+
+16
+00:00:26.130 --> 00:00:27.754
+going to do when it
+receives this write
+
+17
+00:00:27.754 --> 00:00:30.410
+is it's going to apply the
+write and its copy of the data.
+
+18
+00:00:30.410 --> 00:00:32.130
+And by default, as
+soon as it's done
+
+19
+00:00:32.130 --> 00:00:33.960
+performing the write
+in its database,
+
+20
+00:00:33.960 --> 00:00:35.668
+it's going to send an
+acknowledgment back
+
+21
+00:00:35.668 --> 00:00:36.610
+to the client.
+
+22
+00:00:36.610 --> 00:00:39.450
+So at this point, the client has
+received a write acknowledgment
+
+23
+00:00:39.450 --> 00:00:41.670
+back from the database,
+and it considers the write
+
+24
+00:00:41.670 --> 00:00:42.812
+to be complete.
+
+25
+00:00:42.812 --> 00:00:45.270
+It assumes that the secondary
+nodes will replicate the data
+
+26
+00:00:45.270 --> 00:00:47.280
+sometime soon, but
+it doesn't actually
+
+27
+00:00:47.280 --> 00:00:50.880
+have any immediate proof of it
+from this acknowledgment alone.
+
+28
+00:00:50.880 --> 00:00:53.190
+So that was an example of
+a write with writeConcern--
+
+29
+00:00:53.190 --> 00:00:54.367
+{w 1}.
+
+30
+00:00:54.367 --> 00:00:55.950
+The number 1 here
+refers to the number
+
+31
+00:00:55.950 --> 00:00:57.672
+of nodes in this
+set that must apply
+
+32
+00:00:57.672 --> 00:00:59.880
+the write before a client
+gets an acknowledgment back
+
+33
+00:00:59.880 --> 00:01:01.050
+from the driver.
+
+34
+00:01:01.050 --> 00:01:03.240
+In this case, it
+was just one node.
+
+35
+00:01:03.240 --> 00:01:05.459
+This is the default
+behavior in MongoDB,
+
+36
+00:01:05.459 --> 00:01:08.130
+so if you send a write to
+MongoDB without a writeConcern
+
+37
+00:01:08.130 --> 00:01:11.726
+specified, it will
+use {w 1} by default.
+
+38
+00:01:11.726 --> 00:01:13.350
+So now let's consider
+a different level
+
+39
+00:01:13.350 --> 00:01:14.682
+of write concern.
+
+40
+00:01:14.682 --> 00:01:16.890
+Our shopping cart application
+sends a write statement
+
+41
+00:01:16.890 --> 00:01:18.750
+to the primary node,
+and the primary
+
+42
+00:01:18.750 --> 00:01:21.190
+applies that write just
+like it did before.
+
+43
+00:01:21.190 --> 00:01:23.450
+But this time, the primary
+waits before sending
+
+44
+00:01:23.450 --> 00:01:24.992
+an acknowledgment
+back to the client.
+
+45
+00:01:24.992 --> 00:01:26.116
+And what is it waiting for?
+
+46
+00:01:26.116 --> 00:01:28.320
+Well, before sending an
+acknowledgment of the write
+
+47
+00:01:28.320 --> 00:01:30.660
+back to the client, the
+primary will actually
+
+48
+00:01:30.660 --> 00:01:33.810
+wait for one of the secondary
+nodes to replicate the data.
+
+49
+00:01:33.810 --> 00:01:35.610
+When the secondary
+applies the write, it
+
+50
+00:01:35.610 --> 00:01:38.110
+will send an acknowledgment
+back to the primary saying, hey,
+
+51
+00:01:38.110 --> 00:01:40.770
+I applied this write
+to my copy of the data.
+
+52
+00:01:40.770 --> 00:01:42.630
+Once the primary
+knows that in addition
+
+53
+00:01:42.630 --> 00:01:45.180
+to it having applied the write
+itself, one of the secondaries
+
+54
+00:01:45.180 --> 00:01:47.607
+has also applied
+the write, only then
+
+55
+00:01:47.607 --> 00:01:49.690
+will it send an acknowledgment
+back to the client.
+
+56
+00:01:49.690 --> 00:01:51.930
+This write was sent
+with w majority, which
+
+57
+00:01:51.930 --> 00:01:53.340
+means that the
+client isn't going
+
+58
+00:01:53.340 --> 00:01:55.214
+to get an acknowledgment
+back from the driver
+
+59
+00:01:55.214 --> 00:01:58.165
+until a majority of nodes in
+the set have applied the write.
+
+60
+00:01:58.165 --> 00:01:59.790
+In this case, this
+is a three-node set,
+
+61
+00:01:59.790 --> 00:02:02.430
+so we only needed two of the
+nodes to apply the write.
+
+62
+00:02:02.430 --> 00:02:05.226
+You can think of w majority
+as a contract with the client
+
+63
+00:02:05.226 --> 00:02:06.600
+that this write
+will not be lost,
+
+64
+00:02:06.600 --> 00:02:09.039
+even in the event
+of hosts going down.
+
+65
+00:02:09.039 --> 00:02:11.452
+If an application sends
+a write with w majority
+
+66
+00:02:11.452 --> 00:02:13.410
+and gets an acknowledgment
+back for that write,
+
+67
+00:02:13.410 --> 00:02:15.510
+it knows that even if
+the current primary were
+
+68
+00:02:15.510 --> 00:02:17.760
+to go down, one of the
+secondaries in the set
+
+69
+00:02:17.760 --> 00:02:19.830
+has also captured the write.
+
+70
+00:02:19.830 --> 00:02:21.390
+So with w majority,
+the connection
+
+71
+00:02:21.390 --> 00:02:23.137
+is going to wait for
+a majority of nodes
+
+72
+00:02:23.137 --> 00:02:25.470
+to apply the write before
+sending an acknowledgment back
+
+73
+00:02:25.470 --> 00:02:26.552
+to the client.
+
+74
+00:02:26.552 --> 00:02:28.260
+For that reason, it
+takes a little longer
+
+75
+00:02:28.260 --> 00:02:30.330
+and is subject to
+replication lag.
+
+76
+00:02:30.330 --> 00:02:32.351
+But there's no additional
+load on the server,
+
+77
+00:02:32.351 --> 00:02:34.350
+so the primary can still
+perform the same number
+
+78
+00:02:34.350 --> 00:02:35.800
+of writes per second.
+
+79
+00:02:35.800 --> 00:02:38.730
+However, w majority essentially
+guarantees to the client
+
+80
+00:02:38.730 --> 00:02:41.100
+that a write will not be
+rolled back during fail over,
+
+81
+00:02:41.100 --> 00:02:43.830
+because the write was committed
+to a majority of nodes.
+
+82
+00:02:43.830 --> 00:02:45.420
+This is useful when
+some of our writes
+
+83
+00:02:45.420 --> 00:02:47.790
+are vital to the success
+of the application.
+
+84
+00:02:47.790 --> 00:02:50.670
+A common example of this
+is a new user on a website.
+
+85
+00:02:50.670 --> 00:02:52.470
+These types of
+operations must succeed,
+
+86
+00:02:52.470 --> 00:02:54.511
+because without an account,
+the user can't really
+
+87
+00:02:54.511 --> 00:02:56.100
+do anything else on the site.
+
+88
+00:02:56.100 --> 00:02:59.029
+So I just want to discuss
+one more write concern, w 0.
+
+89
+00:02:59.029 --> 00:03:01.320
+By now, you must have realized
+that when the value of w
+
+90
+00:03:01.320 --> 00:03:03.197
+is a number, it's
+the number of nodes
+
+91
+00:03:03.197 --> 00:03:05.280
+that must apply a write
+before the client receives
+
+92
+00:03:05.280 --> 00:03:06.570
+an acknowledgment.
+
+93
+00:03:06.570 --> 00:03:09.060
+We can pass any number
+here to the w field,
+
+94
+00:03:09.060 --> 00:03:11.100
+but it will throw us an
+error if this number is
+
+95
+00:03:11.100 --> 00:03:13.620
+higher than the total
+number of nodes in the set.
+
+96
+00:03:13.620 --> 00:03:17.112
+Following that rule, when w's
+0, none of the nodes in the set
+
+97
+00:03:17.112 --> 00:03:19.320
+actually need to apply a
+write before the client gets
+
+98
+00:03:19.320 --> 00:03:20.580
+acknowledgment.
+
+99
+00:03:20.580 --> 00:03:22.332
+This means that when
+we're w 0, there's
+
+100
+00:03:22.332 --> 00:03:23.790
+a chance that we
+get acknowledgment
+
+101
+00:03:23.790 --> 00:03:25.900
+before any data has
+actually been written.
+
+102
+00:03:25.900 --> 00:03:28.440
+So if the server crashes,
+we might lose a few writes.
+
+103
+00:03:28.440 --> 00:03:30.690
+This type of write is referred
+to as a fire and forget
+
+104
+00:03:30.690 --> 00:03:32.540
+operation, because
+it sends the write
+
+105
+00:03:32.540 --> 00:03:34.650
+and doesn't really worry
+about the response.
+
+106
+00:03:34.650 --> 00:03:37.140
+But this isn't entirely true,
+because the acknowledgment
+
+107
+00:03:37.140 --> 00:03:40.410
+from a w 0 operation can also
+alert us to network errors
+
+108
+00:03:40.410 --> 00:03:41.850
+and socket exceptions.
+
+109
+00:03:41.850 --> 00:03:43.470
+So the client can
+implement some logic
+
+110
+00:03:43.470 --> 00:03:45.095
+to figure out if the
+write was actually
+
+111
+00:03:45.095 --> 00:03:46.530
+received by the database.
+
+112
+00:03:46.530 --> 00:03:49.560
+In any case, writing
+with w 0 is very fast
+
+113
+00:03:49.560 --> 00:03:51.060
+and can be useful
+for less important
+
+114
+00:03:51.060 --> 00:03:52.860
+writes that occur frequently.
+
+115
+00:03:52.860 --> 00:03:55.000
+For example, if an
+internet of things device
+
+116
+00:03:55.000 --> 00:03:56.850
+is sending a ping to
+Mango every two minutes
+
+117
+00:03:56.850 --> 00:03:58.710
+to report its
+status, it might be
+
+118
+00:03:58.710 --> 00:04:01.650
+OK to speed up every write
+operation at the risk of losing
+
+119
+00:04:01.650 --> 00:04:02.940
+a few writes.
+
+120
+00:04:02.940 --> 00:04:06.420
+So to recap, w 1 is the
+default write concern in Mongo,
+
+121
+00:04:06.420 --> 00:04:08.197
+and it commits a
+write to one node
+
+122
+00:04:08.197 --> 00:04:09.780
+before sending an
+acknowledgement back
+
+123
+00:04:09.780 --> 00:04:10.720
+to the client.
+
+124
+00:04:10.720 --> 00:04:12.960
+w majority will make sure
+the write was applied
+
+125
+00:04:12.960 --> 00:04:15.780
+by a majority of the set before
+sending an acknowledgment back
+
+126
+00:04:15.780 --> 00:04:16.364
+to the client.
+
+127
+00:04:16.364 --> 00:04:17.863
+This means the
+application will have
+
+128
+00:04:17.863 --> 00:04:19.500
+to wait a little
+longer for a response,
+
+129
+00:04:19.500 --> 00:04:21.570
+but it should not have a
+performance impact so long
+
+130
+00:04:21.570 --> 00:04:23.444
+as you have enough
+connections to the primary
+
+131
+00:04:23.444 --> 00:04:24.750
+to handle your requests.
+
+132
+00:04:24.750 --> 00:04:27.150
+w 0 does not commit
+the write at all,
+
+133
+00:04:27.150 --> 00:04:29.710
+but sends an acknowledgement
+back to the client immediately.
+
+134
+00:04:29.710 --> 00:04:31.168
+So there's a slightly
+higher chance
+
+135
+00:04:31.168 --> 00:04:34.520
+that we lose data in the
+event of a primary going down.

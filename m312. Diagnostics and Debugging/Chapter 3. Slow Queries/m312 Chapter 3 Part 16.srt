@@ -1,0 +1,646 @@
+
+1
+00:00:00.000 --> 00:00:00.410
+
+
+2
+00:00:00.410 --> 00:00:00.950
+OK.
+
+3
+00:00:00.950 --> 00:00:04.310
+So these first three are
+all ways to create indexes.
+
+4
+00:00:04.310 --> 00:00:07.400
+But as I said, creating an
+index does a collection scan,
+
+5
+00:00:07.400 --> 00:00:09.800
+and that may be an
+issue, especially
+
+6
+00:00:09.800 --> 00:00:11.720
+with the system under a load.
+
+7
+00:00:11.720 --> 00:00:13.850
+So next, we're going
+to create the index
+
+8
+00:00:13.850 --> 00:00:17.180
+on the replica set using what
+we call a rolling upgrade.
+
+9
+00:00:17.180 --> 00:00:22.025
+Let's go back into our
+VM and go to the primary.
+
+10
+00:00:22.025 --> 00:00:23.400
+And we'll connect
+to our primary.
+
+11
+00:00:23.400 --> 00:00:26.780
+
+
+12
+00:00:26.780 --> 00:00:29.360
+From that primary, let's drop
+the social security number
+
+13
+00:00:29.360 --> 00:00:31.250
+index.
+
+14
+00:00:31.250 --> 00:00:32.000
+Great.
+
+15
+00:00:32.000 --> 00:00:35.000
+Now I'm creating a connection
+object to this secondary
+
+16
+00:00:35.000 --> 00:00:37.520
+and running the shutdown
+server command on it
+
+17
+00:00:37.520 --> 00:00:38.690
+directly from my primary.
+
+18
+00:00:38.690 --> 00:00:41.750
+
+
+19
+00:00:41.750 --> 00:00:42.350
+Perfect.
+
+20
+00:00:42.350 --> 00:00:43.340
+Let's check our status.
+
+21
+00:00:43.340 --> 00:00:46.020
+
+
+22
+00:00:46.020 --> 00:00:48.300
+And as I can see,
+we're no longer
+
+23
+00:00:48.300 --> 00:00:50.640
+able to reach this
+secondary, because we've
+
+24
+00:00:50.640 --> 00:00:52.860
+killed the process.
+
+25
+00:00:52.860 --> 00:00:55.260
+Now I can check to see that
+I'm down to only two servers.
+
+26
+00:00:55.260 --> 00:00:58.030
+
+
+27
+00:00:58.030 --> 00:00:58.630
+Good.
+
+28
+00:00:58.630 --> 00:01:00.550
+Definitely just the two.
+
+29
+00:01:00.550 --> 00:01:02.860
+Next, I want to restart
+the MongoDB process
+
+30
+00:01:02.860 --> 00:01:07.180
+in standalone mode, meaning I am
+omitting the --repl set option
+
+31
+00:01:07.180 --> 00:01:09.360
+and using a different port.
+
+32
+00:01:09.360 --> 00:01:12.190
+This change of port is to
+avoid any traffic trying
+
+33
+00:01:12.190 --> 00:01:14.890
+to connect to that instance
+while I build the index out
+
+34
+00:01:14.890 --> 00:01:16.480
+of the replica set.
+
+35
+00:01:16.480 --> 00:01:19.420
+First, I want to know
+what command I used.
+
+36
+00:01:19.420 --> 00:01:22.570
+I shut down the server on
+RS3, so it's not appearing
+
+37
+00:01:22.570 --> 00:01:24.640
+in the list of processes.
+
+38
+00:01:24.640 --> 00:01:27.280
+I'm going to start with one
+of these processes I see here.
+
+39
+00:01:27.280 --> 00:01:29.920
+I'm going to change its
+port, change its directory,
+
+40
+00:01:29.920 --> 00:01:33.910
+and drop the --repl
+set argument.
+
+41
+00:01:33.910 --> 00:01:35.620
+You can do this
+yourself manually,
+
+42
+00:01:35.620 --> 00:01:37.840
+but I wrote a little
+script to do it for me.
+
+43
+00:01:37.840 --> 00:01:39.140
+You're welcome to use it.
+
+44
+00:01:39.140 --> 00:01:41.710
+But if you do, then use
+it at your own risk.
+
+45
+00:01:41.710 --> 00:01:44.114
+Also, if you see a more
+elegant way to do this,
+
+46
+00:01:44.114 --> 00:01:45.030
+please don't judge me.
+
+47
+00:01:45.030 --> 00:01:54.640
+
+
+48
+00:01:54.640 --> 00:01:58.667
+Connecting with the Mongo shell,
+I now can create the index.
+
+49
+00:01:58.667 --> 00:02:01.000
+This time, there's no reason
+to build in the background.
+
+50
+00:02:01.000 --> 00:02:01.882
+Foreground is better.
+
+51
+00:02:01.882 --> 00:02:03.340
+It's not a part of
+the replica set.
+
+52
+00:02:03.340 --> 00:02:04.120
+It's a standalone.
+
+53
+00:02:04.120 --> 00:02:06.940
+And foreground builds
+tend to be faster.
+
+54
+00:02:06.940 --> 00:02:10.120
+Let's make sure we're
+in the right place.
+
+55
+00:02:10.120 --> 00:02:10.750
+And yes.
+
+56
+00:02:10.750 --> 00:02:15.190
+We're in the M312 database, and
+there's the people collection.
+
+57
+00:02:15.190 --> 00:02:16.240
+Perfect.
+
+58
+00:02:16.240 --> 00:02:17.620
+Let's shut down this instance.
+
+59
+00:02:17.620 --> 00:02:20.680
+
+
+60
+00:02:20.680 --> 00:02:22.454
+And I can restart
+the MongoD server
+
+61
+00:02:22.454 --> 00:02:24.120
+and verify that it's
+back in the replica
+
+62
+00:02:24.120 --> 00:02:27.810
+set with another script that's
+similar to the previous one,
+
+63
+00:02:27.810 --> 00:02:29.670
+just a little different.
+
+64
+00:02:29.670 --> 00:02:34.500
+Now let's go back to
+the primary and check up
+
+65
+00:02:34.500 --> 00:02:37.520
+on our replica set.
+
+66
+00:02:37.520 --> 00:02:40.620
+Secondary, secondary, primary.
+
+67
+00:02:40.620 --> 00:02:41.810
+Great.
+
+68
+00:02:41.810 --> 00:02:45.180
+Our server is back up,
+and it's the secondary.
+
+69
+00:02:45.180 --> 00:02:47.580
+In real life, there's a
+chance that the index build
+
+70
+00:02:47.580 --> 00:02:49.620
+would take a really long time.
+
+71
+00:02:49.620 --> 00:02:52.890
+If that had happened, I would
+then want this re-added member
+
+72
+00:02:52.890 --> 00:02:55.620
+to catch up on its oplog
+before doing the same work
+
+73
+00:02:55.620 --> 00:02:57.510
+on the other secondaries.
+
+74
+00:02:57.510 --> 00:03:00.240
+But this is a class demo, and
+I haven't done any writes,
+
+75
+00:03:00.240 --> 00:03:02.370
+so I'll just shrink
+down my other secondary
+
+76
+00:03:02.370 --> 00:03:03.780
+and do the same work on it.
+
+77
+00:03:03.780 --> 00:03:06.330
+
+
+78
+00:03:06.330 --> 00:03:09.070
+And that member is down.
+
+79
+00:03:09.070 --> 00:03:10.990
+So we'll go through a
+similar set of steps,
+
+80
+00:03:10.990 --> 00:03:11.990
+just like we did before.
+
+81
+00:03:11.990 --> 00:03:15.870
+
+
+82
+00:03:15.870 --> 00:03:19.359
+Now our second server
+is up as a standalone.
+
+83
+00:03:19.359 --> 00:03:20.400
+We're in the right place.
+
+84
+00:03:20.400 --> 00:03:23.190
+
+
+85
+00:03:23.190 --> 00:03:26.250
+We've created our
+index, so we want
+
+86
+00:03:26.250 --> 00:03:31.412
+to shut down and restart it.
+
+87
+00:03:31.412 --> 00:03:33.120
+Let's go back to the
+primary and confirm.
+
+88
+00:03:33.120 --> 00:03:37.750
+
+
+89
+00:03:37.750 --> 00:03:42.790
+Secondary, secondary, primary.
+
+90
+00:03:42.790 --> 00:03:43.300
+Great.
+
+91
+00:03:43.300 --> 00:03:46.210
+All three of my
+members are up again.
+
+92
+00:03:46.210 --> 00:03:48.950
+And once I've
+re-added this member,
+
+93
+00:03:48.950 --> 00:03:51.310
+my two secondaries
+both have the index,
+
+94
+00:03:51.310 --> 00:03:54.280
+and we're left doing
+the work on the primary.
+
+95
+00:03:54.280 --> 00:03:56.740
+Let's step down the primary
+and then shut it down
+
+96
+00:03:56.740 --> 00:03:58.478
+and do the same procedure.
+
+97
+00:03:58.478 --> 00:04:01.550
+
+
+98
+00:04:01.550 --> 00:04:03.340
+So now we're no
+longer the primary.
+
+99
+00:04:03.340 --> 00:04:06.040
+
+
+100
+00:04:06.040 --> 00:04:10.390
+This server on port
+30002 is the primary,
+
+101
+00:04:10.390 --> 00:04:12.590
+and we're just a secondary.
+
+102
+00:04:12.590 --> 00:04:13.090
+OK.
+
+103
+00:04:13.090 --> 00:04:15.010
+Let's go through and
+repeat all of our steps.
+
+104
+00:04:15.010 --> 00:04:19.000
+
+
+105
+00:04:19.000 --> 00:04:21.170
+First, I'll shut down
+my server, then exit.
+
+106
+00:04:21.170 --> 00:04:27.070
+
+
+107
+00:04:27.070 --> 00:04:31.820
+Next, I'll spin it back
+up as a standalone.
+
+108
+00:04:31.820 --> 00:04:35.630
+And let's jump to it.
+
+109
+00:04:35.630 --> 00:04:37.010
+Once again, a sanity check.
+
+110
+00:04:37.010 --> 00:04:40.060
+
+
+111
+00:04:40.060 --> 00:04:46.050
+We'll create our index,
+and we'll shut down.
+
+112
+00:04:46.050 --> 00:04:49.440
+
+
+113
+00:04:49.440 --> 00:04:50.040
+OK.
+
+114
+00:04:50.040 --> 00:04:53.100
+Let's restart it and confirm.
+
+115
+00:04:53.100 --> 00:04:58.870
+
+
+116
+00:04:58.870 --> 00:05:03.790
+Server on port 30002
+is still primary.
+
+117
+00:05:03.790 --> 00:05:05.110
+Secondary.
+
+118
+00:05:05.110 --> 00:05:07.630
+And here we are.
+
+119
+00:05:07.630 --> 00:05:10.600
+Once I'm done with updating
+my last replica set member,
+
+120
+00:05:10.600 --> 00:05:11.449
+I'm good to go.
+
+121
+00:05:11.449 --> 00:05:12.740
+There are a few things to note.
+
+122
+00:05:12.740 --> 00:05:16.530
+First, the role of primary
+was exchanged between hosts.
+
+123
+00:05:16.530 --> 00:05:19.300
+This server on port 30000
+used to be the primary.
+
+124
+00:05:19.300 --> 00:05:20.590
+Now it's a secondary.
+
+125
+00:05:20.590 --> 00:05:24.790
+And this server on port
+30002 is now primary.
+
+126
+00:05:24.790 --> 00:05:27.430
+By the way, which server
+steps up to be primary
+
+127
+00:05:27.430 --> 00:05:29.390
+may vary on your system.
+
+128
+00:05:29.390 --> 00:05:30.200
+It doesn't matter.
+
+129
+00:05:30.200 --> 00:05:31.949
+The important thing
+is that another server
+
+130
+00:05:31.949 --> 00:05:33.640
+is going to have to step up.
+
+131
+00:05:33.640 --> 00:05:36.430
+Also, it's up to me to
+build the same index
+
+132
+00:05:36.430 --> 00:05:39.580
+with the exact same
+parameters on all hosts.
+
+133
+00:05:39.580 --> 00:05:41.110
+There is no check
+from the system
+
+134
+00:05:41.110 --> 00:05:42.640
+to tell me that
+the indexes aren't
+
+135
+00:05:42.640 --> 00:05:45.100
+the same across all the nodes.
+
+136
+00:05:45.100 --> 00:05:47.800
+Even if you're not going
+to build indexes this way,
+
+137
+00:05:47.800 --> 00:05:49.570
+this is a powerful
+procedure that you
+
+138
+00:05:49.570 --> 00:05:53.230
+should master in order to do
+any kind of upgrade on MongoDB.
+
+139
+00:05:53.230 --> 00:05:55.990
+Use this process anytime
+you change your MongoDB
+
+140
+00:05:55.990 --> 00:05:58.510
+version or your server's
+operating system
+
+141
+00:05:58.510 --> 00:06:00.610
+or upgrade your hardware.
+
+142
+00:06:00.610 --> 00:06:02.860
+You can do all of this by
+leveraging the replication
+
+143
+00:06:02.860 --> 00:06:05.130
+feature of MongoDB.

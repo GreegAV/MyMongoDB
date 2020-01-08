@@ -1,0 +1,47 @@
+In MongoDB, roles are updatable.
+
+Well, some of them at least.
+
+Not surprisingly, if we try to update a built-in role, we're not going to get too far.
+
+User defined roles, however, can be updated.
+
+There are three ways to update a given role.
+
+We can go ahead and use db.getRole to get a role like the intern role, and then store it in a variable called role.
+
+From here it's not hard to make changes to this object just using JavaScript.
+
+As you can see here, we now have a variable called updatedPrivileges, which currently contains all of the old privileges on this role, which is just the ability to update meteorites on the NASA database.
+
+And it's not hard to just use JavaScript to push a insert action onto the actions array of the privileges array.
+
+Now if you look at updated privileges, we'll see that insert is also in action.
+
+I'm not going to run this command, because I don't actually want to update the intern role.
+
+But the db.updateRole allows us to pass on a role, and then any updates you want to make to that role.
+
+In this case, I'm just going to update all the privileges with this new privilege array that we have to find.
+
+Another way to update roles in MongoDB is to use the grantPrivilegesToRole function.
+
+With this command we pass in the name of the role that we want.
+
+And then we pass an array of all of the privileged documents that we want to add to this role.
+
+Drawing from the last example, if I just want to add the ability to insert on the meteorites collection in the NASA database on the internRole, we just pass in a privileged document with a resource document like so.
+
+And adding an action like so.
+
+Again, I'm not going to run this command, because I don't actually want to add this privilege to the intern role.
+
+The last way that we can add privileges to a role is by granting roles to a role.
+
+And by "roles," I mean the roles that a role inherits from.
+
+So in this case, grantRolesToRole takes in the name of the role we want to add inherited roles to, and then just an array of all the inherited roles we want to add.
+
+In this example I am adding the readWriteAnyDatabase role to the internRole, which of course we don't want to do.
+
+So I'm not going to run it.

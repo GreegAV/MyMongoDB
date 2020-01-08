@@ -1,0 +1,19 @@
+Now let's look at operators for array-valued fields.
+
+First, we'll look at $all.
+
+$all matches array fields against an array of elements.
+
+In order for a document to match a filter using $all, all the elements we're looking for must be included in that array field.
+
+Now they don't necessarily need to be in this order, but each one of these must occur in the genre's field in this example.
+
+So here, we're filtering for documents that have been classified as falling into the comedy, crime, and drama genres.
+
+Considering the syntax for $all, note that it's specified as the value of the field were searching on in our filter, and that $all has, as its value, an array.
+
+And if we try this query in the mongo Shell, we see that, in fact, each one of the search results does contain these three genres in it genres field.
+
+Note also that if we loosen up our query a little bit, and instead search for movies that fall into the genres comedy and drama, then we see a mix of movies, all of which have comedy and drama listed among their genres, but which also list other genres, whether it be romance, adventure, thriller, or something else.
+
+So that's $all.

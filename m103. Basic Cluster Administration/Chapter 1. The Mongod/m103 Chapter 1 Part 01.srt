@@ -1,0 +1,661 @@
+1
+00:00:00,500 --> 00:00:02,780
+The MongoDB configuration
+file is a way
+
+2
+00:00:02,780 --> 00:00:06,020
+to organize the options you
+need to run the MongoD or MongoS
+
+3
+00:00:06,020 --> 00:00:09,500
+process into an easy
+to parse YAML file.
+
+4
+00:00:09,500 --> 00:00:12,110
+For the majority of use
+cases outside of the most
+
+5
+00:00:12,110 --> 00:00:14,480
+basic of development
+or evaluation,
+
+6
+00:00:14,480 --> 00:00:16,820
+you should be using
+a configuration file
+
+7
+00:00:16,820 --> 00:00:20,420
+for storing your MongoD
+or MongoS startup options.
+
+8
+00:00:20,420 --> 00:00:23,790
+Before we get into more detail
+on the configuration file,
+
+9
+00:00:23,790 --> 00:00:26,980
+let's first start with
+a MongoD option is.
+
+10
+00:00:26,980 --> 00:00:29,690
+If you've interacted with a
+program in a terminal or shell
+
+11
+00:00:29,690 --> 00:00:32,180
+environment, you are likely
+already familiar with how
+
+12
+00:00:32,180 --> 00:00:34,340
+the command line options work.
+
+13
+00:00:34,340 --> 00:00:36,980
+Typically you have
+your main executable--
+
+14
+00:00:36,980 --> 00:00:39,470
+for example, the MongoD.
+
+15
+00:00:39,470 --> 00:00:41,870
+Then you chain in your
+command line options.
+
+16
+00:00:41,870 --> 00:00:46,160
+Some of them like take a
+value, like dbpath and logpath.
+
+17
+00:00:46,160 --> 00:00:48,680
+Others work like a flag
+and don't require a value
+
+18
+00:00:48,680 --> 00:00:51,170
+to direct behavior, like fork.
+
+19
+00:00:51,170 --> 00:00:53,450
+In the end, you have
+your full command
+
+20
+00:00:53,450 --> 00:00:57,230
+on the command line
+with potentially dozens
+
+21
+00:00:57,230 --> 00:00:58,325
+of options and values.
+
+22
+00:01:01,680 --> 00:01:04,160
+This command is perfectly
+valid and would work fine
+
+23
+00:01:04,160 --> 00:01:05,730
+in production environments.
+
+24
+00:01:05,730 --> 00:01:08,060
+But there are problems
+with this approach.
+
+25
+00:01:08,060 --> 00:01:12,050
+We would have to type this whole
+thing over again every time
+
+26
+00:01:12,050 --> 00:01:15,860
+we would like to launch a new
+MongoD in a different server.
+
+27
+00:01:15,860 --> 00:01:17,570
+If we want to track
+these settings,
+
+28
+00:01:17,570 --> 00:01:20,150
+we would need to grep the
+existing services running
+
+29
+00:01:20,150 --> 00:01:23,840
+in the server or run a
+command within MongoDB.
+
+30
+00:01:23,840 --> 00:01:26,270
+Finally, it's harder
+to read and look
+
+31
+00:01:26,270 --> 00:01:29,390
+for individual options along
+this very long command line
+
+32
+00:01:29,390 --> 00:01:31,130
+string.
+
+33
+00:01:31,130 --> 00:01:33,930
+Before we get into the
+configuration file,
+
+34
+00:01:33,930 --> 00:01:36,830
+let's start with a few
+common command line options.
+
+35
+00:01:36,830 --> 00:01:39,510
+You have your basic path
+configuration options--
+
+36
+00:01:39,510 --> 00:01:41,900
+dbpath and logpath.
+
+37
+00:01:41,900 --> 00:01:44,360
+Starting with 3.6, you
+need to set bind ip
+
+38
+00:01:44,360 --> 00:01:47,900
+to include a network adapter on
+the host that provides access
+
+39
+00:01:47,900 --> 00:01:49,069
+to the network.
+
+40
+00:01:49,069 --> 00:01:51,110
+Otherwise, the MongoD can
+only accept connections
+
+41
+00:01:51,110 --> 00:01:52,970
+on that same host.
+
+42
+00:01:52,970 --> 00:01:55,880
+Setting the replSet
+and keyFile options
+
+43
+00:01:55,880 --> 00:01:58,430
+starts up the MongoD
+in replication mode
+
+44
+00:01:58,430 --> 00:02:01,010
+with basic intercluster
+auth security and user
+
+45
+00:02:01,010 --> 00:02:03,050
+authentication enabled.
+
+46
+00:02:03,050 --> 00:02:05,510
+These are very common
+options, and chances are,
+
+47
+00:02:05,510 --> 00:02:09,580
+you'll see at least one of
+these in any MongoDB deployment.
+
+48
+00:02:09,580 --> 00:02:13,996
+The SSL options are related to
+tls ssl transport encryption.
+
+49
+00:02:13,996 --> 00:02:16,370
+You don't need to know much
+about these options in detail
+
+50
+00:02:16,370 --> 00:02:17,780
+for this course.
+
+51
+00:02:17,780 --> 00:02:20,570
+Take a look at M3 10 here
+on MongoDB University
+
+52
+00:02:20,570 --> 00:02:23,610
+for an in-depth course
+on cluster security,
+
+53
+00:02:23,610 --> 00:02:25,370
+including tsl ssl.
+
+54
+00:02:25,370 --> 00:02:28,190
+Alternatively, take a
+look at our documentation.
+
+55
+00:02:28,190 --> 00:02:31,460
+Finally, we have fork,
+which just tells the MongoD
+
+56
+00:02:31,460 --> 00:02:35,340
+run as a daemon instead of
+being tied to a terminal window.
+
+57
+00:02:35,340 --> 00:02:38,150
+So what are the configuration
+file counterparts
+
+58
+00:02:38,150 --> 00:02:40,610
+to these command line options?
+
+59
+00:02:40,610 --> 00:02:42,080
+On the right, I
+have the full path
+
+60
+00:02:42,080 --> 00:02:44,120
+to the configuration option.
+
+61
+00:02:44,120 --> 00:02:47,570
+That means each key in the
+path to the final value
+
+62
+00:02:47,570 --> 00:02:49,940
+is the parent of the YAML file.
+
+63
+00:02:49,940 --> 00:02:53,180
+So the replSet name
+configuration option
+
+64
+00:02:53,180 --> 00:02:57,350
+falls under the
+replication parent key.
+
+65
+00:02:57,350 --> 00:03:00,860
+Configuration files to support
+deeper nesting as well.
+
+66
+00:03:00,860 --> 00:03:02,910
+Take a look at
+these two options--
+
+67
+00:03:02,910 --> 00:03:06,530
+sslPEMKey and sslCA file.
+
+68
+00:03:06,530 --> 00:03:09,620
+These are both under the
+SSL parent, which themselves
+
+69
+00:03:09,620 --> 00:03:11,550
+are under the net parent.
+
+70
+00:03:11,550 --> 00:03:15,110
+The net parent also
+captures a bind ip.
+
+71
+00:03:15,110 --> 00:03:18,350
+All three options are related
+to the net parent, but as
+
+72
+00:03:18,350 --> 00:03:24,390
+a sslPEMKey and sslCAKey
+are specific to net.ssl.
+
+73
+00:03:24,390 --> 00:03:27,230
+Now, how did I get
+to these mappings?
+
+74
+00:03:27,230 --> 00:03:31,830
+This is where our fantastic
+manual comes to the rescue.
+
+75
+00:03:31,830 --> 00:03:34,550
+All of our command line options
+and our configuration file
+
+76
+00:03:34,550 --> 00:03:37,705
+options are well documented
+in these two links.
+
+77
+00:03:37,705 --> 00:03:39,080
+I invite you to
+give these a look
+
+78
+00:03:39,080 --> 00:03:40,580
+to find out about
+which command line
+
+79
+00:03:40,580 --> 00:03:43,340
+options or configuration
+file options are available
+
+80
+00:03:43,340 --> 00:03:46,470
+and how to map between the two.
+
+81
+00:03:46,470 --> 00:03:49,070
+Now let's take our list of
+configuration file options
+
+82
+00:03:49,070 --> 00:03:51,980
+with the full path to the
+option and translate that
+
+83
+00:03:51,980 --> 00:03:54,740
+into our configuration
+YAML file.
+
+84
+00:03:54,740 --> 00:03:57,920
+YAML stands for Yet
+Another Markup Language.
+
+85
+00:03:57,920 --> 00:04:00,690
+You have your key value pairs.
+
+86
+00:04:00,690 --> 00:04:04,040
+The top level key and a
+MongoDB a configuration file
+
+87
+00:04:04,040 --> 00:04:08,000
+represents a logical
+grouping of options.
+
+88
+00:04:08,000 --> 00:04:10,370
+Each nested element
+under a top level key
+
+89
+00:04:10,370 --> 00:04:14,160
+represents an option related
+to that top level key.
+
+90
+00:04:14,160 --> 00:04:17,930
+So here we see that dbPath
+is a storage option.
+
+91
+00:04:17,930 --> 00:04:21,589
+Remember, previously this
+was listed as storage.dbPath.
+
+92
+00:04:21,589 --> 00:04:25,385
+The command line option
+was dash dash dbPath.
+
+93
+00:04:25,385 --> 00:04:27,900
+A key can have multiple
+embedded key pair
+
+94
+00:04:27,900 --> 00:04:31,700
+values, each representing an
+option related to the top level
+
+95
+00:04:31,700 --> 00:04:33,000
+key.
+
+96
+00:04:33,000 --> 00:04:35,540
+So here we have our
+system log family
+
+97
+00:04:35,540 --> 00:04:39,170
+of options where I am
+specifying the path to the log
+
+98
+00:04:39,170 --> 00:04:42,410
+file and the file type.
+
+99
+00:04:42,410 --> 00:04:47,700
+You'll notice that our one
+option, log path, became two.
+
+100
+00:04:47,700 --> 00:04:49,670
+Sometimes a
+configuration file option
+
+101
+00:04:49,670 --> 00:04:53,000
+will have one or more
+required chained options.
+
+102
+00:04:53,000 --> 00:04:54,920
+The documentation will
+always clearly state
+
+103
+00:04:54,920 --> 00:04:57,060
+these relationships.
+
+104
+00:04:57,060 --> 00:05:00,830
+It's also easier to see distinct
+groupings of related options.
+
+105
+00:05:00,830 --> 00:05:03,740
+I can clearly distinguish
+the storage options
+
+106
+00:05:03,740 --> 00:05:07,700
+from the system logging options
+from the replication options.
+
+107
+00:05:07,700 --> 00:05:09,650
+I've even added a
+comment to improve
+
+108
+00:05:09,650 --> 00:05:12,182
+readability and comprehension.
+
+109
+00:05:12,182 --> 00:05:13,640
+The configuration
+file options have
+
+110
+00:05:13,640 --> 00:05:16,040
+the same effect as the
+command line options,
+
+111
+00:05:16,040 --> 00:05:17,990
+but as you can see,
+the YAML format
+
+112
+00:05:17,990 --> 00:05:20,670
+provides significant advantages.
+
+113
+00:05:20,670 --> 00:05:23,850
+These are all of the options
+from our initial example.
+
+114
+00:05:23,850 --> 00:05:25,730
+The effect on the
+MongoD is the same,
+
+115
+00:05:25,730 --> 00:05:30,040
+but the organization and
+readability is vastly improved.
+
+116
+00:05:30,040 --> 00:05:33,470
+Now how do we use a
+configuration file?
+
+117
+00:05:33,470 --> 00:05:35,870
+We are going to have to use
+at least one command line
+
+118
+00:05:35,870 --> 00:05:38,550
+option for this to work.
+
+119
+00:05:38,550 --> 00:05:44,190
+Specify dash dash config
+or dash f along with a path
+
+120
+00:05:44,190 --> 00:05:46,230
+to the configuration file.
+
+121
+00:05:46,230 --> 00:05:49,800
+For many Linux distributions,
+when installing MongoDB through
+
+122
+00:05:49,800 --> 00:05:53,100
+a package manager, you'll find
+a default configuration file
+
+123
+00:05:53,100 --> 00:05:55,980
+in etc/mongod.conf.
+
+124
+00:05:55,980 --> 00:05:59,040
+Feel free to modify this or
+point to your own configuration
+
+125
+00:05:59,040 --> 00:05:59,896
+file.
+
+126
+00:05:59,896 --> 00:06:01,520
+You just need to
+ensure that the MongoD
+
+127
+00:06:01,520 --> 00:06:06,660
+process can access the file
+location and read the file.
+
+128
+00:06:06,660 --> 00:06:10,110
+You can find the complete list
+of configuration file options
+
+129
+00:06:10,110 --> 00:06:13,420
+and how to use them on
+our online documentation.
+
+130
+00:06:13,420 --> 00:06:16,710
+The documentation also includes
+structural examples, as well as
+
+131
+00:06:16,710 --> 00:06:19,050
+a description of
+how the options work
+
+132
+00:06:19,050 --> 00:06:21,780
+and what the
+expected values are.
+
+133
+00:06:21,780 --> 00:06:24,060
+To recap, configuration
+file options
+
+134
+00:06:24,060 --> 00:06:27,330
+provide the same functionality
+as our command line options.
+
+135
+00:06:27,330 --> 00:06:30,660
+They improve the readability
+of our configuration settings,
+
+136
+00:06:30,660 --> 00:06:32,130
+and you can use
+the documentation
+
+137
+00:06:32,130 --> 00:06:35,730
+to facilitate mapping a command
+line option to a configuration
+
+138
+00:06:35,730 --> 00:00:00,000
+file option.
+

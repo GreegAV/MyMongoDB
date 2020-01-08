@@ -1,0 +1,203 @@
+In this lesson we're going to talk about insert performance from MongoDB.
+
+By the end of this lesson, you should be familiar with the following concepts with regards to insert performance.
+
+First, we're going to talk about how indexes affect our write performance.
+
+And we're also going to talk about how write concerns can affect our write performance.
+
+We already know that when we use indexes, we seriously increase the read performance of our application.
+
+This is because indexes store mappings between field values and the references to documents that have those field values.
+
+And these indexes can be searched very quickly for these references.
+
+But we don't get this read performance enhancement for free.
+
+The downside is that we need to keep these indexes up to date.
+
+So as documents are inserted, updated or deleted, we may need to update our indexes.
+
+And this means that for every index that we add, we'll be decreasing the overall insert, update and delete performance of our application.
+
+Before we look at some practical examples of the overhead that indexes can incur, let's talk about our other topic for this lesson, write concern.
+
+When we make writes to MongoDB we can specify our write concern.
+
+This write concern describes the level of acknowledgment requested from MongoDB for write operations.
+
+A write concern has three parameters, w, k, and wtimeout.
+
+w describes how many of the members of our replica set we're going to wait for the write to be propagated to before we consider it truly written.
+
+This can be a number, like one if we just want to wait for the primary, or two if we want to wait for two members to acknowledge the write and so forth.
+
+We can also use the string "majority" where we want to wait for a majority of the members to acknowledge the write.
+
+j is a Boolean value specifying whether or not we want to wait for the on disk journal.
+
+When writes come into the database, they're primarily written to memory.
+
+But periodically that information is flushed to an on disk journal.
+
+And finally we have wtimeout.
+
+This specifies how long we want to wait in milliseconds for the write to be acknowledged before we time out.
+
+So here's an example write concern, where we say we want to wait for one member, the primary, to acknowledge the write, and we don't want to wait for the on disk journal to be written to, and we want a timeout after five seconds.
+
+I do want to point out that just because we time out doesn't mean the write was aborted.
+
+We can time out and the write can still occur.
+
+Here's another example of a write concern.
+
+Here we're saying that we will wait for a majority of the members to acknowledge the write.
+
+And we also want to wait until that write has been journaled.
+
+It's somewhat intuitive to see how this write concern on the bottom will generally take longer to be acknowledged than the one on the top.
+
+With the top write concern, we only need to wait for one server to acknowledge the write, and we're not waiting on the on disk journal.
+
+On the bottom one here, however, we have to wait for a majority of the members, and we have to wait for the on disk journal.
+
+Let's go ahead and run some tests and see how these two factors affect write performance.
+
+For this exercise, I'm going to use the POC driver that we talked about in our benchmarking lesson.
+
+And this is MongoDB Atlas, our hosted MongoDB as a service offering.
+
+Here I've gone ahead and spun up a three member replica set, and this will effectively act as our testbed.
+
+Now let's jump into the terminal and run some tests.
+
+Here I've gone ahead and connected to my Atlas cluster via the Mongo shell, where I can go ahead and keep this connection open so that we can drop our test collection in between tests, and we can also create indexes on the fly.
+
+Let's head over to another shell.
+
+Here have gone ahead and followed the instructions in the readme, and I've compiled our .jar file.
+
+Now when we run this .jar file with the -p option, it'll print out an example document.
+
+And this is the kind of document that we're going to be inserting into the database for our test.
+
+And so now I can go ahead and use my .jar file with the -c option specified in the connection string to my MongoDB Atlas cluster.
+
+And now this POC driver is going to insert documents as fast as it can into my Atlas cluster.
+
+And as you can see, we're inserting documents at about 16,000 per second.
+
+And so this our baseline.
+
+We have no indexes and we're using the default write concern.
+
+Let's go ahead and go back to our Mongo shell and create our first index.
+
+You'll see that we now have this POC database.
+
+I'm going to switch to it and drop our collection and create an index.
+
+And now let's rerun our test.
+
+So the only thing that's changed here is now I've added an index, and so we would expect to have a little bit of loss of write performance.
+
+And as you can see, we're now only inserting documents at about 15,000 documents per second, a little bit slower than our 16,000 we had before.
+
+We can now go ahead and drop our collection again.
+
+And this time we'll create indexes on five fields.
+
+Now that those five indexes have been created, let's go ahead and run our test again.
+
+And so now we're inserting documents at about 10,000 or 11,000 documents per second.
+
+While it's not a huge decrease in performance, it's still noticeable.
+
+Now let's go ahead and run some tests to see how write concern affects our write performance.
+
+I've gone ahead and created some different .jar files for each of the different write concerns.
+
+Unfortunately, this POC driver doesn't support different write concerns from the command line.
+
+So what I did was edit the source code directly.
+
+If you're interested, I went ahead and imported in these two classes.
+
+And then all I did was add these lines of code.
+
+And what I did was is for each of the different .jar files, I just commented out whichever line had the write concern I wanted to test.
+
+And that's how I generated these different .jar files.
+
+So now we just need to rerun our same tests with these different .jar files.
+
+But first we should go ahead and drop our collection.
+
+Here I'm running with w set to one and j set to false.
+
+These are the default settings.
+
+So we should expect to see similar numbers to our first test.
+
+And as you can see, we're now inserting about 27,000 documents per second.
+
+This is a little bit faster than our first test, but network latency.
+
+Let's go ahead and drop our collection again.
+
+And now I'm going to run the test with w still equal to one, but now journaling is going to be set to true.
+
+And as you can see, we're inserting documents at about 19,000 per second.
+
+You should now have an idea of how this works.
+
+We can go ahead and skip to the table of results.
+
+And here you can see how the different indexes affected our inserts per second.
+
+When we had no indexes, we were inserting about 16,000 per second.
+
+When we added one, we are talking about 15,000 per second.
+
+And when we had five, we were inserting only about 10,500 per second.
+
+And you can see here I've also added a percent loss from the baseline.
+
+And we can also see how different write concerns affect our performance.
+
+Interestingly enough, it doesn't seem like journaling matters that much when we're dealing with a majority write concern.
+
+But it does seem to matter when we're dealing with just the primary.
+
+And this kind of makes sense.
+
+Here we're waiting for multiple members and we have network latency going on.
+
+And here there is no network latency.
+
+We're just waiting for the on disk journal to be written to.
+
+These are my own numbers running on my own machine on my iMac talking to an Atlas cluster.
+
+So this isn't a best case scenario.
+
+I really should be running these tests inside AWS instance, because AWS is where Atlas is hosted on.
+
+And we probably want to minimize the amount of network latency between my Atlas cluster and my application server.
+
+But that being said, this still gives us a good high level idea of what we're dealing with.
+
+Now I don't want you to forget about the significant read performance gains that we saw by adding indexes to our collection.
+
+With each additional index, we lost about 6% of our write performance.
+
+But often we would see a more than 10x read performance increase when we use the best index for a query.
+
+And so this should give you a good overview of insert performance.
+
+Let's recap what we've learned.
+
+We've talked about index overhead and how as we add more indexes, our insert performance is going to degrade.
+
+And we also talked about write concern, where we discussed different levels of acknowledgement affecting our write performance.

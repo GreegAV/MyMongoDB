@@ -1,0 +1,546 @@
+1
+00:00:00,000 --> 00:00:00,210
+
+
+2
+00:00:00,210 --> 00:00:01,710
+In this lesson, we
+are going to look
+
+3
+00:00:01,710 --> 00:00:04,110
+into the replaceOne commands.
+
+4
+00:00:04,110 --> 00:00:07,080
+But before we go into
+the actual details of how
+
+5
+00:00:07,080 --> 00:00:09,960
+to use this command, the
+syntax, and semantics,
+
+6
+00:00:09,960 --> 00:00:12,060
+let's have a look
+to the outset first.
+
+7
+00:00:12,060 --> 00:00:15,210
+In my video.movieDetails
+collection,
+
+8
+00:00:15,210 --> 00:00:18,670
+I can find a documents,
+a movie documents,
+
+9
+00:00:18,670 --> 00:00:20,760
+which matches the
+title, House, M.D.,
+
+10
+00:00:20,760 --> 00:00:25,560
+Season Four, New Beginnings,
+a very popular TV series
+
+11
+00:00:25,560 --> 00:00:26,970
+around here.
+
+12
+00:00:26,970 --> 00:00:29,820
+Once I execute that find
+in my Compass interface,
+
+13
+00:00:29,820 --> 00:00:32,670
+I can see the structure
+of my document.
+
+14
+00:00:32,670 --> 00:00:34,410
+In here, I have
+all the information
+
+15
+00:00:34,410 --> 00:00:37,350
+about this particular movie.
+
+16
+00:00:37,350 --> 00:00:39,000
+Now, one thing that
+I'm noticing here
+
+17
+00:00:39,000 --> 00:00:40,920
+is that the poster
+information is set to null,
+
+18
+00:00:40,920 --> 00:00:43,860
+and the genres information
+here is only composed
+
+19
+00:00:43,860 --> 00:00:46,530
+by Documentary and Short.
+
+20
+00:00:46,530 --> 00:00:49,800
+That indicates to me that
+I actually have information
+
+21
+00:00:49,800 --> 00:00:51,430
+that needs to be updated.
+
+22
+00:00:51,430 --> 00:00:53,010
+I do have information
+for the poster,
+
+23
+00:00:53,010 --> 00:00:55,740
+and I would like to
+extend the genres
+
+24
+00:00:55,740 --> 00:00:59,490
+field by including the
+TV series as a genre
+
+25
+00:00:59,490 --> 00:01:01,080
+for this particular movie.
+
+26
+00:01:01,080 --> 00:01:04,110
+And for that, I'm going to
+use the replaceOne method.
+
+27
+00:01:04,110 --> 00:01:06,960
+Now, you've already seen
+a couple of other methods
+
+28
+00:01:06,960 --> 00:01:09,810
+to write, like
+inserts and updates.
+
+29
+00:01:09,810 --> 00:01:11,970
+And this one is just
+another extension
+
+30
+00:01:11,970 --> 00:01:14,370
+of that same
+capability that we have
+
+31
+00:01:14,370 --> 00:01:17,490
+for either writing data,
+updating data, or recording
+
+32
+00:01:17,490 --> 00:01:18,246
+data.
+
+33
+00:01:18,246 --> 00:01:19,620
+And we're going
+to look into this
+
+34
+00:01:19,620 --> 00:01:21,810
+from the context
+of an application.
+
+35
+00:01:21,810 --> 00:01:24,660
+Now, we're going to use
+the Mongo shell, which
+
+36
+00:01:24,660 --> 00:01:26,670
+is a JavaScript interpreter.
+
+37
+00:01:26,670 --> 00:01:29,640
+That allows us to mimic
+what the natural behavior
+
+38
+00:01:29,640 --> 00:01:33,030
+of an application will be like.
+
+39
+00:01:33,030 --> 00:01:35,612
+First thing I'm going to
+do is specify the filter
+
+40
+00:01:35,612 --> 00:01:37,320
+by which I want to
+find a document that I
+
+41
+00:01:37,320 --> 00:01:39,240
+want to replace.
+
+42
+00:01:39,240 --> 00:01:41,730
+In this case, it's the title
+House M.D., Season Four,
+
+43
+00:01:41,730 --> 00:01:43,430
+New Beginnings-- perfect.
+
+44
+00:01:43,430 --> 00:01:46,290
+And then I'm going to use the
+movieDetails.findOne method
+
+45
+00:01:46,290 --> 00:01:50,700
+to retrieve only one document
+back that matches that filter.
+
+46
+00:01:50,700 --> 00:01:52,969
+Let's go ahead and do
+that on the Mongo shell.
+
+47
+00:01:52,969 --> 00:01:54,510
+Once I'm connected
+to the Mongo shell
+
+48
+00:01:54,510 --> 00:01:59,770
+into my movies collection,
+I can specify the filter,
+
+49
+00:01:59,770 --> 00:02:02,050
+which determines what
+am I looking for,
+
+50
+00:02:02,050 --> 00:02:06,330
+what documents which matches
+title I'm interested on.
+
+51
+00:02:06,330 --> 00:02:09,600
+And then using the findOne
+method on my moviesDetails,
+
+52
+00:02:09,600 --> 00:02:12,600
+passing along that filter,
+I get back a variable--
+
+53
+00:02:12,600 --> 00:02:17,610
+or I can set a variable-- called
+doc with that same information.
+
+54
+00:02:17,610 --> 00:02:20,400
+When I look into it, I can see
+all the information, including
+
+55
+00:02:20,400 --> 00:02:22,140
+the fact that
+poster is not there,
+
+56
+00:02:22,140 --> 00:02:25,470
+and the genres is only opposed
+by Short and Documentary.
+
+57
+00:02:25,470 --> 00:02:28,710
+Now that I know that, I have
+to go to my poster fields
+
+58
+00:02:28,710 --> 00:02:30,960
+and specify the
+value of that poster
+
+59
+00:02:30,960 --> 00:02:34,180
+to that particular string
+that represents the poster
+
+60
+00:02:34,180 --> 00:02:36,540
+information that
+I want to attach.
+
+61
+00:02:36,540 --> 00:02:39,600
+Great, now I'm setting
+up the poster field
+
+62
+00:02:39,600 --> 00:02:41,500
+with that information.
+
+63
+00:02:41,500 --> 00:02:45,090
+The next step is to
+look into my genres.
+
+64
+00:02:45,090 --> 00:02:47,970
+And I can see that this is an
+array composed of two string
+
+65
+00:02:47,970 --> 00:02:48,990
+values.
+
+66
+00:02:48,990 --> 00:02:52,320
+Now what I would like to
+do is push to that array
+
+67
+00:02:52,320 --> 00:02:54,960
+a new one, TV Series.
+
+68
+00:02:54,960 --> 00:02:58,830
+Once I do that, and I
+look into my genres again,
+
+69
+00:02:58,830 --> 00:03:01,620
+I can see that now the array
+has been updated, appended
+
+70
+00:03:01,620 --> 00:03:02,880
+a new value.
+
+71
+00:03:02,880 --> 00:03:07,500
+Right now, my doc is fully
+set with all the information
+
+72
+00:03:07,500 --> 00:03:10,980
+that I want-- the
+poster and the genres.
+
+73
+00:03:10,980 --> 00:03:15,060
+But this is only in the context
+of the Mongo shell currently.
+
+74
+00:03:15,060 --> 00:03:17,160
+The database has not
+yet been updated,
+
+75
+00:03:17,160 --> 00:03:20,520
+because we haven't
+told it to be updated.
+
+76
+00:03:20,520 --> 00:03:23,910
+One way to do that would be
+to use the replacement method.
+
+77
+00:03:23,910 --> 00:03:25,840
+The replacement method
+will take a filter.
+
+78
+00:03:25,840 --> 00:03:28,440
+We're going to use exactly
+the same one as before, where
+
+79
+00:03:28,440 --> 00:03:32,466
+the title equals House
+M.D., whatever, whatever.
+
+80
+00:03:32,466 --> 00:03:34,590
+And we're going to use the
+same variable that we've
+
+81
+00:03:34,590 --> 00:03:39,540
+been changing throughout the
+execution of this Mongo shell
+
+82
+00:03:39,540 --> 00:03:42,840
+with the settings that we
+want, like setting the poster
+
+83
+00:03:42,840 --> 00:03:48,150
+and appending a new TV
+series value to the genres.
+
+84
+00:03:48,150 --> 00:03:50,250
+Once I execute that,
+what will happen
+
+85
+00:03:50,250 --> 00:03:53,460
+is that MongoDB will
+receive this document,
+
+86
+00:03:53,460 --> 00:03:57,390
+match it with whatever document
+it finds defined by the filter,
+
+87
+00:03:57,390 --> 00:04:01,350
+and replace it with this
+particular structure.
+
+88
+00:04:01,350 --> 00:04:04,200
+Now, in case, we
+defined a filter that
+
+89
+00:04:04,200 --> 00:04:06,260
+contains more than
+one document, or we'll
+
+90
+00:04:06,260 --> 00:04:08,280
+be matching more
+than one document,
+
+91
+00:04:08,280 --> 00:04:11,520
+it will just replace the
+first one that it would find.
+
+92
+00:04:11,520 --> 00:04:14,070
+This is why just
+only replacing one.
+
+93
+00:04:14,070 --> 00:04:17,790
+As we can see, as in the
+output of this execution,
+
+94
+00:04:17,790 --> 00:04:19,740
+we acknowledged
+it, which is great.
+
+95
+00:04:19,740 --> 00:04:23,550
+We matched one documents
+for our update,
+
+96
+00:04:23,550 --> 00:04:27,050
+and we modified
+that same document.
+
+97
+00:04:27,050 --> 00:04:29,810
+Once we execute the query
+again and retrieved again
+
+98
+00:04:29,810 --> 00:04:32,550
+the same document now
+from the database,
+
+99
+00:04:32,550 --> 00:04:35,090
+we can see that my
+poster is no longer null,
+
+100
+00:04:35,090 --> 00:04:38,580
+and the documentaries are
+set with exact information
+
+101
+00:04:38,580 --> 00:04:39,860
+that I want.
+
+102
+00:04:39,860 --> 00:04:42,800
+Now, why would you use
+replaceOne instead,
+
+103
+00:04:42,800 --> 00:04:45,770
+for example, of updateOne?
+
+104
+00:04:45,770 --> 00:04:47,720
+updateOne is designed
+to, for example,
+
+105
+00:04:47,720 --> 00:04:52,100
+update a specific set of
+values into a document.
+
+106
+00:04:52,100 --> 00:04:55,010
+replaceOne will completely
+replace the documents.
+
+107
+00:04:55,010 --> 00:04:57,050
+In one hand, replaceOne
+and updateOne
+
+108
+00:04:57,050 --> 00:04:59,750
+do exactly the same
+thing, except for the fact
+
+109
+00:04:59,750 --> 00:05:04,120
+that we are passing the full
+payload of our new document.
+
+110
+00:05:04,120 --> 00:05:07,190
+All the changes will go back
+and forth from your application
+
+111
+00:05:07,190 --> 00:05:10,280
+to the server,
+while updateOne you
+
+112
+00:05:10,280 --> 00:05:14,810
+can specify only the sets
+or field set operators
+
+113
+00:05:14,810 --> 00:00:00,000
+that you are interested on.
+

@@ -1,0 +1,189 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.540
+What a week.
+
+3
+00:00:01.540 --> 00:00:03.670
+Don't worry if it looks
+like a lot of information.
+
+4
+00:00:03.670 --> 00:00:05.580
+You can always go back
+to a specific pattern
+
+5
+00:00:05.580 --> 00:00:07.600
+later, if you forgot
+about it and suspect
+
+6
+00:00:07.600 --> 00:00:10.928
+it may be a good match for
+the schema you're working on.
+
+7
+00:00:10.928 --> 00:00:12.720
+Let's have a quick
+overview of the affinity
+
+8
+00:00:12.720 --> 00:00:15.630
+[? for ?] patterns with
+the common use cases.
+
+9
+00:00:15.630 --> 00:00:18.210
+I want to stress the point
+that the patterns we identified
+
+10
+00:00:18.210 --> 00:00:20.160
+under a given use case
+are not necessarily
+
+11
+00:00:20.160 --> 00:00:22.170
+all applicable to your problem.
+
+12
+00:00:22.170 --> 00:00:25.290
+Neither the ones not
+selected should be discarded.
+
+13
+00:00:25.290 --> 00:00:28.350
+The tables simply highlights the
+most likely and most important
+
+14
+00:00:28.350 --> 00:00:31.830
+ones that may appear
+for a given use case.
+
+15
+00:00:31.830 --> 00:00:33.960
+For example, while
+working on the Internet
+
+16
+00:00:33.960 --> 00:00:36.360
+of Things projects,
+the project often
+
+17
+00:00:36.360 --> 00:00:38.420
+uses the bucket patterning.
+
+18
+00:00:38.420 --> 00:00:40.190
+However, even if
+not highlighted,
+
+19
+00:00:40.190 --> 00:00:42.040
+it may benefit from
+the tree pattern,
+
+20
+00:00:42.040 --> 00:00:45.690
+If the devices organize in
+a hierarchy of some sort.
+
+21
+00:00:45.690 --> 00:00:47.790
+This matrix is
+there to guide you
+
+22
+00:00:47.790 --> 00:00:51.220
+toward the most
+likely patterns first.
+
+23
+00:00:51.220 --> 00:00:53.490
+A special note
+about the computed
+
+24
+00:00:53.490 --> 00:00:56.580
+and the schema versioning
+patterns-- the computed pattern
+
+25
+00:00:56.580 --> 00:00:59.850
+is generic and applicable
+to most use cases.
+
+26
+00:00:59.850 --> 00:01:02.010
+As for the schema
+versioning one,
+
+27
+00:01:02.010 --> 00:01:04.200
+it is applicable
+to all use cases.
+
+28
+00:01:04.200 --> 00:01:05.980
+So ensure you get
+a good grasp of it.
+
+29
+00:01:05.980 --> 00:01:09.210
+Then you'll be ready
+to use it, when needed.
+
+30
+00:01:09.210 --> 00:01:11.850
+In summary, in this chapter,
+we learned a few schema design
+
+31
+00:01:11.850 --> 00:01:12.930
+patterns.
+
+32
+00:01:12.930 --> 00:01:14.880
+Those act as powerful
+transformation,
+
+33
+00:01:14.880 --> 00:01:16.770
+when designing schema.
+
+34
+00:01:16.770 --> 00:01:19.290
+If you most likely care
+about ease of development
+
+35
+00:01:19.290 --> 00:01:21.810
+and there's not any difficult
+performance requirements
+
+36
+00:01:21.810 --> 00:01:25.560
+to meet, you may not need
+many of those patterns.
+
+37
+00:01:25.560 --> 00:01:29.640
+The pattern and also provide a
+common language for the team.
+
+38
+00:01:29.640 --> 00:01:31.500
+And finally, using
+the patterns lets
+
+39
+00:01:31.500 --> 00:01:35.060
+you have a more
+predictable methodology.

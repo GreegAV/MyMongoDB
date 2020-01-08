@@ -1,0 +1,218 @@
+
+1
+00:00:00.000 --> 00:00:00.030
+
+
+2
+00:00:00.030 --> 00:00:02.170
+Previously we mentioned
+there is a step which
+
+3
+00:00:02.170 --> 00:00:05.660
+concerns a transformation
+of the username
+
+4
+00:00:05.660 --> 00:00:07.520
+and credentials
+passed to MongoDB
+
+5
+00:00:07.520 --> 00:00:11.060
+so they can be validated against
+the authentication mechanism.
+
+6
+00:00:11.060 --> 00:00:14.130
+But also we validate against
+the authorization mechanism--
+
+7
+00:00:14.130 --> 00:00:15.560
+in this case LDAP.
+
+8
+00:00:15.560 --> 00:00:17.720
+So what will happen
+is that MongoDB
+
+9
+00:00:17.720 --> 00:00:19.980
+will transform
+authentication users
+
+10
+00:00:19.980 --> 00:00:22.050
+into their corresponding
+distinguished
+
+11
+00:00:22.050 --> 00:00:24.000
+names if necessary.
+
+12
+00:00:24.000 --> 00:00:25.860
+This will be done
+by using ordered
+
+13
+00:00:25.860 --> 00:00:30.270
+lists of regular expressions
+and substitution pairs.
+
+14
+00:00:30.270 --> 00:00:33.110
+Now these lists are
+configured by providing
+
+15
+00:00:33.110 --> 00:00:36.410
+a string representation
+of a JSON array
+
+16
+00:00:36.410 --> 00:00:39.190
+that will contain such pairs.
+
+17
+00:00:39.190 --> 00:00:42.320
+Now there's a bit more of
+process associated with this.
+
+18
+00:00:42.320 --> 00:00:47.500
+Let's have a look on exactly how
+this process is accomplished.
+
+19
+00:00:47.500 --> 00:00:50.360
+Now let's consider the
+following set of scenarios
+
+20
+00:00:50.360 --> 00:00:52.430
+represented by a decision tree.
+
+21
+00:00:52.430 --> 00:00:55.460
+We will have initial
+set of pairs,
+
+22
+00:00:55.460 --> 00:00:58.760
+each containing its
+expression and substitution.
+
+23
+00:00:58.760 --> 00:01:02.890
+Now we pick one of these pairs
+and analyze the expression
+
+24
+00:01:02.890 --> 00:01:05.459
+against the credentials
+passed on to MongoDB
+
+25
+00:01:05.459 --> 00:01:08.350
+and validated by the
+authentication mechanism.
+
+26
+00:01:08.350 --> 00:01:12.845
+Now if the expression matches,
+we will track all groups
+
+27
+00:01:12.845 --> 00:01:15.840
+and insert it into
+a substitution.
+
+28
+00:01:15.840 --> 00:01:20.850
+If the situation has attributes,
+the transformation is complete.
+
+29
+00:01:20.850 --> 00:01:23.240
+If it doesn't have
+any attributes,
+
+30
+00:01:23.240 --> 00:01:26.570
+we will check if
+our substitution is
+
+31
+00:01:26.570 --> 00:01:28.500
+represented by an LDAP query.
+
+32
+00:01:28.500 --> 00:01:31.400
+If so, we'll execute
+the substitution query
+
+33
+00:01:31.400 --> 00:01:35.120
+against the LDAP server
+and parse the results.
+
+34
+00:01:35.120 --> 00:01:39.210
+If we get exactly one match,
+our transformation is done.
+
+35
+00:01:39.210 --> 00:01:42.080
+If we get none, the
+expression will fail,
+
+36
+00:01:42.080 --> 00:01:45.290
+and we'll pick the
+next one from the set.
+
+37
+00:01:45.290 --> 00:01:49.560
+If we get more than one, the
+system will automatically fail,
+
+38
+00:01:49.560 --> 00:01:51.560
+and the transformation
+will fail--
+
+39
+00:01:51.560 --> 00:01:54.290
+meaning that the
+expression's set are not
+
+40
+00:01:54.290 --> 00:01:56.750
+valid for our
+transformations step.
+
+41
+00:01:56.750 --> 00:01:57.630
+That
+
+42
+00:01:57.630 --> 00:01:59.530
+If all regular
+expressions substitution
+
+43
+00:01:59.530 --> 00:02:02.210
+pairs have been
+compared and none
+
+44
+00:02:02.210 --> 00:02:07.290
+has been successfully matched or
+applied a valid transformation,
+
+45
+00:02:07.290 --> 00:02:10.200
+then our transformation
+will also fail.

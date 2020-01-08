@@ -1,0 +1,388 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.370
+One of the other
+things that can happen
+
+3
+00:00:02.370 --> 00:00:07.740
+is, although one or two
+machines can reach each other,
+
+4
+00:00:07.740 --> 00:00:09.780
+there might be a
+misconfiguration
+
+5
+00:00:09.780 --> 00:00:14.500
+between two pair of nodes
+in your replica set.
+
+6
+00:00:14.500 --> 00:00:16.180
+Let's see this in action.
+
+7
+00:00:16.180 --> 00:00:20.220
+Let's go ahead and
+connect to my m1 box.
+
+8
+00:00:20.220 --> 00:00:24.260
+And let's do something weird
+into the configuration.
+
+9
+00:00:24.260 --> 00:00:29.310
+Let's say to the system
+that, instead of having m3,
+
+10
+00:00:29.310 --> 00:00:33.600
+I only know the machine by
+its fully-qualified name.
+
+11
+00:00:33.600 --> 00:00:35.190
+Once I do this--
+
+12
+00:00:35.190 --> 00:00:38.100
+and if I connect to
+the running host--
+
+13
+00:00:38.100 --> 00:00:44.730
+if I get a rs.status, I will see
+that my configuration are all
+
+14
+00:00:44.730 --> 00:00:47.130
+up and running perfectly well.
+
+15
+00:00:47.130 --> 00:00:51.290
+So there's a majority of nodes
+that know about each other.
+
+16
+00:00:51.290 --> 00:00:56.100
+Notice how I connect to the
+machine using the replica set.
+
+17
+00:00:56.100 --> 00:01:01.230
+I'll get an information warning
+stating, well, connecting
+
+18
+00:01:01.230 --> 00:01:06.000
+to this box, getting
+address of m3 failed.
+
+19
+00:01:06.000 --> 00:01:11.190
+No name or service known to the
+machine that I'm connecting.
+
+20
+00:01:11.190 --> 00:01:16.590
+This is from my own
+m1 box, from whom
+
+21
+00:01:16.590 --> 00:01:18.580
+we removed the definition m3.
+
+22
+00:01:18.580 --> 00:01:22.680
+We just keep the
+fully-qualified name here.
+
+23
+00:01:22.680 --> 00:01:27.960
+And once we try to connect to
+[? ourselves ?] replica set,
+
+24
+00:01:27.960 --> 00:01:30.660
+we will see that there's an
+error message, or a warning
+
+25
+00:01:30.660 --> 00:01:37.320
+message, saying, hey, watch
+out I do not know who m3 is.
+
+26
+00:01:37.320 --> 00:01:40.620
+So look for errors
+like those to make sure
+
+27
+00:01:40.620 --> 00:01:43.110
+that all of your nodes
+can reach each other
+
+28
+00:01:43.110 --> 00:01:46.620
+and know about each other,
+regardless of the way
+
+29
+00:01:46.620 --> 00:01:48.600
+that we configured them.
+
+30
+00:01:48.600 --> 00:01:50.740
+And obviously, if there's
+an election in place,
+
+31
+00:01:50.740 --> 00:01:55.710
+like if we tell m2 to
+step down, and relinquish
+
+32
+00:01:55.710 --> 00:01:59.810
+the primary role, if
+we connect once more,
+
+33
+00:01:59.810 --> 00:02:05.437
+and if m3 is not reachable
+by this local machine,
+
+34
+00:02:05.437 --> 00:02:07.020
+we will get into a
+state where there's
+
+35
+00:02:07.020 --> 00:02:10.740
+no way we can elect a primary.
+
+36
+00:02:10.740 --> 00:02:13.110
+So basically, we end
+up in the situation
+
+37
+00:02:13.110 --> 00:02:17.340
+where our primary gets
+disconnected, or steps down.
+
+38
+00:02:17.340 --> 00:02:21.150
+We have a secondary that can
+be reached by this old primary.
+
+39
+00:02:21.150 --> 00:02:23.310
+He knows about m3.
+
+40
+00:02:23.310 --> 00:02:29.550
+But this configured machine
+does not know who M3 is.
+
+41
+00:02:29.550 --> 00:02:32.640
+So ending up in a situation
+where we cannot elect,
+
+42
+00:02:32.640 --> 00:02:37.270
+because this node will
+not know who that one is.
+
+43
+00:02:37.270 --> 00:02:40.060
+Let's avoid doing that.
+
+44
+00:02:40.060 --> 00:02:42.810
+So let's fix the
+order of the world,
+
+45
+00:02:42.810 --> 00:02:45.930
+making sure that all nodes
+know about each other,
+
+46
+00:02:45.930 --> 00:02:48.857
+and they are aware of
+each other's IP addresses.
+
+47
+00:02:48.857 --> 00:02:50.940
+But if you think about it,
+for example, in a cloud
+
+48
+00:02:50.940 --> 00:02:54.490
+environment, where machines
+can be brought down,
+
+49
+00:02:54.490 --> 00:02:57.970
+and if we configure them
+with their IP addresses.
+
+50
+00:02:57.970 --> 00:03:01.140
+And since that can be renewed,
+you can get into a messy state
+
+51
+00:03:01.140 --> 00:03:06.600
+with machines that are in
+the sets can be reached,
+
+52
+00:03:06.600 --> 00:03:08.310
+but not by their
+current IP address,
+
+53
+00:03:08.310 --> 00:03:12.840
+or not by their old DNS
+name, because they cannot be
+
+54
+00:03:12.840 --> 00:03:16.530
+identified exactly in the
+same way they are configured
+
+55
+00:03:16.530 --> 00:03:19.050
+in their replicas
+and configuration.
+
+56
+00:03:19.050 --> 00:03:22.170
+So we should have some
+good practices in place,
+
+57
+00:03:22.170 --> 00:03:24.640
+or some best
+networking practice.
+
+58
+00:03:24.640 --> 00:03:25.140
+All right.
+
+59
+00:03:25.140 --> 00:03:27.750
+Because that nodes should be
+addressable from the client
+
+60
+00:03:27.750 --> 00:03:30.990
+host, and other
+replica set hosts.
+
+61
+00:03:30.990 --> 00:03:33.900
+All mongoses in a
+cluster should also
+
+62
+00:03:33.900 --> 00:03:37.900
+be addressable by all
+client applications
+
+63
+00:03:37.900 --> 00:03:40.200
+into all replica sets.
+
+64
+00:03:40.200 --> 00:03:43.980
+We urge you to use DNS names
+instead of IP addresses
+
+65
+00:03:43.980 --> 00:03:47.460
+to avoid IP address renew
+resolution conflicts.
+
+66
+00:03:47.460 --> 00:03:50.840
+If we define good DNS
+names to our machines,
+
+67
+00:03:50.840 --> 00:03:53.220
+it will be easier
+to move those nodes
+
+68
+00:03:53.220 --> 00:03:58.020
+into other different hardware
+physical boxes, which is OK.
+
+69
+00:03:58.020 --> 00:04:00.480
+If we use fixed IP
+addresses, it might
+
+70
+00:04:00.480 --> 00:04:04.080
+be more tricky to move
+those machines around.
+
+71
+00:04:04.080 --> 00:04:06.900
+And every time we renew
+the IP address of a node,
+
+72
+00:04:06.900 --> 00:04:10.140
+we might lose accessibility
+and readability from that node,
+
+73
+00:04:10.140 --> 00:04:13.320
+causing internal problems
+in terms of configuration.
+
+74
+00:04:13.320 --> 00:04:16.050
+Make sure you use ping
+and other networking
+
+75
+00:04:16.050 --> 00:04:20.310
+commands to reach
+machines, and to make sure
+
+76
+00:04:20.310 --> 00:04:22.800
+that they can reach each other.
+
+77
+00:04:22.800 --> 00:04:25.440
+And use telnet as well to see
+if the ports that we are using
+
+78
+00:04:25.440 --> 00:04:28.990
+are reachable, and they
+are properly configured.
+
+79
+00:04:28.990 --> 00:04:33.230
+That's all we have for you in
+terms of making sure your hosts
+
+80
+00:04:33.230 --> 00:04:37.860
+and cluster configurations
+match, and are well set up.

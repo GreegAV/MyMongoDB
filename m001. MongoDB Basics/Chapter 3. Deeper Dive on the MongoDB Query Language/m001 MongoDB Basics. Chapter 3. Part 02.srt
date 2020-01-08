@@ -1,0 +1,473 @@
+1
+00:00:00,000 --> 00:00:00,230
+
+
+2
+00:00:00,230 --> 00:00:01,850
+In another lesson
+I mention that,
+
+3
+00:00:01,850 --> 00:00:04,030
+because of its
+flexible data model,
+
+4
+00:00:04,030 --> 00:00:07,510
+MongoDB supports operators that
+allow us to detect the presence
+
+5
+00:00:07,510 --> 00:00:09,580
+or absence of a given field.
+
+6
+00:00:09,580 --> 00:00:12,860
+Also, as you know, although
+not usually a good idea,
+
+7
+00:00:12,860 --> 00:00:15,160
+it is possible to have the
+same field in the collection
+
+8
+00:00:15,160 --> 00:00:18,770
+have a different value type
+from one document to another.
+
+9
+00:00:18,770 --> 00:00:20,374
+The MongoDB query
+language provides
+
+10
+00:00:20,374 --> 00:00:21,790
+operators that
+enable us to handle
+
+11
+00:00:21,790 --> 00:00:23,560
+both of these situations.
+
+12
+00:00:23,560 --> 00:00:27,370
+They're called
+$exists and $type.
+
+13
+00:00:27,370 --> 00:00:31,240
+So let's take a look at an
+example of $exists first.
+
+14
+00:00:31,240 --> 00:00:35,360
+For this we'll look again
+at the M001 class Atlas
+
+15
+00:00:35,360 --> 00:00:40,600
+cluster and the
+video.movies collection.
+
+16
+00:00:40,600 --> 00:00:44,270
+Within the movies collection,
+we have quite a few old movies.
+
+17
+00:00:44,270 --> 00:00:47,930
+Many of these movies predate
+the MPAA movie rating system.
+
+18
+00:00:47,930 --> 00:00:51,280
+What we might want to
+do with an application
+
+19
+00:00:51,280 --> 00:00:54,050
+is test for the
+existence of a rating.
+
+20
+00:00:54,050 --> 00:00:57,910
+Here in compass, I've connected
+to the class Atlas cluster.
+
+21
+00:00:57,910 --> 00:01:01,530
+Let's filter for documents that
+contain an MPAA rating field.
+
+22
+00:01:01,530 --> 00:01:04,209
+
+
+23
+00:01:04,209 --> 00:01:07,990
+So the syntax of
+$exists is that we
+
+24
+00:01:07,990 --> 00:01:10,600
+specify the key were
+interested in testing
+
+25
+00:01:10,600 --> 00:01:12,590
+for the existence of.
+
+26
+00:01:12,590 --> 00:01:15,210
+And as the value for
+that key in our filter,
+
+27
+00:01:15,210 --> 00:01:20,980
+we supply a document that
+has $exists as the key
+
+28
+00:01:20,980 --> 00:01:23,780
+and a value of
+either true or false.
+
+29
+00:01:23,780 --> 00:01:26,230
+If the value we
+specify here is true,
+
+30
+00:01:26,230 --> 00:01:31,440
+then we will match documents
+that contain this key.
+
+31
+00:01:31,440 --> 00:01:33,310
+And if it's false,
+we'll match documents
+
+32
+00:01:33,310 --> 00:01:36,140
+that do not contain the key.
+
+33
+00:01:36,140 --> 00:01:40,060
+Note that the documents
+containing the MPAA rating key
+
+34
+00:01:40,060 --> 00:01:43,090
+are substantially less than
+the total number of documents
+
+35
+00:01:43,090 --> 00:01:44,680
+in this collection.
+
+36
+00:01:44,680 --> 00:01:49,400
+Let's do the reverse now
+and set $exists to false.
+
+37
+00:01:49,400 --> 00:01:51,560
+Now we can see that movies
+retrieved in response
+
+38
+00:01:51,560 --> 00:01:55,920
+to this query do not contain
+an MPAA rating field at all.
+
+39
+00:01:55,920 --> 00:01:58,050
+If we scroll through
+the schema view,
+
+40
+00:01:58,050 --> 00:02:00,910
+we see that right here where
+MPAA rating should appear,
+
+41
+00:02:00,910 --> 00:02:01,890
+it does not.
+
+42
+00:02:01,890 --> 00:02:04,360
+That's because with
+this filter applied,
+
+43
+00:02:04,360 --> 00:02:06,530
+compass is only
+looking at documents
+
+44
+00:02:06,530 --> 00:02:09,210
+that do not have this field.
+
+45
+00:02:09,210 --> 00:02:11,710
+I should note here something
+you might run into with respect
+
+46
+00:02:11,710 --> 00:02:13,220
+missing fields.
+
+47
+00:02:13,220 --> 00:02:17,200
+No is a value that is commonly
+used in relational databases
+
+48
+00:02:17,200 --> 00:02:22,670
+for rows that do not have any
+data for a particular column.
+
+49
+00:02:22,670 --> 00:02:24,110
+And for this
+example, we're going
+
+50
+00:02:24,110 --> 00:02:28,500
+to switch quickly to our
+Atlas sandbox cluster
+
+51
+00:02:28,500 --> 00:02:32,840
+and take a look at the
+movie details collection.
+
+52
+00:02:32,840 --> 00:02:36,240
+Some MongoDB users
+prefer to include a key
+
+53
+00:02:36,240 --> 00:02:39,070
+and simply set its value
+to null for documents that
+
+54
+00:02:39,070 --> 00:02:41,160
+have no value for that field.
+
+55
+00:02:41,160 --> 00:02:44,380
+In order to support
+queries for nullish values,
+
+56
+00:02:44,380 --> 00:02:46,180
+if you filter for
+something like this,
+
+57
+00:02:46,180 --> 00:02:48,750
+tomato.consensus
+null, this filter
+
+58
+00:02:48,750 --> 00:02:53,300
+will match both documents that
+explicitly have the value set
+
+59
+00:02:53,300 --> 00:02:55,880
+to null, like we see
+in this document,
+
+60
+00:02:55,880 --> 00:03:00,160
+and those that do not contain
+the key tomato.consensus
+
+61
+00:03:00,160 --> 00:03:02,890
+at all, as we see in
+this document, which
+
+62
+00:03:02,890 --> 00:03:05,020
+not only doesn't
+have tomato.consensus
+
+63
+00:03:05,020 --> 00:03:07,890
+but doesn't have the
+tomato field period.
+
+64
+00:03:07,890 --> 00:03:09,640
+For collections
+containing documents
+
+65
+00:03:09,640 --> 00:03:12,240
+with null values
+for some fields,
+
+66
+00:03:12,240 --> 00:03:15,160
+you will inevitably
+run into this.
+
+67
+00:03:15,160 --> 00:03:17,190
+So be on the lookout.
+
+68
+00:03:17,190 --> 00:03:20,870
+Now let's take a look
+at the $type operator.
+
+69
+00:03:20,870 --> 00:03:24,100
+We'll continue to work with
+our video.movies collection
+
+70
+00:03:24,100 --> 00:03:25,450
+for our example.
+
+71
+00:03:25,450 --> 00:03:28,230
+Take a look at the
+viewer rating field.
+
+72
+00:03:28,230 --> 00:03:31,800
+What we see here in the
+schema view for video.movies
+
+73
+00:03:31,800 --> 00:03:34,550
+is that the value
+type for viewer rating
+
+74
+00:03:34,550 --> 00:03:37,130
+really depends on which
+document we look at.
+
+75
+00:03:37,130 --> 00:03:39,110
+Some have a value
+type for double,
+
+76
+00:03:39,110 --> 00:03:42,400
+some have a value
+type of Int32, others
+
+77
+00:03:42,400 --> 00:03:44,580
+have a value type of undefined.
+
+78
+00:03:44,580 --> 00:03:47,150
+We can filter for documents
+that have a particular value
+
+79
+00:03:47,150 --> 00:03:52,740
+type for a field using
+the $type operator.
+
+80
+00:03:52,740 --> 00:03:54,580
+Let's look at an example.
+
+81
+00:03:54,580 --> 00:03:57,460
+And for this, I'd like to
+return to the Mongo shell.
+
+82
+00:03:57,460 --> 00:04:02,920
+Here I have a shell connected
+to the M001 class Atlas cluster.
+
+83
+00:04:02,920 --> 00:04:06,510
+With this command, our filter
+will match only documents
+
+84
+00:04:06,510 --> 00:04:08,860
+in the video.movies
+collection that
+
+85
+00:04:08,860 --> 00:04:12,522
+have a value for viewerRating
+that is a 32-bit integer.
+
+86
+00:04:12,522 --> 00:04:14,480
+And we can see that in
+each of these documents,
+
+87
+00:04:14,480 --> 00:04:17,170
+the viewerRating is
+in fact an integer.
+
+88
+00:04:17,170 --> 00:04:22,160
+I can flip this and look
+for just doubles instead.
+
+89
+00:04:22,160 --> 00:04:26,090
+And here we can see that these
+are floating point values.
+
+90
+00:04:26,090 --> 00:04:29,350
+If you'd like to review how
+to filter for other types,
+
+91
+00:04:29,350 --> 00:04:31,860
+please see the documentation.
+
+92
+00:04:31,860 --> 00:04:33,770
+It includes
+comprehensive coverage
+
+93
+00:04:33,770 --> 00:04:36,630
+for all of the value types
+that you can filter for,
+
+94
+00:04:36,630 --> 00:04:40,040
+along with additional detail
+about the $type operator.
+
+95
+00:04:40,040 --> 00:04:44,330
+$exists and $type allow us to
+ask meta questions of sorts
+
+96
+00:04:44,330 --> 00:04:46,570
+about documents in a
+collection, and thereby
+
+97
+00:04:46,570 --> 00:04:50,700
+give us some important tools
+in working with MongoDB support
+
+98
+00:04:50,700 --> 00:00:00,000
+for flexible data models.
+

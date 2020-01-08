@@ -1,0 +1,39 @@
+What a week.
+
+Don't worry if it looks like a lot of information.
+
+You can always go back to a specific pattern later, if you forgot about it and suspect it may be a good match for the schema you're working on.
+
+Let's have a quick overview of the affinity [?
+
+for ?] patterns with the common use cases.
+
+I want to stress the point that the patterns we identified under a given use case are not necessarily all applicable to your problem.
+
+Neither the ones not selected should be discarded.
+
+The tables simply highlights the most likely and most important ones that may appear for a given use case.
+
+For example, while working on the Internet of Things projects, the project often uses the bucket patterning.
+
+However, even if not highlighted, it may benefit from the tree pattern, If the devices organize in a hierarchy of some sort.
+
+This matrix is there to guide you toward the most likely patterns first.
+
+A special note about the computed and the schema versioning patterns-- the computed pattern is generic and applicable to most use cases.
+
+As for the schema versioning one, it is applicable to all use cases.
+
+So ensure you get a good grasp of it.
+
+Then you'll be ready to use it, when needed.
+
+In summary, in this chapter, we learned a few schema design patterns.
+
+Those act as powerful transformation, when designing schema.
+
+If you most likely care about ease of development and there's not any difficult performance requirements to meet, you may not need many of those patterns.
+
+The pattern and also provide a common language for the team.
+
+And finally, using the patterns lets you have a more predictable methodology.

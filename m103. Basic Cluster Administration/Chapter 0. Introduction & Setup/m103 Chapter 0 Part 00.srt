@@ -1,0 +1,355 @@
+1
+00:00:00,000 --> 00:00:00,730
+
+
+2
+00:00:00,730 --> 00:00:04,732
+Hi there, and welcome to M103,
+basic cluster administration.
+
+3
+00:00:04,732 --> 00:00:06,190
+My name's Matt,
+and I'm going to be
+
+4
+00:00:06,190 --> 00:00:08,440
+one of your instructors
+for this course.
+
+5
+00:00:08,440 --> 00:00:10,450
+Together, we'll learn
+about deploying MongoDB
+
+6
+00:00:10,450 --> 00:00:11,860
+in various
+architectures, and how
+
+7
+00:00:11,860 --> 00:00:14,512
+to use the basic administrative
+tools at your disposal.
+
+8
+00:00:14,512 --> 00:00:15,970
+In the first chapter,
+we'll discuss
+
+9
+00:00:15,970 --> 00:00:17,710
+Mongod, which is
+the core database
+
+10
+00:00:17,710 --> 00:00:19,780
+process that handles
+data requests
+
+11
+00:00:19,780 --> 00:00:21,850
+and manages data access.
+
+12
+00:00:21,850 --> 00:00:23,440
+We'll also cover
+important aspects
+
+13
+00:00:23,440 --> 00:00:25,900
+of deploying a single Mongod
+process, such as enabling
+
+14
+00:00:25,900 --> 00:00:29,290
+authentication and
+exploring the database logs.
+
+15
+00:00:29,290 --> 00:00:30,790
+In the second
+chapter, we'll discuss
+
+16
+00:00:30,790 --> 00:00:32,710
+how MongoDB supports
+high availability
+
+17
+00:00:32,710 --> 00:00:34,510
+by replicating our data.
+
+18
+00:00:34,510 --> 00:00:37,450
+With multiple copies of data
+on different database servers,
+
+19
+00:00:37,450 --> 00:00:39,520
+replication provides a
+level of fault tolerance
+
+20
+00:00:39,520 --> 00:00:41,915
+against the loss of a
+single database server.
+
+21
+00:00:41,915 --> 00:00:44,290
+In this course, we'll go
+through the general architecture
+
+22
+00:00:44,290 --> 00:00:46,960
+and behavior of a replica set,
+and the different deployment
+
+23
+00:00:46,960 --> 00:00:50,250
+strategies you can use to
+better suit your application.
+
+24
+00:00:50,250 --> 00:00:51,820
+In the final chapter,
+we'll discuss
+
+25
+00:00:51,820 --> 00:00:53,920
+scalability and
+how MongoDB scales
+
+26
+00:00:53,920 --> 00:00:56,080
+horizontally through sharding.
+
+27
+00:00:56,080 --> 00:00:58,150
+In this course, we're
+going to cover topics
+
+28
+00:00:58,150 --> 00:01:00,550
+like the architecture
+of a sharded cluster,
+
+29
+00:01:00,550 --> 00:01:03,640
+how queries are handled, and how
+to choose the way your data is
+
+30
+00:01:03,640 --> 00:01:05,740
+distributed.
+
+31
+00:01:05,740 --> 00:01:07,550
+This course is
+three chapters long.
+
+32
+00:01:07,550 --> 00:01:10,750
+And with each chapter, there'll
+be a new set of lesson videos.
+
+33
+00:01:10,750 --> 00:01:12,460
+After each lesson,
+there will be a quiz
+
+34
+00:01:12,460 --> 00:01:15,010
+to assess your learning
+of the material.
+
+35
+00:01:15,010 --> 00:01:17,410
+Lab exercises are dispersed
+throughout each chapter
+
+36
+00:01:17,410 --> 00:01:20,020
+so that you can apply what
+you've learned throughout.
+
+37
+00:01:20,020 --> 00:01:23,020
+So let's go over a few logistics
+of the course very quickly.
+
+38
+00:01:23,020 --> 00:01:24,642
+Who's the target audience?
+
+39
+00:01:24,642 --> 00:01:25,600
+This is a basic course.
+
+40
+00:01:25,600 --> 00:01:27,558
+So it's suitable for
+people on both development
+
+41
+00:01:27,558 --> 00:01:29,380
+and administration teams.
+
+42
+00:01:29,380 --> 00:01:31,780
+It's expected that you already
+have some basic knowledge
+
+43
+00:01:31,780 --> 00:01:34,720
+or understanding of databases
+or a basic familiarity
+
+44
+00:01:34,720 --> 00:01:36,040
+with MongoDB.
+
+45
+00:01:36,040 --> 00:01:39,589
+For example, if you took
+M001 on MongoDB University,
+
+46
+00:01:39,589 --> 00:01:42,130
+and you feel comfortable with
+what you learned in that class,
+
+47
+00:01:42,130 --> 00:01:44,180
+then you're in the right place.
+
+48
+00:01:44,180 --> 00:01:45,800
+How does the grading work?
+
+49
+00:01:45,800 --> 00:01:48,080
+There are quizzes,
+labs, and a final exam
+
+50
+00:01:48,080 --> 00:01:50,500
+as deliverables on your
+part during the course.
+
+51
+00:01:50,500 --> 00:01:51,980
+1/2 of your grade
+in the class will
+
+52
+00:01:51,980 --> 00:01:53,900
+be determined by how
+you do in the labs,
+
+53
+00:01:53,900 --> 00:01:56,275
+and the other half will be
+determined by your performance
+
+54
+00:01:56,275 --> 00:01:57,470
+on the final exam.
+
+55
+00:01:57,470 --> 00:01:59,420
+The quizzes are ungraded
+and they exist mainly
+
+56
+00:01:59,420 --> 00:02:02,840
+to help you track your own
+understanding of the material.
+
+57
+00:02:02,840 --> 00:02:04,850
+Students with a grade
+of 65% or greater
+
+58
+00:02:04,850 --> 00:02:07,070
+will receive a passing
+grade and a certificate
+
+59
+00:02:07,070 --> 00:02:08,840
+of course completion.
+
+60
+00:02:08,840 --> 00:02:10,639
+Throughout the course,
+we highly encourage
+
+61
+00:02:10,639 --> 00:02:13,260
+you to participate in
+the discussion forum.
+
+62
+00:02:13,260 --> 00:02:15,200
+We provide knowledgeable
+teaching assistants
+
+63
+00:02:15,200 --> 00:02:17,210
+who are there to help
+answer your questions.
+
+64
+00:02:17,210 --> 00:02:19,250
+But you also have
+your fellow classmates
+
+65
+00:02:19,250 --> 00:02:21,530
+who are often very
+helpful resources, as they
+
+66
+00:02:21,530 --> 00:02:24,020
+take the course alongside you.
+
+67
+00:02:24,020 --> 00:02:25,820
+By the end of this
+course, you should
+
+68
+00:02:25,820 --> 00:02:29,120
+be familiar with the different
+tools and techniques used
+
+69
+00:02:29,120 --> 00:02:31,910
+to administer basic
+MongoDB deployments.
+
+70
+00:02:31,910 --> 00:02:34,790
+You'll be able to identify
+different MongoDB architectures
+
+71
+00:02:34,790 --> 00:02:37,500
+and use the MongoDB
+shell to configure them.
+
+72
+00:02:37,500 --> 00:02:39,320
+So without further
+ado, thank you
+
+73
+00:02:39,320 --> 00:02:40,850
+for deciding to learn with us.
+
+74
+00:02:40,850 --> 00:00:00,000
+And we wish you
+the best of luck.
+

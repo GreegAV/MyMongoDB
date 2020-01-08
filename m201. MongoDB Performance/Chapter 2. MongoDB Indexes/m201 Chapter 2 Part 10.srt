@@ -1,0 +1,555 @@
+
+1
+00:00:00.000 --> 00:00:00.580
+
+
+2
+00:00:00.580 --> 00:00:03.840
+In this lesson, we're going
+to talk about text indexes.
+
+3
+00:00:03.840 --> 00:00:05.620
+And specifically,
+we're to discuss
+
+4
+00:00:05.620 --> 00:00:08.840
+how we can create inquiry
+with text indexes.
+
+5
+00:00:08.840 --> 00:00:11.590
+What kind of implications text
+indexes have on the number
+
+6
+00:00:11.590 --> 00:00:13.572
+index keys that are generated.
+
+7
+00:00:13.572 --> 00:00:15.030
+And finally, we're
+going to discuss
+
+8
+00:00:15.030 --> 00:00:17.920
+some of the costs that are
+associated with text searches
+
+9
+00:00:17.920 --> 00:00:19.730
+and text indexes.
+
+10
+00:00:19.730 --> 00:00:22.790
+Oftentimes, we store
+text in our documents.
+
+11
+00:00:22.790 --> 00:00:24.490
+And for certain
+use cases, it can
+
+12
+00:00:24.490 --> 00:00:26.380
+be useful to search
+for documents
+
+13
+00:00:26.380 --> 00:00:29.740
+based on the words that are
+a part of those text fields.
+
+14
+00:00:29.740 --> 00:00:31.720
+For example, here
+I have a document
+
+15
+00:00:31.720 --> 00:00:33.910
+with English words
+describing this product
+
+16
+00:00:33.910 --> 00:00:36.280
+as a long sleeved t-shirt.
+
+17
+00:00:36.280 --> 00:00:39.100
+Now using MongoDB's
+default query engine,
+
+18
+00:00:39.100 --> 00:00:42.580
+I can specify a string
+that exactly matches
+
+19
+00:00:42.580 --> 00:00:44.620
+the string specified
+in this document
+
+20
+00:00:44.620 --> 00:00:46.810
+if I wanted to
+find this document.
+
+21
+00:00:46.810 --> 00:00:48.190
+Now there are
+obvious limitations
+
+22
+00:00:48.190 --> 00:00:49.750
+to querying in this way.
+
+23
+00:00:49.750 --> 00:00:52.450
+Users of our application
+are unlikely to know
+
+24
+00:00:52.450 --> 00:00:56.170
+the exact string to input
+to return this document.
+
+25
+00:00:56.170 --> 00:00:58.090
+One possible solution
+to this problem
+
+26
+00:00:58.090 --> 00:00:59.770
+would be to take
+advantage of MongoDB's
+
+27
+00:00:59.770 --> 00:01:02.770
+built-in regular
+expression support.
+
+28
+00:01:02.770 --> 00:01:06.100
+While this would work, there
+are performance disadvantages.
+
+29
+00:01:06.100 --> 00:01:07.870
+As you'll learn
+in another lesson,
+
+30
+00:01:07.870 --> 00:01:10.440
+regular expressions don't
+have the best performance.
+
+31
+00:01:10.440 --> 00:01:13.150
+And this is even true
+when they use indexes.
+
+32
+00:01:13.150 --> 00:01:16.060
+And this is where text
+indexes come into play.
+
+33
+00:01:16.060 --> 00:01:18.500
+Rather than specifying
+that we want our indexes
+
+34
+00:01:18.500 --> 00:01:21.310
+to be ascending or
+descending, rather, we
+
+35
+00:01:21.310 --> 00:01:25.130
+pass a special text
+keyword to createIndex.
+
+36
+00:01:25.130 --> 00:01:28.450
+This allows us to create
+a special text index.
+
+37
+00:01:28.450 --> 00:01:31.360
+By doing this, were able to
+leverage MongoDB's full text
+
+38
+00:01:31.360 --> 00:01:35.230
+search capabilities, while
+avoiding collection scans.
+
+39
+00:01:35.230 --> 00:01:39.220
+Under the hood, this works very
+similarly to multi-key indexes.
+
+40
+00:01:39.220 --> 00:01:42.030
+The server is going to
+process this text field
+
+41
+00:01:42.030 --> 00:01:44.980
+and create an index key
+for every unique word
+
+42
+00:01:44.980 --> 00:01:46.940
+in the string.
+
+43
+00:01:46.940 --> 00:01:50.050
+So in this case, MongoDB
+would create five index keys
+
+44
+00:01:50.050 --> 00:01:51.580
+for this document.
+
+45
+00:01:51.580 --> 00:01:54.730
+This is because Unicode
+considers both spaces
+
+46
+00:01:54.730 --> 00:01:57.850
+and hyphens as text delimiters.
+
+47
+00:01:57.850 --> 00:02:01.810
+The five index keys would
+be mongodb, long, sleeve, t,
+
+48
+00:02:01.810 --> 00:02:03.490
+and shirt.
+
+49
+00:02:03.490 --> 00:02:06.580
+You'll notice that each of
+these tokens are also lowercase.
+
+50
+00:02:06.580 --> 00:02:10.690
+That's because, by default, text
+indexes are case insensitive.
+
+51
+00:02:10.690 --> 00:02:14.020
+With regards to performance,
+like multi-key indexes,
+
+52
+00:02:14.020 --> 00:02:17.380
+we want to be aware that the
+bigger our text fields are,
+
+53
+00:02:17.380 --> 00:02:21.132
+the more index keys per
+document we'll be producing.
+
+54
+00:02:21.132 --> 00:02:22.840
+This will affect the
+number of index keys
+
+55
+00:02:22.840 --> 00:02:25.150
+that the query engine
+needs to examine
+
+56
+00:02:25.150 --> 00:02:28.390
+as well as the overall
+size of our index.
+
+57
+00:02:28.390 --> 00:02:31.120
+You'll want to watch very
+closely how big our index is
+
+58
+00:02:31.120 --> 00:02:34.037
+getting to make sure that
+it fits entirely in RAM.
+
+59
+00:02:34.037 --> 00:02:35.620
+You'll also want to
+be aware that this
+
+60
+00:02:35.620 --> 00:02:38.860
+means that it's going to take
+longer than normal to build
+
+61
+00:02:38.860 --> 00:02:42.370
+this kind of index, than
+a traditional index.
+
+62
+00:02:42.370 --> 00:02:44.950
+And of course, since we're
+generating more index keys,
+
+63
+00:02:44.950 --> 00:02:47.440
+we'll also see a more
+significant decrease
+
+64
+00:02:47.440 --> 00:02:50.710
+in write performance,
+than with a typical index.
+
+65
+00:02:50.710 --> 00:02:53.410
+One strategy for reducing
+the number of index keys
+
+66
+00:02:53.410 --> 00:02:56.500
+that need to be examined, would
+be to create a compound text
+
+67
+00:02:56.500 --> 00:02:57.270
+index.
+
+68
+00:02:57.270 --> 00:02:58.870
+Here I'm creating
+a compound index
+
+69
+00:02:58.870 --> 00:03:01.220
+on category and product name.
+
+70
+00:03:01.220 --> 00:03:04.150
+And this allows us to limit
+the number of text keys
+
+71
+00:03:04.150 --> 00:03:07.240
+that need to be inspected
+by limiting on the clothing
+
+72
+00:03:07.240 --> 00:03:08.530
+category.
+
+73
+00:03:08.530 --> 00:03:11.770
+We'll only need to
+examine index keys that
+
+74
+00:03:11.770 --> 00:03:13.750
+fit the clothing
+category, rather
+
+75
+00:03:13.750 --> 00:03:16.462
+than looking at all index keys.
+
+76
+00:03:16.462 --> 00:03:18.670
+Let's go ahead and try out
+some of the other features
+
+77
+00:03:18.670 --> 00:03:21.700
+of text indexes from the shell.
+
+78
+00:03:21.700 --> 00:03:24.900
+First, let's connect
+to the m201 database.
+
+79
+00:03:24.900 --> 00:03:28.800
+From here, we can go ahead and
+insert some example documents.
+
+80
+00:03:28.800 --> 00:03:30.890
+Here, I have inserted
+two documents.
+
+81
+00:03:30.890 --> 00:03:33.760
+One that says that "MongoDB is
+the best," another that says
+
+82
+00:03:33.760 --> 00:03:35.510
+that "MongoDB is the worst."
+
+83
+00:03:35.510 --> 00:03:37.440
+More on this in a second.
+
+84
+00:03:37.440 --> 00:03:40.400
+And of course, I can go ahead
+and now create a text index
+
+85
+00:03:40.400 --> 00:03:42.440
+on the statement field.
+
+86
+00:03:42.440 --> 00:03:45.980
+And now when I search for
+the special $text and $search
+
+87
+00:03:45.980 --> 00:03:49.430
+operators for the
+phrase "MongoDB best,"
+
+88
+00:03:49.430 --> 00:03:52.060
+you'll see that the first
+document returned says,
+
+89
+00:03:52.060 --> 00:03:53.274
+"MongoDB is the worst."
+
+90
+00:03:53.274 --> 00:03:54.690
+And the second
+document it returns
+
+91
+00:03:54.690 --> 00:03:56.840
+says, "MongoDB is the best."
+
+92
+00:03:56.840 --> 00:03:58.460
+So what exactly happened here?
+
+93
+00:03:58.460 --> 00:04:00.800
+Why was worst before best.
+
+94
+00:04:00.800 --> 00:04:03.000
+And why did worst
+even appear at all?
+
+95
+00:04:03.000 --> 00:04:05.000
+Well, first of all, it's
+important to understand
+
+96
+00:04:05.000 --> 00:04:10.100
+that text queries logically
+"or" each delimited word.
+
+97
+00:04:10.100 --> 00:04:12.770
+So in this case, when
+we say that we're
+
+98
+00:04:12.770 --> 00:04:14.450
+searching for
+"MongoDB best," we're
+
+99
+00:04:14.450 --> 00:04:16.279
+searching for any
+documents that include
+
+100
+00:04:16.279 --> 00:04:20.959
+MongoDB or any documents
+that include the word best.
+
+101
+00:04:20.959 --> 00:04:24.230
+To address this issue, we can
+project the special textScore
+
+102
+00:04:24.230 --> 00:04:27.500
+value to our returned results.
+
+103
+00:04:27.500 --> 00:04:32.750
+The $text operator assigns
+a score to each document,
+
+104
+00:04:32.750 --> 00:04:35.570
+based on the relevance of that
+document for a given search
+
+105
+00:04:35.570 --> 00:04:37.114
+query.
+
+106
+00:04:37.114 --> 00:04:38.780
+And now that we've
+projected this field,
+
+107
+00:04:38.780 --> 00:04:43.280
+we can go ahead and sort by
+the same projected field.
+
+108
+00:04:43.280 --> 00:04:45.920
+Now the documents that
+best match our search
+
+109
+00:04:45.920 --> 00:04:49.230
+query are at the
+top of our results.
+
+110
+00:04:49.230 --> 00:04:51.360
+Let's go ahead and recap
+what we've learned.
+
+111
+00:04:51.360 --> 00:04:54.710
+We discussed how to create
+inquiry with text indexes.
+
+112
+00:04:54.710 --> 00:04:56.900
+We also discussed some
+of the implications
+
+113
+00:04:56.900 --> 00:04:58.760
+of having so many
+text keys being
+
+114
+00:04:58.760 --> 00:05:01.370
+generated by text indexes.
+
+115
+00:05:01.370 --> 00:05:03.860
+And finally, we talked about
+some of the associated costs
+
+116
+00:05:03.860 --> 00:05:06.190
+with tech searches in general.

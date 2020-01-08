@@ -1,0 +1,79 @@
+In this video I'd like to examine the different actions that are supported in MongoDB.
+
+We already know that there are two parts to a privilege-- an action and a resource.
+
+Actions describe the operations that a given user may perform on a resource in the database.
+
+You can think of actions as verbs.
+
+While resources are the subjects of these verbs.
+
+Within MongoDB, we have several different types of actions.
+
+Let's go through each of these categories one by one.
+
+Let's start with query and write actions.
+
+All of the actions in this category are related to CRUD.
+
+You can see that we have things like find, insert, remove, update, and bypass document validation.
+
+Pretty straightforward.
+
+After query and write actions, we have database management actions.
+
+Most of these actions are DDL operations.
+
+These are structural to the database.
+
+Things like creating an index, creating a collection, dropping a user, killing cursors, unlocking the database.
+
+One thing I want to point out is that there's a difference between changing your own password and changing a password.
+
+The changeOwnPassword role allows you to change your own password.
+
+Whereas the changePassword role grants you the privilege to change anyone's password.
+
+After database management actions, we can move on to deployment management actions.
+
+Deployment Management Actions are also pretty straightforward.
+
+They allow you to manage your deployment.
+
+The one thing I like to point out here is that all of these operations-- all of these actions-- are only applied to the cluster resource.
+
+After deployment management actions, we have replication actions.
+
+As you'd expect, all these actions involve getting and setting different replications settings.
+
+We also have the ability to append an oplog note, do a resync.
+
+All these actions are also applied to the cluster resource.
+
+After replication we can talk about sharding.
+
+All of these sharding actions, well, pertain to sharding.
+
+Things like adding a shard, enabling sharding, listing the shards, moving a chunk, and removing a shard, et cetera.
+
+Next we can take a look at server administration actions.
+
+All of these actions relate to administering the actual database-- things like running compact, getting the host info, getting a server parameter, shutting the database itself down.
+
+All these are directly related to the server and administrating it.
+
+Next we have diagnostic actions.
+
+These are the actions often required to diagnose or monitor your database.
+
+Generally, these are the actions that will have access to statistics and metrics collected by profiling or similar resources-- things like connection pool stats, db stats, index stats, server status, et cetera.
+
+And finally, we can talk about internal actions.
+
+These actions are the most sensitive set of actions that we can grant to a role.
+
+Be very careful when granting these actions.
+
+They should only be granted in exceptional circumstances, as they are internal to the database.
+
+And those are all the different actions that are supported with MongoDB.

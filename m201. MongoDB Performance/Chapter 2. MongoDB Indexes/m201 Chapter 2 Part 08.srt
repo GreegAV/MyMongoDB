@@ -1,0 +1,498 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.870
+In this lesson, we're going to
+talk about multikey indexes.
+
+3
+00:00:04.870 --> 00:00:07.420
+Because of MongoDB's
+flexible data model,
+
+4
+00:00:07.420 --> 00:00:10.780
+we're able to embed
+arrays into our documents.
+
+5
+00:00:10.780 --> 00:00:14.590
+And when we index on a
+field that is an array,
+
+6
+00:00:14.590 --> 00:00:18.040
+this is what we call
+a multikey index.
+
+7
+00:00:18.040 --> 00:00:21.550
+It's called this because
+for each entry in the array,
+
+8
+00:00:21.550 --> 00:00:24.640
+the server will create
+a separate index key.
+
+9
+00:00:24.640 --> 00:00:26.470
+For example, in
+this document, if we
+
+10
+00:00:26.470 --> 00:00:28.236
+were to create
+index on categories,
+
+11
+00:00:28.236 --> 00:00:29.860
+then the server would
+create index keys
+
+12
+00:00:29.860 --> 00:00:33.710
+for t-shirts,
+clothing, and apparel.
+
+13
+00:00:33.710 --> 00:00:35.570
+With multikey
+indexes, we can not
+
+14
+00:00:35.570 --> 00:00:39.170
+only index on scalar values,
+like strings and numbers,
+
+15
+00:00:39.170 --> 00:00:42.650
+but we can also index
+on nested documents.
+
+16
+00:00:42.650 --> 00:00:44.390
+For instance, we
+might want to be
+
+17
+00:00:44.390 --> 00:00:48.230
+able to create an index on the
+quantity field of our stock
+
+18
+00:00:48.230 --> 00:00:50.180
+sub-documents so
+that we can sort all
+
+19
+00:00:50.180 --> 00:00:52.130
+these documents by quantity.
+
+20
+00:00:52.130 --> 00:00:54.920
+This would work the same
+way as with scalar values.
+
+21
+00:00:54.920 --> 00:00:58.040
+In this case, the server would
+create three index keys, one
+
+22
+00:00:58.040 --> 00:01:00.500
+for each of the sub-documents.
+
+23
+00:01:00.500 --> 00:01:04.550
+For each index document, we can
+have at most one index field
+
+24
+00:01:04.550 --> 00:01:06.830
+whose value is an array.
+
+25
+00:01:06.830 --> 00:01:09.050
+In the case of our example,
+we can create an index
+
+26
+00:01:09.050 --> 00:01:12.500
+on product name
+and stock quantity,
+
+27
+00:01:12.500 --> 00:01:16.010
+but we couldn't create an index
+on both categories and stock
+
+28
+00:01:16.010 --> 00:01:17.750
+quantity.
+
+29
+00:01:17.750 --> 00:01:19.700
+If we were to create
+a compound index
+
+30
+00:01:19.700 --> 00:01:22.820
+on both categories
+and stock, then we'd
+
+31
+00:01:22.820 --> 00:01:25.700
+be creating index keys
+for the Cartesian product
+
+32
+00:01:25.700 --> 00:01:29.210
+between the length of the
+category and stock arrays.
+
+33
+00:01:29.210 --> 00:01:31.760
+We'd be generating a huge
+amount of index keys, which
+
+34
+00:01:31.760 --> 00:01:34.790
+would affect the
+performance of our queries.
+
+35
+00:01:34.790 --> 00:01:36.490
+And this brings up a good point.
+
+36
+00:01:36.490 --> 00:01:39.280
+We want to be careful with
+creating multikey indexes
+
+37
+00:01:39.280 --> 00:01:41.470
+because we want to make
+sure that our arrays don't
+
+38
+00:01:41.470 --> 00:01:43.000
+grow too large.
+
+39
+00:01:43.000 --> 00:01:46.300
+Because in doing so, we'd
+affect how large our index is,
+
+40
+00:01:46.300 --> 00:01:48.490
+potentially causing problems
+with fitting the index
+
+41
+00:01:48.490 --> 00:01:53.540
+into memory, pushing our
+data out, and vice versa.
+
+42
+00:01:53.540 --> 00:01:55.720
+Another important
+caveat to point out
+
+43
+00:01:55.720 --> 00:01:59.650
+is that multikey indexes
+don't support covered queries.
+
+44
+00:01:59.650 --> 00:02:01.660
+So if you're inclined
+to use covered queries
+
+45
+00:02:01.660 --> 00:02:03.670
+to prevent the reading
+of your documents,
+
+46
+00:02:03.670 --> 00:02:06.170
+then you'll want to
+keep that in mind.
+
+47
+00:02:06.170 --> 00:02:08.380
+Let's go ahead and look at
+how multikey indexes work
+
+48
+00:02:08.380 --> 00:02:10.070
+from the shell.
+
+49
+00:02:10.070 --> 00:02:12.720
+We can go ahead and switch
+over to the m201 database
+
+50
+00:02:12.720 --> 00:02:14.590
+that we've been using.
+
+51
+00:02:14.590 --> 00:02:17.220
+And from here, let's go
+ahead and insert a document
+
+52
+00:02:17.220 --> 00:02:20.090
+similar to our example.
+
+53
+00:02:20.090 --> 00:02:22.820
+Now we can run a FIND query and
+look at the document we just
+
+54
+00:02:22.820 --> 00:02:24.122
+inserted.
+
+55
+00:02:24.122 --> 00:02:25.580
+You'll notice that
+this document is
+
+56
+00:02:25.580 --> 00:02:28.160
+slightly different than
+the one from our example.
+
+57
+00:02:28.160 --> 00:02:31.430
+In the example,
+stock was an array.
+
+58
+00:02:31.430 --> 00:02:33.870
+Here, it's an embed document.
+
+59
+00:02:33.870 --> 00:02:36.120
+You'll see why I did
+this in a second.
+
+60
+00:02:36.120 --> 00:02:38.360
+Let's go ahead and create
+an index on stock.quantity
+
+61
+00:02:38.360 --> 00:02:40.499
+like we did in the example.
+
+62
+00:02:40.499 --> 00:02:42.290
+And like always, we
+can go ahead and create
+
+63
+00:02:42.290 --> 00:02:43.920
+our explainable object.
+
+64
+00:02:43.920 --> 00:02:46.640
+You'll notice that I'm not
+specifying execution stats
+
+65
+00:02:46.640 --> 00:02:48.710
+because we're just going
+to look at the stages.
+
+66
+00:02:48.710 --> 00:02:50.870
+And now we can run
+a FIND on this query
+
+67
+00:02:50.870 --> 00:02:52.640
+and look at the explain output.
+
+68
+00:02:52.640 --> 00:02:56.000
+And you'll see that we're able
+to successfully use our index.
+
+69
+00:02:56.000 --> 00:02:59.210
+But you'll notice that
+is multikey is false.
+
+70
+00:02:59.210 --> 00:03:01.280
+And this should make sense
+because we haven't yet
+
+71
+00:03:01.280 --> 00:03:03.590
+indexed on our array field.
+
+72
+00:03:03.590 --> 00:03:05.090
+We modified our
+document slightly so
+
+73
+00:03:05.090 --> 00:03:09.384
+that stock was an embedded
+document rather than our array.
+
+74
+00:03:09.384 --> 00:03:11.300
+And so now we can actually
+insert the document
+
+75
+00:03:11.300 --> 00:03:15.130
+from our example where the
+stock field is an array.
+
+76
+00:03:15.130 --> 00:03:18.100
+And now, if we run our
+first query, which would not
+
+77
+00:03:18.100 --> 00:03:20.050
+match the document
+we just inserted,
+
+78
+00:03:20.050 --> 00:03:22.840
+it should only match
+our first document,
+
+79
+00:03:22.840 --> 00:03:24.830
+you'll note that the
+output has changed.
+
+80
+00:03:24.830 --> 00:03:28.960
+We're still doing an index
+scan, but now multikey is true.
+
+81
+00:03:28.960 --> 00:03:32.710
+So MongoDB only recognizes
+that an index is multikey
+
+82
+00:03:32.710 --> 00:03:34.750
+when a document
+is inserted where
+
+83
+00:03:34.750 --> 00:03:36.970
+that field is in an array.
+
+84
+00:03:36.970 --> 00:03:38.680
+And like I said
+earlier, if we try
+
+85
+00:03:38.680 --> 00:03:42.490
+to create an index where
+both fields are arrays,
+
+86
+00:03:42.490 --> 00:03:44.370
+then this should fail.
+
+87
+00:03:44.370 --> 00:03:45.930
+And it does.
+
+88
+00:03:45.930 --> 00:03:49.680
+However, we can still create
+compound multikey index using
+
+89
+00:03:49.680 --> 00:03:53.550
+product name and stock.quantity
+because the stock field is only
+
+90
+00:03:53.550 --> 00:03:54.900
+an array.
+
+91
+00:03:54.900 --> 00:03:57.330
+So it should be fine for
+me to insert this document
+
+92
+00:03:57.330 --> 00:04:01.662
+where product name is an
+array, but stock is not.
+
+93
+00:04:01.662 --> 00:04:03.120
+Also, I should
+point out this isn't
+
+94
+00:04:03.120 --> 00:04:06.380
+a particularly good schema
+to use so I wouldn't
+
+95
+00:04:06.380 --> 00:04:07.870
+use this in production.
+
+96
+00:04:07.870 --> 00:04:10.080
+And the document
+inserted just fine.
+
+97
+00:04:10.080 --> 00:04:13.970
+However, if both product
+name and stock were arrays,
+
+98
+00:04:13.970 --> 00:04:18.320
+like in this document,
+then we'll get an error.
+
+99
+00:04:18.320 --> 00:04:21.800
+I hope this gives you a good
+overview of multikey indexes.
+
+100
+00:04:21.800 --> 00:04:25.070
+By now, you should be familiar
+with how to create and use
+
+101
+00:04:25.070 --> 00:04:28.190
+multikey indexes,
+the implications
+
+102
+00:04:28.190 --> 00:04:31.280
+of multikey indexes
+on your index size,
+
+103
+00:04:31.280 --> 00:04:33.380
+and some of the limitations
+that are associated
+
+104
+00:04:33.380 --> 00:04:35.440
+with multikey indexes.

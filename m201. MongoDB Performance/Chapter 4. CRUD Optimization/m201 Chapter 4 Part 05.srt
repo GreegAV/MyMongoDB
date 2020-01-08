@@ -1,0 +1,434 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.740
+The same kind of
+ordering will be
+
+3
+00:00:02.740 --> 00:00:06.040
+applied to the index structure.
+
+4
+00:00:06.040 --> 00:00:09.910
+So internally how we
+built our big tree
+
+5
+00:00:09.910 --> 00:00:12.370
+is that we will be
+going to be grouping
+
+6
+00:00:12.370 --> 00:00:15.730
+the documents, or
+the document keys,
+
+7
+00:00:15.730 --> 00:00:20.110
+based on the data
+type representation.
+
+8
+00:00:20.110 --> 00:00:24.070
+That way, if we are
+traversing the tree looking
+
+9
+00:00:24.070 --> 00:00:28.360
+for a specific data
+type we can go directly
+
+10
+00:00:28.360 --> 00:00:33.370
+to that first branch of the
+tree and get the results
+
+11
+00:00:33.370 --> 00:00:36.040
+in a much streamlined fashion.
+
+12
+00:00:36.040 --> 00:00:38.320
+So we'll start by
+grouping and creating
+
+13
+00:00:38.320 --> 00:00:41.680
+a tree for numerical
+value types,
+
+14
+00:00:41.680 --> 00:00:46.600
+including any floating point
+values, numerical decimal,
+
+15
+00:00:46.600 --> 00:00:49.270
+or even integer 64.
+
+16
+00:00:49.270 --> 00:00:51.010
+And then we'll
+create the structure
+
+17
+00:00:51.010 --> 00:00:55.390
+for all of our
+strings and symbols,
+
+18
+00:00:55.390 --> 00:00:58.390
+grouping them into the
+different data types
+
+19
+00:00:58.390 --> 00:01:01.270
+that they are represented by.
+
+20
+00:01:01.270 --> 00:01:05.260
+Although this is the correct way
+of dealing with this scenario,
+
+21
+00:01:05.260 --> 00:01:10.000
+it might not be exactly what the
+application actually expects.
+
+22
+00:01:10.000 --> 00:01:13.630
+In a situation where
+these two documents, which
+
+23
+00:01:13.630 --> 00:01:18.010
+are represented by a string
+value as their base field,
+
+24
+00:01:18.010 --> 00:01:24.460
+they are not exactly following
+their numeric representation.
+
+25
+00:01:24.460 --> 00:01:29.170
+We are just ordering them
+according with their data type
+
+26
+00:01:29.170 --> 00:01:32.030
+and using a string
+comparison between them,
+
+27
+00:01:32.030 --> 00:01:34.630
+which is totally correct.
+
+28
+00:01:34.630 --> 00:01:39.010
+But probably not the expected
+numeric ordering sorting.
+
+29
+00:01:39.010 --> 00:01:43.390
+We can solve this situation
+by creating an index
+
+30
+00:01:43.390 --> 00:01:47.140
+or even applying a
+collation on a query that
+
+31
+00:01:47.140 --> 00:01:53.740
+applies the numeric ordering
+of that string representation.
+
+32
+00:01:53.740 --> 00:01:55.190
+If we run the query--
+
+33
+00:01:55.190 --> 00:01:56.920
+exactly the same query--
+
+34
+00:01:56.920 --> 00:01:59.800
+but instead of just
+sorting the value,
+
+35
+00:01:59.800 --> 00:02:04.980
+if we apply a collation with
+numeric ordering in place,
+
+36
+00:02:04.980 --> 00:02:07.930
+and still sorting
+by the same value,
+
+37
+00:02:07.930 --> 00:02:12.590
+we will get the expected
+string numerical
+
+38
+00:02:12.590 --> 00:02:16.180
+ordering representation
+while we are doing our sort.
+
+39
+00:02:16.180 --> 00:02:20.440
+We are still going to be
+doing the ordering by groups.
+
+40
+00:02:20.440 --> 00:02:25.780
+First numerical data types,
+integer 64, numerical decimal,
+
+41
+00:02:25.780 --> 00:02:28.540
+number decimal,
+and then strings.
+
+42
+00:02:28.540 --> 00:02:31.960
+But within strings,
+we will order them
+
+43
+00:02:31.960 --> 00:02:35.350
+according with their
+numeric representation.
+
+44
+00:02:35.350 --> 00:02:37.870
+There is also the
+obvious implications
+
+45
+00:02:37.870 --> 00:02:40.780
+to your application logic.
+
+46
+00:02:40.780 --> 00:02:44.290
+If you populate documents
+where a given field has seven
+
+47
+00:02:44.290 --> 00:02:47.530
+different data types,
+the application
+
+48
+00:02:47.530 --> 00:02:52.150
+will need to be prepared
+to handle those scenarios.
+
+49
+00:02:52.150 --> 00:02:55.360
+While these scenarios might
+be extremely inconvenient
+
+50
+00:02:55.360 --> 00:02:58.900
+in terms of data
+migrations or even
+
+51
+00:02:58.900 --> 00:03:01.910
+while using a
+dynamic language, it
+
+52
+00:03:01.910 --> 00:03:05.350
+will create some
+client side logic
+
+53
+00:03:05.350 --> 00:03:08.530
+that will need to be prepared
+to deal with different data
+
+54
+00:03:08.530 --> 00:03:12.650
+types, which in turn will result
+in a much more complex code
+
+55
+00:03:12.650 --> 00:03:15.620
+base, or expected to be complex.
+
+56
+00:03:15.620 --> 00:03:20.950
+And more important than that,
+a more complex test base.
+
+57
+00:03:20.950 --> 00:03:25.180
+The number of variations of
+tests that you need to create
+
+58
+00:03:25.180 --> 00:03:28.990
+will be in the order of
+the different data types
+
+59
+00:03:28.990 --> 00:03:33.190
+that you might have in your
+collection for the same field.
+
+60
+00:03:33.190 --> 00:03:38.170
+Again, while these might
+be very, very useful,
+
+61
+00:03:38.170 --> 00:03:41.700
+we advise to use them with care.
+
+62
+00:03:41.700 --> 00:03:45.460
+As a recap, there are
+several different data type
+
+63
+00:03:45.460 --> 00:03:48.130
+implications that you
+should be aware of
+
+64
+00:03:48.130 --> 00:03:50.590
+and you need to deal
+with those once you
+
+65
+00:03:50.590 --> 00:03:53.290
+are using a flexible scheme.
+
+66
+00:03:53.290 --> 00:03:56.740
+You should be aware,
+and your application
+
+67
+00:03:56.740 --> 00:03:59.740
+should be aware, that it needs
+to avoid data consistency
+
+68
+00:03:59.740 --> 00:04:00.550
+issues.
+
+69
+00:04:00.550 --> 00:04:03.160
+If one client writes
+one data type,
+
+70
+00:04:03.160 --> 00:04:06.010
+the other clients should also
+write exactly the same data
+
+71
+00:04:06.010 --> 00:04:06.970
+type.
+
+72
+00:04:06.970 --> 00:04:10.570
+Otherwise it might be
+confusing for different clients
+
+73
+00:04:10.570 --> 00:04:13.150
+to deal with
+different data types.
+
+74
+00:04:13.150 --> 00:04:16.959
+We will be ensuring that
+the correctness on queries
+
+75
+00:04:16.959 --> 00:04:20.149
+and sorting in terms of
+data types by default.
+
+76
+00:04:20.149 --> 00:04:22.930
+But if you want to add
+that extra edge of being
+
+77
+00:04:22.930 --> 00:04:26.380
+able to capture the numerical
+representation of a string
+
+78
+00:04:26.380 --> 00:04:31.390
+print, for example, you'll need
+to apply collations in place.
+
+79
+00:04:31.390 --> 00:04:35.080
+There are implications
+for your code base.
+
+80
+00:04:35.080 --> 00:04:38.410
+The more streamlined
+your fields are
+
+81
+00:04:38.410 --> 00:04:42.380
+in terms of more normalized
+with using always the same data
+
+82
+00:04:42.380 --> 00:04:46.270
+type, the more simple your
+code base of your application
+
+83
+00:04:46.270 --> 00:04:47.740
+will be.
+
+84
+00:04:47.740 --> 00:04:50.110
+And you can enforce
+certain rules,
+
+85
+00:04:50.110 --> 00:04:51.880
+like document
+validation that can
+
+86
+00:04:51.880 --> 00:04:54.340
+be defined at the
+collection level
+
+87
+00:04:54.340 --> 00:04:58.330
+to give you that extra control
+of which kind of documents
+
+88
+00:04:58.330 --> 00:05:01.500
+are being inserted
+into your collection.
+
+89
+00:05:01.500 --> 00:05:04.620
+And these are the different
+data type implications
+
+90
+00:05:04.620 --> 00:05:06.790
+that we needed to cover.

@@ -1,0 +1,271 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.340
+Hi I'm Kirby.
+
+3
+00:00:02.340 --> 00:00:06.830
+Welcome to M 2 0 1
+MongoDB performance.
+
+4
+00:00:06.830 --> 00:00:09.340
+Highly performant
+database architectures
+
+5
+00:00:09.340 --> 00:00:11.980
+are a key condition of
+mission critical software
+
+6
+00:00:11.980 --> 00:00:13.390
+infrastructure.
+
+7
+00:00:13.390 --> 00:00:16.059
+Throughout this course we're
+going to discuss performance
+
+8
+00:00:16.059 --> 00:00:18.980
+in the context of MongoDB.
+
+9
+00:00:18.980 --> 00:00:20.840
+This course is
+five chapters long,
+
+10
+00:00:20.840 --> 00:00:24.760
+with each chapter there will
+be a new set of lesson videos.
+
+11
+00:00:24.760 --> 00:00:26.320
+After most of these
+videos there'll
+
+12
+00:00:26.320 --> 00:00:29.470
+be a quiz to assess your
+learning of the material.
+
+13
+00:00:29.470 --> 00:00:31.040
+At the end of each
+chapter, there
+
+14
+00:00:31.040 --> 00:00:34.360
+will also be a set of
+related lab exercises.
+
+15
+00:00:34.360 --> 00:00:37.360
+Let's go over a few
+logistics of this course.
+
+16
+00:00:37.360 --> 00:00:38.727
+Target audience.
+
+17
+00:00:38.727 --> 00:00:40.810
+This is an intermediate
+course suitable for people
+
+18
+00:00:40.810 --> 00:00:44.560
+on both the development
+and operations teams.
+
+19
+00:00:44.560 --> 00:00:46.840
+It is expected that you have
+some basic understanding
+
+20
+00:00:46.840 --> 00:00:48.400
+of databases.
+
+21
+00:00:48.400 --> 00:00:49.970
+How does grading work?
+
+22
+00:00:49.970 --> 00:00:53.840
+Well, there are quizzes,
+labs, and a final exam
+
+23
+00:00:53.840 --> 00:00:56.820
+as deliverables on your
+part of the course.
+
+24
+00:00:56.820 --> 00:00:59.010
+Quizzes are ungraded and
+exist to make sure you're
+
+25
+00:00:59.010 --> 00:01:00.816
+understanding the content.
+
+26
+00:01:00.816 --> 00:01:02.190
+Your grade in the
+class, however,
+
+27
+00:01:02.190 --> 00:01:04.370
+will be based on how
+well you do on the labs
+
+28
+00:01:04.370 --> 00:01:05.940
+and on the final exam.
+
+29
+00:01:05.940 --> 00:01:09.830
+Each of these being worth
+about 50% of your final grade.
+
+30
+00:01:09.830 --> 00:01:12.620
+Students who receive
+a 65% or greater
+
+31
+00:01:12.620 --> 00:01:15.650
+will receive a passing grade
+and will receive a certificate
+
+32
+00:01:15.650 --> 00:01:17.650
+of course completion.
+
+33
+00:01:17.650 --> 00:01:20.500
+Finally I'd highly
+encourage you to participate
+
+34
+00:01:20.500 --> 00:01:22.300
+in our discussion forum.
+
+35
+00:01:22.300 --> 00:01:24.640
+We have knowledgeable teaching
+assistants who are there
+
+36
+00:01:24.640 --> 00:01:26.350
+to help answer your questions.
+
+37
+00:01:26.350 --> 00:01:28.630
+And you also have
+your fellow classmates
+
+38
+00:01:28.630 --> 00:01:30.370
+who can aid in
+answering your questions
+
+39
+00:01:30.370 --> 00:01:34.300
+and are often very knowledgeable
+and helpful resources.
+
+40
+00:01:34.300 --> 00:01:36.310
+Based on our
+experience, we've seen
+
+41
+00:01:36.310 --> 00:01:38.230
+that students who perform
+best in the course
+
+42
+00:01:38.230 --> 00:01:42.700
+are often those who are very
+active in the discussion forum.
+
+43
+00:01:42.700 --> 00:01:46.000
+This course will be divided
+into five main chapters.
+
+44
+00:01:46.000 --> 00:01:51.210
+There's the Overview chapter,
+Indexes Index Operations,
+
+45
+00:01:51.210 --> 00:01:54.940
+CRUD Optimization, and
+Distributed Systems.
+
+46
+00:01:54.940 --> 00:01:57.030
+Each of these topics
+will take a deep dive
+
+47
+00:01:57.030 --> 00:01:58.680
+into one or more
+performance related
+
+48
+00:01:58.680 --> 00:02:01.690
+aspects concerning MongoDB.
+
+49
+00:02:01.690 --> 00:02:03.340
+By the end of this
+course, you should
+
+50
+00:02:03.340 --> 00:02:05.650
+be familiar with the
+different techniques used
+
+51
+00:02:05.650 --> 00:02:08.680
+to increase the performance
+of your MongoDB servers.
+
+52
+00:02:08.680 --> 00:02:11.470
+And you should be capable of
+analyzing the different trade
+
+53
+00:02:11.470 --> 00:02:13.300
+offs that are
+commonly encountered
+
+54
+00:02:13.300 --> 00:02:15.730
+in different
+performance scenarios.
+
+55
+00:02:15.730 --> 00:02:17.590
+With all that being
+said, we're super
+
+56
+00:02:17.590 --> 00:02:19.210
+excited to have
+you in this course
+
+57
+00:02:19.210 --> 00:02:21.510
+and wish you the best of luck.

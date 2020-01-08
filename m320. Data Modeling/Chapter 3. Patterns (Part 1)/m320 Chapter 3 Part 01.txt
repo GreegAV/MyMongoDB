@@ -1,0 +1,81 @@
+Hello.
+
+In this lesson, we're going to go over how to use the JSON validator tool for the labs for this and the following chapters.
+
+Please download the handout from the lecture notes below this video.
+
+Make sure to download the handout that corresponds to your operating system.
+
+In this case, we're downloading the Mac OS X handout, which as the first link in the lecture notes below this video.
+
+When the download is done, you might see a warning message.
+
+Select to keep the download.
+
+Navigate to the directory where the download is stored.
+
+Here, we created an m320 folder for this course, so we moved the downloaded file there.
+
+Now, the last thing that we need to do to be able to start validating the upcoming labs in this course is to change the permissions in this file to read and execute.
+
+You can do that by running this command in the command line.
+
+If you are using Windows, you do not need to perform the operation.
+
+From now on, we will be able to run this validator from our m320 directory.
+
+Here, you will also see an example JSON document that we will use to demonstrate how our lab validation tool works.
+
+Our assignment says that the old document structure no longer works for our application and that we need to change it.
+
+Let's start by creating a JSON file with this schema so we can modify it as the task requires.
+
+We just created a new empty JSON file called answer schema JSON.
+
+We can now copy the old schema and paste it into here.
+
+Let's save it.
+
+Now, let's run the validator to see what happens.
+
+Looks like we're getting an error.
+
+You might want to figure out what went wrong without additional hints, but you don't have to.
+
+To get more details on what exactly went wrong, we can add the verbose option, which will give us more detail.
+
+It says that in-house must be one of the following-- bool.
+
+Now that we know what went wrong, let's do what a good student does and read the actual assignment carefully.
+
+It says here that the updated version of the application is expecting to receive a Boolean value for the in-house field instead of an integer, which seems to match what the validator error was returning.
+
+Just to make sure that we get it right this time around, we're going to click on this useful link listing all the valid BSON types.
+
+These are the data types from the MongoDB query language which happens to also be the type that our validator understands and is able to process, spelled exactly the way they are, in the right column, case sensitive.
+
+Looks like we need to spell out bool in our solution as the in-house field value.
+
+Here, as I'm making a change I'll accidentally forget to close the curly bracket at the end of the document, which results an invalid JSON.
+
+Let's see if our validator is able to recognize that.
+
+Looks like it does-- wonderful.
+
+Time to fix this solution and get the validation code.
+
+Here it is, the curly bracket back in the file.
+
+Now that I've added the curly bracket back in, we have a valid JSON file.
+
+Let's run the validator.
+
+Success.
+
+Here's the validation code that we can now copy-paste into the submission field in the lab.
+
+It is important to note that this answer document is a valid JSON document.
+
+But it is also a custom notation for schema definition, much like JSON schema, a link to which you can find in the lecture notes below this video.
+
+We opted out of using JSON schema for this course because it can be too verbose for our purposes.

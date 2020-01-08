@@ -1,0 +1,301 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.060
+In this lesson, we are going
+to start using our MongoDB Java
+
+3
+00:00:03.060 --> 00:00:05.410
+driver by creating a
+database connection,
+
+4
+00:00:05.410 --> 00:00:07.410
+and walk you through
+the different objects
+
+5
+00:00:07.410 --> 00:00:09.180
+that this library
+exposes in order
+
+6
+00:00:09.180 --> 00:00:11.610
+for us to build
+applications and manipulate
+
+7
+00:00:11.610 --> 00:00:13.660
+data stored in MongoDB.
+
+8
+00:00:13.660 --> 00:00:16.980
+So let's first define what
+we are going to be using.
+
+9
+00:00:16.980 --> 00:00:21.450
+To communicate with the
+MongoDB database server, that
+
+10
+00:00:21.450 --> 00:00:25.260
+in this course is hosted
+by our MongoDB Atlas,
+
+11
+00:00:25.260 --> 00:00:28.230
+we need to establish a
+connection between the client
+
+12
+00:00:28.230 --> 00:00:29.910
+and the server.
+
+13
+00:00:29.910 --> 00:00:33.690
+To do that, we need to use
+a client-side library that
+
+14
+00:00:33.690 --> 00:00:38.130
+enables our application code to
+establish such communication.
+
+15
+00:00:38.130 --> 00:00:41.190
+These client-side
+libraries are called
+
+16
+00:00:41.190 --> 00:00:43.860
+drivers in MongoDB lingo.
+
+17
+00:00:43.860 --> 00:00:46.140
+There are numerous
+types of drivers
+
+18
+00:00:46.140 --> 00:00:49.320
+from MongoDB covering all
+the most common programming
+
+19
+00:00:49.320 --> 00:00:51.420
+languages.
+
+20
+00:00:51.420 --> 00:00:54.660
+In this course, we'll be using
+the official Java MongoDB
+
+21
+00:00:54.660 --> 00:00:56.010
+driver.
+
+22
+00:00:56.010 --> 00:01:00.410
+For Java, we publish
+two different drivers--
+
+23
+00:01:00.410 --> 00:01:03.180
+mongodb-driver-sync,
+for synchronous,
+
+24
+00:01:03.180 --> 00:01:07.800
+which we'll be using in this
+course, mongodb-driver-async,
+
+25
+00:01:07.800 --> 00:01:09.000
+for asynchronous.
+
+26
+00:01:09.000 --> 00:01:12.720
+That uses callbacks to
+interact with the application.
+
+27
+00:01:12.720 --> 00:01:15.510
+We are not going to cover
+the asynchronous driver
+
+28
+00:01:15.510 --> 00:01:16.510
+in this course.
+
+29
+00:01:16.510 --> 00:01:20.650
+However, feel free to go ahead
+and experiment on your own.
+
+30
+00:01:20.650 --> 00:01:25.590
+There is a third driver, our
+uber mongodb-driver-legacy,
+
+31
+00:01:25.590 --> 00:01:28.295
+which we have since
+deprecated, which
+
+32
+00:01:28.295 --> 00:01:32.010
+is used to combine both
+the sync and async models.
+
+33
+00:01:32.010 --> 00:01:35.360
+You should not be using
+that going forward.
+
+34
+00:01:35.360 --> 00:01:37.280
+Within our [? mflex ?]
+application,
+
+35
+00:01:37.280 --> 00:01:39.860
+we have already set up
+the dependencies for you,
+
+36
+00:01:39.860 --> 00:01:42.600
+so no need to take any action.
+
+37
+00:01:42.600 --> 00:01:45.900
+But it is always good to
+know what is out there,
+
+38
+00:01:45.900 --> 00:01:50.540
+so you can make the appropriate
+decision for your own projects.
+
+39
+00:01:50.540 --> 00:01:53.420
+Within the driver, there
+are a set of object classes
+
+40
+00:01:53.420 --> 00:01:56.210
+that we need you to know of--
+
+41
+00:01:56.210 --> 00:01:59.504
+the MongoDB client, the
+base connection class
+
+42
+00:01:59.504 --> 00:02:00.920
+that handles
+configuration options
+
+43
+00:02:00.920 --> 00:02:02.294
+and establishes
+the communication
+
+44
+00:02:02.294 --> 00:02:05.995
+between the cluster and
+the application, your app.
+
+45
+00:02:05.995 --> 00:02:10.160
+The MongoDB database, the
+MongoCollection class, and then
+
+46
+00:02:10.160 --> 00:02:12.750
+we have Bson objects.
+
+47
+00:02:12.750 --> 00:02:16.700
+Well, that is also defined
+in the Java driver classes,
+
+48
+00:02:16.700 --> 00:02:21.170
+since Document implements
+the Bson interface.
+
+49
+00:02:21.170 --> 00:02:23.210
+We will be using
+Document quite a lot,
+
+50
+00:02:23.210 --> 00:02:24.860
+especially to define
+corporate tickets
+
+51
+00:02:24.860 --> 00:02:27.920
+and return back documents
+from the collections.
+
+52
+00:02:27.920 --> 00:02:29.630
+But we are also
+going to be using
+
+53
+00:02:29.630 --> 00:02:33.890
+quite a lot of Bson objects
+to define components
+
+54
+00:02:33.890 --> 00:02:36.950
+of our query predicates,
+update objects, aggregation
+
+55
+00:02:36.950 --> 00:02:40.810
+stages, and some other
+types of operations.
+
+56
+00:02:40.810 --> 00:02:43.460
+In MongoDB nearly every
+piece of information
+
+57
+00:02:43.460 --> 00:02:46.100
+from the database data
+communication inquiries
+
+58
+00:02:46.100 --> 00:02:47.100
+are documents.
+
+59
+00:02:47.100 --> 00:02:51.060
+So it's a very important
+class to keep in mind.
+
+60
+00:02:51.060 --> 00:02:54.480
+In essence, these are the main
+basic objects that our MongoDB
+
+61
+00:02:54.480 --> 00:02:56.130
+Java driver exposes.
+
+62
+00:02:56.130 --> 00:02:57.360
+But enough talk.
+
+63
+00:02:57.360 --> 00:03:00.530
+Let's see these
+objects in action.

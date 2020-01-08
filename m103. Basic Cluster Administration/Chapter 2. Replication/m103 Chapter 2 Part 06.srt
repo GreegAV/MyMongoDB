@@ -1,0 +1,766 @@
+1
+00:00:00,500 --> 00:00:03,200
+After initiating our node and
+adding the node to the replica
+
+2
+00:00:03,200 --> 00:00:06,974
+set, the oplog.rs
+collection is created.
+
+3
+00:00:06,974 --> 00:00:08,390
+By default, as I
+mentioned before,
+
+4
+00:00:08,390 --> 00:00:11,390
+we take 5% of the
+available disk.
+
+5
+00:00:11,390 --> 00:00:15,140
+But this value can also
+be set by configuring it
+
+6
+00:00:15,140 --> 00:00:18,320
+through the oplog size in
+megabytes under the replication
+
+7
+00:00:18,320 --> 00:00:21,590
+section of our
+configuration file.
+
+8
+00:00:21,590 --> 00:00:24,170
+As operations get
+logged into the oplog,
+
+9
+00:00:24,170 --> 00:00:27,260
+like inserts or deletes
+or create collection kind
+
+10
+00:00:27,260 --> 00:00:30,410
+of operations, the
+oplog.rs collection
+
+11
+00:00:30,410 --> 00:00:33,530
+starts to accumulate the
+operations and statements,
+
+12
+00:00:33,530 --> 00:00:37,400
+until it reaches the
+oplog size limit.
+
+13
+00:00:37,400 --> 00:00:41,570
+Once that happens, the first
+operations in our oplog
+
+14
+00:00:41,570 --> 00:00:45,780
+start to be overwritten
+with newer operations.
+
+15
+00:00:45,780 --> 00:00:50,090
+The time it takes to
+fill in fully our oplog
+
+16
+00:00:50,090 --> 00:00:52,790
+and start rewriting
+the early statements
+
+17
+00:00:52,790 --> 00:00:55,990
+determines the
+replication window.
+
+18
+00:00:55,990 --> 00:00:58,180
+The replication window
+is important aspect
+
+19
+00:00:58,180 --> 00:01:02,240
+to monitor because we'll impact
+how much time the replica
+
+20
+00:01:02,240 --> 00:01:05,650
+set can afford a node to
+be down without requiring
+
+21
+00:01:05,650 --> 00:01:08,980
+any human intervention
+to auto recover.
+
+22
+00:01:08,980 --> 00:01:12,280
+Every node in our replica
+set has its own oplog.
+
+23
+00:01:12,280 --> 00:01:15,220
+As writes and operations
+gets to the primary node,
+
+24
+00:01:15,220 --> 00:01:18,310
+these are captured in the oplog.
+
+25
+00:01:18,310 --> 00:01:21,535
+And then the secondary nodes
+replicate that data and apply
+
+26
+00:01:21,535 --> 00:01:24,210
+it on their own oplog.
+
+27
+00:01:24,210 --> 00:01:27,330
+Now if for some reason
+one of the nodes
+
+28
+00:01:27,330 --> 00:01:31,100
+gets disconnected,
+either because they're
+
+29
+00:01:31,100 --> 00:01:32,990
+going some
+maintenance, or there's
+
+30
+00:01:32,990 --> 00:01:35,770
+some sort of network
+issues, or any server
+
+31
+00:01:35,770 --> 00:01:39,750
+downtime of any kind, and
+the server keeps on working,
+
+32
+00:01:39,750 --> 00:01:43,350
+the replica set keeps on
+accumulating new writes--
+
+33
+00:01:43,350 --> 00:01:46,440
+for the server to be able to
+catch up with the remaining
+
+34
+00:01:46,440 --> 00:01:48,930
+nodes, you will
+need to figure out
+
+35
+00:01:48,930 --> 00:01:52,740
+what's a common point
+where everyone can
+
+36
+00:01:52,740 --> 00:01:55,080
+see what happened in the past.
+
+37
+00:01:55,080 --> 00:01:58,530
+Basically what will happen
+is that a recovering node
+
+38
+00:01:58,530 --> 00:02:01,500
+will check for its
+last oplog entry
+
+39
+00:02:01,500 --> 00:02:06,090
+and try to find it in one
+of the available nodes.
+
+40
+00:02:06,090 --> 00:02:10,320
+Once he finds it, he will just
+simply re-apply all operations
+
+41
+00:02:10,320 --> 00:02:13,950
+since that point and catch
+up with the remaining
+
+42
+00:02:13,950 --> 00:02:16,020
+nodes of the sets.
+
+43
+00:02:16,020 --> 00:02:21,870
+However, if it is not able to
+find the same common operation
+
+44
+00:02:21,870 --> 00:02:25,630
+in the remaining nodes' oplog
+because of the oplog already
+
+45
+00:02:25,630 --> 00:02:31,000
+rotated and no sync source
+point as the last operation,
+
+46
+00:02:31,000 --> 00:02:35,370
+the node will not be able to
+automatically recover and sync
+
+47
+00:02:35,370 --> 00:02:39,330
+with the rest of the set,
+being placed in recovery mode.
+
+48
+00:02:39,330 --> 00:02:42,220
+Now, not all nodes
+need to be the same.
+
+49
+00:02:42,220 --> 00:02:47,580
+For example, sync sources might
+have different oplog sizes.
+
+50
+00:02:47,580 --> 00:02:51,420
+However, if our oplog
+size is larger and able
+
+51
+00:02:51,420 --> 00:02:55,030
+to accommodate more
+changes in the system,
+
+52
+00:02:55,030 --> 00:02:57,990
+we can afford our nodes
+to be down for longer
+
+53
+00:02:57,990 --> 00:03:02,310
+and still be able to reconnect
+once they're being brought back
+
+54
+00:03:02,310 --> 00:03:03,880
+up again.
+
+55
+00:03:03,880 --> 00:03:06,660
+Therefore, the size of
+our oplog.rs collection
+
+56
+00:03:06,660 --> 00:03:09,210
+is an important aspect
+to keep in mind.
+
+57
+00:03:09,210 --> 00:03:12,810
+To sum up, the replication
+window measured in hours
+
+58
+00:03:12,810 --> 00:03:15,930
+will be proportional to
+the load of your system.
+
+59
+00:03:15,930 --> 00:03:18,030
+You should keep an eye on that.
+
+60
+00:03:18,030 --> 00:03:21,810
+The other good thing is that our
+oplog.rs size can be changed.
+
+61
+00:03:21,810 --> 00:03:25,410
+And we have a fair amount of
+good documentation telling you
+
+62
+00:03:25,410 --> 00:03:30,370
+how to do that as a
+administration task.
+
+63
+00:03:30,370 --> 00:03:32,380
+Another aspect to know
+about this collection
+
+64
+00:03:32,380 --> 00:03:35,140
+is that given the
+idempotent nature
+
+65
+00:03:35,140 --> 00:03:38,620
+of the instructions,
+one single update
+
+66
+00:03:38,620 --> 00:03:43,030
+may result in several different
+operations in this collection.
+
+67
+00:03:43,030 --> 00:03:44,560
+Let me show you how this works.
+
+68
+00:03:44,560 --> 00:03:46,840
+I'm going to use
+this database here--
+
+69
+00:03:46,840 --> 00:03:48,340
+M03.
+
+70
+00:03:48,340 --> 00:03:51,850
+I'm going to create a
+collection called messages.
+
+71
+00:03:51,850 --> 00:03:56,800
+Once I create that, I can see
+that collection there created.
+
+72
+00:03:56,800 --> 00:04:00,320
+Now if I jump into
+my local database
+
+73
+00:04:00,320 --> 00:04:05,400
+and I look into our oplog.rs,
+excluding any periodic noop
+
+74
+00:04:05,400 --> 00:04:08,120
+operations maintained
+by the server,
+
+75
+00:04:08,120 --> 00:04:11,570
+I can find here the
+instruction that creates
+
+76
+00:04:11,570 --> 00:04:14,920
+this collection in the oplog.
+
+77
+00:04:14,920 --> 00:04:16,940
+Cool, this is really good.
+
+78
+00:04:16,940 --> 00:04:20,570
+Now let's jump back to
+our M103 collection.
+
+79
+00:04:20,570 --> 00:04:25,399
+And let's insert a few
+documents just for fun.
+
+80
+00:04:25,399 --> 00:04:25,940
+There you go.
+
+81
+00:04:25,940 --> 00:04:31,320
+We inserted 100 documents
+with the message, not yet.
+
+82
+00:04:31,320 --> 00:04:35,150
+If I go ahead and count them up,
+I can see 100 documents there--
+
+83
+00:04:35,150 --> 00:04:36,260
+great.
+
+84
+00:04:36,260 --> 00:04:38,600
+If I jump back to
+my local database
+
+85
+00:04:38,600 --> 00:04:41,180
+and look for those
+messages, I can
+
+86
+00:04:41,180 --> 00:04:44,360
+see that I can find those
+insert-- the operation there
+
+87
+00:04:44,360 --> 00:04:45,800
+is an insert.
+
+88
+00:04:45,800 --> 00:04:51,960
+And the object being inserted
+is one of the 100 documents
+
+89
+00:04:51,960 --> 00:04:53,510
+inserted-- great.
+
+90
+00:04:53,510 --> 00:04:58,460
+But now let's do a simple
+updateMany operation.
+
+91
+00:04:58,460 --> 00:05:02,450
+Let's say that I want to
+make sure these messages here
+
+92
+00:05:02,450 --> 00:05:03,400
+have an author.
+
+93
+00:05:03,400 --> 00:05:06,770
+So I'm going to set a
+new field called author
+
+94
+00:05:06,770 --> 00:05:09,420
+with the value called,
+well, my own name--
+
+95
+00:05:09,420 --> 00:05:10,940
+Norberto.
+
+96
+00:05:10,940 --> 00:05:11,960
+Once I do this--
+
+97
+00:05:11,960 --> 00:05:15,530
+and keep in mind that this
+is one single operation, one
+
+98
+00:05:15,530 --> 00:05:18,830
+UpdateOne, that
+modified and matched
+
+99
+00:05:18,830 --> 00:05:21,170
+100 different documents.
+
+100
+00:05:21,170 --> 00:05:25,280
+If we jump back to local, and
+if we look for more operations,
+
+101
+00:05:25,280 --> 00:05:28,820
+I can see that there
+is an update operation,
+
+102
+00:05:28,820 --> 00:05:31,850
+or several update operations--
+
+103
+00:05:31,850 --> 00:05:34,310
+op equals u means an update--
+
+104
+00:05:34,310 --> 00:05:39,430
+for all the affected
+documents in this collection.
+
+105
+00:05:39,430 --> 00:05:43,190
+So one single instruction--
+an updateMany--
+
+106
+00:05:43,190 --> 00:05:47,960
+into our primary, produced
+100 different operations
+
+107
+00:05:47,960 --> 00:05:50,280
+into our oplog.
+
+108
+00:05:50,280 --> 00:05:53,250
+Now this is the magic
+of idempotence.
+
+109
+00:05:53,250 --> 00:05:54,180
+Be aware of this.
+
+110
+00:05:54,180 --> 00:05:58,140
+Sometimes is easy to dismiss
+the fact that idempotency
+
+111
+00:05:58,140 --> 00:06:00,380
+might generate a
+lot more operations
+
+112
+00:06:00,380 --> 00:06:03,900
+in our oplog than the number
+of commands actually issued
+
+113
+00:06:03,900 --> 00:06:05,610
+from the client.
+
+114
+00:06:05,610 --> 00:06:08,100
+One last point that I want
+to bring to your attention
+
+115
+00:06:08,100 --> 00:06:12,600
+is that, please don't change
+any of this information present
+
+116
+00:06:12,600 --> 00:06:15,200
+on any of this collection.
+
+117
+00:06:15,200 --> 00:06:18,380
+Contrary to what MC
+Hammer used to say,
+
+118
+00:06:18,380 --> 00:06:21,020
+you can, in fact,
+touch this, given
+
+119
+00:06:21,020 --> 00:06:22,860
+the correct set of permissions.
+
+120
+00:06:22,860 --> 00:06:24,410
+But please don't.
+
+121
+00:06:24,410 --> 00:06:28,010
+This might affect
+tremendously badly the way
+
+122
+00:06:28,010 --> 00:06:30,440
+that your replica works.
+
+123
+00:06:30,440 --> 00:06:35,850
+So try not to mess around too
+much with this collection.
+
+124
+00:06:35,850 --> 00:06:39,370
+That said, and to prove you
+that you can do some damage,
+
+125
+00:06:39,370 --> 00:06:42,990
+let's try to write to
+this local database.
+
+126
+00:06:42,990 --> 00:06:46,420
+I'm going to go ahead and
+in my local collection,
+
+127
+00:06:46,420 --> 00:06:50,700
+insert a message saying
+that you cannot touch this.
+
+128
+00:06:50,700 --> 00:06:56,250
+And if we look for it in our
+oplog.rs, we will not find it.
+
+129
+00:06:56,250 --> 00:06:59,040
+You should keep in
+mind that this data
+
+130
+00:06:59,040 --> 00:07:03,990
+that I've just written into
+this particular database--
+
+131
+00:07:03,990 --> 00:07:07,300
+there it is, my
+local collection--
+
+132
+00:07:07,300 --> 00:07:10,460
+is written into
+the local database.
+
+133
+00:07:10,460 --> 00:07:13,880
+That means it's local to
+this particular instance.
+
+134
+00:07:13,880 --> 00:07:17,300
+Any data written
+in this collection
+
+135
+00:07:17,300 --> 00:07:20,280
+will not be replicated.
+
+136
+00:07:20,280 --> 00:07:21,940
+Local database is like Vegas.
+
+137
+00:07:21,940 --> 00:07:24,240
+What happens in
+local, stays in local.
+
+138
+00:07:24,240 --> 00:07:28,170
+No other node in the set
+will ever see that data,
+
+139
+00:07:28,170 --> 00:07:30,840
+except obviously
+for the oplog.rs,
+
+140
+00:07:30,840 --> 00:07:33,810
+which they are reading and
+applying it on their own.
+
+141
+00:07:33,810 --> 00:07:38,130
+Anything else that you
+might want to keep local,
+
+142
+00:07:38,130 --> 00:07:39,510
+you can write here.
+
+143
+00:07:39,510 --> 00:07:43,290
+But we do not recommend
+you to do any of that
+
+144
+00:07:43,290 --> 00:07:46,140
+unless you really know
+what you're doing.
+
+145
+00:07:46,140 --> 00:07:49,740
+Let's quickly sum up
+what we just learned.
+
+146
+00:07:49,740 --> 00:07:52,620
+Local database holds very
+important information
+
+147
+00:07:52,620 --> 00:07:55,200
+and should not be
+messed up with.
+
+148
+00:07:55,200 --> 00:07:58,600
+Changing the data in your oplog
+or any of the configuration
+
+149
+00:07:58,600 --> 00:08:00,270
+collections will
+impact the settings
+
+150
+00:08:00,270 --> 00:08:02,475
+in the replication mechanism.
+
+151
+00:08:02,475 --> 00:08:05,940
+The oplog.rs is central to
+our replication mechanism.
+
+152
+00:08:05,940 --> 00:08:07,920
+Everything that needs
+to be replicated
+
+153
+00:08:07,920 --> 00:08:12,420
+will be stored and logged in
+the oplog in an idempotent
+
+154
+00:08:12,420 --> 00:08:13,440
+way.
+
+155
+00:08:13,440 --> 00:08:17,520
+The size of our oplog will
+impact the replication window
+
+156
+00:08:17,520 --> 00:08:20,130
+and should be closely monitored.
+
+157
+00:08:20,130 --> 00:08:23,970
+Any data written to local
+database that is not
+
+158
+00:08:23,970 --> 00:08:27,630
+written to oplog.rs or
+changing any of the system
+
+159
+00:08:27,630 --> 00:08:30,600
+configuration collections
+will stay there
+
+160
+00:08:30,600 --> 00:00:00,000
+and will not be replicated.
+

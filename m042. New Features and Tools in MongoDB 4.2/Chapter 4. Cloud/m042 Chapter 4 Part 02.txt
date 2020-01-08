@@ -1,0 +1,71 @@
+In MongoDB 4.2, when a tree node replica set is in a state where two nodes are performing an initial sync, the replica set will no longer have a primary, and therefore won't accept writes.
+
+That is, where we used to have primary Startup 2 and Startup 2, we now have secondary Startup 2 and Startup 2.
+
+Startup 2 lets you continue to write your replica set.
+
+When the replica set is in this state, you can now reconfigure the replica set to have a single voting node using automation.
+
+So now when a replica set is in this state, you can perform a reconfiguration, if needed, so that the number of voting nodes is equal to 1, and the replica set will continue to accept writes.
+
+It's important to note that your client may not acknowledge writes if you're using a custom write concern value.
+
+That is to say, that if specifying a write concern where more than one node needs to acknowledge the write-- w:2, for instance-- a replica set with one voting member will not acknowledge any writes until that write concern can be satisfied.
+
+W majority and W1 writes will be successful if the replica set has a single voting node.
+
+For more information on write concerns, please refer to our documentation.
+
+Another new feature in Ops Manager 4.2 Account Manager are service users.
+
+Remember, Cloud Manager and Ops Manager organizations can contain multiple projects.
+
+And projects can contain multiple clusters.
+
+Previously, you could only generate API keys at a project level.
+
+Also, there was no granularity with regard to access control with these API keys.
+
+This meant that if a user was given an API key associated with a project, they had access to a full range of features, including closer administration.
+
+Also, previously, personal API keys were not visible to the Ops Manager admins.
+
+This meant that if a person left the company and you had revoked their LDAP access, they could still use their API key.
+
+Given the principle of least privilege, we only want to grant authorization to a user as needed.
+
+Sometimes we need to programmatically retrieve data, but have no need to make changes to the cluster or to the users, for instance.
+
+So what are service users?
+
+They are a way for you to assign API keys at organization level and grant permissions to the API key.
+
+You can do this directly from the Cloud Manager or Ops Manager UI.
+
+There are five different organization permissions we can grant to an API key, the first being Organization Owner.
+
+The Organization Owner has root access to the organization, including the project owner role to all projects in the organization.
+
+This service user also has access to administrator organization settings, users and teams, and access to delete the organization permissions granted to the roles below.
+
+The organization Project Creator provides project creation access, as well as permissions being granted to the organization member role.
+
+The Organization Billing Admin role provides access to administrator billing information for the organization, as well as all permissions granted to the organization member role.
+
+The Organization Read Only role provides access to everything in the organization, including all projects in that organization.
+
+And finally, the Organization Member role provides read only access to the organization, including settings, users, and billing.
+
+Remember, API keys are only used for accessing this information programmatically.
+
+You can still get all of this information and perform all of the tasks we've listed through Declare Manager and Ops Manager UI.
+
+So let's recap.
+
+Ops Manager 4.2 and Cloud Manager provide two new features.
+
+Automation Now allows you to reconfigure a tree node replica set where two nodes are performing initial sync so that you have one voting member.
+
+This ensures that your replica set can take writes while it's in this state.
+
+We've also added service users, which are a way for you to assign roles to API keys at organization level to allow finer-grained access control for your applications.

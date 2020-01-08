@@ -1,0 +1,47 @@
+Obviously a way to fix this would be to edit my hosts file.
+
+In this case, in my local machine, where I have my application, which in this case is just my mongo shell.
+
+But it will serve the same needs.
+
+I will just need to make sure that it knows how to identify m2.university.mongodb.
+
+And also m2 because this is also something that the machine will need to know in the future.
+
+But would that be enough?
+
+Would just knowing one of the nodes, or two of the nodes in this case, and by the names and configuration details that are configured in the replica set definition.
+
+Would that be enough?
+
+Well let's try it out.
+
+Now I know I can reach the machine because I configured my hosts file that responds to m2.university.mongodb.
+
+Let's test it out.
+
+Yes I can.
+
+Here we are.
+
+We can connect.
+
+Everything is great.
+
+Can I reach it through, for the previous IP address my m1 IP address, which is also part of the configuration of my replica set.
+
+In this case, I also can do so because both of those IP addresses are known.
+
+But now let's see what happens when the configuration changes.
+
+So essentially what we were setting up in the previous configuration was that, although our replica set is fully well configured, in this case using the IP address, in that other case using the fully qualified name, and this one using m3, I would not know what m2 and its fully qualified name would be looking like.
+
+So it would effectively be out of reach for those.
+
+And once that machine will be brought down, if was a primary or not, since I would not be able to reach those machines, I could not failover to the existing nodes, defeating the purpose of having multiple nodes for high availability.
+
+If I only can reach one, if I cannot reach the other members of the node, then I don't have any availability whatsoever.
+
+Once I do add the second member by adding my fully qualified name of m2 and if I express my mongodb URI, specifying more than one member that I know of, if one of them is down it will try the other one to connect.
+
+And if it can understand what it is, and how it's reachable from the machines, and if it's configured properly, I will be able to establish a failover operation to that new node.

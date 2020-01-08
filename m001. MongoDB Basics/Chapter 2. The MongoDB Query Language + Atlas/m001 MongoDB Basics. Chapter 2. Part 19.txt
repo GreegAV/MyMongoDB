@@ -1,0 +1,77 @@
+OK.
+
+Now let's look at the last of our CRUD operations, Delete operations.
+
+The MongoDB query language supports two different delete methods, deleteOne and deleteMany.
+
+These are similar to insertOne, insertMany, updateOne, updateMany in the sense that the first argument is a filter that we're using to identify the document or documents that we want to delete.
+
+So suppose we're developing a web application and we want to add two additional pieces of functionality, one being that users of our website can delete reviews they've made of movies, and that when necessary we can delete all of the reviews for an individual user, say for example if they choose to delete their account.
+
+Now again, we're going to work in the MongoDB shell just as a demonstration of the use of deleteOne and deleteMany in this type of hypothetical application.
+
+And in order to work through this example, I'd like to introduce an additional data set, and that is small data set of reviews.
+
+Now, as we did with the movie details data set, we can load this reviews data set using the Mongo shell.
+
+In the handouts for this lesson, I've provided a script called loadReviewsDataset.js.
+
+You can use the Mongo shell to execute this script, and the script will load the reviews collection into whatever host you specify.
+
+Now here, I've specified the hosts for my Atlas Sandbox cluster and provided my username and password, although I have hidden the password here.
+
+Again, for you to do this for yourself, you will need to supply your own Atlas cluster hostnames, username, and password.
+
+And again, this is the administrative username and password that you created when you set up your Atlas Sandbox cluster.
+
+Now, one last thing that I want to point out here is that I'm specifying the video database.
+
+So when I connect here, I'm going to use the video database, and load reviews data set will therefore create a collection in the video database.
+
+Now, we know enough about the MongoDB query language to actually understand how this script works.
+
+It's actually quite simple.
+
+We make a call to insertMany, passing it an array of reviews documents.
+
+Again, db should be a reference to the video database and will be if you specified video as the database to connect to when you run this script.
+
+OK.
+
+So let's take a look at this collection in Compass.
+
+You can get a pretty good sense for what the structure of the documents is.
+
+Note that there are 20 documents total, and I want to draw your attention to this object ID.
+
+In order to delete reviews, one way of doing that is by its unique identifier.
+
+And in fact, for this call to deleteOne, that's exactly what we're going to do-- 595b, 9b3b.
+
+In fact, our deleteOne statement is going to delete this first document from our collection.
+
+So now let's go ahead and execute this deleteOne statement in our Mongo shell.
+
+Here, I'm connected to my Atlas Sandbox cluster, and I'm going to run deleteOne.
+
+And we can see from the output that my delete was successful and that I deleted one document.
+
+If we go back to Compass and refresh, we can see that we're now down to 19 documents and that first document is gone.
+
+Now let's go ahead and execute this deleteMany statement.
+
+Now, here what we're going to do is delete all of the reviews that were created by reviewer 795 and so on.
+
+So let's find this reviewer in our Compass data set.
+
+So if I add this filter and apply, we can see that I have three documents all of them created by reviewer Emile T all with the same unique identifier for reviewer ID.
+
+So if I run this method in the Mongo shell, we see that I have a deleted count of three, so my delete was successful.
+
+And if I go back to Compass and refresh, this filter no longer matches any documents.
+
+And in fact, if I reset and look at all of the documents in this collection, I can see that I'm now down to 16 documents.
+
+So I deleted one document with my deleteOne statement and then three more with my deleteMany statement, taking me from 20 documents down to 16.
+
+And that is delete operations in MongoDB, using deleteOne and deleteMany.

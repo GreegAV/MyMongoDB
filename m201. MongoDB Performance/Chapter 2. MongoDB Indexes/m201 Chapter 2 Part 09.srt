@@ -1,0 +1,510 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.860
+In this lesson, we're going
+to talk about partial indexes.
+
+3
+00:00:03.860 --> 00:00:05.960
+Sometimes, it makes sense
+for us to only index
+
+4
+00:00:05.960 --> 00:00:09.380
+a portion of the
+documents in a collection.
+
+5
+00:00:09.380 --> 00:00:12.290
+When we index on a
+subset of our documents,
+
+6
+00:00:12.290 --> 00:00:14.480
+we can have lower
+storage requirements
+
+7
+00:00:14.480 --> 00:00:17.180
+and reduce the performance cost
+of creating and maintaining
+
+8
+00:00:17.180 --> 00:00:18.500
+indexes.
+
+9
+00:00:18.500 --> 00:00:21.050
+To achieve this, MongoDB
+supports the creation
+
+10
+00:00:21.050 --> 00:00:23.300
+of partial indexes.
+
+11
+00:00:23.300 --> 00:00:25.340
+Let's look at an example.
+
+12
+00:00:25.340 --> 00:00:28.409
+Take, for instance, a collection
+of restaurant information.
+
+13
+00:00:28.409 --> 00:00:30.200
+Maybe there are lots
+of queries for finding
+
+14
+00:00:30.200 --> 00:00:32.980
+a particular cuisine
+in a particular city,
+
+15
+00:00:32.980 --> 00:00:35.430
+but of all these queries
+that the server receives,
+
+16
+00:00:35.430 --> 00:00:39.350
+90% of them are for restaurants
+with 3.5 and above stars.
+
+17
+00:00:39.350 --> 00:00:42.110
+So instead of creating
+a compound index on city
+
+18
+00:00:42.110 --> 00:00:45.350
+and cuisine, or city
+cuisine and stars,
+
+19
+00:00:45.350 --> 00:00:47.930
+instead we can create
+a partial index
+
+20
+00:00:47.930 --> 00:00:50.390
+where we index on
+city and cuisine
+
+21
+00:00:50.390 --> 00:00:54.050
+only if the restaurant
+has 3.5 or more stars.
+
+22
+00:00:54.050 --> 00:00:56.540
+We're effectively reducing
+the number of index keys
+
+23
+00:00:56.540 --> 00:00:59.150
+that we need to store, and
+therefore reducing our space
+
+24
+00:00:59.150 --> 00:01:01.222
+requirements for our index.
+
+25
+00:01:01.222 --> 00:01:02.930
+This can be useful if
+our index has grown
+
+26
+00:01:02.930 --> 00:01:04.879
+too large to fit into memory.
+
+27
+00:01:04.879 --> 00:01:08.720
+Partial indexes can also be
+useful with multi key indexes.
+
+28
+00:01:08.720 --> 00:01:11.350
+As we know, with
+multi key indexes,
+
+29
+00:01:11.350 --> 00:01:14.750
+keys are created for
+each array entry.
+
+30
+00:01:14.750 --> 00:01:17.690
+If our documents have
+particularly large arrays,
+
+31
+00:01:17.690 --> 00:01:20.360
+then the server will be
+creating lots of index keys.
+
+32
+00:01:20.360 --> 00:01:23.900
+This could cause issues with
+fitting the index into memory.
+
+33
+00:01:23.900 --> 00:01:25.880
+We can mitigate
+these kinds of issues
+
+34
+00:01:25.880 --> 00:01:28.490
+by creating a partial index.
+
+35
+00:01:28.490 --> 00:01:31.610
+I'd also like to point out
+that sparse indexes are
+
+36
+00:01:31.610 --> 00:01:34.850
+a special case of
+partial indexes.
+
+37
+00:01:34.850 --> 00:01:36.920
+With a sparse
+index, we only index
+
+38
+00:01:36.920 --> 00:01:39.620
+documents where the
+field exists that we're
+
+39
+00:01:39.620 --> 00:01:42.380
+indexing on, rather
+than creating an index
+
+40
+00:01:42.380 --> 00:01:44.000
+key with a null value.
+
+41
+00:01:44.000 --> 00:01:47.180
+We can achieve the same effect
+by creating a partial index
+
+42
+00:01:47.180 --> 00:01:49.520
+where the filter expression
+checks for the existence
+
+43
+00:01:49.520 --> 00:01:51.670
+of the field were indexing on.
+
+44
+00:01:51.670 --> 00:01:53.300
+It might be somewhat
+obvious, but I'd
+
+45
+00:01:53.300 --> 00:01:56.060
+like to point out that
+partial indexes are much more
+
+46
+00:01:56.060 --> 00:01:58.310
+expressive than sparse indexes.
+
+47
+00:01:58.310 --> 00:02:01.462
+With partial indexes we can
+define a filter expression
+
+48
+00:02:01.462 --> 00:02:03.920
+that checks for the existence
+of fields other than the ones
+
+49
+00:02:03.920 --> 00:02:05.740
+we're indexing on.
+
+50
+00:02:05.740 --> 00:02:08.380
+Therefore, we suggest that
+you use partial indexes
+
+51
+00:02:08.380 --> 00:02:10.449
+over sparse indexes.
+
+52
+00:02:10.449 --> 00:02:13.390
+Let's head over to the shell so
+that we can see partial indexes
+
+53
+00:02:13.390 --> 00:02:14.884
+in practice.
+
+54
+00:02:14.884 --> 00:02:17.050
+We can go ahead and switch
+over to the M201 database
+
+55
+00:02:17.050 --> 00:02:18.810
+that we've been using.
+
+56
+00:02:18.810 --> 00:02:21.160
+And from here, we can go
+ahead and insert a document
+
+57
+00:02:21.160 --> 00:02:22.750
+similar to our example.
+
+58
+00:02:22.750 --> 00:02:26.200
+And let's go ahead and run a
+find query on our document,
+
+59
+00:02:26.200 --> 00:02:28.870
+matching on city and cuisine.
+
+60
+00:02:28.870 --> 00:02:31.640
+And of course, we find the
+document we just inserted.
+
+61
+00:02:31.640 --> 00:02:35.650
+And now we can go ahead and
+create our explainable objects
+
+62
+00:02:35.650 --> 00:02:37.249
+and rerun our query.
+
+63
+00:02:37.249 --> 00:02:39.040
+Now, I would expect
+this to be a collection
+
+64
+00:02:39.040 --> 00:02:41.980
+scan because we have not
+created any indexes yet.
+
+65
+00:02:41.980 --> 00:02:45.620
+And indeed, the winning plan
+was to do a collection scan.
+
+66
+00:02:45.620 --> 00:02:49.900
+Let's go ahead and create the
+partial index from our example.
+
+67
+00:02:49.900 --> 00:02:51.780
+Now, if we run the
+same query again,
+
+68
+00:02:51.780 --> 00:02:53.710
+we'd expect it to use
+the index because we're
+
+69
+00:02:53.710 --> 00:02:56.620
+querying on the keys
+of our compound index
+
+70
+00:02:56.620 --> 00:02:59.410
+and our document has
+greater than 3.5 stars.
+
+71
+00:02:59.410 --> 00:03:02.530
+And when we scroll
+up, we see that whoa,
+
+72
+00:03:02.530 --> 00:03:04.824
+we're doing a collection scan.
+
+73
+00:03:04.824 --> 00:03:07.240
+I did this because I wanted
+to point out an important part
+
+74
+00:03:07.240 --> 00:03:09.130
+of partial indexes.
+
+75
+00:03:09.130 --> 00:03:11.260
+In order to use a
+partial index, the query
+
+76
+00:03:11.260 --> 00:03:13.240
+must be guaranteed
+to match a subset
+
+77
+00:03:13.240 --> 00:03:16.700
+of the documents, specified
+by the filter expression.
+
+78
+00:03:16.700 --> 00:03:19.330
+This is because the server
+could miss results in the case
+
+79
+00:03:19.330 --> 00:03:22.780
+where matching documents
+are not indexed.
+
+80
+00:03:22.780 --> 00:03:25.060
+In order for us to
+trigger an index scan,
+
+81
+00:03:25.060 --> 00:03:28.510
+we need to include the stars
+predicate in our query that
+
+82
+00:03:28.510 --> 00:03:30.470
+matches our filter expression.
+
+83
+00:03:30.470 --> 00:03:32.050
+And now when want
+to explain output,
+
+84
+00:03:32.050 --> 00:03:34.810
+we can see that we're
+indeed doing an index scan.
+
+85
+00:03:34.810 --> 00:03:36.790
+Just remember that
+your query predicate
+
+86
+00:03:36.790 --> 00:03:40.090
+must be guaranteed to match a
+subset of the documents that
+
+87
+00:03:40.090 --> 00:03:41.950
+will match our
+filter expression.
+
+88
+00:03:41.950 --> 00:03:44.260
+This property will hold,
+regardless of which documents
+
+89
+00:03:44.260 --> 00:03:46.520
+happen to be in the collection.
+
+90
+00:03:46.520 --> 00:03:48.910
+Let's take a moment to discuss
+some of the restrictions
+
+91
+00:03:48.910 --> 00:03:51.040
+of partial indexes.
+
+92
+00:03:51.040 --> 00:03:54.220
+So we cannot specify both
+a partialFilterExpression
+
+93
+00:03:54.220 --> 00:03:57.130
+and the sparse option, and
+that's OK because we can
+
+94
+00:03:57.130 --> 00:04:02.080
+actually make a sparse query
+with a filter expression.
+
+95
+00:04:02.080 --> 00:04:05.680
+We also can't make
+our _ID index partial,
+
+96
+00:04:05.680 --> 00:04:08.620
+and that's because every
+document has to have an indexed
+
+97
+00:04:08.620 --> 00:04:11.260
+_ID field.
+
+98
+00:04:11.260 --> 00:04:15.370
+And finally, we cannot have our
+shared key be a partial index.
+
+99
+00:04:15.370 --> 00:04:17.170
+Let's recap what we've learned.
+
+100
+00:04:17.170 --> 00:04:20.342
+So we've learned how to create
+and use partial indexes,
+
+101
+00:04:20.342 --> 00:04:22.300
+we've also learned about
+some of the advantages
+
+102
+00:04:22.300 --> 00:04:24.682
+and disadvantages
+of partial indexes.
+
+103
+00:04:24.682 --> 00:04:26.890
+We've learned how to predict
+when a query will ignore
+
+104
+00:04:26.890 --> 00:04:29.230
+the existence of
+a partial index,
+
+105
+00:04:29.230 --> 00:04:31.930
+and we've learned how to
+emulate a sparse index
+
+106
+00:04:31.930 --> 00:04:33.780
+with a partial index.
+
+107
+00:04:33.780 --> 00:04:37.170
+And that should give you a good
+overview of partial indexes.

@@ -1,0 +1,593 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.400
+In this video, I want to take
+her understanding of sorting
+
+3
+00:00:03.400 --> 00:00:05.590
+with indexes to the next level.
+
+4
+00:00:05.590 --> 00:00:08.080
+In our first lesson we discuss
+how we can use single field
+
+5
+00:00:08.080 --> 00:00:11.410
+indexes to sort on queries.
+
+6
+00:00:11.410 --> 00:00:14.740
+Since then we've learned
+about compound indexes.
+
+7
+00:00:14.740 --> 00:00:17.740
+In this video we'll discuss
+how we can use compound indexes
+
+8
+00:00:17.740 --> 00:00:20.260
+to sort our queries.
+
+9
+00:00:20.260 --> 00:00:22.480
+Let's continue using
+the people data set
+
+10
+00:00:22.480 --> 00:00:25.710
+and we'll continue using the
+index from our compound index
+
+11
+00:00:25.710 --> 00:00:27.160
+lesson.
+
+12
+00:00:27.160 --> 00:00:30.860
+The most simple way we can use
+compound indexes for sorting
+
+13
+00:00:30.860 --> 00:00:34.810
+is to use the index key
+pattern as our sort predicate.
+
+14
+00:00:34.810 --> 00:00:37.570
+When we run this query and
+look at the explain output,
+
+15
+00:00:37.570 --> 00:00:41.352
+we can see that we're
+doing an index scan.
+
+16
+00:00:41.352 --> 00:00:43.060
+Which shouldn't be
+surprising since we're
+
+17
+00:00:43.060 --> 00:00:45.960
+matching the same
+index keys in the order
+
+18
+00:00:45.960 --> 00:00:49.180
+they were specified
+during index creation.
+
+19
+00:00:49.180 --> 00:00:53.020
+This is very similar to how we
+work with single key indexes.
+
+20
+00:00:53.020 --> 00:00:55.210
+We don't have to use
+all of our index keys
+
+21
+00:00:55.210 --> 00:00:57.430
+in our sort predicate
+to prevent and in-memory
+
+22
+00:00:57.430 --> 00:01:00.130
+sort by doing an index scan.
+
+23
+00:01:00.130 --> 00:01:01.600
+Here's another query.
+
+24
+00:01:01.600 --> 00:01:05.500
+This time I'm only using the
+first two fields of our index.
+
+25
+00:01:05.500 --> 00:01:08.290
+But when I run it you'll
+notice that I'm still
+
+26
+00:01:08.290 --> 00:01:10.990
+doing an index scan.
+
+27
+00:01:10.990 --> 00:01:15.700
+And this is because I'm using
+an index prefix for our index.
+
+28
+00:01:15.700 --> 00:01:19.780
+If you look at our query
+we did job: 1, employer: 1,
+
+29
+00:01:19.780 --> 00:01:22.420
+which is a prefix for
+our keyPattern "job" : 1,
+
+30
+00:01:22.420 --> 00:01:24.570
+"employer" : 1.
+
+31
+00:01:24.570 --> 00:01:26.760
+Let's try another query
+and see if we're still
+
+32
+00:01:26.760 --> 00:01:28.890
+able to use the
+index for sorting.
+
+33
+00:01:28.890 --> 00:01:31.950
+Instead of sorting by job
+and then employer, this time
+
+34
+00:01:31.950 --> 00:01:35.640
+we're going to sort by
+employer and then by job.
+
+35
+00:01:35.640 --> 00:01:38.430
+And if we look at
+our winning plan,
+
+36
+00:01:38.430 --> 00:01:40.350
+you'll see that we
+did a collection scan
+
+37
+00:01:40.350 --> 00:01:43.530
+followed by an in-memory sort.
+
+38
+00:01:43.530 --> 00:01:45.510
+And unsurprisingly,
+this is because we
+
+39
+00:01:45.510 --> 00:01:47.790
+did it using index prefix.
+
+40
+00:01:47.790 --> 00:01:50.820
+Last time we the job
+comma employer, this time
+
+41
+00:01:50.820 --> 00:01:54.060
+we did employer comma job.
+
+42
+00:01:54.060 --> 00:01:57.540
+This means that all of
+these following sort queries
+
+43
+00:01:57.540 --> 00:02:00.150
+would use an index instead
+of an in-memory sort
+
+44
+00:02:00.150 --> 00:02:05.750
+because all of their sort
+predicates are index prefixes.
+
+45
+00:02:05.750 --> 00:02:08.509
+And it doesn't matter what
+the query predicates are.
+
+46
+00:02:08.509 --> 00:02:11.720
+The server really doesn't
+like doing in-memory sorts.
+
+47
+00:02:11.720 --> 00:02:14.060
+So in the following
+example it's still
+
+48
+00:02:14.060 --> 00:02:16.670
+going to use an index to
+fetch the documents because we
+
+49
+00:02:16.670 --> 00:02:19.910
+have an index prefix
+in our sort predicate.
+
+50
+00:02:19.910 --> 00:02:23.300
+So even though we're only
+returning one document,
+
+51
+00:02:23.300 --> 00:02:26.180
+we still have to look
+at all 50,000 documents.
+
+52
+00:02:26.180 --> 00:02:32.774
+Because the index scan was used
+for sorting not for filtering.
+
+53
+00:02:32.774 --> 00:02:34.940
+The server was going to
+have to look at those 50,000
+
+54
+00:02:34.940 --> 00:02:36.724
+documents either way.
+
+55
+00:02:36.724 --> 00:02:38.390
+It didn't know that
+there was only going
+
+56
+00:02:38.390 --> 00:02:40.810
+to be one document returned.
+
+57
+00:02:40.810 --> 00:02:44.780
+But an index can be used to
+both filter and sort documents
+
+58
+00:02:44.780 --> 00:02:47.510
+if the query includes
+equality conditions
+
+59
+00:02:47.510 --> 00:02:51.690
+on all of the prefix keys
+that precede the sort keys.
+
+60
+00:02:51.690 --> 00:02:54.320
+Let's look at this example.
+
+61
+00:02:54.320 --> 00:02:56.265
+This was a very fast
+query because we
+
+62
+00:02:56.265 --> 00:03:01.030
+were able to use indexes for
+both filtering and for sorting.
+
+63
+00:03:01.030 --> 00:03:06.250
+And this is because these
+keys are an index prefix.
+
+64
+00:03:06.250 --> 00:03:10.300
+The first keys, "job,
+employer" are an index prefix.
+
+65
+00:03:10.300 --> 00:03:12.670
+But continuing onward,
+last_name would
+
+66
+00:03:12.670 --> 00:03:16.830
+complete another index prefix.
+
+67
+00:03:16.830 --> 00:03:18.790
+I've modified this
+query slightly
+
+68
+00:03:18.790 --> 00:03:22.080
+so I can no longer be able
+to use the index for sorting.
+
+69
+00:03:22.080 --> 00:03:25.390
+Job is still an index
+prefix, so we'll still
+
+70
+00:03:25.390 --> 00:03:28.810
+be able to filter
+documents using the index.
+
+71
+00:03:28.810 --> 00:03:33.370
+But since job comma last_name
+is not an index prefix,
+
+72
+00:03:33.370 --> 00:03:36.070
+we'll no longer be able to use
+the index for both filtering
+
+73
+00:03:36.070 --> 00:03:39.040
+and sorting, as we'll see now.
+
+74
+00:03:39.040 --> 00:03:41.650
+So we were able to use
+the index for filtering
+
+75
+00:03:41.650 --> 00:03:46.240
+we only had to examine 99
+documents for the 99 returned,
+
+76
+00:03:46.240 --> 00:03:49.510
+but we still had to
+do an in-memory sort.
+
+77
+00:03:49.510 --> 00:03:51.520
+The next was first
+useful filtering
+
+78
+00:03:51.520 --> 00:03:53.170
+and then those
+filtered documents
+
+79
+00:03:53.170 --> 00:03:56.380
+were then sorted in-memory.
+
+80
+00:03:56.380 --> 00:03:58.600
+The last topic I want to
+talk about in this video
+
+81
+00:03:58.600 --> 00:04:02.020
+is about sort direction when
+sorting on multiple fields.
+
+82
+00:04:02.020 --> 00:04:04.160
+In the single key
+index sorting lesson,
+
+83
+00:04:04.160 --> 00:04:06.520
+we saw that we were able
+to walk our index backwards
+
+84
+00:04:06.520 --> 00:04:09.444
+by inverting the key
+in our sort predicate.
+
+85
+00:04:09.444 --> 00:04:11.110
+You might be wondering
+how is this going
+
+86
+00:04:11.110 --> 00:04:12.935
+to work with compound indexes.
+
+87
+00:04:12.935 --> 00:04:14.560
+Well, it's actually
+surprisingly simple
+
+88
+00:04:14.560 --> 00:04:16.750
+to determine if your
+sort key pattern will
+
+89
+00:04:16.750 --> 00:04:19.060
+be able to walk the
+index backwards.
+
+90
+00:04:19.060 --> 00:04:22.480
+If I was to create
+the following index,
+
+91
+00:04:22.480 --> 00:04:24.490
+we know that the
+following sort predicate
+
+92
+00:04:24.490 --> 00:04:27.310
+would walk the index forward.
+
+93
+00:04:27.310 --> 00:04:30.220
+In order to walk the index
+backwards all we need to do
+
+94
+00:04:30.220 --> 00:04:31.900
+is invert each key.
+
+95
+00:04:31.900 --> 00:04:34.980
+
+
+96
+00:04:34.980 --> 00:04:36.820
+All of the following
+sort queries
+
+97
+00:04:36.820 --> 00:04:39.010
+would use the index for sorting.
+
+98
+00:04:39.010 --> 00:04:41.500
+The first two would
+walk the index forward
+
+99
+00:04:41.500 --> 00:04:43.870
+because they're index prefixes.
+
+100
+00:04:43.870 --> 00:04:46.390
+The last two would walk
+the index backwards
+
+101
+00:04:46.390 --> 00:04:51.310
+because they're the
+inverse of these prefixes.
+
+102
+00:04:51.310 --> 00:04:53.920
+We can look at an example
+with our people collection.
+
+103
+00:04:53.920 --> 00:04:56.770
+Here I'm sorting on job
+descending, employer
+
+104
+00:04:56.770 --> 00:05:01.200
+descending, which job
+ascending, employer ascending
+
+105
+00:05:01.200 --> 00:05:02.510
+would be an index prefix.
+
+106
+00:05:02.510 --> 00:05:05.920
+So here I'm just inverting
+the ascending version.
+
+107
+00:05:05.920 --> 00:05:07.930
+And when we look at
+the explain output
+
+108
+00:05:07.930 --> 00:05:10.940
+you can see that
+I use the index,
+
+109
+00:05:10.940 --> 00:05:13.520
+and rather than walking
+the index forward,
+
+110
+00:05:13.520 --> 00:05:15.800
+we're walking it backwards.
+
+111
+00:05:15.800 --> 00:05:18.670
+But if I were to change
+one of these keys
+
+112
+00:05:18.670 --> 00:05:21.220
+we would then have to do a
+collection scan, followed
+
+113
+00:05:21.220 --> 00:05:23.650
+by an in-memory sort.
+
+114
+00:05:23.650 --> 00:05:25.690
+Let's recap what we've learned.
+
+115
+00:05:25.690 --> 00:05:29.080
+We learned how to sort our
+queries by using index prefixes
+
+116
+00:05:29.080 --> 00:05:31.960
+in our sort predicates.
+
+117
+00:05:31.960 --> 00:05:34.780
+We also learned how to both
+filter and sort our queries
+
+118
+00:05:34.780 --> 00:05:37.630
+by splitting up our index prefix
+between our query and sort
+
+119
+00:05:37.630 --> 00:05:38.860
+predicates.
+
+120
+00:05:38.860 --> 00:05:41.350
+Important to remember
+that our query part has
+
+121
+00:05:41.350 --> 00:05:45.250
+to precede the sort part and
+that these have to be equality
+
+122
+00:05:45.250 --> 00:05:47.121
+matches.
+
+123
+00:05:47.121 --> 00:05:49.120
+And finally we learned
+how to sort our documents
+
+124
+00:05:49.120 --> 00:05:52.150
+with an index if our sort
+predicate inverts our index
+
+125
+00:05:52.150 --> 00:05:54.600
+keys or their prefixes.

@@ -1,0 +1,563 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.150
+So in this lesson, we're going
+to cover joins in MongoDB.
+
+3
+00:00:03.150 --> 00:00:04.770
+So joins are used
+to combine data
+
+4
+00:00:04.770 --> 00:00:07.614
+from two or more collections,
+which is true for all database
+
+5
+00:00:07.614 --> 00:00:09.030
+systems, but the
+implementation is
+
+6
+00:00:09.030 --> 00:00:11.154
+going to be a little
+different in MongoDB.
+
+7
+00:00:11.154 --> 00:00:12.570
+The join we're
+going to do here is
+
+8
+00:00:12.570 --> 00:00:14.490
+between the movies and
+comments collection
+
+9
+00:00:14.490 --> 00:00:16.140
+from the mflix database.
+
+10
+00:00:16.140 --> 00:00:18.540
+Each comment in mflix
+is posted by a user,
+
+11
+00:00:18.540 --> 00:00:20.827
+and associated with
+one specific movie.
+
+12
+00:00:20.827 --> 00:00:22.410
+And we want to count
+how many comments
+
+13
+00:00:22.410 --> 00:00:24.510
+are associated with each movie.
+
+14
+00:00:24.510 --> 00:00:26.534
+Users use comments as a
+way to discuss movies,
+
+15
+00:00:26.534 --> 00:00:28.950
+so we can think of this sort
+of like a popularity contest.
+
+16
+00:00:28.950 --> 00:00:30.600
+You know, which movies
+are being talked
+
+17
+00:00:30.600 --> 00:00:32.520
+about the most on our site.
+
+18
+00:00:32.520 --> 00:00:34.980
+We're going to use the new
+expressive lookup in MongoDB
+
+19
+00:00:34.980 --> 00:00:37.350
+3.6, so we can express
+a pipeline for the data
+
+20
+00:00:37.350 --> 00:00:38.370
+that we're joining.
+
+21
+00:00:38.370 --> 00:00:39.610
+This might not make
+sense right now,
+
+22
+00:00:39.610 --> 00:00:41.220
+so we'll explore what
+it means in a minute.
+
+23
+00:00:41.220 --> 00:00:43.230
+We're going to build
+this pipeline in Compass,
+
+24
+00:00:43.230 --> 00:00:45.690
+and then use Compass'
+export to language feature
+
+25
+00:00:45.690 --> 00:00:48.510
+to produce code that we can copy
+directly into our application's
+
+26
+00:00:48.510 --> 00:00:49.470
+native language.
+
+27
+00:00:49.470 --> 00:00:52.477
+So here I'm just connected to
+the mflix database in Compass.
+
+28
+00:00:52.477 --> 00:00:54.810
+And we're going to start our
+aggregation from the movies
+
+29
+00:00:54.810 --> 00:00:57.237
+collection, and then join
+from the comments collection.
+
+30
+00:00:57.237 --> 00:00:59.820
+Although it would probably work
+the other way around, as well.
+
+31
+00:00:59.820 --> 00:01:02.700
+Just going to move
+this Aggregations tab.
+
+32
+00:01:02.700 --> 00:01:04.800
+And I can select a new stage.
+
+33
+00:01:04.800 --> 00:01:07.560
+I'm going to add a match stage
+to select only the movies that
+
+34
+00:01:07.560 --> 00:01:09.600
+came out in the 1980s.
+
+35
+00:01:09.600 --> 00:01:12.180
+And now that our match
+stage is fully written out,
+
+36
+00:01:12.180 --> 00:01:13.770
+it looks like
+Compass has already
+
+37
+00:01:13.770 --> 00:01:17.100
+loaded the documents that would
+be returned by this query.
+
+38
+00:01:17.100 --> 00:01:21.200
+And it looks like all of these
+movies came out in the 1980s.
+
+39
+00:01:21.200 --> 00:01:24.040
+So now here's the stage where
+the join actually happens.
+
+40
+00:01:24.040 --> 00:01:26.800
+This is a look up stage
+in the expressive version.
+
+41
+00:01:26.800 --> 00:01:28.480
+And there are four fields--
+
+42
+00:01:28.480 --> 00:01:31.744
+from, let, pipeline, and as.
+
+43
+00:01:31.744 --> 00:01:33.160
+From is going to
+be the collection
+
+44
+00:01:33.160 --> 00:01:33.970
+that we're joining from.
+
+45
+00:01:33.970 --> 00:01:35.770
+So we're running this
+aggregation from the movies
+
+46
+00:01:35.770 --> 00:01:38.370
+collection, and we want to join
+from the comments collection.
+
+47
+00:01:38.370 --> 00:01:40.180
+So that's the one
+I've specified here.
+
+48
+00:01:40.180 --> 00:01:42.550
+So let is when this starts
+to get a little complicated,
+
+49
+00:01:42.550 --> 00:01:44.200
+so try to follow closely.
+
+50
+00:01:44.200 --> 00:01:46.690
+The pipeline we
+write inside the join
+
+51
+00:01:46.690 --> 00:01:49.122
+has access to fields of
+documents inside the comments
+
+52
+00:01:49.122 --> 00:01:50.830
+collection, because
+that's the collection
+
+53
+00:01:50.830 --> 00:01:51.875
+that we're joining from.
+
+54
+00:01:51.875 --> 00:01:53.500
+But it doesn't have
+access to the field
+
+55
+00:01:53.500 --> 00:01:56.650
+inside the movies collection,
+unless we specify them in let.
+
+56
+00:01:56.650 --> 00:01:59.170
+So if we want to use the
+underscore ID from the movies
+
+57
+00:01:59.170 --> 00:02:01.060
+documents inside
+the pipeline, we
+
+58
+00:02:01.060 --> 00:02:04.210
+have to declare this
+variable ID and assign it
+
+59
+00:02:04.210 --> 00:02:07.160
+to the dollar underscore ID
+from the movies collection.
+
+60
+00:02:07.160 --> 00:02:08.949
+So if we look
+inside the pipeline,
+
+61
+00:02:08.949 --> 00:02:12.139
+we can see that we refer to this
+variable with two dollar signs,
+
+62
+00:02:12.139 --> 00:02:13.930
+because the variables
+with one dollar signs
+
+63
+00:02:13.930 --> 00:02:16.772
+refer to fields inside
+the comment documents.
+
+64
+00:02:16.772 --> 00:02:18.730
+This obviously can get
+a little bit complicated
+
+65
+00:02:18.730 --> 00:02:20.188
+with all the dollar
+signs, but just
+
+66
+00:02:20.188 --> 00:02:23.050
+remember that double dollar
+sign means that the variable was
+
+67
+00:02:23.050 --> 00:02:25.840
+defined in the let statement.
+
+68
+00:02:25.840 --> 00:02:28.980
+The pipeline itself only has
+one match stage right now,
+
+69
+00:02:28.980 --> 00:02:31.390
+and it's matching the
+movie ID of the comment
+
+70
+00:02:31.390 --> 00:02:33.710
+to the underscore
+ID from the movie.
+
+71
+00:02:33.710 --> 00:02:37.840
+We've set as to movie comments,
+so that the movie document will
+
+72
+00:02:37.840 --> 00:02:40.480
+now have an array field
+called movie documents that
+
+73
+00:02:40.480 --> 00:02:42.400
+contains a list of all
+the comments associated
+
+74
+00:02:42.400 --> 00:02:43.450
+with that movie.
+
+75
+00:02:43.450 --> 00:02:47.230
+And we can check that that
+field exists down here.
+
+76
+00:02:47.230 --> 00:02:49.300
+It looks like it did
+create this movie comments
+
+77
+00:02:49.300 --> 00:02:51.970
+field, which is a type array.
+
+78
+00:02:51.970 --> 00:02:55.030
+And each element of the
+array is its own document,
+
+79
+00:02:55.030 --> 00:02:57.160
+which look like the
+exact comment documents
+
+80
+00:02:57.160 --> 00:02:59.200
+from the comments collection.
+
+81
+00:02:59.200 --> 00:03:02.590
+Now I embedded all the comment
+documents inside each movie,
+
+82
+00:03:02.590 --> 00:03:04.150
+but all I really
+wanted to figure out
+
+83
+00:03:04.150 --> 00:03:06.660
+was how many comments were
+associated with each movie.
+
+84
+00:03:06.660 --> 00:03:09.160
+I don't really care what each
+comment says, or who wrote it,
+
+85
+00:03:09.160 --> 00:03:10.180
+or when it was written.
+
+86
+00:03:10.180 --> 00:03:12.380
+I just care how many there are.
+
+87
+00:03:12.380 --> 00:03:14.650
+So here I've changed up our
+look up stage a little bit
+
+88
+00:03:14.650 --> 00:03:17.865
+by adding this count
+stage to the pipeline.
+
+89
+00:03:17.865 --> 00:03:19.990
+Count is just going to
+count all the documents that
+
+90
+00:03:19.990 --> 00:03:21.520
+pass through this pipeline.
+
+91
+00:03:21.520 --> 00:03:23.560
+And since we already
+used a match stage
+
+92
+00:03:23.560 --> 00:03:25.660
+to make sure that each
+comment was associated only
+
+93
+00:03:25.660 --> 00:03:28.600
+with that movie, this
+meets our needs perfectly.
+
+94
+00:03:28.600 --> 00:03:31.630
+And we can see we've ended
+up with a single array field
+
+95
+00:03:31.630 --> 00:03:35.140
+with one value that just has a
+count of the number of comments
+
+96
+00:03:35.140 --> 00:03:37.280
+associated with this movie.
+
+97
+00:03:37.280 --> 00:03:39.100
+So this pipeline in
+the expressive lookup
+
+98
+00:03:39.100 --> 00:03:41.110
+is actually very
+powerful, because it
+
+99
+00:03:41.110 --> 00:03:43.660
+allows us to transform the
+comments documents returned
+
+100
+00:03:43.660 --> 00:03:46.600
+by a join on the server before
+that data even gets embedded
+
+101
+00:03:46.600 --> 00:03:48.397
+inside this movies document.
+
+102
+00:03:48.397 --> 00:03:50.230
+And now that we've
+written out our pipeline,
+
+103
+00:03:50.230 --> 00:03:51.880
+we can verify that
+our output documents
+
+104
+00:03:51.880 --> 00:03:53.380
+look the way we expect.
+
+105
+00:03:53.380 --> 00:03:56.110
+We can export the pipeline
+to a language that
+
+106
+00:03:56.110 --> 00:03:58.150
+suits our application's needs.
+
+107
+00:03:58.150 --> 00:04:03.412
+We have Python 3, C#, Node
+JS, and Java available to us.
+
+108
+00:04:03.412 --> 00:04:04.870
+So just to recap,
+expressive lookup
+
+109
+00:04:04.870 --> 00:04:07.360
+up allows us to pass
+an aggregation pipeline
+
+110
+00:04:07.360 --> 00:04:09.700
+to the command that can
+transform the data before
+
+111
+00:04:09.700 --> 00:04:11.620
+that data is actually joined.
+
+112
+00:04:11.620 --> 00:04:13.540
+And let allows us
+to declare variables
+
+113
+00:04:13.540 --> 00:04:15.820
+in that pipeline that
+refer to document fields
+
+114
+00:04:15.820 --> 00:04:17.260
+in our source collection.
+
+115
+00:04:17.260 --> 00:04:19.630
+Once we're done writing the
+pipeline out in Compass,
+
+116
+00:04:19.630 --> 00:04:21.430
+we can use the export
+to language feature
+
+117
+00:04:21.430 --> 00:04:23.471
+to produce the aggregation
+in the language that's
+
+118
+00:04:23.471 --> 00:04:25.890
+native to our application.

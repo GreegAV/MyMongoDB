@@ -1,0 +1,115 @@
+In this video, I want to take her understanding of sorting with indexes to the next level.
+
+In our first lesson we discuss how we can use single field indexes to sort on queries.
+
+Since then we've learned about compound indexes.
+
+In this video we'll discuss how we can use compound indexes to sort our queries.
+
+Let's continue using the people data set and we'll continue using the index from our compound index lesson.
+
+The most simple way we can use compound indexes for sorting is to use the index key pattern as our sort predicate.
+
+When we run this query and look at the explain output, we can see that we're doing an index scan.
+
+Which shouldn't be surprising since we're matching the same index keys in the order they were specified during index creation.
+
+This is very similar to how we work with single key indexes.
+
+We don't have to use all of our index keys in our sort predicate to prevent and in-memory sort by doing an index scan.
+
+Here's another query.
+
+This time I'm only using the first two fields of our index.
+
+But when I run it you'll notice that I'm still doing an index scan.
+
+And this is because I'm using an index prefix for our index.
+
+If you look at our query we did job: 1, employer: 1, which is a prefix for our keyPattern "job" : 1, "employer" : 1.
+
+Let's try another query and see if we're still able to use the index for sorting.
+
+Instead of sorting by job and then employer, this time we're going to sort by employer and then by job.
+
+And if we look at our winning plan, you'll see that we did a collection scan followed by an in-memory sort.
+
+And unsurprisingly, this is because we did it using index prefix.
+
+Last time we the job comma employer, this time we did employer comma job.
+
+This means that all of these following sort queries would use an index instead of an in-memory sort because all of their sort predicates are index prefixes.
+
+And it doesn't matter what the query predicates are.
+
+The server really doesn't like doing in-memory sorts.
+
+So in the following example it's still going to use an index to fetch the documents because we have an index prefix in our sort predicate.
+
+So even though we're only returning one document, we still have to look at all 50,000 documents.
+
+Because the index scan was used for sorting not for filtering.
+
+The server was going to have to look at those 50,000 documents either way.
+
+It didn't know that there was only going to be one document returned.
+
+But an index can be used to both filter and sort documents if the query includes equality conditions on all of the prefix keys that precede the sort keys.
+
+Let's look at this example.
+
+This was a very fast query because we were able to use indexes for both filtering and for sorting.
+
+And this is because these keys are an index prefix.
+
+The first keys, "job, employer" are an index prefix.
+
+But continuing onward, last_name would complete another index prefix.
+
+I've modified this query slightly so I can no longer be able to use the index for sorting.
+
+Job is still an index prefix, so we'll still be able to filter documents using the index.
+
+But since job comma last_name is not an index prefix, we'll no longer be able to use the index for both filtering and sorting, as we'll see now.
+
+So we were able to use the index for filtering we only had to examine 99 documents for the 99 returned, but we still had to do an in-memory sort.
+
+The next was first useful filtering and then those filtered documents were then sorted in-memory.
+
+The last topic I want to talk about in this video is about sort direction when sorting on multiple fields.
+
+In the single key index sorting lesson, we saw that we were able to walk our index backwards by inverting the key in our sort predicate.
+
+You might be wondering how is this going to work with compound indexes.
+
+Well, it's actually surprisingly simple to determine if your sort key pattern will be able to walk the index backwards.
+
+If I was to create the following index, we know that the following sort predicate would walk the index forward.
+
+In order to walk the index backwards all we need to do is invert each key.
+
+All of the following sort queries would use the index for sorting.
+
+The first two would walk the index forward because they're index prefixes.
+
+The last two would walk the index backwards because they're the inverse of these prefixes.
+
+We can look at an example with our people collection.
+
+Here I'm sorting on job descending, employer descending, which job ascending, employer ascending would be an index prefix.
+
+So here I'm just inverting the ascending version.
+
+And when we look at the explain output you can see that I use the index, and rather than walking the index forward, we're walking it backwards.
+
+But if I were to change one of these keys we would then have to do a collection scan, followed by an in-memory sort.
+
+Let's recap what we've learned.
+
+We learned how to sort our queries by using index prefixes in our sort predicates.
+
+We also learned how to both filter and sort our queries by splitting up our index prefix between our query and sort predicates.
+
+Important to remember that our query part has to precede the sort part and that these have to be equality matches.
+
+And finally we learned how to sort our documents with an index if our sort predicate inverts our index keys or their prefixes.

@@ -1,0 +1,347 @@
+
+1
+00:00:00.000 --> 00:00:00.840
+
+
+2
+00:00:00.840 --> 00:00:03.500
+In this video, I'm going to
+cover how to actually enable
+
+3
+00:00:03.500 --> 00:00:06.290
+auditing from the command line.
+
+4
+00:00:06.290 --> 00:00:09.200
+Here's a very typical
+command to start a mongod.
+
+5
+00:00:09.200 --> 00:00:12.280
+In order to enable auditing,
+we add the auditDestination
+
+6
+00:00:12.280 --> 00:00:13.250
+option.
+
+7
+00:00:13.250 --> 00:00:14.960
+This option will
+take an argument
+
+8
+00:00:14.960 --> 00:00:16.960
+which will determine
+where the logs go.
+
+9
+00:00:16.960 --> 00:00:19.130
+In this case, I
+specified syslog,
+
+10
+00:00:19.130 --> 00:00:22.000
+meaning that the logs will
+go to the system's logs.
+
+11
+00:00:22.000 --> 00:00:25.340
+Virtually all operating
+systems have a system log.
+
+12
+00:00:25.340 --> 00:00:27.497
+Your system logs are
+very OS dependent,
+
+13
+00:00:27.497 --> 00:00:29.080
+so depending on your
+operating system,
+
+14
+00:00:29.080 --> 00:00:32.490
+you just need to look up where
+your system logs are stored.
+
+15
+00:00:32.490 --> 00:00:35.420
+And that's where
+these logs would go.
+
+16
+00:00:35.420 --> 00:00:38.820
+We can also output our
+auditing logs to standard out.
+
+17
+00:00:38.820 --> 00:00:41.640
+If we want to do that, we
+use the console keyword.
+
+18
+00:00:41.640 --> 00:00:44.530
+Now of course, we can
+also output our audit logs
+
+19
+00:00:44.530 --> 00:00:48.280
+to a file of our choosing
+by using the file argument.
+
+20
+00:00:48.280 --> 00:00:50.670
+When we choose to output
+our logs to a file,
+
+21
+00:00:50.670 --> 00:00:53.020
+we'll need to add
+two more options.
+
+22
+00:00:53.020 --> 00:00:55.210
+And here are the two
+additional options,
+
+23
+00:00:55.210 --> 00:00:58.200
+auditFormat and auditPath.
+
+24
+00:00:58.200 --> 00:01:00.660
+auditFormat takes an
+argument which can either
+
+25
+00:01:00.660 --> 00:01:05.980
+be JSON or BSON, and auditPath
+takes an additional argument,
+
+26
+00:01:05.980 --> 00:01:07.970
+which, of course,
+is the path of where
+
+27
+00:01:07.970 --> 00:01:09.920
+we want to store the audit log.
+
+28
+00:01:09.920 --> 00:01:14.200
+One reason you'd output your
+logs in BSON instead of JSON
+
+29
+00:01:14.200 --> 00:01:17.630
+is because BSON serializes
+to disk a lot faster.
+
+30
+00:01:17.630 --> 00:01:21.190
+There's no serialization
+process between BSON and JSON
+
+31
+00:01:21.190 --> 00:01:23.410
+when you just output
+directly to BSON.
+
+32
+00:01:23.410 --> 00:01:26.330
+Of course, you're going to
+lose some ease of readability,
+
+33
+00:01:26.330 --> 00:01:28.110
+because with a JSON
+the file you can just
+
+34
+00:01:28.110 --> 00:01:30.970
+pop right into the file and
+read your logs immediately.
+
+35
+00:01:30.970 --> 00:01:33.570
+But if you are worried
+about write performance,
+
+36
+00:01:33.570 --> 00:01:36.250
+then you can always use BSON
+to have high write throughput
+
+37
+00:01:36.250 --> 00:01:37.940
+on your audits.
+
+38
+00:01:37.940 --> 00:01:40.400
+For now, let's stick
+with JSON so you can see
+
+39
+00:01:40.400 --> 00:01:42.320
+what our logs look like easily.
+
+40
+00:01:42.320 --> 00:01:44.860
+And we can see that our server
+has successfully started.
+
+41
+00:01:44.860 --> 00:01:47.510
+And I'm going to go to
+another shell and go ahead
+
+42
+00:01:47.510 --> 00:01:50.210
+and tail those logs.
+
+43
+00:01:50.210 --> 00:01:53.680
+And here I'm using the tail
+command with the -f option
+
+44
+00:01:53.680 --> 00:01:57.950
+so we can see our auditLog.json
+update in real time.
+
+45
+00:01:57.950 --> 00:02:00.690
+We'll go back to another
+shell, and we'll connect.
+
+46
+00:02:00.690 --> 00:02:02.790
+And now if I try to
+authenticate with a user
+
+47
+00:02:02.790 --> 00:02:06.080
+that we know is phony, we
+should see that in the log.
+
+48
+00:02:06.080 --> 00:02:09.080
+And here, we can see that
+the authentication failed.
+
+49
+00:02:09.080 --> 00:02:11.721
+And if we go to our other shell,
+and we see the log right here.
+
+50
+00:02:11.721 --> 00:02:13.470
+And just like we showed
+in our last video,
+
+51
+00:02:13.470 --> 00:02:18.300
+there's an atype, a time stamp,
+a local and remote IP address,
+
+52
+00:02:18.300 --> 00:02:20.470
+as well as a list
+of the users who
+
+53
+00:02:20.470 --> 00:02:22.640
+executed the command, which,
+of course, is nothing,
+
+54
+00:02:22.640 --> 00:02:24.892
+since we weren't logged
+in to anyone yet.
+
+55
+00:02:24.892 --> 00:02:26.600
+And then you can
+actually see that it was
+
+56
+00:02:26.600 --> 00:02:28.294
+an authentication action type.
+
+57
+00:02:28.294 --> 00:02:30.210
+And here were the
+parameters that were passed.
+
+58
+00:02:30.210 --> 00:02:32.560
+It was a user, "baduser."
+
+59
+00:02:32.560 --> 00:02:34.910
+The password is redacted.
+
+60
+00:02:34.910 --> 00:02:37.050
+And we can see that is
+executed on the test databse
+
+61
+00:02:37.050 --> 00:02:38.830
+using SCRAM-SHA-1.
+
+62
+00:02:38.830 --> 00:02:40.640
+Of course, we can
+also make our lives
+
+63
+00:02:40.640 --> 00:02:43.530
+a lot easier by specifying
+this configuration
+
+64
+00:02:43.530 --> 00:02:46.760
+in a configuration file, which
+is what I've done so already.
+
+65
+00:02:46.760 --> 00:02:48.780
+Here I have this
+config.yaml file.
+
+66
+00:02:48.780 --> 00:02:51.370
+And if we take a look, and
+this configuration file
+
+67
+00:02:51.370 --> 00:02:52.910
+makes a lot of sense.
+
+68
+00:02:52.910 --> 00:02:56.260
+We have our mongo.log
+going to its regular place.
+
+69
+00:02:56.260 --> 00:02:58.412
+We have dbPath going
+to its regular place.
+
+70
+00:02:58.412 --> 00:03:00.370
+And then, just like we
+saw in the last command,
+
+71
+00:03:00.370 --> 00:03:04.420
+I'm saying that out auditLog
+will be to a file for JSON.
+
+72
+00:03:04.420 --> 00:03:07.840
+And here is the name
+and path of the file.

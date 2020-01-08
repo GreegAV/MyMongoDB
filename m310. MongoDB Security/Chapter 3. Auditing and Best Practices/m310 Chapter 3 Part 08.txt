@@ -1,0 +1,43 @@
+Let's go ahead and modify our config file so we can pass the appropriate parameters to our MongoDB.
+
+The first thing we do is go ahead and delete our filter from last time.
+
+And now, in order to enable the auditing of DML operations, actually all we want to do is enable the auditing of authorization success.
+
+We can enable this auditing via server parameter.
+
+And this is how we do that.
+
+We just use a server parameter and say "auditAuthorizationSuccess" and set it to true.
+
+And now, any kind of operation that passes successfully, in this case DML or CRUD operations, should now be audited.
+
+Let's go in and try it out by starting our server.
+
+Now that our server's up and running with CRUD operations being audited, we can now go ahead and test our CRUD operation.
+
+Le'ts go ahead and switch to the my-application database.
+
+And, from here, we can go ahead and try to insert something into the products collection.
+
+And here, I'm going to insert a product called "candy bar" into the products collection.
+
+And it was inserted.
+
+And now let's go ahead and see our audit logs and see if this CRUD operation was logged.
+
+And, right here, you can see that we have an "authCheck." We actually though, we have a bunch of authChecks, but this is the authCheck that pertains to us.
+
+We can see that there is an insert into products, and then we have the following document, productName "candy bar." But it's important to point out here that there are lots of authChecks.
+
+There's an authCheck to make sure that we're Master, another authCheck to make sure that we're Master, another authCheck to make sure that we're Master.
+
+There's a lot of noise in here.
+
+So it's highly recommended that you don't actually turn on CRUD operations to be audited unless you really, really need that functionality from a security perspective, because we are significantly increasing the write load that the server has.
+
+So if this server was under a high amount of write load from clients, then the server is going to be having a bunch of additional writes just for auditing purposes.
+
+That would take away from its ability to handle the writes that are coming in from clients.
+
+And that's how you enable auditing for CRUD operations with MongoDB.

@@ -1,0 +1,128 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.570
+Let's talk a bit about how
+this course is going to work.
+
+3
+00:00:03.570 --> 00:00:05.820
+In a lot of courses, we
+would present the material
+
+4
+00:00:05.820 --> 00:00:07.980
+in a way that's very ordered.
+
+5
+00:00:07.980 --> 00:00:11.340
+Each topic is touched upon
+once, and related topics
+
+6
+00:00:11.340 --> 00:00:13.380
+are touched upon together.
+
+7
+00:00:13.380 --> 00:00:16.350
+In this course, we're going
+to try something different.
+
+8
+00:00:16.350 --> 00:00:20.100
+We'll introduce a lot
+of new tools early on,
+
+9
+00:00:20.100 --> 00:00:22.160
+but we won't go very deep.
+
+10
+00:00:22.160 --> 00:00:23.910
+We'll give you a sense
+of how to use them,
+
+11
+00:00:23.910 --> 00:00:25.260
+and then we'll move on.
+
+12
+00:00:25.260 --> 00:00:28.470
+In later chapters, we'll
+introduce scenarios
+
+13
+00:00:28.470 --> 00:00:30.024
+where something is going wrong.
+
+14
+00:00:30.024 --> 00:00:31.440
+We'll describe
+what you're seeing,
+
+15
+00:00:31.440 --> 00:00:33.440
+and when it's appropriate,
+we'll pull out a tool
+
+16
+00:00:33.440 --> 00:00:36.540
+and show you how to use it
+to perform a diagnostic test.
+
+17
+00:00:36.540 --> 00:00:38.010
+That is when you'll
+really see what
+
+18
+00:00:38.010 --> 00:00:40.920
+you want to do with that tool
+in that particular situation.
+
+19
+00:00:40.920 --> 00:00:43.620
+Maybe the tool will show
+you something useful,
+
+20
+00:00:43.620 --> 00:00:45.960
+or maybe it will eliminate
+a hypothesis for what
+
+21
+00:00:45.960 --> 00:00:47.940
+could have caused the issue.
+
+22
+00:00:47.940 --> 00:00:50.730
+During this course, we may
+touch on an individual tool
+
+23
+00:00:50.730 --> 00:00:54.030
+several times and use it
+in several different ways.
+
+24
+00:00:54.030 --> 00:00:55.590
+The net result is
+that the course
+
+25
+00:00:55.590 --> 00:00:59.190
+is going to be structured around
+issues and diagnostic questions
+
+26
+00:00:59.190 --> 00:01:01.650
+rather than MongoDB features.
+
+27
+00:01:01.650 --> 00:01:04.550
+And that's how we'll structure
+things for the course.

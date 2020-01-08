@@ -1,0 +1,19 @@
+Now that we actually understand what authentication is, we can talk about the different authentication mechanisms that are supported with MongoDB.
+
+We can divide these different authentication mechanisms into two categories-- There's client and user authentication, which deals with how clients of the database authenticate MongoDB.
+
+And then there's internal authentication, which is how different members of a replica set or sharded cluster authenticate with one another.
+
+Here are all of the different authentication mechanisms currently supported with MongoDB.
+
+In the later video, we'll go into each of these with much more detail.
+
+Of the five different mechanisms that we currently support, three of them are a part of the Community version of MongoDB.
+
+Whereas, these last two, LDAP and Kerberos, are only a part of the Enterprise version.
+
+Furthermore, SCRAM-SHA-1 and MONGODB-CR are considered challenge-response mechanisms.
+
+Whereas, X.509 is a certificate-based authentication mechanism.
+
+And LDAP and Kerberos are both external mechanisms.

@@ -1,0 +1,87 @@
+What would actually be interesting to do is allow our system to run special analytics queries on this node alone.
+
+Queries that do not serve any operation workload therefore never going to be run on the primary node.
+
+We can do this by creating such an index on a particular secondary.
+
+For that, what we will do is just shut down our server.
+
+Once the server is down, we'll bring it up as a standalone.
+
+To do that, I need to reflect the exact same DB path.
+
+The port could potentially be different, but let's keep some consistency here.
+
+But the important thing is that we are loading a MongoD using the same previously set up r2 DB path to load this machine without a replica set configuration in place.
+
+So bringing it up as a standalone node.
+
+Once I do that, and I connect to the nodes on port 27002, I can confirm that this instance is no longer running on replica set enabled mode.
+
+Not running with --replSet.
+
+Also telling me no replication enabled, which is great.
+
+This is exactly what we wanted.
+
+So let's create a specific index to support our analytical query.
+
+In this case, we want to be able to index the full address information and the restaurant's type of cuisine.
+
+So for that, we're going to we creating an index on cuisine and all members of our address sub documents, street, city, state, and zip code.
+
+Once we do that, and as you can imagine, this is going to be a large beefy index, that is only going to serve a set of specific queries from the analytical workload.
+
+If we then run our query, that looks for example for cuisine that starts with medi for Mediterranean, and in a given address zip code range, which all zip codes start with the digit 6.
+
+If we explain this query, we will see that our recently created index is, in fact, supporting our query, and therefore being used to optimize search types of queries like this one, where we are using a regex for the zip code and another regex for cuisine.
+
+So apparently we've done our job here.
+
+So let's go ahead and shut down the server once again.
+
+Once we shut down the server, we can then relaunch our MongoD by just basically relaunching with the configuration file that it previously sets.
+
+Once we have that up and running, we can then connect again to our replica set by passing along the set list and the replica set name.
+
+Once connected to the primary, let's use our designated database, which is M201.
+
+And if we run the previous analytical query that looks for cuisine and zip code in a range using regex as we've seen before on the primary node, we will see that we are no longer using the index.
+
+So what happened?
+
+Did our index just run away scared?
+
+No, not at all.
+
+Our brave index will only be utilized if we run this query on the designated secondary node.
+
+So let's do just that.
+
+Let's go ahead and connect again to our 27002 priority 0 passive node.
+
+Once we connect it, we need again to enable reading from secondaries with sets labelled k.
+
+And if we run the query again now under a replica set, no longer in a standalone mode, we can see that our index is being used to support this particular query.
+
+Let's recap what we learned today.
+
+Again, let's reinforce that it is not a usual set up for our indexes.
+
+The main purpose of our replica set is to enable high availability.
+
+Therefore, all nodes should be configured homogeneously.
+
+It is a very useful set up for attending analytical, reporting, and text-based search kind of workloads on secondary nodes alone.
+
+You should prevent your secondaries that hold those indexes to ever become primaries.
+
+If they do, given the nature of the indexes, the expected performance of your system, especially in what right workload is concerned, will be considerably impacted.
+
+So be careful about that.
+
+But then again, great for analyticals.
+
+Not very usual, but awesome.
+
+And that's what we learned today on replica set nodes with different indexes.

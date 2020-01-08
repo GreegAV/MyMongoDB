@@ -1,0 +1,109 @@
+Welcome back.
+
+In this lesson, we're going to talk about the MongoDB Agent, which is a new agent coming to office manager 402 and clear manager.
+
+We currently have three separate agents to monitor, manage and backup your deployment in cloud and Ops Manager.
+
+We have the monitoring agent, which is responsible for gathering metrics from your MongoDB deployment.
+
+We have the automation agent, which is responsible for deploying, administering and managing your MongoDB processes.
+
+And the backup agent, which is responsible for streaming oplog from your MongoDB replica set and keeping your backups in sync.
+
+Up until now, to use each individual functionality, you needed to install and manage each of these agents.
+
+Each agent was a separate binary.
+
+We've now combined the functionality into a brand new agent called the MongoDB Agent.
+
+This separate agent will handle all of the functionality of the three agents, without the need to install three separate packages.
+
+You simply install among the MongoDB Agents and activate which function you wish to use.
+
+It's important to note that as before, if you do not have any process imported for automation, the MongoDB Agent will not automate the processes.
+
+Automation is not mandatory, but definitely recommended.
+
+Let's install the new agent and deploy a replica set.
+
+OK, so up to this point, the entire installation process has been exactly the same as it was with previous agents.
+
+Let's start the agent process and jump into the UI to see if our agent is pinging back the Cloud Manager.
+
+OK, great.
+
+We can see that our agent is pinging by the Cloud Manager.
+
+Now we need to activate which functions we're going to use.
+
+As we're using a single server here, we're going to activate all functions on this server.
+
+As you can see, moderating and backup are displayed in the UI.
+
+And that's because automation will not be used unless you explicitly manage your deployment.
+
+If we were using multiple servers, we could activate one or more functions on each agent based on the needs, and how we have our deployment configured.
+
+Let's activate backup a monitoring on this agent.
+
+OK, so our changes are deployed and our agent is ready to go.
+
+OK, so let's add a new replica set from the Deployment page.
+
+When you come to the replica set configuration page, you can either manually enter all the values, or you can use the autofill option, which is what we're going to use here.
+
+And then we just click Create Replica Set.
+
+Review and Deploy and Confirm Deploy.
+
+OK, we can see now that our change is successfully deployed.
+
+We have a replica set.
+
+And that's it.
+
+You can now manage, monitor and backup MongoDB with a single agent.
+
+So what happens if you already have the standard agents installed and running?
+
+No problem.
+
+If you're using managed agents, i.e., your agents are currently managed by the automation agent, when the MongoDB Agent is available, you will see the usual banner notification that your agents are out of date.
+
+You'll then be guided through a process in the UI, and the agents will be updated to the MongoDB Agent and assigned the correct functions.
+
+So at a high level, the steps are as follows.
+
+The automation agent stops any monitoring of backup agents.
+
+Then enables monitoring and backup on the servers where monitoring or backup were running as an agent.
+
+It removes the stopped monitoring and backup agent binaries.
+
+And unlocks the MMS monitoring agent or MMS backup agent users in the MongoDB instance, so that you can delete them if desired.
+
+The MongoDB Agent uses the MMS automation agent user to connect to your instances.
+
+OK, so if you're using self managed agents and manage your agents yourself, the process is slightly more involved.
+
+The steps are as follows.
+
+When the automation agent is available, you'll see the banner notification that your monitoring and backup agent are out of date.
+
+When you're ready to update, click Update in the banner.
+
+A workflow that guides you through the update process starts.
+
+Once the MongoDB Agent is installed on the server, it enables the monitoring and backup where they existed as a standalone agent before.
+
+The MongoDB Agent puts the old monitoring and backup agents into standby mode, and no longer shows them in the UI.
+
+We've created a detailed FAQ in our docs, which we've linked in the notes for this lesson.
+
+Rest assured, you will be supported with the new agent and the upgrade process.
+
+So let's recap.
+
+We now have one agent which is responsible for monitoring, backup and automation.
+
+You no longer need to install three separate agents to manage your MongoDB deployment.

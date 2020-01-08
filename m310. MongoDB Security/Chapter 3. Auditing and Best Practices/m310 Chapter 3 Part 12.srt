@@ -1,0 +1,341 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.580
+In this video, I'd like to talk
+about vulnerability reports
+
+3
+00:00:03.580 --> 00:00:04.950
+with MongoDB.
+
+4
+00:00:04.950 --> 00:00:09.950
+At MongoDB, we take the security
+of our database very seriously.
+
+5
+00:00:09.950 --> 00:00:12.990
+A part of our mission
+to keep MongoDB secure
+
+6
+00:00:12.990 --> 00:00:16.764
+includes vulnerability
+reporting from our users.
+
+7
+00:00:16.764 --> 00:00:18.180
+If you believe you
+have discovered
+
+8
+00:00:18.180 --> 00:00:21.210
+a vulnerability in MongoDB,
+or have experienced a security
+
+9
+00:00:21.210 --> 00:00:24.530
+incident related to MongoDB,
+please report the issue
+
+10
+00:00:24.530 --> 00:00:26.710
+to aid in its resolution.
+
+11
+00:00:26.710 --> 00:00:28.840
+We've tried to make
+reporting of vulnerability
+
+12
+00:00:28.840 --> 00:00:30.840
+as easy as possible.
+
+13
+00:00:30.840 --> 00:00:33.100
+There are two ways to
+report a potential MongoDB
+
+14
+00:00:33.100 --> 00:00:34.590
+vulnerability.
+
+15
+00:00:34.590 --> 00:00:37.370
+The first way, which is the
+recommended notification
+
+16
+00:00:37.370 --> 00:00:40.010
+method, is to submit a
+ticket to the SECURITY
+
+17
+00:00:40.010 --> 00:00:42.140
+Project on our JIRA.
+
+18
+00:00:42.140 --> 00:00:44.250
+The second way is to
+simply just send an email
+
+19
+00:00:44.250 --> 00:00:46.600
+to security@mongodb.com.
+
+20
+00:00:46.600 --> 00:00:48.350
+If you would like to
+encrypt your message,
+
+21
+00:00:48.350 --> 00:00:50.790
+you can use our PGP public
+key encryption, which
+
+22
+00:00:50.790 --> 00:00:52.700
+will be linked below the video.
+
+23
+00:00:52.700 --> 00:00:54.860
+All vulnerability
+reports will be
+
+24
+00:00:54.860 --> 00:00:57.380
+responded to within 48 hours.
+
+25
+00:00:57.380 --> 00:00:59.240
+In order to best serve
+MongoDB's security
+
+26
+00:00:59.240 --> 00:01:03.100
+team and our developers,
+all vulnerability reports
+
+27
+00:01:03.100 --> 00:01:05.680
+should contain as much
+information as possible.
+
+28
+00:01:05.680 --> 00:01:07.600
+And in particular,
+these following items
+
+29
+00:01:07.600 --> 00:01:09.641
+are highly recommended.
+
+30
+00:01:09.641 --> 00:01:11.390
+Of course, you're going
+to want to include
+
+31
+00:01:11.390 --> 00:01:13.306
+the name of the product
+that you've identified
+
+32
+00:01:13.306 --> 00:01:14.840
+a potential issue with.
+
+33
+00:01:14.840 --> 00:01:17.170
+And then next, you can include
+any common vulnerability
+
+34
+00:01:17.170 --> 00:01:18.350
+information.
+
+35
+00:01:18.350 --> 00:01:22.200
+If there's a CVSS score, which,
+if you're not familiar with,
+
+36
+00:01:22.200 --> 00:01:25.340
+is a score from one to
+10, 10 being the worst,
+
+37
+00:01:25.340 --> 00:01:28.270
+that rates the severity
+of a vulnerability.
+
+38
+00:01:28.270 --> 00:01:30.950
+If the vulnerability is a
+publicly- or commonly-known
+
+39
+00:01:30.950 --> 00:01:35.160
+type of vulnerability, then
+please also include the CVE,
+
+40
+00:01:35.160 --> 00:01:39.690
+the Common Vulnerabilities
+and Exposures identifier.
+
+41
+00:01:39.690 --> 00:01:42.670
+And of course, if you're open
+to be contacted by MongoDB
+
+42
+00:01:42.670 --> 00:01:45.660
+security staff, please
+include any necessary contact
+
+43
+00:01:45.660 --> 00:01:46.860
+information.
+
+44
+00:01:46.860 --> 00:01:49.470
+If needed, MongoDB
+representatives
+
+45
+00:01:49.470 --> 00:01:52.660
+will serve a conference call to
+exchange information regarding
+
+46
+00:01:52.660 --> 00:01:53.947
+the vulnerability.
+
+47
+00:01:53.947 --> 00:01:55.530
+I would like to point
+out that MongoDB
+
+48
+00:01:55.530 --> 00:01:59.190
+takes all of our vulnerability
+reports very seriously.
+
+49
+00:01:59.190 --> 00:02:01.860
+We validate all submitted
+vulnerabilities and will
+
+50
+00:02:01.860 --> 00:02:04.630
+use JIRA to track all
+communications regarding
+
+51
+00:02:04.630 --> 00:02:07.530
+a vulnerability, including
+requests for clarification
+
+52
+00:02:07.530 --> 00:02:09.509
+or additional information.
+
+53
+00:02:09.509 --> 00:02:12.370
+Finally, we ask that if you
+find a potential security
+
+54
+00:02:12.370 --> 00:02:14.560
+vulnerability, that
+you do not publicly
+
+55
+00:02:14.560 --> 00:02:17.750
+disclose any information
+regarding the vulnerability
+
+56
+00:02:17.750 --> 00:02:19.495
+or exploit the issue.
+
+57
+00:02:19.495 --> 00:02:20.870
+This will give us
+the opportunity
+
+58
+00:02:20.870 --> 00:02:24.660
+to analyze the vulnerability,
+to respond to the notification,
+
+59
+00:02:24.660 --> 00:02:28.050
+and to notify key users,
+customers, and partners.
+
+60
+00:02:28.050 --> 00:02:30.660
+The amount of time required
+to validate a reported
+
+61
+00:02:30.660 --> 00:02:33.250
+vulnerability depends
+on the complexity
+
+62
+00:02:33.250 --> 00:02:34.970
+and the severity of the issue.
+
+63
+00:02:34.970 --> 00:02:37.600
+We take all vulnerabilities
+very seriously.
+
+64
+00:02:37.600 --> 00:02:39.100
+And we will always
+ensure that there
+
+65
+00:02:39.100 --> 00:02:41.380
+is a clear and open
+channel of communication
+
+66
+00:02:41.380 --> 00:02:43.340
+with the reporter.
+
+67
+00:02:43.340 --> 00:02:45.460
+After validating
+an issue, MongoDB
+
+68
+00:02:45.460 --> 00:02:47.470
+will coordinate a public
+disclosure of the issue
+
+69
+00:02:47.470 --> 00:02:49.700
+with the reporter in
+a mutually-agreed time
+
+70
+00:02:49.700 --> 00:02:50.830
+frame and format.
+
+71
+00:02:50.830 --> 00:02:54.590
+If required or requested, the
+reporter of a vulnerability
+
+72
+00:02:54.590 --> 00:02:58.020
+will receive credit in the
+published security bulletin.

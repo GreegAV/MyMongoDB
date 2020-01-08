@@ -1,0 +1,73 @@
+Now let's talk about exact matches for array fields.
+
+Again, we're setting the stage here for a complete understanding of the MongoDB query language, including using a variety of operators that allow us to do a number of very sophisticated types of queries.
+
+So in considering equality matches on arrays, we can consider matches on the entire array, matches based on any element in the array, and those based on a specific element, say, matching only arrays whose first element matches a specific criteria.
+
+We can also look at more complex matches using operators.
+
+We'll do that in other lessons.
+
+Here we're looking at our video database in Compass.
+
+Let's take a look at this same database in the Mongo shell.
+
+OK, so here, in the Mongo shell, I'm connected to our class Atlas cluster.
+
+Let's use the video database, and then, in this first example, we'll filter for an exact match to an array.
+
+Now for these types of filters, matching documents must have a value that is exactly what we've entered as the array.
+
+So for the query cast, and then looking for Jeff Bridges and Tim Robbins-- and let me pretty that up-- matching documents will have a cast field that has as its value an array with exactly two elements-- Jeff Bridges, followed by Tim Robbins, in that order.
+
+There's just one movie that matches these criteria.
+
+It's a documentary called "Making of Arlington Road." Note that the array field matches our filter exactly.
+
+Also note that, due to the semantics of array matches, the movie "Arlington Road" itself does not match, because it also lists Joan Cusack and Hope Davis, in addition to Jeff Bridges and Tim Robbins, in the cast.
+
+Let's do a quick query for that one.
+
+And here we can see that Joan Cusack and Hope Davis are also listed in the cast.
+
+Since our original query specified that we want cast to be exactly this array, this particular document does not match.
+
+Now it's more common that we filter for a single element of an array field.
+
+To do this in MongoDB, we can simply filter for, say, Jeff Bridges, like this.
+
+Matching documents contain the string Jeff Bridges as one element of the array field cast.
+
+We can see Jeff Bridges is here.
+
+If we scroll through the array documents, he appears in every single one of the cast arrays, sometimes as the first actor listed, and sometimes in other positions, as in here.
+
+What's nice about this syntax is that it's exactly the same as selectors for scalar values.
+
+In some situations, we want to match a specific element of an array.
+
+Actors are frequently listed in order of precedence, with those whose contributions to a film that are highest occurring earlier in the list.
+
+For example, the star of a movie will appear before supporting actors, as we see in the document for "Iron Man." In this movie, Robert Downey Jr.
+
+is the star, with Jeff Bridges playing a supporting role, so Robert Downey Jr.
+
+appears first.
+
+The MongoDB query language enables us to specify that we want to match array elements occurring in a specific position in an array.
+
+To query for those movies in which Jeff Bridges was listed first among cast members, we can use dot notation and specify an array index.
+
+For this, it's going to be a little bit easier to see the difference if we go back to Compass.
+
+So here in Compass, a query for cast Jeff Bridges gives us 114 documents.
+
+But if we query for Jeff Bridges in position 0 for the cast field, then we have just 56 documents, and we can see that in each and every one of these returned results, Jeff Bridges is appearing first in the cast array.
+
+Now again, just to remind you, if we want to do this type of query in the Mongo shell, it's going to be necessary to enclose our key in quotes.
+
+And again, here we can see quickly that Jeff Bridges is listed first for all of these.
+
+Now we've looked at equality matches on arrays against the entire array, matching any element of the array, and then those based on a specific element of the array.
+
+You should now have a solid understanding of the syntax for the most common read operations on arrays.

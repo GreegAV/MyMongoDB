@@ -1,0 +1,339 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.240
+In this video, let's continue
+talking about single field
+
+3
+00:00:03.240 --> 00:00:04.500
+indexes.
+
+4
+00:00:04.500 --> 00:00:06.000
+In the last video,
+we saw how we can
+
+5
+00:00:06.000 --> 00:00:08.700
+create an index
+on a single field
+
+6
+00:00:08.700 --> 00:00:11.820
+to query on a single
+value or to use
+
+7
+00:00:11.820 --> 00:00:14.130
+dot notation to query
+on a single value
+
+8
+00:00:14.130 --> 00:00:16.350
+inside of a subdocument.
+
+9
+00:00:16.350 --> 00:00:19.830
+In this video, let's talk about
+using single field indexes
+
+10
+00:00:19.830 --> 00:00:22.260
+to query on ranges of
+values and querying
+
+11
+00:00:22.260 --> 00:00:24.930
+on several distinct values.
+
+12
+00:00:24.930 --> 00:00:26.430
+Earlier, we saw
+how to use an index
+
+13
+00:00:26.430 --> 00:00:29.901
+to get just one value for
+a social security number.
+
+14
+00:00:29.901 --> 00:00:31.275
+Here, we're going
+to try to match
+
+15
+00:00:31.275 --> 00:00:35.590
+for a range of social
+security numbers.
+
+16
+00:00:35.590 --> 00:00:39.340
+And if we look at our explain
+output, as we would expect,
+
+17
+00:00:39.340 --> 00:00:41.760
+we're able to do an index scan.
+
+18
+00:00:41.760 --> 00:00:43.540
+And by doing this
+index scan, when
+
+19
+00:00:43.540 --> 00:00:45.460
+we look at execution
+stats, we can
+
+20
+00:00:45.460 --> 00:00:48.160
+see that we only had
+to examine 49 documents
+
+21
+00:00:48.160 --> 00:00:50.200
+to return 49 documents.
+
+22
+00:00:50.200 --> 00:00:52.900
+So we didn't have to look at
+any superfluous documents, which
+
+23
+00:00:52.900 --> 00:00:54.649
+is really, really
+awesome, because we were
+
+24
+00:00:54.649 --> 00:00:58.210
+able to use our 49 index
+keys to directly get those 49
+
+25
+00:00:58.210 --> 00:01:00.000
+documents.
+
+26
+00:01:00.000 --> 00:01:01.980
+Rather than using
+a range, what if I
+
+27
+00:01:01.980 --> 00:01:06.100
+wanted to query on a set
+of social security numbers?
+
+28
+00:01:06.100 --> 00:01:11.720
+Well, as you'll see, we're
+still able to do an index scan
+
+29
+00:01:11.720 --> 00:01:13.230
+as our winning plan.
+
+30
+00:01:13.230 --> 00:01:15.600
+And you'll see, if we
+look under executionStats,
+
+31
+00:01:15.600 --> 00:01:17.580
+we only had to examine
+three documents
+
+32
+00:01:17.580 --> 00:01:21.360
+to find the three documents
+that matched our set.
+
+33
+00:01:21.360 --> 00:01:23.730
+We did have to look at
+six index keys, which
+
+34
+00:01:23.730 --> 00:01:25.750
+is more than we would
+probably expect,
+
+35
+00:01:25.750 --> 00:01:27.960
+which is a little less
+efficient than it could be.
+
+36
+00:01:27.960 --> 00:01:31.190
+But it's still much better
+than doing a collections scan.
+
+37
+00:01:31.190 --> 00:01:34.470
+These extra index keys are due
+to the algorithm the system
+
+38
+00:01:34.470 --> 00:01:36.300
+used, which can
+involve overshooting
+
+39
+00:01:36.300 --> 00:01:38.340
+the values we're looking for.
+
+40
+00:01:38.340 --> 00:01:40.290
+I also want to note
+that I can specify
+
+41
+00:01:40.290 --> 00:01:43.120
+multiple fields in my query.
+
+42
+00:01:43.120 --> 00:01:45.720
+We can still use an index,
+even if we're only touching
+
+43
+00:01:45.720 --> 00:01:49.600
+one of the multiple fields.
+
+44
+00:01:49.600 --> 00:01:51.510
+So when we look
+our explain output,
+
+45
+00:01:51.510 --> 00:01:53.540
+we can see what's going on here.
+
+46
+00:01:53.540 --> 00:01:55.970
+And we can see here, by
+looking at our winningPlan,
+
+47
+00:01:55.970 --> 00:01:57.450
+that what we're
+doing is, as we're
+
+48
+00:01:57.450 --> 00:02:00.870
+doing an index scan on the
+social security number,
+
+49
+00:02:00.870 --> 00:02:05.040
+to filter down to the three
+documents that match our query.
+
+50
+00:02:05.040 --> 00:02:07.050
+And then from those
+three documents,
+
+51
+00:02:07.050 --> 00:02:09.720
+we're then filtering
+on which of those three
+
+52
+00:02:09.720 --> 00:02:12.690
+match our last name predicate.
+
+53
+00:02:12.690 --> 00:02:15.210
+So if a query is
+matching documents
+
+54
+00:02:15.210 --> 00:02:17.760
+on two or more fields,
+but the database only
+
+55
+00:02:17.760 --> 00:02:20.960
+has a single field index
+for one of them, what
+
+56
+00:02:20.960 --> 00:02:25.080
+will happen is the database
+will filter using the index
+
+57
+00:02:25.080 --> 00:02:27.600
+and then it will then
+look at those documents
+
+58
+00:02:27.600 --> 00:02:31.860
+and fetch only the ones that
+match the other predicates.
+
+59
+00:02:31.860 --> 00:02:35.010
+Later, you'll see how we can
+use compound indexes to get even
+
+60
+00:02:35.010 --> 00:02:37.140
+more efficiency in our queries.
+
+61
+00:02:37.140 --> 00:02:39.660
+But this is the behavior you
+should expect from single field
+
+62
+00:02:39.660 --> 00:02:40.920
+indexes.
+
+63
+00:02:40.920 --> 00:02:42.750
+So let's recap
+what we've learned.
+
+64
+00:02:42.750 --> 00:02:44.490
+In these last two
+videos, we've learned
+
+65
+00:02:44.490 --> 00:02:46.650
+that we can use a
+single field index
+
+66
+00:02:46.650 --> 00:02:51.850
+to query on a single value or
+to query on a range of values.
+
+67
+00:02:51.850 --> 00:02:54.120
+We can also use it
+for dot notation
+
+68
+00:02:54.120 --> 00:02:56.130
+when using subdocuments.
+
+69
+00:02:56.130 --> 00:02:57.930
+And finally, we've
+seen that we can use it
+
+70
+00:02:57.930 --> 00:03:02.900
+for several distinct values,
+as I have a single query.
+
+71
+00:03:02.900 --> 00:03:06.550
+And that's what you need to
+know about single field indexes.

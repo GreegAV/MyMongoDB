@@ -1,0 +1,103 @@
+The most interesting type of relationship is the one-to-many relationship.
+
+First, because if all our data is only composed of one-to-one relationships, a spreadsheet application like Excel could do the job, at least for a small data set.
+
+As for the many-to-many relationships, most of them can be expressed as two one-to-many relationships.
+
+We will describe this in more detail in the many-to-many relationship lesson.
+
+A one-to-many relationship means that an object of a given type is associated with n objects of a second type, while the relationship in the opposite direction means that each of the objects of the second type can only be associated with one object on the one side.
+
+As an example of this relationship, we use a person and their credit cards, or a blog entry and its comments.
+
+A person has n credit cards, but each of these credit cards belongs to one and only one person.
+
+Using MongoDB and its document model, give us a few ways to represent this kind of relationship.
+
+We can embed each document from the many side into the document on the one side.
+
+Or vise versa, we can embed the document from the one side into each document on the many side.
+
+Instead of using a single collection and embedding the information in it, we keep the documents in two separate collections and reference documents from one collection in documents of the other collection.
+
+Using our product catalog use case, let's have a look at all of these representation of the one-to-many relationship.
+
+The first representation embeds the end documents as an array of sub documents.
+
+In our product catalog, we keep the top reviews of an item within the item itself because we want to display these reviews once the item gets retrieved from the database.
+
+In other words, items are the main objects we access.
+
+And when we do so, we want to bring in all the associated top reviews with them.
+
+For simple applications where the number of embedded documents is small,, this is the most common representation.
+
+The information that is needed together stays together.
+
+As for quartering on the many side, which is now embedded, we use multi key indexes, which are designed for indexing values in array fields.
+
+The second representation of one-to-many relationships is to embed the document from the one side in each of the documents associated with it from the many side.
+
+Let's use an as the count of document associated to our document on the one side.
+
+A good example will be an address and the order's delivery to the address.
+
+Over time, because many orders were delivered to the same address, we have a one-to-many relationship between address and orders.
+
+Application are more likely to handle orders than trying to figure out everything shipped to a given location.
+
+The access pattern's focus is on orders, not addresses.
+
+As a result, it makes more sense for us to store the address, the one side of the relationship, on every order, the many sides of the relationship, rather than the other way around.
+
+This representation is less often used.
+
+The main disadvantage of this representation is that the embedded object must be duplicated in many locations.
+
+However, the nature of the embedded information is static-- hardly ever changes-- such as the shipping address of the order.
+
+It is, in fact, better to store it in the order document itself.
+
+If the address for a given customer changes in the future, it does not that affect all the previous orders and where they got delivered.
+
+The third representation is to have two collections.
+
+From the one side, we reference the many side.
+
+To do so, we need an array of references.
+
+In our zips collection, which contain our zip codes, we create an array of stores where each element in the array is a store ID value that identifies documents in the store's collection.
+
+The referencing representations are great.
+
+If we can't or don't need to embed the remaining entity information, we get to know all the references, the stores, without making a second query on the store's collection.
+
+If the entries in the array are descriptive enough, we are saving ourselves some queries.
+
+However, in this representation, we need to keep in sync the area references and their reference documents.
+
+If we need the reference document, we must also delete the reference to this document.
+
+MongoDB does not currently support foreign keys or cascade deletes, therefore there is no way for all references to automatically be removed on document deletion.
+
+The application must perform all of this sort of data management.
+
+More commonly, references are stored in the documents on the many side of a one to many relationship.
+
+For example, we may have a collection of zip codes, each zip code adding possibly many stores in it.
+
+By adding a single field called zip in each of my stores documents, I can reference the document in the zips collection.
+
+Compared to the previous representation, if we delete a store, there is no additional reference to remove because the reference is inside the document we are removing.
+
+To recap this lesson, when representing one-to-many relationships, there is a lot of choices-- embed or reference and choose the side between one and many.
+
+Duplication may occur when embedding on the many side.
+
+However, it may be OK or even preferable.
+
+Prefer embedding over referencing for simplicity, or when there is a small number of reference documents, as all related information is kept together.
+
+Embed on the side of the most queried collection.
+
+Prefer referencing when the associated documents are not always needed with the most often queried documents.

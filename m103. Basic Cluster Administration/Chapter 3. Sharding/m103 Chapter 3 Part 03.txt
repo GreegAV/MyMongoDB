@@ -1,0 +1,161 @@
+So now that we've gone over the architecture of a basic sharded cluster MongoDB, we're actually going to build one in our course virtual environment.
+
+So, right now, all we have is a replica set M103 repel.
+
+This is just a normal replica set, but eventually it will become the first shard in our cluster.
+
+This diagram is the bare minimum required to start a sharded cluster-- essentially, just the mongos, a config server replica set, and at least one shard.
+
+The main things we have to build are the CSRS and the mongos.
+
+The rest of the work will just be connecting everything together.
+
+The first thing we're going to build is our config servers.
+
+So this is the configuration file for one of our config servers.
+
+It's going to be one of the nodes in the CSR's, but it's just a regular MongoD, so it's still going to have a port, a DB path, and a log path.
+
+Now the config servers that a very important role in the shard cluster.
+
+So we have to specify, in the configuration, that this is in fact a config server.
+
+So, here, I'm just going to use that file to start up a mongoD process.
+
+And, here, I'm going to do the same thing for the other two nodes in the CSRS.
+
+And you can find those config files in the lecture notes.
+
+They look very similar to the first one.
+
+So we enable this replica set to use authentication, and the key file authentication is fine because we already created our key file.
+
+We're going to share the same key file in this setup since all mongoD instances are running on the same virtual machine.
+
+But in a real production environment, X509 certificates would be the way to go.
+
+Having a shared password like the key file, when shared across multiple machines, increases the risk of that file being compromised.
+
+So just keep that in mind.
+
+Here, I'm just initiating the config server replica set.
+
+And here, I just use the localhost exception to create our super user.
+
+So now, I'm just going to authenticate as the super user.
+
+One means that it worked.
+
+And now we can start adding those to the set.
+
+Here's our second node, and our third, and now we have a complete config server replica set.
+
+I'm just going to verify that with rs.ismaster.
+
+And it looks like the set has three nodes in it.
+
+So now we have our CSRS up and running, we can start up mongos and then point mongos in the direction of our config server replica set.
+
+So this is the configuration file for mongos, and the first thing you're going to notice is that there is no DB path.
+
+That's because mongos doesn't need to store any data.
+
+All of the data used by mongos is stored on the config servers.
+
+So in the sharding section, we've specified those.
+
+And note that we specified the entire replica set instead of the individual members.
+
+We also enabled key file authentication, so we're going to need to authenticate to mongos.
+
+But it will inherit the same users as their config servers, and we'll see that in a minute.
+
+So this is the command we use to start mongos.
+
+We passed the config file, like we did before.
+
+But, note that this is not a mongoD process.
+
+Mongos is a different process with different properties.
+
+So just bear that in mind.
+
+So, as we saw before, mongos has auth enabled, and it's also going to inherit any users that we created on the config servers.
+
+So this user is actually ready to go.
+
+And it looks like we're in.
+
+Just going to check the status here.
+
+So, sh.status is the most basic way to get sharding data from mongos.
+
+And if we take a look at the output, we can see that we have the number of mongos's currently connected, and we also have the number of shards.
+
+Right now, this is empty because we don't have any shards.
+
+But, you can probably see where this is going.
+
+Right now, we have a mongos running with the config servers.
+
+And actually we also have a replica set that we can use.
+
+We just need to tweak the configuration so we can use it as a shard node.
+
+So this is the configuration file for the first node in our replica set, and I've changed it slightly.
+
+I've added this restriction on the cache size and gigabytes, because Vagrant only has permission to use two gigabytes of memory.
+
+So I wanted to reduce the stress on the overall environment.
+
+This is generally not good practice in production, but it's going to be necessary once we start sharding collections in this cluster.
+
+So this is the one line that we have to add if we want to enable sharding on this node.
+
+This line is going to tell mongos, hey, you know you can use me as a shard node in your cluster.
+
+We have to add this line to every single node in the replica is set.
+
+So I just changed the config files for all three nodes in our set, but the nodes still need to be restarted in order to account for those changes.
+
+We're going to do a rolling upgrade in order to do this.
+
+Which means, we're going to upgrade the secondaries first, then bring them back up, step down the current primary, and then upgrade that last node.
+
+Here, I'm just connecting to one of the secondary nodes.
+
+Just going to switch to the admin-- database, and shutdown, this node.
+
+And here, I'm just starting a backup with the new configuration.
+
+Do the same thing for our third node.
+
+And here, I'm starting up the third node with a new configuration.
+
+So now that both secondaries have been upgraded for the new configuration, I'm going to connect to the primary, and then step it down so I can upgrade that one, too.
+
+I'm just going to force an election so this node becomes a secondary, and it worked.
+
+Now I'm going to shut this node down as well.
+
+So now I'm just starting up our last node with the new configuration, and it worked.
+
+So now we've successfully enabled sharding on this replica set.
+
+Now I'm going to connect back to mongos.
+
+So once I'm connected back to mongos, I can add the shard that we just enable sharding on.
+
+And we specified the entire replica set, so we only need to specify one node in order for mongos to discover the current primary of this replica set.
+
+And, it looks like it worked.
+
+I'm just going to check sh.status, and our list of shards now has one shard in it.
+
+And as we can see, we only specified one node, but mongo was able to discover all the nodes in the set.
+
+So just to recap here-- we covered how to launch mongos and a config server replica set.
+
+We learned how to enable sharding on a replica set, and we did so by way of a rolling upgrade.
+
+And we added shards to our cluster.

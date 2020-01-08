@@ -1,0 +1,5 @@
+At 2:18, Kirby runs the command to get the subject of the certificate. Ensure you use the same command, which includes -nameopt RFC2253, to get the exact subject to create your users with the fields properly ordered.
+
+For example, to retrieve the subject from the client.pem certificate, you would run:
+
+openssl x509 -in client.pem -inform PEM -subject -nameopt RFC2253 -noout

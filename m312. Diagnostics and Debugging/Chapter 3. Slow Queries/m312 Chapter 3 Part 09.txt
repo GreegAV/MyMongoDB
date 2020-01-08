@@ -1,0 +1,113 @@
+So in my system here, I can see that there's been a normal flow of connections, then a spike in this place here, and then another spike here.
+
+Now, connection spikes are generally correlated with something that the application is doing.
+
+New connections being established means that you might have new clients or new threads of those clients establishing connections to do some work.
+
+There are a couple of things that also can provoke this which are not that good.
+
+Well, exhausting connection pools is probably an indicator and a direct correlation between how your driver's configured and how connections have you been enabling your system to work with.
+
+The drivers will try to reuse as many connections as possible by maintaining a connection pool.
+
+If those connections pools are exhausted, they will have specific configuration to allow you to establish new connections.
+
+But once the connection pool is exhausted, it will try to connect more and more and more.
+
+So seeing exactly why there's some exhaustion of your connection pools might be a good indicator from debugging perspective to see if your application is actually doing what it should be doing.
+
+There can also be occasional incorrect connections to your production environment.
+
+Let's say, for example, that we are running a long-lasting tests that inadvertently connects to your production environment.
+
+Those can also be identified in terms of connection spikes in your system.
+
+And obviously, there's the analytical workload load and reporting tools.
+
+If they are supposed to connect your system, you eventually see the spikes in the numbers of connections and some specific operations that those tools will do.
+
+Now, if your connections keep increasing but not a lot of work or workload is associated with that increase, that might be provoked by two different situations, either stale operations or incorrect credentials used by the application.
+
+In this case in particular, for us to analyze exactly what happened in terms of number of workload, we need to see if the number of connections, especially in these two setups here, [?
+
+did ?] actually correlated with more operations per second.
+
+We can see that there's a small spike in number of operations per second here, especially commands.
+
+There are some queries going on, not a lot of get mores.
+
+So there's something going on here.
+
+And there's some document metrics as well-- some operations that are related with return documents per queries.
+
+But the connections keeping increasing at a completely different pace than the number of returned documents and the number of operations per second.
+
+That might not be a very good sign.
+
+Actually, it's not at all a extremely good sign.
+
+For us to understand exactly what's going on, we also need to see the number of cursors open.
+
+Now, if I need more cursors-- and here, I can totally see that there's been an increase once we jumped the first level of number of connections in the number of cursors open.
+
+But once I increase it again a second time, no more curses were needed to be opened.
+
+So that means that the database is actually being able to fulfill the number of requests that these new connections are establishing with the same number of cursors.
+
+Now, this can be correlated with a particular situation where we have very, very, very bad queries.
+
+And for that, we need to analyze this particular metric here, which is query targeting.
+
+Query targeting will allow us to identify long-lasting non-indexed queries, which as you all know from this chapter, that's a very bad thing.
+
+So identifying them-- it's our mission.
+
+Here, I can tell you right now that this is not an ideal scenario for a couple of reasons.
+
+Let's look in more detail.
+
+The query targeting metric allows us to see two different ratios, the number of scans per returned documents-- so number of scan entries in an index-- and the number of returned documents consecutive to that number of scans.
+
+As you can see here, it's pretty much flat to almost 0-- so very little index scanning going on here.
+
+The other ratio is the scanned objects per returned documents.
+
+This gives us the information on how many documents we are scanning divided by the number of documents returned.
+
+Now, as you can see here, this is looking pretty bad.
+
+Why?
+
+Well, we are scanning a lot of different documents and returning a very small amount of those documents in return.
+
+This is basically clear indication that the queries that our clients are doing in this particular stage here are all non-indexed queries.
+
+Once you target such a thing and correlate it back with the number of connections being increasing constantly and not a lot of document metrics being returned, for example, and not a lot of different operations per second, you might want to go back to your developers and ask, why do we need so many clients, or why are we launching so many requests to our system if the total amount of work in our system is actually pretty much not significant?
+
+Now, once you have clearly identified the situations, apart from going back to your developer team and start doing some questions about why did we launch at this point and this point and again at this point so many different connections, you should also analyze the logs of these machines to pinpoint what kind of queries are being done by these clients.
+
+So you'll have much more clear information of what kind of queries are our system doing.
+
+And for that, we will need tools like mlogvis or just analyzing the logs of your mongod instance.
+
+So just to recap what we've learned, keeping an historical monitoring data-- it's quite important to analyze how the system is doing and how we can predict the system application will be doing in the future.
+
+Watching out for spikes in connections or spikes in the number of operations per second, cursors, and so on will allow us to correlate values between them.
+
+And if they out of sync, you need to come back to your developers and ask educated questions.
+
+Make sure you use mlogvis and other tools to understand exactly what those connections are doing, what those clients are doing.
+
+Do not forget that some spikes might skew out your data.
+
+So make sure you know what you're looking for.
+
+And obviously, don't forget to spot long-lasting queries or non-indexed queries to understand how those can affect your overall performance of the system and get to the bottom of why they exist and why they are present.
+
+Now, changes, if notified and controlled, will still be observed by the monitoring tools.
+
+Make sure you keep an eye on a change log of your application.
+
+Ask your team to keep you up-to-date on incoming changes.
+
+If they don't, given that you have all this information and the detailed information of mlogvis, the profiler, the explain commands, you'll be able to go back with a great deal of detail and help them solve some potential issues.

@@ -1,0 +1,773 @@
+1
+00:00:00,000 --> 00:00:00,217
+
+
+2
+00:00:00,217 --> 00:00:01,800
+Now let's look at
+how to query MongoDB
+
+3
+00:00:01,800 --> 00:00:04,740
+so that we can locate just
+those documents that match
+
+4
+00:00:04,740 --> 00:00:06,690
+a specific set of filters.
+
+5
+00:00:06,690 --> 00:00:10,260
+In doing this, we'll be sending
+a request to our MongoDB
+
+6
+00:00:10,260 --> 00:00:14,280
+cluster and MongoDB will find
+in return only those documents
+
+7
+00:00:14,280 --> 00:00:16,470
+that meet our stated criteria.
+
+8
+00:00:16,470 --> 00:00:19,140
+Compass provides a rich
+point and click interface
+
+9
+00:00:19,140 --> 00:00:20,670
+for filtering collections.
+
+10
+00:00:20,670 --> 00:00:23,430
+Let's look at some examples
+of filtering collections using
+
+11
+00:00:23,430 --> 00:00:26,820
+the citibike.trips collection.
+
+12
+00:00:26,820 --> 00:00:29,670
+This dataset contains
+documents recording trips
+
+13
+00:00:29,670 --> 00:00:32,729
+taken within New York
+City using the Citi Bike
+
+14
+00:00:32,729 --> 00:00:37,050
+network of publicly accessible
+bicycles and stations.
+
+15
+00:00:37,050 --> 00:00:38,820
+The documents in this
+collection provide
+
+16
+00:00:38,820 --> 00:00:43,080
+details on the start and end
+stations, duration, start
+
+17
+00:00:43,080 --> 00:00:47,930
+and end day and time for
+trips taken using a city bike.
+
+18
+00:00:47,930 --> 00:00:50,930
+There's also a very small amount
+of demographic information,
+
+19
+00:00:50,930 --> 00:00:52,990
+including birth year and gender.
+
+20
+00:00:52,990 --> 00:00:55,160
+Now as you're aware,
+the graph to the right
+
+21
+00:00:55,160 --> 00:00:56,990
+for each field in the
+Compass schema view
+
+22
+00:00:56,990 --> 00:00:59,270
+provides a summary of
+the range of values
+
+23
+00:00:59,270 --> 00:01:02,930
+found within a given field for
+documents in the collection.
+
+24
+00:01:02,930 --> 00:01:05,450
+If we hover over
+a graph element,
+
+25
+00:01:05,450 --> 00:01:08,690
+we can see what values
+that element represents.
+
+26
+00:01:08,690 --> 00:01:10,700
+Now if we click on
+a graph element,
+
+27
+00:01:10,700 --> 00:01:14,480
+we open up a whole new area
+of Compass functionality.
+
+28
+00:01:14,480 --> 00:01:18,110
+As an example, I've clicked on
+this bar within the end station
+
+29
+00:01:18,110 --> 00:01:19,970
+name graph.
+
+30
+00:01:19,970 --> 00:01:23,030
+At first you might notice only
+that the bar changed color.
+
+31
+00:01:23,030 --> 00:01:27,340
+But if you look here, in
+the schema view for Compass,
+
+32
+00:01:27,340 --> 00:01:30,580
+you should see that the filter
+form element in this view
+
+33
+00:01:30,580 --> 00:01:31,970
+has been updated.
+
+34
+00:01:31,970 --> 00:01:33,910
+Let's take a minute
+to talk about this.
+
+35
+00:01:33,910 --> 00:01:36,670
+Chances are you're already
+familiar with JavaScript Object
+
+36
+00:01:36,670 --> 00:01:39,670
+Notation, also known
+by its acronym JSON.
+
+37
+00:01:39,670 --> 00:01:44,470
+That's J-S-O-N. As you become
+more experienced in your use
+
+38
+00:01:44,470 --> 00:01:47,560
+of MongoDB, much of your
+interaction with the database
+
+39
+00:01:47,560 --> 00:01:52,470
+will be through JSON documents
+of one type or another.
+
+40
+00:01:52,470 --> 00:01:54,580
+Though Compass is a
+GUI client, a little
+
+41
+00:01:54,580 --> 00:01:56,980
+of the JSON
+orientation of MongoDB
+
+42
+00:01:56,980 --> 00:01:59,710
+comes through in this aspect
+of the Compass interface.
+
+43
+00:01:59,710 --> 00:02:02,680
+We explore JSON in greater
+detail in another lesson.
+
+44
+00:02:02,680 --> 00:02:05,770
+For now, you only really need
+to know a few simple facts
+
+45
+00:02:05,770 --> 00:02:06,760
+about JSON documents.
+
+46
+00:02:06,760 --> 00:02:12,790
+First, JSON documents begin
+and end with curly braces.
+
+47
+00:02:12,790 --> 00:02:16,000
+Second, JSON documents
+are composed of fields.
+
+48
+00:02:16,000 --> 00:02:17,740
+In the example we're
+looking at here,
+
+49
+00:02:17,740 --> 00:02:20,050
+this document has one field.
+
+50
+00:02:20,050 --> 00:02:23,160
+And finally, fields
+have two parts.
+
+51
+00:02:23,160 --> 00:02:26,560
+A key and a value.
+
+52
+00:02:26,560 --> 00:02:30,820
+The key is a string, and
+must be enclosed in quotes,
+
+53
+00:02:30,820 --> 00:02:32,800
+as we see here.
+
+54
+00:02:32,800 --> 00:02:36,830
+The value can be any valid
+JavaScript data type, including
+
+55
+00:02:36,830 --> 00:02:38,860
+a nested JSON document.
+
+56
+00:02:38,860 --> 00:02:41,050
+The value of the
+field in this document
+
+57
+00:02:41,050 --> 00:02:43,930
+is Broadway and
+East 22nd Street.
+
+58
+00:02:43,930 --> 00:02:49,120
+Within a field, the key and
+value are separated by a colon.
+
+59
+00:02:49,120 --> 00:02:52,150
+For now, that's all you really
+need to know about JSON.
+
+60
+00:02:52,150 --> 00:02:53,650
+In this lesson,
+we'll see a couple
+
+61
+00:02:53,650 --> 00:02:55,930
+of different examples
+of JSON documents
+
+62
+00:02:55,930 --> 00:02:59,220
+as we look at
+filtering collections.
+
+63
+00:02:59,220 --> 00:03:01,640
+Now, let's apply our filter.
+
+64
+00:03:01,640 --> 00:03:05,160
+The filter we've just applied
+can be expressed as follows.
+
+65
+00:03:05,160 --> 00:03:08,220
+Show me all documents
+for which the end station
+
+66
+00:03:08,220 --> 00:03:12,690
+name has the value Broadway
+and East 22nd Street.
+
+67
+00:03:12,690 --> 00:03:15,930
+Note that rather than the nearly
+2 million documents reported
+
+68
+00:03:15,930 --> 00:03:18,300
+by Compass for the
+entire collection,
+
+69
+00:03:18,300 --> 00:03:20,550
+upon applying the
+filter, Compass
+
+70
+00:03:20,550 --> 00:03:24,270
+reports a little more
+than 13,000 documents
+
+71
+00:03:24,270 --> 00:03:25,952
+matching our query.
+
+72
+00:03:25,952 --> 00:03:27,660
+Before we move on, it
+is important for me
+
+73
+00:03:27,660 --> 00:03:30,390
+to mention that the type of
+filter we have applied here
+
+74
+00:03:30,390 --> 00:03:32,280
+is called an equality filter.
+
+75
+00:03:32,280 --> 00:03:33,780
+This simply means
+that we're looking
+
+76
+00:03:33,780 --> 00:03:38,880
+for documents with this exact
+value in the end station name
+
+77
+00:03:38,880 --> 00:03:39,957
+field.
+
+78
+00:03:39,957 --> 00:03:41,790
+Now let's look at a
+different type of filter
+
+79
+00:03:41,790 --> 00:03:44,010
+for situations in
+which we want to select
+
+80
+00:03:44,010 --> 00:03:47,970
+documents that fall into a
+particular range of values.
+
+81
+00:03:47,970 --> 00:03:49,830
+A good example for
+us to work with here
+
+82
+00:03:49,830 --> 00:03:53,010
+is the birth year field of
+the city bike collection.
+
+83
+00:03:53,010 --> 00:03:55,440
+Note that when hovering on
+any of the bars in the summary
+
+84
+00:03:55,440 --> 00:04:00,930
+graph, that each bar
+represents a range of values.
+
+85
+00:04:00,930 --> 00:04:04,650
+At the far left are birth
+years less than 1940,
+
+86
+00:04:04,650 --> 00:04:09,270
+and the other bars represent
+a range of five years each.
+
+87
+00:04:09,270 --> 00:04:13,620
+Let's click on the
+bar from 1985 to 1990.
+
+88
+00:04:13,620 --> 00:04:16,110
+Note the filter document
+created for us here.
+
+89
+00:04:16,110 --> 00:04:17,970
+This filter stipulates
+a constraint that
+
+90
+00:04:17,970 --> 00:04:19,920
+can be expressed as follows.
+
+91
+00:04:19,920 --> 00:04:24,180
+Show me all the documents for
+which the birth year field has
+
+92
+00:04:24,180 --> 00:04:27,720
+a value that is greater
+than or equal to 1985,
+
+93
+00:04:27,720 --> 00:04:30,240
+and less than 1990.
+
+94
+00:04:30,240 --> 00:04:33,640
+Instead of a single value, as
+we had for the equality filter,
+
+95
+00:04:33,640 --> 00:04:36,810
+this filter specifies
+a range of values.
+
+96
+00:04:36,810 --> 00:04:38,350
+There are two
+things to note here.
+
+97
+00:04:38,350 --> 00:04:40,140
+One is that the value
+for the birth year
+
+98
+00:04:40,140 --> 00:04:45,300
+field in our filtered document
+is a nested JSON document.
+
+99
+00:04:45,300 --> 00:04:47,100
+It follows all the
+rules of JSON documents
+
+100
+00:04:47,100 --> 00:04:50,640
+with respect to the
+fields, and the key value
+
+101
+00:04:50,640 --> 00:04:52,644
+pairs this document contains.
+
+102
+00:04:52,644 --> 00:04:54,810
+The second thing to note
+is that the fields together
+
+103
+00:04:54,810 --> 00:04:57,570
+to find a range of
+values because of the use
+
+104
+00:04:57,570 --> 00:04:59,820
+of a couple of special keys.
+
+105
+00:04:59,820 --> 00:05:05,290
+$gte and $lt. In
+MongoDB this type of key
+
+106
+00:05:05,290 --> 00:05:07,360
+is called an operator.
+
+107
+00:05:07,360 --> 00:05:11,080
+MongoDB defines many operators
+in its query language.
+
+108
+00:05:11,080 --> 00:05:13,900
+In other lessons we'll go
+into detail on operators,
+
+109
+00:05:13,900 --> 00:05:18,300
+and all other aspects of
+the MongoDB query language.
+
+110
+00:05:18,300 --> 00:05:22,710
+Applying this filter, we can
+see that about 343,000 documents
+
+111
+00:05:22,710 --> 00:05:26,850
+match the range we've
+specified here for birth year.
+
+112
+00:05:26,850 --> 00:05:28,560
+Now that we have a
+better understanding
+
+113
+00:05:28,560 --> 00:05:31,320
+of range filters,
+let's experiment a bit
+
+114
+00:05:31,320 --> 00:05:33,930
+to get a sense for what's
+possible with Compass and range
+
+115
+00:05:33,930 --> 00:05:34,800
+filters.
+
+116
+00:05:34,800 --> 00:05:37,290
+Rather than clicking on
+just one bar in the summary
+
+117
+00:05:37,290 --> 00:05:40,410
+graph for birth year,
+let's click and hold
+
+118
+00:05:40,410 --> 00:05:44,100
+the mouse button, and select
+several bars in this graph.
+
+119
+00:05:44,100 --> 00:05:46,170
+Note that the
+filter document now
+
+120
+00:05:46,170 --> 00:05:49,410
+expresses a much broader
+range of birth years.
+
+121
+00:05:49,410 --> 00:05:52,710
+If we apply this filter, MongoDB
+will return all documents
+
+122
+00:05:52,710 --> 00:05:55,200
+that have a birth year value
+that is greater than or equal
+
+123
+00:05:55,200 --> 00:05:58,260
+to '70, and less than 1990.
+
+124
+00:05:58,260 --> 00:06:00,090
+Before we move on
+from range filters,
+
+125
+00:06:00,090 --> 00:06:02,100
+let's take a look
+at one last example.
+
+126
+00:06:02,100 --> 00:06:04,260
+After resetting our
+filter, let's scroll down
+
+127
+00:06:04,260 --> 00:06:07,080
+to the bottom of
+the schema view.
+
+128
+00:06:07,080 --> 00:06:09,540
+Here we'll find a field
+called trip duration.
+
+129
+00:06:09,540 --> 00:06:14,220
+Trip duration stores the
+length of the trip in seconds.
+
+130
+00:06:14,220 --> 00:06:16,320
+Let's just select a
+region of this graph
+
+131
+00:06:16,320 --> 00:06:17,580
+and apply the filter.
+
+132
+00:06:17,580 --> 00:06:19,410
+Here I've selected
+a trip duration
+
+133
+00:06:19,410 --> 00:06:22,110
+in the range 2,000 to 4,000.
+
+134
+00:06:22,110 --> 00:06:24,510
+In this example, we can see
+one reason why Compass--
+
+135
+00:06:24,510 --> 00:06:26,250
+even though it's a visual tool--
+
+136
+00:06:26,250 --> 00:06:29,850
+gives a JSON filter to work
+with, in addition to the point,
+
+137
+00:06:29,850 --> 00:06:32,070
+click, drag interface.
+
+138
+00:06:32,070 --> 00:06:34,500
+For fields that have values
+that are this granular,
+
+139
+00:06:34,500 --> 00:06:37,980
+sometimes it's just faster to
+edit the JSON filter directly
+
+140
+00:06:37,980 --> 00:06:39,520
+to get what we want.
+
+141
+00:06:39,520 --> 00:06:41,190
+For example, say
+we want to filter
+
+142
+00:06:41,190 --> 00:06:44,790
+for trips that have a duration
+of between 10 and 20 minutes.
+
+143
+00:06:44,790 --> 00:06:47,610
+We can simply edit the
+JSON filter directly
+
+144
+00:06:47,610 --> 00:06:52,710
+to be greater than 600 seconds,
+and less than 1,200 seconds,
+
+145
+00:06:52,710 --> 00:06:53,820
+like this.
+
+146
+00:06:53,820 --> 00:06:56,250
+And if we apply
+this filter, we can
+
+147
+00:06:56,250 --> 00:06:59,820
+see that more than 600,000
+documents match our query.
+
+148
+00:06:59,820 --> 00:07:02,310
+Scrolling down to the
+trip duration field,
+
+149
+00:07:02,310 --> 00:07:05,050
+we can see that the range
+of values in the schema view
+
+150
+00:07:05,050 --> 00:07:08,580
+now reflects just those
+documents matching our query.
+
+151
+00:07:08,580 --> 00:07:13,940
+The min is 600, and
+the max is 1,199.
+
+152
+00:07:13,940 --> 00:07:15,410
+In this lesson
+we've reviewed how
+
+153
+00:07:15,410 --> 00:07:17,420
+to use the Compass
+interface to complete
+
+154
+00:07:17,420 --> 00:07:22,340
+queries involving equality
+filters and range filters.
+
+155
+00:07:22,340 --> 00:07:25,100
+We've also taken a
+look at JSON documents
+
+156
+00:07:25,100 --> 00:07:27,020
+that represent
+these filters, as we
+
+157
+00:07:27,020 --> 00:07:29,180
+begin to get comfortable
+interacting with MongoDB
+
+158
+00:07:29,180 --> 00:07:31,640
+using JSON syntax.
+
+159
+00:07:31,640 --> 00:07:34,970
+In other lessons in this course,
+we go much deeper on JSON,
+
+160
+00:07:34,970 --> 00:07:37,260
+queries, and a number
+of other operations
+
+161
+00:07:37,260 --> 00:00:00,000
+essential to using MongoDB.
+

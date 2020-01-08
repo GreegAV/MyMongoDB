@@ -1,0 +1,415 @@
+1
+00:00:00,000 --> 00:00:00,600
+
+
+2
+00:00:00,600 --> 00:00:03,420
+MongoDB write concern is
+an acknowledgment mechanism
+
+3
+00:00:03,420 --> 00:00:06,360
+that developers can add
+to write operations.
+
+4
+00:00:06,360 --> 00:00:09,300
+Higher levels of acknowledgment
+produce a stronger durability
+
+5
+00:00:09,300 --> 00:00:10,830
+guarantee.
+
+6
+00:00:10,830 --> 00:00:13,110
+Durability means that
+the write has propagated
+
+7
+00:00:13,110 --> 00:00:15,210
+to the number of
+replica set member nodes
+
+8
+00:00:15,210 --> 00:00:17,580
+specified in the write concern.
+
+9
+00:00:17,580 --> 00:00:19,170
+The more replica
+set members that
+
+10
+00:00:19,170 --> 00:00:22,400
+acknowledge the success of
+a write, the more likely
+
+11
+00:00:22,400 --> 00:00:25,790
+that the write is durable
+in the event of a failure.
+
+12
+00:00:25,790 --> 00:00:29,120
+Majority here is defined as a
+simple majority of replica set
+
+13
+00:00:29,120 --> 00:00:30,050
+members.
+
+14
+00:00:30,050 --> 00:00:33,000
+So divide by two, and round up.
+
+15
+00:00:33,000 --> 00:00:36,000
+The trade-off with increased
+durability is time.
+
+16
+00:00:36,000 --> 00:00:38,130
+More durability
+requires more time
+
+17
+00:00:38,130 --> 00:00:39,840
+to achieve the
+specified durability
+
+18
+00:00:39,840 --> 00:00:43,700
+guarantee since you have to
+wait for those acknowledgments.
+
+19
+00:00:43,700 --> 00:00:47,170
+Let's go over the available
+write concern levels.
+
+20
+00:00:47,170 --> 00:00:50,410
+A write concern of zero means
+that the application doesn't
+
+21
+00:00:50,410 --> 00:00:52,480
+wait for any acknowledgments.
+
+22
+00:00:52,480 --> 00:00:54,850
+The write might succeed or fail.
+
+23
+00:00:54,850 --> 00:00:57,040
+The application
+doesn't really care.
+
+24
+00:00:57,040 --> 00:00:59,260
+It only checks that it
+can connect to the node
+
+25
+00:00:59,260 --> 00:01:00,640
+successfully.
+
+26
+00:01:00,640 --> 00:01:03,700
+Think of this like a
+fire-and-forget strategy-- very
+
+27
+00:01:03,700 --> 00:01:07,070
+fast, but with no
+safety checks in place.
+
+28
+00:01:07,070 --> 00:01:09,761
+The default write
+concern is one.
+
+29
+00:01:09,761 --> 00:01:12,010
+That means the application
+waits for an acknowledgment
+
+30
+00:01:12,010 --> 00:01:14,170
+from a single member
+of the replica set,
+
+31
+00:01:14,170 --> 00:01:16,360
+specifically, the primary.
+
+32
+00:01:16,360 --> 00:01:19,770
+This is a baseline
+guarantee of success.
+
+33
+00:01:19,770 --> 00:01:22,950
+Write concerns greater than
+one increase the number
+
+34
+00:01:22,950 --> 00:01:27,180
+of acknowledgments to include
+one or more secondary members.
+
+35
+00:01:27,180 --> 00:01:29,880
+Higher levels of write concern
+correspond to a stronger
+
+36
+00:01:29,880 --> 00:01:31,920
+guarantee of write durability.
+
+37
+00:01:31,920 --> 00:01:35,070
+For example, I can set
+a write concern of three
+
+38
+00:01:35,070 --> 00:01:39,170
+to require acknowledgment from
+all three replica set members.
+
+39
+00:01:39,170 --> 00:01:41,750
+Majority is a keyword
+that translates
+
+40
+00:01:41,750 --> 00:01:44,900
+to a majority of
+replica set members.
+
+41
+00:01:44,900 --> 00:01:46,200
+It's a simple majority.
+
+42
+00:01:46,200 --> 00:01:49,260
+So divide the number of
+members by two and round up.
+
+43
+00:01:49,260 --> 00:01:52,740
+So this three-member replica
+set has a majority of two.
+
+44
+00:01:52,740 --> 00:01:55,610
+A five-member replica set would
+have a majority of three--
+
+45
+00:01:55,610 --> 00:01:57,620
+so on and so forth.
+
+46
+00:01:57,620 --> 00:01:59,660
+The nice thing with
+majority is that you
+
+47
+00:01:59,660 --> 00:02:02,330
+don't have to update your
+write concern if you increase
+
+48
+00:02:02,330 --> 00:02:04,550
+the size of your replica set.
+
+49
+00:02:04,550 --> 00:02:07,790
+There's also a write concern
+level for replica set tags.
+
+50
+00:02:07,790 --> 00:02:09,816
+That's a little advance
+for this course series,
+
+51
+00:02:09,816 --> 00:02:11,440
+but you can check
+out our documentation
+
+52
+00:02:11,440 --> 00:02:14,040
+on write concern for
+more information.
+
+53
+00:02:14,040 --> 00:02:17,634
+We're just talking about
+replica sets in this lesson.
+
+54
+00:02:17,634 --> 00:02:19,050
+But MongoDB supports
+write concern
+
+55
+00:02:19,050 --> 00:02:21,990
+for both standalone
+and sharded clusters.
+
+56
+00:02:21,990 --> 00:02:24,120
+For sharded clusters
+in particular,
+
+57
+00:02:24,120 --> 00:02:27,130
+write concern is pushed
+down to the shard level.
+
+58
+00:02:27,130 --> 00:02:28,740
+Finally, I want to
+make it very clear
+
+59
+00:02:28,740 --> 00:02:31,410
+that no matter what write
+concern you specify,
+
+60
+00:02:31,410 --> 00:02:34,980
+MongoDB always replicates data
+to every data-bearing node
+
+61
+00:02:34,980 --> 00:02:36,550
+in the cluster.
+
+62
+00:02:36,550 --> 00:02:38,730
+Write concern is
+just there for you
+
+63
+00:02:38,730 --> 00:02:42,940
+to have a way of tracking the
+durability of inserted data.
+
+64
+00:02:42,940 --> 00:02:45,180
+There are two additional
+write concern options
+
+65
+00:02:45,180 --> 00:02:47,220
+that MongoDB provides.
+
+66
+00:02:47,220 --> 00:02:49,800
+The first is wtimeout.
+
+67
+00:02:49,800 --> 00:02:51,900
+This lets you set a
+maximum amount of time
+
+68
+00:02:51,900 --> 00:02:55,680
+the application waits before
+marking an operation as failed.
+
+69
+00:02:55,680 --> 00:02:57,580
+An important note here--
+
+70
+00:02:57,580 --> 00:02:59,520
+hitting a wtimeout
+error does not
+
+71
+00:02:59,520 --> 00:03:02,520
+mean that the write
+operation itself has failed.
+
+72
+00:03:02,520 --> 00:03:04,620
+It only means that the
+application did not
+
+73
+00:03:04,620 --> 00:03:07,620
+get the level of durability
+that it requested.
+
+74
+00:03:07,620 --> 00:03:10,230
+The second is j, or journal.
+
+75
+00:03:10,230 --> 00:03:13,230
+This option requires that
+each replica set member
+
+76
+00:03:13,230 --> 00:03:16,890
+to receive the write and
+commit to the journal filed
+
+77
+00:03:16,890 --> 00:03:19,620
+for the write to be
+considered acknowledged.
+
+78
+00:03:19,620 --> 00:03:23,700
+Starting with MongoDB 3.2.6,
+a write concern of majority
+
+79
+00:03:23,700 --> 00:03:26,407
+actually implies j equals true.
+
+80
+00:03:26,407 --> 00:03:27,990
+The advantage of
+setting j equals true
+
+81
+00:03:27,990 --> 00:03:30,630
+for any given write concern
+is that you have a stronger
+
+82
+00:03:30,630 --> 00:03:33,410
+guarantee that not only
+were the writes received,
+
+83
+00:03:33,410 --> 00:03:36,060
+they've been written
+to an on-disk journal.
+
+84
+00:03:36,060 --> 00:03:38,520
+If you set j to false,
+or if journaling
+
+85
+00:03:38,520 --> 00:03:41,790
+is disabled on the
+mongod, the node
+
+86
+00:03:41,790 --> 00:03:44,040
+only needs to store
+the data in memory
+
+87
+00:03:44,040 --> 00:00:00,000
+before reporting success.
+

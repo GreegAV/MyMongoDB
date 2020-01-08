@@ -1,0 +1,408 @@
+
+1
+00:00:00.000 --> 00:00:00.540
+
+
+2
+00:00:00.540 --> 00:00:03.480
+Let's take a few minutes to talk
+about the structure and syntax
+
+3
+00:00:03.480 --> 00:00:05.370
+of the aggregation framework.
+
+4
+00:00:05.370 --> 00:00:08.550
+The aggregation framework has
+a simple and reliable structure
+
+5
+00:00:08.550 --> 00:00:10.650
+and repeatable syntax.
+
+6
+00:00:10.650 --> 00:00:14.250
+Pipelines may contain
+one or more stages.
+
+7
+00:00:14.250 --> 00:00:17.940
+Each stage is a JSON
+object of key value pairs.
+
+8
+00:00:17.940 --> 00:00:20.940
+With only a few exceptions,
+we can have as many stages
+
+9
+00:00:20.940 --> 00:00:22.260
+as we like.
+
+10
+00:00:22.260 --> 00:00:25.020
+Additionally, options
+may be passed in.
+
+11
+00:00:25.020 --> 00:00:27.780
+For example, specifying
+whether to allow disk use
+
+12
+00:00:27.780 --> 00:00:30.630
+for large aggregations, or
+to view the explain plan
+
+13
+00:00:30.630 --> 00:00:33.420
+of the aggregation to see
+whether it is using indexes,
+
+14
+00:00:33.420 --> 00:00:35.640
+or if the server
+optimized the pipeline.
+
+15
+00:00:35.640 --> 00:00:38.560
+Let's take a look at a very
+simple, but very real pipeline
+
+16
+00:00:38.560 --> 00:00:40.910
+and discuss the syntax.
+
+17
+00:00:40.910 --> 00:00:43.700
+Here, we have a match
+stage that checks
+
+18
+00:00:43.700 --> 00:00:46.260
+whether the atmoshperic
+composition contains oxygen
+
+19
+00:00:46.260 --> 00:00:47.180
+or not.
+
+20
+00:00:47.180 --> 00:00:50.280
+And if the mean temperature
+falls within this range.
+
+21
+00:00:50.280 --> 00:00:53.820
+Then, we have a project stage
+that reshapes the document
+
+22
+00:00:53.820 --> 00:00:55.620
+and calculates the new value.
+
+23
+00:00:55.620 --> 00:00:57.450
+More on this in a moment.
+
+24
+00:00:57.450 --> 00:01:01.110
+Lastly, this is
+our options object.
+
+25
+00:01:01.110 --> 00:01:04.980
+Each stage is composed of
+either operators or expressions.
+
+26
+00:01:04.980 --> 00:01:06.760
+As we continue
+through the course,
+
+27
+00:01:06.760 --> 00:01:08.850
+you'll be introduced
+to many of these.
+
+28
+00:01:08.850 --> 00:01:11.310
+Make sure you bookmark the
+Aggregation Pipeline Quick
+
+29
+00:01:11.310 --> 00:01:13.912
+Reference page that's
+linked below this video.
+
+30
+00:01:13.912 --> 00:01:16.245
+Throughout the course, we'll
+be using the terms operator
+
+31
+00:01:16.245 --> 00:01:19.350
+and expression, and it's vital
+that you can quickly access
+
+32
+00:01:19.350 --> 00:01:22.590
+the documentation for these.
+
+33
+00:01:22.590 --> 00:01:24.240
+So what's an operator?
+
+34
+00:01:24.240 --> 00:01:26.760
+For this course, when
+we say operators,
+
+35
+00:01:26.760 --> 00:01:30.320
+we mean either query operators
+or aggregation stages.
+
+36
+00:01:30.320 --> 00:01:33.330
+In this example,
+$match and $project
+
+37
+00:01:33.330 --> 00:01:38.290
+are aggregation operators,
+and $in, $gte, and $lte,
+
+38
+00:01:38.290 --> 00:01:40.800
+are query operators.
+
+39
+00:01:40.800 --> 00:01:43.680
+As a general rule,
+operators always
+
+40
+00:01:43.680 --> 00:01:47.190
+appear in the key
+position of a document.
+
+41
+00:01:47.190 --> 00:01:51.280
+$match is a little special and
+we'll learn about it later.
+
+42
+00:01:51.280 --> 00:01:52.740
+What's an expression?
+
+43
+00:01:52.740 --> 00:01:55.170
+Expressions act a
+lot like functions.
+
+44
+00:01:55.170 --> 00:01:58.350
+We provide arguments and they
+provide a computed output.
+
+45
+00:01:58.350 --> 00:02:00.600
+And just like
+functions, expressions
+
+46
+00:02:00.600 --> 00:02:04.610
+can be composed to form powerful
+new data transformations.
+
+47
+00:02:04.610 --> 00:02:07.380
+MongoDB provides expressions
+for working with and producing
+
+48
+00:02:07.380 --> 00:02:10.440
+values for many types of values.
+
+49
+00:02:10.440 --> 00:02:13.830
+In the project stage,
+$gt is an expression.
+
+50
+00:02:13.830 --> 00:02:16.740
+And its arguments are
+supplied in ths array.
+
+51
+00:02:16.740 --> 00:02:19.470
+This $number of of moons,
+surrounded by the quotes,
+
+52
+00:02:19.470 --> 00:02:23.160
+is also an expression that
+you'll learn about in a moment.
+
+53
+00:02:23.160 --> 00:02:25.200
+An easy way to remember
+how to use expressions
+
+54
+00:02:25.200 --> 00:02:29.640
+is that it will always
+appear in a value position.
+
+55
+00:02:29.640 --> 00:02:31.590
+Let's run this now
+to see the output.
+
+56
+00:02:31.590 --> 00:02:34.110
+
+
+57
+00:02:34.110 --> 00:02:37.740
+Here, we see the result
+of the calculated field.
+
+58
+00:02:37.740 --> 00:02:39.750
+It looks like Earth isn't
+the only planet that
+
+59
+00:02:39.750 --> 00:02:43.410
+has oxygen. It's a relatively
+comfortable temperature
+
+60
+00:02:43.410 --> 00:02:46.140
+and it does indeed have moons.
+
+61
+00:02:46.140 --> 00:02:47.940
+One more important
+thing to cover.
+
+62
+00:02:47.940 --> 00:02:50.560
+We may encounter
+syntax like this.
+
+63
+00:02:50.560 --> 00:02:52.380
+The first is a field
+path expression
+
+64
+00:02:52.380 --> 00:02:54.660
+and it's used to access
+the value of a field
+
+65
+00:02:54.660 --> 00:02:58.450
+in the document, like number
+of moves in the first example.
+
+66
+00:02:58.450 --> 00:03:00.270
+The second, with
+two dollar signs
+
+67
+00:03:00.270 --> 00:03:04.080
+followed by an uppercase word,
+is a system level variable.
+
+68
+00:03:04.080 --> 00:03:06.339
+$current refers to
+the current document.
+
+69
+00:03:06.339 --> 00:03:08.880
+And you can find the meaning of
+others on the quick reference
+
+70
+00:03:08.880 --> 00:03:09.990
+page.
+
+71
+00:03:09.990 --> 00:03:13.740
+The last with two dollar signs
+followed by a lowercase word
+
+72
+00:03:13.740 --> 00:03:15.690
+is a user variable.
+
+73
+00:03:15.690 --> 00:03:19.050
+expressions let us temporarily
+bind a value to a name,
+
+74
+00:03:19.050 --> 00:03:23.050
+or provide us a special
+name, to access some data.
+
+75
+00:03:23.050 --> 00:03:24.120
+And there we go.
+
+76
+00:03:24.120 --> 00:03:26.790
+The aggregation framework
+structure and syntax.
+
+77
+00:03:26.790 --> 00:03:29.130
+We highly recommend
+that you use an add that
+
+78
+00:03:29.130 --> 00:03:31.650
+has bracket matching while
+constructing your pipelines
+
+79
+00:03:31.650 --> 00:03:33.860
+to make noticing errors easier.
+
+80
+00:03:33.860 --> 00:03:35.820
+There's just a few
+things to remember.
+
+81
+00:03:35.820 --> 00:03:38.700
+Pipelines are always an
+array of one or more stages.
+
+82
+00:03:38.700 --> 00:03:41.370
+Stages are composed of one
+or more aggregation operators
+
+83
+00:03:41.370 --> 00:03:42.750
+or expressions.
+
+84
+00:03:42.750 --> 00:03:44.790
+Expressions may take
+a single argument
+
+85
+00:03:44.790 --> 00:03:46.690
+or an array of arguments.
+
+86
+00:03:46.690 --> 00:03:48.860
+See you in the next lesson.

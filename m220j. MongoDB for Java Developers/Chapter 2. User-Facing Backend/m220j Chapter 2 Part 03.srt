@@ -1,0 +1,387 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.370
+Now, not all aggregation
+stages are made equal.
+
+3
+00:00:03.370 --> 00:00:07.000
+There are ones that are more
+complex than others in terms
+
+4
+00:00:07.000 --> 00:00:08.620
+either of their
+type of operation
+
+5
+00:00:08.620 --> 00:00:11.890
+and the parameters they
+may take to execute.
+
+6
+00:00:11.890 --> 00:00:16.980
+For example, $lookup stage takes
+a fair amount more parameters
+
+7
+00:00:16.980 --> 00:00:21.190
+and options to execute than
+a simple $addFields stage.
+
+8
+00:00:21.190 --> 00:00:22.810
+By comparing these
+two, you can see
+
+9
+00:00:22.810 --> 00:00:25.770
+how they differ in
+terms of complexity
+
+10
+00:00:25.770 --> 00:00:30.030
+and, obviously, what the
+expected output is about.
+
+11
+00:00:30.030 --> 00:00:32.009
+To exemplify this
+scenario, let's go ahead
+
+12
+00:00:32.009 --> 00:00:33.580
+and do the following.
+
+13
+00:00:33.580 --> 00:00:37.500
+Create facets of the
+movie documents that
+
+14
+00:00:37.500 --> 00:00:40.650
+were produced in Portugal,
+the facets on the cast
+
+15
+00:00:40.650 --> 00:00:46.530
+members of those same movies,
+a facet on the genres count,
+
+16
+00:00:46.530 --> 00:00:50.400
+a list of the genres
+and its count,
+
+17
+00:00:50.400 --> 00:00:53.700
+a facet on your bucket
+matching the movies, year
+
+18
+00:00:53.700 --> 00:00:57.360
+bucket, all of which were
+produced, again, in Portugal
+
+19
+00:00:57.360 --> 00:01:00.420
+exactly using the same filters.
+
+20
+00:01:00.420 --> 00:01:02.610
+What we were trying
+to achieve in Java
+
+21
+00:01:02.610 --> 00:01:04.590
+would be something similar
+to this aggregation.
+
+22
+00:01:04.590 --> 00:01:06.840
+Where we match
+for each facet, we
+
+23
+00:01:06.840 --> 00:01:10.290
+are going to create a MongoDB
+client facet object that
+
+24
+00:01:10.290 --> 00:01:13.860
+will express that same facet.
+
+25
+00:01:13.860 --> 00:01:17.480
+Now, a facet constructor
+takes a facet name
+
+26
+00:01:17.480 --> 00:01:20.690
+and a variable argument, a
+variable length arguments,
+
+27
+00:01:20.690 --> 00:01:25.040
+v args for short, of a
+sub-pipeline that build up
+
+28
+00:01:25.040 --> 00:01:27.440
+to the expected facet values.
+
+29
+00:01:27.440 --> 00:01:31.100
+For the cast members, we need
+to unwind the cast arrays
+
+30
+00:01:31.100 --> 00:01:36.030
+and use a group stage to
+create the set of cast members.
+
+31
+00:01:36.030 --> 00:01:38.990
+So, here, what we are
+doing is unwinding the cast
+
+32
+00:01:38.990 --> 00:01:42.200
+and then heading to
+sets as an accumulator
+
+33
+00:01:42.200 --> 00:01:45.080
+on every single cast
+member that we find.
+
+34
+00:01:45.080 --> 00:01:48.106
+So, actually, even the
+group ID here will be empty.
+
+35
+00:01:48.106 --> 00:01:49.730
+So we're not filtering
+in specific one.
+
+36
+00:01:49.730 --> 00:01:51.440
+We just want to
+[? iterate ?] all of them
+
+37
+00:01:51.440 --> 00:01:55.400
+and create a single set
+of all the cast members.
+
+38
+00:01:55.400 --> 00:01:58.220
+That will be our cast
+member facet definition.
+
+39
+00:01:58.220 --> 00:02:02.390
+It takes on the unwind cast
+and the group cast set.
+
+40
+00:02:02.390 --> 00:02:04.880
+All the following facets
+will be having the same kind
+
+41
+00:02:04.880 --> 00:02:06.080
+of logics associated.
+
+42
+00:02:06.080 --> 00:02:08.539
+There will be sub-pipelines
+that we need to build.
+
+43
+00:02:08.539 --> 00:02:11.750
+So in this case, the
+facet genresCountFacet
+
+44
+00:02:11.750 --> 00:02:14.930
+will unwind first the
+genres and then sort
+
+45
+00:02:14.930 --> 00:02:18.110
+by count giving us the
+sorted order and the count
+
+46
+00:02:18.110 --> 00:02:20.360
+of each one of the genres.
+
+47
+00:02:20.360 --> 00:02:24.980
+For the yearBucketFacet we just
+need to create a single stage
+
+48
+00:02:24.980 --> 00:02:27.920
+the BucketAuto, which
+will give us the group
+
+49
+00:02:27.920 --> 00:02:31.640
+by the year in 10 buckets.
+
+50
+00:02:31.640 --> 00:02:34.200
+It will auto generate
+that distribution for us,
+
+51
+00:02:34.200 --> 00:02:36.450
+which is very handy.
+
+52
+00:02:36.450 --> 00:02:38.660
+The Aggregates.facets
+method also
+
+53
+00:02:38.660 --> 00:02:40.730
+takes a variable
+set of facet objects
+
+54
+00:02:40.730 --> 00:02:44.580
+that composes the sub-pipelines
+of each facet element.
+
+55
+00:02:44.580 --> 00:02:46.730
+So in this case
+here, the facet stage
+
+56
+00:02:46.730 --> 00:02:50.570
+will be just basically a setting
+up of all the different facets
+
+57
+00:02:50.570 --> 00:02:52.460
+which we previously defined.
+
+58
+00:02:52.460 --> 00:02:54.080
+Then, finally, we
+can just create
+
+59
+00:02:54.080 --> 00:02:57.830
+a matchStage, the first
+filter for all these facets
+
+60
+00:02:57.830 --> 00:02:58.880
+to be created.
+
+61
+00:02:58.880 --> 00:03:00.960
+Add that matchStage
+to the pipeline.
+
+62
+00:03:00.960 --> 00:03:02.960
+Then add the facetStage.
+
+63
+00:03:02.960 --> 00:03:05.630
+Then iterate and
+count on the results.
+
+64
+00:03:05.630 --> 00:03:08.120
+In this particular case, we
+only have one single document
+
+65
+00:03:08.120 --> 00:03:10.862
+that gives the full facet.
+
+66
+00:03:10.862 --> 00:03:14.170
+We can look into the result
+here for more detail on how
+
+67
+00:03:14.170 --> 00:03:16.284
+this is going to
+be built. You can
+
+68
+00:03:16.284 --> 00:03:17.700
+scroll through the
+list of results
+
+69
+00:03:17.700 --> 00:03:21.660
+here to see what the end
+result of that pipeline
+
+70
+00:03:21.660 --> 00:03:23.490
+will be looking like.
+
+71
+00:03:23.490 --> 00:03:25.800
+Well, let's take
+a moment to recap.
+
+72
+00:03:25.800 --> 00:03:29.460
+Aggregation pipelines are
+composed of lists of Bson stage
+
+73
+00:03:29.460 --> 00:03:31.140
+documents objects.
+
+74
+00:03:31.140 --> 00:03:33.270
+We can use the driver
+Aggregates builder class
+
+75
+00:03:33.270 --> 00:03:35.400
+to compose at different stages.
+
+76
+00:03:35.400 --> 00:03:38.310
+We can use accumulators,
+sorts, filters, builders
+
+77
+00:03:38.310 --> 00:03:41.850
+to compose the different stage's
+expressions and operations
+
+78
+00:03:41.850 --> 00:03:44.464
+that those stages will perform.
+
+79
+00:03:44.464 --> 00:03:45.880
+For complex
+aggregation stages, we
+
+80
+00:03:45.880 --> 00:03:49.360
+can imply several different
+supply plans and stage
+
+81
+00:03:49.360 --> 00:03:51.780
+arguments as well.

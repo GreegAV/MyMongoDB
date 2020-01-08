@@ -1,0 +1,27 @@
+Hi there.
+
+Today I'm going to introduce you to LDAP authorization-- a feature introduced in 3.4 that enhances MongoDB overall integration with LDAP.
+
+Prior versions to 3.4 already supported LDAP for authentication purposes.
+
+This meant that MongoDB could be configured to authenticate users using an external mechanism to MongoDB-- a separate service like LDAP.
+
+Now we can also configure MongoDB to integrate with LDAP at authorization level.
+
+Before, we could validate with LDAP who the user claimed to be.
+
+Now we can use LDAP to determine what the user is allowed to do within MongoDB.
+
+Enabling LDAP for authorization will allow authentication via any of the existing external authentication mechanisms that MongoDB already supports.
+
+This means that we can set up MongoDB to use LDAP authorization.
+
+But we can use an alternate authentication mechanism-- like Kerberos or x509 certificates-- apart from the obvious LDAP for both authentication and authorization.
+
+With MongoDB 3.4, we also remove the dependency on SASL proxy for authentication with LDAP-- except when users use PAM mechanism.
+
+For integration with popular single sign on solutions like Centerfire and Quest.
+
+In these cases, we still need to use SASL proxy.
+
+Now let's have a look into the LDAP authorization mechanism steps.

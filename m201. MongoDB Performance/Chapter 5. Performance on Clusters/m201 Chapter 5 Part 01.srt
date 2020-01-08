@@ -1,0 +1,598 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.360
+Now as you can see
+from this diagram,
+
+3
+00:00:02.360 --> 00:00:05.030
+once you have a shard
+cluster in hand,
+
+4
+00:00:05.030 --> 00:00:06.890
+there will be a bunch
+of different nodes
+
+5
+00:00:06.890 --> 00:00:09.110
+that you need to consider.
+
+6
+00:00:09.110 --> 00:00:12.410
+And with those nodes will
+come some communication,
+
+7
+00:00:12.410 --> 00:00:13.920
+and therefore latency.
+
+8
+00:00:13.920 --> 00:00:17.020
+The client application
+will talk to our MongoSes.
+
+9
+00:00:17.020 --> 00:00:19.130
+The MongoSes themselves
+will establish connections
+
+10
+00:00:19.130 --> 00:00:21.916
+with config servers to fetch
+all the configuration of all
+
+11
+00:00:21.916 --> 00:00:24.590
+your shards, and obviously
+with the shard nodes
+
+12
+00:00:24.590 --> 00:00:27.480
+to retrieve the information
+requested by the application.
+
+13
+00:00:27.480 --> 00:00:29.420
+So there's a lot
+of communication
+
+14
+00:00:29.420 --> 00:00:35.180
+between all different elements
+of this topology for a given
+
+15
+00:00:35.180 --> 00:00:36.830
+shard cluster.
+
+16
+00:00:36.830 --> 00:00:39.740
+Now, all of this communication
+and the fact that the nodes can
+
+17
+00:00:39.740 --> 00:00:43.040
+be spread apart from
+each other, latency
+
+18
+00:00:43.040 --> 00:00:46.920
+will have an impact in your
+application performance.
+
+19
+00:00:46.920 --> 00:00:49.400
+As you can imagine, not
+only the fact that you're
+
+20
+00:00:49.400 --> 00:00:51.710
+going to have different
+nodes talking to each other,
+
+21
+00:00:51.710 --> 00:00:54.230
+but also within the
+replica sets themselves,
+
+22
+00:00:54.230 --> 00:00:57.530
+there will be some entropy
+caused into the network
+
+23
+00:00:57.530 --> 00:00:59.780
+by the replication mechanism.
+
+24
+00:00:59.780 --> 00:01:03.110
+As you can imagine, having to
+talk to a single replica set,
+
+25
+00:01:03.110 --> 00:01:05.360
+or with a different
+set of shard nodes,
+
+26
+00:01:05.360 --> 00:01:08.810
+will have its
+latency consequences.
+
+27
+00:01:08.810 --> 00:01:11.600
+There are architectures
+that try to minimize
+
+28
+00:01:11.600 --> 00:01:15.320
+the impact of latency in
+your application given
+
+29
+00:01:15.320 --> 00:01:17.180
+a shard cluster.
+
+30
+00:01:17.180 --> 00:01:20.780
+Things like co-locating a
+MongoS within the same server
+
+31
+00:01:20.780 --> 00:01:24.860
+as your application server to
+minimize the number of network
+
+32
+00:01:24.860 --> 00:01:27.560
+hoops required to
+access the shard nodes
+
+33
+00:01:27.560 --> 00:01:31.100
+are some of the strategies
+enforced to minimize
+
+34
+00:01:31.100 --> 00:01:32.710
+the impact of latency.
+
+35
+00:01:32.710 --> 00:01:35.000
+And if the nodes are
+correctly connected
+
+36
+00:01:35.000 --> 00:01:37.700
+without passing through
+very slow or latent or even
+
+37
+00:01:37.700 --> 00:01:40.970
+low-bandwidth network
+segments, then the effect
+
+38
+00:01:40.970 --> 00:01:44.450
+of latency in your overall
+performance of a distributed
+
+39
+00:01:44.450 --> 00:01:46.970
+system will be marginal.
+
+40
+00:01:46.970 --> 00:01:50.480
+However, the speed of
+light limit is still there.
+
+41
+00:01:50.480 --> 00:01:54.020
+And if your application
+server sits in Barcelona,
+
+42
+00:01:54.020 --> 00:01:57.500
+tries to reach a shard node that
+is placed, for example, in Palo
+
+43
+00:01:57.500 --> 00:02:01.640
+Alto, then this will not
+be done without paying
+
+44
+00:02:01.640 --> 00:02:03.950
+the latency toll.
+
+45
+00:02:03.950 --> 00:02:06.050
+And this drives us to
+another important aspect
+
+46
+00:02:06.050 --> 00:02:07.830
+of working with
+distributed systems,
+
+47
+00:02:07.830 --> 00:02:11.000
+especially in how
+reads are concerned.
+
+48
+00:02:11.000 --> 00:02:14.330
+In MongoDB, there are two
+types of reads that we
+
+49
+00:02:14.330 --> 00:02:16.550
+can perform in a shard cluster.
+
+50
+00:02:16.550 --> 00:02:18.740
+Scattered gathered,
+where are we ping
+
+51
+00:02:18.740 --> 00:02:22.070
+all nodes of our shard
+cluster for the information
+
+52
+00:02:22.070 --> 00:02:26.060
+corresponding to a
+given query, or routed
+
+53
+00:02:26.060 --> 00:02:31.400
+queries, where we ask one single
+shard node or a small amount
+
+54
+00:02:31.400 --> 00:02:36.110
+of shard nodes for the data that
+your application is requesting.
+
+55
+00:02:36.110 --> 00:02:40.940
+These two different types
+of reads, routed queries
+
+56
+00:02:40.940 --> 00:02:45.230
+and scattered gathered will
+have two different performance
+
+57
+00:02:45.230 --> 00:02:46.950
+profiles.
+
+58
+00:02:46.950 --> 00:02:49.880
+With scattered gather,
+we will pay the price
+
+59
+00:02:49.880 --> 00:02:53.180
+for asking everyone
+for the information
+
+60
+00:02:53.180 --> 00:02:56.120
+that we need to reply
+for a single query,
+
+61
+00:02:56.120 --> 00:02:58.580
+while in routed
+queries, we only need
+
+62
+00:02:58.580 --> 00:03:03.290
+to ask one or a very
+small set of the elements
+
+63
+00:03:03.290 --> 00:03:06.530
+for all the data that we need.
+
+64
+00:03:06.530 --> 00:03:10.460
+The difference will be based on
+if we are using the shard key
+
+65
+00:03:10.460 --> 00:03:12.440
+on our queries or not.
+
+66
+00:03:12.440 --> 00:03:14.330
+If we are not using
+the shard key,
+
+67
+00:03:14.330 --> 00:03:17.690
+we will be performing scattered
+gathered queries, where
+
+68
+00:03:17.690 --> 00:03:19.670
+the system is not
+able to determine
+
+69
+00:03:19.670 --> 00:03:22.220
+with exact precision
+which of the nodes
+
+70
+00:03:22.220 --> 00:03:25.010
+contains the information that
+you need to satisfy your client
+
+71
+00:03:25.010 --> 00:03:28.610
+request, while in
+routed queries, that's
+
+72
+00:03:28.610 --> 00:03:31.790
+completely different,
+by using the shard key,
+
+73
+00:03:31.790 --> 00:03:36.190
+our MongoSes can
+pinpoint exactly which
+
+74
+00:03:36.190 --> 00:03:40.730
+shards contain the information
+relevant for our client query.
+
+75
+00:03:40.730 --> 00:03:44.660
+Sorting in a sharded cluster
+involves a few hurdles.
+
+76
+00:03:44.660 --> 00:03:46.340
+From the application
+perspective,
+
+77
+00:03:46.340 --> 00:03:48.140
+this is totally transparent.
+
+78
+00:03:48.140 --> 00:03:52.190
+It works exactly in the same way
+as a single node replica set.
+
+79
+00:03:52.190 --> 00:03:57.210
+You do not need to change a
+single comma in your code.
+
+80
+00:03:57.210 --> 00:03:59.300
+But from within
+the shard cluster,
+
+81
+00:03:59.300 --> 00:04:01.700
+things change a little bit.
+
+82
+00:04:01.700 --> 00:04:05.440
+After you [INAUDIBLE] the
+query that contains the sort,
+
+83
+00:04:05.440 --> 00:04:08.210
+the MongoS will then
+drive the request
+
+84
+00:04:08.210 --> 00:04:12.140
+to the designated shards
+and locally a sort
+
+85
+00:04:12.140 --> 00:04:13.570
+will be performed.
+
+86
+00:04:13.570 --> 00:04:16.170
+Once that local
+sort is performed,
+
+87
+00:04:16.170 --> 00:04:19.160
+then a final sort
+merge will need
+
+88
+00:04:19.160 --> 00:04:23.330
+to occur in the primary
+shards of our database.
+
+89
+00:04:23.330 --> 00:04:25.620
+Once that sort
+merge is performed,
+
+90
+00:04:25.620 --> 00:04:29.610
+then we return back the
+information to our clients.
+
+91
+00:04:29.610 --> 00:04:31.970
+The same set of
+operations and logic
+
+92
+00:04:31.970 --> 00:04:36.080
+will be applied with the
+skip or even with the limit.
+
+93
+00:04:36.080 --> 00:04:39.960
+The application will send
+their query to MongoS.
+
+94
+00:04:39.960 --> 00:04:42.670
+MongoS will select
+the designated shards,
+
+95
+00:04:42.670 --> 00:04:48.140
+and local skip and
+limit will be performed.
+
+96
+00:04:48.140 --> 00:04:52.850
+And once those results
+are done, a final merge
+
+97
+00:04:52.850 --> 00:04:56.750
+of that result set is
+performed on the primary shard.
+
+98
+00:04:56.750 --> 00:04:59.720
+And then the result is
+sent back to our clients
+
+99
+00:04:59.720 --> 00:05:01.640
+through the MongoS.
+
+100
+00:05:01.640 --> 00:05:03.920
+As you can see, there's
+a few more steps
+
+101
+00:05:03.920 --> 00:05:06.710
+in the overall chain
+of requests that
+
+102
+00:05:06.710 --> 00:05:09.080
+need to be attended
+by the shard cluster
+
+103
+00:05:09.080 --> 00:05:12.830
+before providing back a correct
+answer in terms of limit
+
+104
+00:05:12.830 --> 00:05:16.610
+and skip, but also
+in terms of sorting.
+
+105
+00:05:16.610 --> 00:05:19.250
+Let's recap what
+we've learned today.
+
+106
+00:05:19.250 --> 00:05:22.010
+There are a few things that you
+need to know before sharding.
+
+107
+00:05:22.010 --> 00:05:26.240
+Have you reached the vertical
+scaling limit of your cluster?
+
+108
+00:05:26.240 --> 00:05:29.390
+Have you considered how
+your data is growing,
+
+109
+00:05:29.390 --> 00:05:32.930
+how it is accessed, and
+determined a good shard key.
+
+110
+00:05:32.930 --> 00:05:36.110
+Latency will be involved
+in a distributed system.
+
+111
+00:05:36.110 --> 00:05:37.970
+There's no way to avoid it.
+
+112
+00:05:37.970 --> 00:05:40.940
+It might be minimized with
+good architectures to do so,
+
+113
+00:05:40.940 --> 00:05:43.520
+but it will still be something
+that you need to consider
+
+114
+00:05:43.520 --> 00:05:46.200
+from a performance perspective.
+
+115
+00:05:46.200 --> 00:05:48.470
+Scattered gathered
+and routed queries
+
+116
+00:05:48.470 --> 00:05:51.590
+are two completely
+different profiles in terms
+
+117
+00:05:51.590 --> 00:05:54.620
+of read response in
+a distributed system,
+
+118
+00:05:54.620 --> 00:05:58.290
+so pay close attention to that.
+
+119
+00:05:58.290 --> 00:06:00.470
+Sorting, limit,
+and skip will also
+
+120
+00:06:00.470 --> 00:06:04.310
+have its hurdles within
+a given distributed
+
+121
+00:06:04.310 --> 00:06:09.500
+system for correctness and
+to reflect the exact request
+
+122
+00:06:09.500 --> 00:06:11.810
+that our clients are asking for.
+
+123
+00:06:11.810 --> 00:06:14.510
+And this is all we have on
+performance considerations
+
+124
+00:06:14.510 --> 00:06:16.630
+for distributed systems.

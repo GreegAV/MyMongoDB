@@ -1,0 +1,13 @@
+Hello and welcome to Chapter One of the course.
+
+We've already covered all of the bookkeeping information for the course and explored the application structure.
+
+So now it's time to dive in.
+
+In this chapter we're going to discuss and explore basic read operations, adding fuel protections, and how to handle different query predicates to allow searching our data set from the UI.
+
+Our goal is that by the end of this chapter you are comfortable with basic query semantics and basic shaping operations the decline application might typically require.
+
+Remember to read those user stories closely and run the unit tests.
+
+And I hope you enjoy this chapter of M220.

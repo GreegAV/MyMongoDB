@@ -1,0 +1,420 @@
+
+1
+00:00:00.000 --> 00:00:00.650
+
+
+2
+00:00:00.650 --> 00:00:04.170
+In this lesson, we're going
+to talk about covered queries.
+
+3
+00:00:04.170 --> 00:00:05.850
+In here, we're going
+to talk about what
+
+4
+00:00:05.850 --> 00:00:08.672
+covered queries
+are, how they work,
+
+5
+00:00:08.672 --> 00:00:10.380
+and we'll also spend
+some time discussing
+
+6
+00:00:10.380 --> 00:00:12.960
+some important caveats
+associated with them.
+
+7
+00:00:12.960 --> 00:00:15.270
+Covered queries are a
+highly performant way
+
+8
+00:00:15.270 --> 00:00:17.529
+to service the queries
+to our database.
+
+9
+00:00:17.529 --> 00:00:19.320
+The reason that covered
+queries are so fast
+
+10
+00:00:19.320 --> 00:00:22.359
+is because they're completely
+satisfied by our index keys.
+
+11
+00:00:22.359 --> 00:00:24.150
+This means that the
+server doesn't actually
+
+12
+00:00:24.150 --> 00:00:26.610
+have to touch any
+of the documents.
+
+13
+00:00:26.610 --> 00:00:28.830
+Querying only the index
+can be much faster
+
+14
+00:00:28.830 --> 00:00:31.470
+than querying documents
+outside of the index
+
+15
+00:00:31.470 --> 00:00:33.600
+because the index keys
+are typically smaller
+
+16
+00:00:33.600 --> 00:00:36.510
+than the documents they catalog
+and index keys are typically
+
+17
+00:00:36.510 --> 00:00:37.800
+available in RAM.
+
+18
+00:00:37.800 --> 00:00:39.282
+Let's discuss how this works.
+
+19
+00:00:39.282 --> 00:00:40.740
+Imagine we have a
+query where we're
+
+20
+00:00:40.740 --> 00:00:43.620
+trying to find all the
+restaurants that start with l,
+
+21
+00:00:43.620 --> 00:00:46.770
+serve sushi, and have
+four or more stars.
+
+22
+00:00:46.770 --> 00:00:49.770
+And we also have an index
+on those same fields.
+
+23
+00:00:49.770 --> 00:00:52.940
+Now, if we were to add a
+projection to this query
+
+24
+00:00:52.940 --> 00:00:55.500
+so that we're only including
+the fields that we're indexing
+
+25
+00:00:55.500 --> 00:01:00.040
+on omitting the underscore
+ID field, in this case,
+
+26
+00:01:00.040 --> 00:01:03.690
+then all the information that
+we expect to get back already
+
+27
+00:01:03.690 --> 00:01:07.200
+exists in the keys of our index.
+
+28
+00:01:07.200 --> 00:01:10.650
+Because this index contains
+all the fields required
+
+29
+00:01:10.650 --> 00:01:12.910
+by the results of
+our query, MongoDB
+
+30
+00:01:12.910 --> 00:01:15.120
+can both match the
+query conditions
+
+31
+00:01:15.120 --> 00:01:19.520
+and return the results
+only using the index.
+
+32
+00:01:19.520 --> 00:01:22.180
+Let's see how this
+works in practice.
+
+33
+00:01:22.180 --> 00:01:25.720
+I'm going to go ahead and
+connect to the m201 database,
+
+34
+00:01:25.720 --> 00:01:28.090
+create an explainable
+object, and then create
+
+35
+00:01:28.090 --> 00:01:30.160
+the index we were
+just talking about.
+
+36
+00:01:30.160 --> 00:01:33.310
+Now, when I run the FIND
+query from our example,
+
+37
+00:01:33.310 --> 00:01:35.770
+and you'll see that our results
+have all the same fields
+
+38
+00:01:35.770 --> 00:01:38.260
+as our keys in our index.
+
+39
+00:01:38.260 --> 00:01:41.812
+All these values exist directly
+on the index we just created.
+
+40
+00:01:41.812 --> 00:01:43.270
+And we can easily
+confirm that this
+
+41
+00:01:43.270 --> 00:01:45.970
+is a covered query by looking
+at the explain output.
+
+42
+00:01:45.970 --> 00:01:48.850
+You'll notice that
+under execution stats
+
+43
+00:01:48.850 --> 00:01:51.910
+we didn't actually have to
+examine any documents to return
+
+44
+00:01:51.910 --> 00:01:53.290
+our results.
+
+45
+00:01:53.290 --> 00:01:54.850
+It was also a super fast query.
+
+46
+00:01:54.850 --> 00:01:59.590
+It only took 10 milliseconds to
+return almost 3,000 documents.
+
+47
+00:01:59.590 --> 00:02:02.530
+This is further illustrated
+by the winning plan.
+
+48
+00:02:02.530 --> 00:02:04.810
+You can see that we're
+immediately doing an index scan
+
+49
+00:02:04.810 --> 00:02:06.250
+followed by a projection.
+
+50
+00:02:06.250 --> 00:02:08.199
+We completely skipped
+the fetch stage
+
+51
+00:02:08.199 --> 00:02:10.030
+that we would normally
+see when we turn
+
+52
+00:02:10.030 --> 00:02:12.850
+the record IDs into documents.
+
+53
+00:02:12.850 --> 00:02:15.040
+I do want to point out
+an important caveat.
+
+54
+00:02:15.040 --> 00:02:18.110
+Let's see what happens here
+when we run this example.
+
+55
+00:02:18.110 --> 00:02:20.380
+We see the same output
+as our earlier query
+
+56
+00:02:20.380 --> 00:02:23.080
+when we explicitly said that
+we wanted name, cuisine,
+
+57
+00:02:23.080 --> 00:02:24.280
+and stars.
+
+58
+00:02:24.280 --> 00:02:25.850
+Here, we're doing
+the same thing,
+
+59
+00:02:25.850 --> 00:02:29.940
+except we're just omitting
+underscore ID and address.
+
+60
+00:02:29.940 --> 00:02:31.770
+And so we'd expect the
+same explain output.
+
+61
+00:02:31.770 --> 00:02:33.120
+Right?
+
+62
+00:02:33.120 --> 00:02:34.120
+Wrong.
+
+63
+00:02:34.120 --> 00:02:37.120
+When we go and scroll up
+to the execution stats,
+
+64
+00:02:37.120 --> 00:02:39.820
+you can see that we're
+now examining documents.
+
+65
+00:02:39.820 --> 00:02:41.290
+And this actually makes sense.
+
+66
+00:02:41.290 --> 00:02:43.900
+When we explicitly omit
+fields, the query planner
+
+67
+00:02:43.900 --> 00:02:47.390
+has no way of telling what
+other fields might be present.
+
+68
+00:02:47.390 --> 00:02:49.810
+We might only have the
+fields that are index queues,
+
+69
+00:02:49.810 --> 00:02:51.393
+but there also might
+be documents that
+
+70
+00:02:51.393 --> 00:02:53.440
+have other additional fields.
+
+71
+00:02:53.440 --> 00:02:56.290
+Because of this, an
+index covers a query only
+
+72
+00:02:56.290 --> 00:02:59.890
+when both all fields in the
+query are a part of the index
+
+73
+00:02:59.890 --> 00:03:02.710
+and all the fields are
+turned in the result
+
+74
+00:03:02.710 --> 00:03:04.056
+are in the same index.
+
+75
+00:03:04.056 --> 00:03:05.430
+This generally
+means that we need
+
+76
+00:03:05.430 --> 00:03:07.450
+to filter out underscore ID.
+
+77
+00:03:07.450 --> 00:03:08.950
+Before we finish
+this lesson, I want
+
+78
+00:03:08.950 --> 00:03:11.260
+to point out a few
+other caveats associated
+
+79
+00:03:11.260 --> 00:03:13.070
+with covered queries.
+
+80
+00:03:13.070 --> 00:03:15.550
+We can't cover a query
+if our index fields are
+
+81
+00:03:15.550 --> 00:03:18.460
+arrays or embedded documents.
+
+82
+00:03:18.460 --> 00:03:22.180
+We also can't cover a
+query against a Mongos
+
+83
+00:03:22.180 --> 00:03:24.820
+if the index does not
+contain the shard key.
+
+84
+00:03:24.820 --> 00:03:26.770
+Let's recap what we've learned.
+
+85
+00:03:26.770 --> 00:03:29.170
+We talked about what
+covered queries are.
+
+86
+00:03:29.170 --> 00:03:31.574
+We spent some time
+looking at how they work.
+
+87
+00:03:31.574 --> 00:03:33.490
+And we also pointed out
+some important caveats
+
+88
+00:03:33.490 --> 00:03:35.670
+associated with them.

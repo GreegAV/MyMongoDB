@@ -1,0 +1,27 @@
+The find method returns a cursor.
+
+A cursor is essentially a pointer to the current location in a result set.
+
+For queries that return more than just a few documents, MongoDB will return the results in batches to our client.
+
+And remember that the mongo shell is a client.
+
+We use the cursor in our client to iterate through the results.
+
+In the shell, the cursor is automatically iterated up to 20 times to print an initial set of search results, as we see here in response to this query.
+
+So when this query was issued, the server returned a cursor to the shell, and the shell requested the next item in the result set from the cursor 20 times.
+
+So what we'll see above here, if we were to scroll up, are the first 20 results from this query.
+
+Now, as we iterate through a cursor and reached the end of a batch of query results, if there are more results, iterating the cursor will trigger a getMore operation to retrieve the next batch of results.
+
+In this way, we can iterate through an entire set of search results.
+
+Now, in this particular case, the shell provides a convenience, and that is that after it displays the first 20 results we have an opportunity to look at more of them by typing it, which is short for iterate.
+
+And that will give us the next 20 results in our result set.
+
+And we can continue to do this until we exhaust the cursor.
+
+So in this way, we can iterate through an entire set of search results.

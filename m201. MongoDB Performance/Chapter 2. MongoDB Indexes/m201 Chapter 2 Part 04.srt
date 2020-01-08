@@ -1,0 +1,604 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.650
+In this video, I'd
+like to discuss
+
+3
+00:00:02.650 --> 00:00:05.050
+how we can utilize
+indexes to sort
+
+4
+00:00:05.050 --> 00:00:07.780
+the documents in our queries.
+
+5
+00:00:07.780 --> 00:00:12.220
+We already know that any
+query can also be sorted.
+
+6
+00:00:12.220 --> 00:00:14.710
+Now there are two ways that
+these documents can be sorted.
+
+7
+00:00:14.710 --> 00:00:19.390
+They can be sorted in
+memory or by using an index.
+
+8
+00:00:19.390 --> 00:00:24.010
+Let's talk about the first case,
+when sorting happens in memory.
+
+9
+00:00:24.010 --> 00:00:25.630
+The documents in
+our collections are
+
+10
+00:00:25.630 --> 00:00:29.050
+stored on disk in
+an unknown order,
+
+11
+00:00:29.050 --> 00:00:31.510
+therefore, when we query
+the server our documents are
+
+12
+00:00:31.510 --> 00:00:33.670
+going to be returned
+in the same order
+
+13
+00:00:33.670 --> 00:00:36.370
+that the server finds them.
+
+14
+00:00:36.370 --> 00:00:38.500
+If we happen to want
+them in the same order
+
+15
+00:00:38.500 --> 00:00:41.320
+that the server finds
+them, great, but that's
+
+16
+00:00:41.320 --> 00:00:43.300
+not very likely to happen.
+
+17
+00:00:43.300 --> 00:00:45.100
+This means that
+when we add a sort,
+
+18
+00:00:45.100 --> 00:00:48.220
+the server is going have to
+read the documents from disk
+
+19
+00:00:48.220 --> 00:00:49.470
+into RAM.
+
+20
+00:00:49.470 --> 00:00:51.220
+And then in RAM, it
+will perform some kind
+
+21
+00:00:51.220 --> 00:00:53.900
+of sorting algorithm on them.
+
+22
+00:00:53.900 --> 00:00:55.780
+Depending on how many
+documents you have,
+
+23
+00:00:55.780 --> 00:00:58.010
+this might take a long time.
+
+24
+00:00:58.010 --> 00:01:00.520
+Moreover, because sorting
+a large amount of documents
+
+25
+00:01:00.520 --> 00:01:03.340
+in memory might be an
+expensive operation,
+
+26
+00:01:03.340 --> 00:01:05.920
+the server is going to
+abort sorting in memory
+
+27
+00:01:05.920 --> 00:01:09.080
+when 32 megabytes of
+memory is being used.
+
+28
+00:01:09.080 --> 00:01:11.890
+This leads nicely in how
+we can sort with indexes.
+
+29
+00:01:11.890 --> 00:01:14.560
+In an index, the
+keys are ordered
+
+30
+00:01:14.560 --> 00:01:19.540
+according to the field
+specified during index creation.
+
+31
+00:01:19.540 --> 00:01:23.240
+The server can take
+advantage of this via sort.
+
+32
+00:01:23.240 --> 00:01:25.660
+If a query is using
+an index scan,
+
+33
+00:01:25.660 --> 00:01:27.790
+the order of the
+documents returned
+
+34
+00:01:27.790 --> 00:01:31.600
+is guaranteed to be
+sorted by the index keys.
+
+35
+00:01:31.600 --> 00:01:34.480
+This means that there is no
+need to reform an explicit sort,
+
+36
+00:01:34.480 --> 00:01:37.540
+as the documents will be
+fetched from the server
+
+37
+00:01:37.540 --> 00:01:39.040
+in the sorted order.
+
+38
+00:01:39.040 --> 00:01:41.590
+Now it's important to point out
+that these documents are only
+
+39
+00:01:41.590 --> 00:01:44.800
+going to be ordered according
+to the fields that make up
+
+40
+00:01:44.800 --> 00:01:46.180
+the index.
+
+41
+00:01:46.180 --> 00:01:49.370
+If we have an ascending
+index on last name,
+
+42
+00:01:49.370 --> 00:01:53.020
+then the documents will be
+ordered according to last name.
+
+43
+00:01:53.020 --> 00:01:54.574
+If there's an index
+on first name,
+
+44
+00:01:54.574 --> 00:01:55.990
+then the documents
+will be ordered
+
+45
+00:01:55.990 --> 00:01:58.450
+according to first name.
+
+46
+00:01:58.450 --> 00:02:01.810
+It's important to note that the
+query planner considers indexes
+
+47
+00:02:01.810 --> 00:02:04.600
+that can be helpful to
+either the query predicate
+
+48
+00:02:04.600 --> 00:02:06.700
+or to the requested sort.
+
+49
+00:02:06.700 --> 00:02:09.190
+Let's dig a little bit deeper
+into sorting functionality
+
+50
+00:02:09.190 --> 00:02:11.784
+with single field indexes
+by looking at the shell.
+
+51
+00:02:11.784 --> 00:02:13.450
+For this lesson, we're
+going to continue
+
+52
+00:02:13.450 --> 00:02:16.240
+using the people.json
+data set that we have been
+
+53
+00:02:16.240 --> 00:02:18.352
+using in the previous lessons.
+
+54
+00:02:18.352 --> 00:02:20.560
+If you haven't got it, you
+can go ahead and import it
+
+55
+00:02:20.560 --> 00:02:22.150
+with Mongo import.
+
+56
+00:02:22.150 --> 00:02:24.550
+If you can, go ahead
+and skip this step.
+
+57
+00:02:24.550 --> 00:02:26.380
+Let's go ahead and
+find all the documents
+
+58
+00:02:26.380 --> 00:02:30.110
+in our collection sorted
+by social security number.
+
+59
+00:02:30.110 --> 00:02:32.030
+Here are the first 20 documents.
+
+60
+00:02:32.030 --> 00:02:33.980
+You can see that we're
+finding everyone,
+
+61
+00:02:33.980 --> 00:02:36.920
+and we're sorting by the
+social security number.
+
+62
+00:02:36.920 --> 00:02:39.440
+Let's go ahead and create
+our explainable object
+
+63
+00:02:39.440 --> 00:02:41.720
+and use it to explain our query.
+
+64
+00:02:41.720 --> 00:02:43.250
+If we go to
+executionStats, you can
+
+65
+00:02:43.250 --> 00:02:45.920
+see that we had to look
+at 50,000 documents
+
+66
+00:02:45.920 --> 00:02:49.370
+to return our 50,000
+documents, which makes sense.
+
+67
+00:02:49.370 --> 00:02:53.120
+But you also notice that
+we used 50,000 index keys
+
+68
+00:02:53.120 --> 00:02:57.320
+and that's because we
+still did an index scan.
+
+69
+00:02:57.320 --> 00:02:59.960
+Well, why did we do an
+index scan if we needed
+
+70
+00:02:59.960 --> 00:03:01.760
+to return all the documents?
+
+71
+00:03:01.760 --> 00:03:03.260
+Well that's because
+the index wasn't
+
+72
+00:03:03.260 --> 00:03:05.630
+used for filtering
+documents, but was rather
+
+73
+00:03:05.630 --> 00:03:08.330
+used for sorting.
+
+74
+00:03:08.330 --> 00:03:11.990
+If I instead sort on first name,
+which we don't have an index
+
+75
+00:03:11.990 --> 00:03:13.850
+for.
+
+76
+00:03:13.850 --> 00:03:16.400
+If we scroll up
+to executionStats,
+
+77
+00:03:16.400 --> 00:03:19.640
+you'll see that we still
+examined 50,000 documents
+
+78
+00:03:19.640 --> 00:03:22.070
+because we returned
+50,000 documents.
+
+79
+00:03:22.070 --> 00:03:24.560
+But this time we looked
+at no index keys,
+
+80
+00:03:24.560 --> 00:03:27.710
+and that's because we
+did in memory SORT.
+
+81
+00:03:27.710 --> 00:03:30.170
+So we effectively did
+a collection scan, read
+
+82
+00:03:30.170 --> 00:03:32.180
+all the documents
+into memory, and then
+
+83
+00:03:32.180 --> 00:03:34.850
+once they are in memory, we
+were able to do an in memory
+
+84
+00:03:34.850 --> 00:03:39.890
+SORT on the unsorted documents
+for the first name field.
+
+85
+00:03:39.890 --> 00:03:42.500
+In our previous
+index sorted example,
+
+86
+00:03:42.500 --> 00:03:45.590
+we sorted by security
+number ascending.
+
+87
+00:03:45.590 --> 00:03:48.770
+This time let's sort
+by it descending.
+
+88
+00:03:48.770 --> 00:03:50.900
+And then we look at
+our output, you'll
+
+89
+00:03:50.900 --> 00:03:53.720
+see that we're still
+doing an index scan.
+
+90
+00:03:53.720 --> 00:03:56.270
+This is because this
+time we're able to walk
+
+91
+00:03:56.270 --> 00:04:00.380
+our index backwards instead
+of walking it forwards.
+
+92
+00:04:00.380 --> 00:04:02.600
+When we're sorting with
+a single field index,
+
+93
+00:04:02.600 --> 00:04:03.980
+we can always do that.
+
+94
+00:04:03.980 --> 00:04:07.100
+I can sort my documents either
+ascending or descending,
+
+95
+00:04:07.100 --> 00:04:10.930
+regardless of the physical
+ordering of the index keys.
+
+96
+00:04:10.930 --> 00:04:15.740
+I can both filter and
+sort in the same query.
+
+97
+00:04:15.740 --> 00:04:19.070
+Here I'm finding everyone whose
+social security number starts
+
+98
+00:04:19.070 --> 00:04:21.740
+with 555.
+
+99
+00:04:21.740 --> 00:04:23.660
+And then we look at
+the explain output,
+
+100
+00:04:23.660 --> 00:04:27.020
+you can see that we
+did an index scan.
+
+101
+00:04:27.020 --> 00:04:31.080
+And this index scan was used
+both for filtering and sorting
+
+102
+00:04:31.080 --> 00:04:33.380
+the documents because
+we can see that we only
+
+103
+00:04:33.380 --> 00:04:37.160
+had to look at 49 documents,
+which were the same 49 that we
+
+104
+00:04:37.160 --> 00:04:38.570
+were returned.
+
+105
+00:04:38.570 --> 00:04:40.460
+Just to verify
+things, let's see what
+
+106
+00:04:40.460 --> 00:04:43.580
+would happen if we built
+descending index keys.
+
+107
+00:04:43.580 --> 00:04:46.390
+We'll first drop
+our old indexes.
+
+108
+00:04:46.390 --> 00:04:48.070
+And now we'll
+create another index
+
+109
+00:04:48.070 --> 00:04:51.560
+on social security number, but
+this time descending instead of
+
+110
+00:04:51.560 --> 00:04:53.820
+ascending.
+
+111
+00:04:53.820 --> 00:04:57.190
+And so now, when I search
+for social security numbers
+
+112
+00:04:57.190 --> 00:05:02.110
+beginning with 555, and I
+sort them the descending,
+
+113
+00:05:02.110 --> 00:05:04.270
+we're now walking
+the index forward
+
+114
+00:05:04.270 --> 00:05:07.330
+because it is a
+descending index.
+
+115
+00:05:07.330 --> 00:05:10.360
+Whereas before, we were
+walking it backwards
+
+116
+00:05:10.360 --> 00:05:13.930
+because it was an
+ascending index.
+
+117
+00:05:13.930 --> 00:05:15.805
+This may seem
+unimportant, but it
+
+118
+00:05:15.805 --> 00:05:17.470
+will become more
+important later when
+
+119
+00:05:17.470 --> 00:05:20.320
+we discuss compound indexes.
+
+120
+00:05:20.320 --> 00:05:22.230
+Let's recap what we've learned.
+
+121
+00:05:22.230 --> 00:05:26.350
+In this lesson you learned
+how to use indexes to sort.
+
+122
+00:05:26.350 --> 00:05:28.720
+And how to create
+indexes that both match
+
+123
+00:05:28.720 --> 00:05:31.024
+and sort on a single query.
+
+124
+00:05:31.024 --> 00:05:32.440
+And you also learned
+how to create
+
+125
+00:05:32.440 --> 00:05:36.190
+indexes that can be used
+for ascending and descending
+
+126
+00:05:36.190 --> 00:05:38.160
+sort orders.

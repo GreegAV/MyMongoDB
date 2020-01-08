@@ -1,0 +1,654 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:03,970
+In this lesson, we will discuss
+comparison query operators.
+
+3
+00:00:03,970 --> 00:00:05,490
+These are operators
+that allow us
+
+4
+00:00:05,490 --> 00:00:10,370
+to match based on a fields value
+relative to some other value.
+
+5
+00:00:10,370 --> 00:00:13,200
+In our movie details
+collection, most documents
+
+6
+00:00:13,200 --> 00:00:15,340
+have a field called run time.
+
+7
+00:00:15,340 --> 00:00:18,400
+This makes a good starting point
+for considering some comparison
+
+8
+00:00:18,400 --> 00:00:20,420
+operators.
+
+9
+00:00:20,420 --> 00:00:22,980
+Here I have mongo shell
+connected to my sandbox Atlas
+
+10
+00:00:22,980 --> 00:00:24,790
+cluster.
+
+11
+00:00:24,790 --> 00:00:26,310
+We're going to
+filter for all movies
+
+12
+00:00:26,310 --> 00:00:29,320
+that have a run time
+greater than 90.
+
+13
+00:00:29,320 --> 00:00:32,280
+Now runtime is
+specified in minutes,
+
+14
+00:00:32,280 --> 00:00:36,620
+so this is all movies longer
+than an hour and a half.
+
+15
+00:00:36,620 --> 00:00:38,840
+If we like we can
+actually project out
+
+16
+00:00:38,840 --> 00:00:41,770
+just the title and the
+runtime to give us a quicker
+
+17
+00:00:41,770 --> 00:00:44,220
+summary of this results set.
+
+18
+00:00:44,220 --> 00:00:47,600
+You can see that every
+document in our result set
+
+19
+00:00:47,600 --> 00:00:51,150
+does in fact have a runtime
+greater than 90 minutes.
+
+20
+00:00:51,150 --> 00:00:54,180
+Now let's revisit the
+syntax for a minute.
+
+21
+00:00:54,180 --> 00:00:56,120
+Why is it structured this way?
+
+22
+00:00:56,120 --> 00:00:58,540
+The idea here is to
+maintain consistency
+
+23
+00:00:58,540 --> 00:01:00,420
+with equality filters.
+
+24
+00:01:00,420 --> 00:01:02,770
+And to be clear by
+equality filter,
+
+25
+00:01:02,770 --> 00:01:05,290
+I simply mean a filter
+for an exact value.
+
+26
+00:01:05,290 --> 00:01:08,750
+For equality filters, we
+define a specific value
+
+27
+00:01:08,750 --> 00:01:11,520
+a key should have in
+matching documents.
+
+28
+00:01:11,520 --> 00:01:13,950
+In the case of
+this query, instead
+
+29
+00:01:13,950 --> 00:01:17,400
+of specifying a value we
+need runtime to be equal to,
+
+30
+00:01:17,400 --> 00:01:20,640
+we are instead expressing
+the type of relationship
+
+31
+00:01:20,640 --> 00:01:24,090
+we want all documents in the
+result set to have with respect
+
+32
+00:01:24,090 --> 00:01:26,330
+to the runtime field.
+
+33
+00:01:26,330 --> 00:01:30,650
+This syntax also makes it very
+convenient to express ranges.
+
+34
+00:01:30,650 --> 00:01:32,920
+For example, I can
+stipulate that I'd
+
+35
+00:01:32,920 --> 00:01:34,880
+like to see movies
+greater than 90 minutes
+
+36
+00:01:34,880 --> 00:01:38,380
+long and less than 120 minutes.
+
+37
+00:01:38,380 --> 00:01:42,440
+To do that, we can
+use this query.
+
+38
+00:01:42,440 --> 00:01:44,330
+And for the sake
+of completeness,
+
+39
+00:01:44,330 --> 00:01:48,390
+I'll mention that $lt is
+the less than operator.
+
+40
+00:01:48,390 --> 00:01:51,530
+Now what I really
+want is for all movies
+
+41
+00:01:51,530 --> 00:01:54,690
+that match my filter to be
+greater than or equal to 90
+
+42
+00:01:54,690 --> 00:01:58,080
+minutes and less than
+a equal to 120 minutes.
+
+43
+00:01:58,080 --> 00:02:00,170
+So I can modify
+my filter slightly
+
+44
+00:02:00,170 --> 00:02:03,480
+to use the greater than
+or equal to, or $gte
+
+45
+00:02:03,480 --> 00:02:07,280
+operator, and the $lte operator.
+
+46
+00:02:07,280 --> 00:02:08,800
+Let's run this.
+
+47
+00:02:08,800 --> 00:02:13,210
+Here we can see we've lost a
+few results from the last time
+
+48
+00:02:13,210 --> 00:02:14,750
+because now we're
+specifying that we
+
+49
+00:02:14,750 --> 00:02:18,580
+want movies in a range
+up to only two hours.
+
+50
+00:02:18,580 --> 00:02:20,910
+So with this query, we
+had quite a few movies
+
+51
+00:02:20,910 --> 00:02:23,160
+that were in fact
+longer than two hours.
+
+52
+00:02:23,160 --> 00:02:25,100
+And with this one,
+only those that
+
+53
+00:02:25,100 --> 00:02:27,350
+are between 90
+minutes and two hours.
+
+54
+00:02:27,350 --> 00:02:28,850
+Of course, with
+comparison operators
+
+55
+00:02:28,850 --> 00:02:31,190
+were not limited to working
+with a single field.
+
+56
+00:02:31,190 --> 00:02:32,780
+We can easily work
+with as many fields
+
+57
+00:02:32,780 --> 00:02:36,880
+as we need to using
+combinations of comparison
+
+58
+00:02:36,880 --> 00:02:40,620
+operators, other operators,
+and equality matches.
+
+59
+00:02:40,620 --> 00:02:43,530
+Suppose we're interested in
+movies that are highly rated
+
+60
+00:02:43,530 --> 00:02:46,170
+and also have long run times.
+
+61
+00:02:46,170 --> 00:02:48,020
+Let's mix things up
+a little bit more
+
+62
+00:02:48,020 --> 00:02:52,490
+by using an embedded document
+field, the tomato meter.
+
+63
+00:02:52,490 --> 00:02:55,230
+Now for tomato meter,
+the max is 100.
+
+64
+00:02:55,230 --> 00:02:57,500
+So what I'll do is
+combine a selector
+
+65
+00:02:57,500 --> 00:03:00,100
+for tomato meter
+looking for values
+
+66
+00:03:00,100 --> 00:03:02,580
+that are greater
+than or equal to 95
+
+67
+00:03:02,580 --> 00:03:06,520
+with runtime looking
+for values that are
+
+68
+00:03:06,520 --> 00:03:08,980
+greater than or equal to 180.
+
+69
+00:03:08,980 --> 00:03:12,345
+So in this case, movies that
+are three hours or longer.
+
+70
+00:03:12,345 --> 00:03:14,220
+Here we can see that we
+have two results that
+
+71
+00:03:14,220 --> 00:03:15,154
+meet these criteria.
+
+72
+00:03:15,154 --> 00:03:16,570
+The Godfather:
+Part II, of course,
+
+73
+00:03:16,570 --> 00:03:19,480
+being very long, and in my
+opinion, the best of the three
+
+74
+00:03:19,480 --> 00:03:20,616
+godfather movies.
+
+75
+00:03:20,616 --> 00:03:22,490
+So let's take a look at
+what other comparison
+
+76
+00:03:22,490 --> 00:03:24,140
+operators there are.
+
+77
+00:03:24,140 --> 00:03:27,500
+$eq, has exactly the same
+semantics as the equality
+
+78
+00:03:27,500 --> 00:03:30,309
+matches you're
+already familiar with.
+
+79
+00:03:30,309 --> 00:03:32,600
+We've looked at greater than,
+greater than or equal to,
+
+80
+00:03:32,600 --> 00:03:34,650
+less than, and less
+than or equal to.
+
+81
+00:03:34,650 --> 00:03:40,110
+Now let's take a look at not
+equal to, or $ne and $in.
+
+82
+00:03:40,110 --> 00:03:41,810
+First, we'll look at $ne.
+
+83
+00:03:41,810 --> 00:03:43,860
+Now in a lot of
+applications, particularly
+
+84
+00:03:43,860 --> 00:03:45,990
+if we're doing something
+like data cleaning,
+
+85
+00:03:45,990 --> 00:03:48,784
+we might be interested
+in partitioning our data
+
+86
+00:03:48,784 --> 00:03:50,450
+because we know we
+have some fields that
+
+87
+00:03:50,450 --> 00:03:53,030
+are not as expected.
+
+88
+00:03:53,030 --> 00:03:54,870
+A lot of movies
+in this collection
+
+89
+00:03:54,870 --> 00:03:58,485
+have four rated a
+value of unrated.
+
+90
+00:03:58,485 --> 00:04:00,610
+So maybe we just want to
+look at all documents that
+
+91
+00:04:00,610 --> 00:04:06,340
+have an actual rating, such
+as PG, PG-13, R, et cetera.
+
+92
+00:04:06,340 --> 00:04:10,870
+We can use $ne to do this, and
+the semantics of this filter
+
+93
+00:04:10,870 --> 00:04:13,760
+are that we'll
+match all documents
+
+94
+00:04:13,760 --> 00:04:17,000
+that for the rated key
+will have a value that
+
+95
+00:04:17,000 --> 00:04:22,210
+is anything other than or
+that is not equal to unrated.
+
+96
+00:04:22,210 --> 00:04:24,930
+Now there's one thing I
+should mention about $ne.
+
+97
+00:04:24,930 --> 00:04:27,540
+In addition to matching
+all documents containing
+
+98
+00:04:27,540 --> 00:04:32,280
+a rated field whose value is
+something other then unrated,
+
+99
+00:04:32,280 --> 00:04:35,010
+$ne will also return
+documents that don't
+
+100
+00:04:35,010 --> 00:04:38,050
+have a rated field at all.
+
+101
+00:04:38,050 --> 00:04:40,240
+MongoDB supports a
+flexible data model.
+
+102
+00:04:40,240 --> 00:04:41,849
+There are many use
+cases for documents
+
+103
+00:04:41,849 --> 00:04:43,390
+in the same collection
+to have fields
+
+104
+00:04:43,390 --> 00:04:45,900
+that other documents do not.
+
+105
+00:04:45,900 --> 00:04:47,930
+In MongoDB data models,
+rather than store
+
+106
+00:04:47,930 --> 00:04:51,430
+a null value for field,
+we will often simply not
+
+107
+00:04:51,430 --> 00:04:53,350
+store at field at all.
+
+108
+00:04:53,350 --> 00:04:55,830
+In another lesson, we look at
+how to distinguish documents
+
+109
+00:04:55,830 --> 00:04:57,900
+that do not have a given field.
+
+110
+00:04:57,900 --> 00:05:00,630
+OK, so the last comparison
+operator I want to look at
+
+111
+00:05:00,630 --> 00:05:02,810
+is the $in.
+
+112
+00:05:02,810 --> 00:05:07,330
+$in, allows us to specify
+one or more values.
+
+113
+00:05:07,330 --> 00:05:10,840
+Any one of which should cause
+a document to be returned.
+
+114
+00:05:10,840 --> 00:05:14,000
+This filter we'll select
+all documents where
+
+115
+00:05:14,000 --> 00:05:19,160
+the value of rated is G or PG.
+
+116
+00:05:19,160 --> 00:05:22,720
+Documents with either of those
+two values for the rated key
+
+117
+00:05:22,720 --> 00:05:24,070
+will match this filter.
+
+118
+00:05:24,070 --> 00:05:26,010
+And here we can see that
+in fact, all results
+
+119
+00:05:26,010 --> 00:05:30,850
+have a value of either PG
+or G for the rated key.
+
+120
+00:05:30,850 --> 00:05:33,280
+If we wanted to
+extend this, we simply
+
+121
+00:05:33,280 --> 00:05:37,712
+add another element to the
+array value of our $in operator.
+
+122
+00:05:37,712 --> 00:05:41,410
+
+
+123
+00:05:41,410 --> 00:05:46,670
+Please note that the value
+of $in must be an array.
+
+124
+00:05:46,670 --> 00:05:49,740
+In this case, documents
+that have a value for rated
+
+125
+00:05:49,740 --> 00:05:54,150
+that is any one of these
+three values will be returned.
+
+126
+00:05:54,150 --> 00:05:56,150
+If we make this up a
+little bit, and change this
+
+127
+00:05:56,150 --> 00:05:59,370
+to just movies that
+are R rated and PG-13,
+
+128
+00:05:59,370 --> 00:06:02,669
+you see that now our results
+are matching those criteria.
+
+129
+00:06:02,669 --> 00:06:04,210
+There is also an
+operator that allows
+
+130
+00:06:04,210 --> 00:06:07,480
+us to do the reverse
+of what the $in does.
+
+131
+00:06:07,480 --> 00:06:09,120
+I'll leave it as
+an exercise to you
+
+132
+00:06:09,120 --> 00:06:11,260
+to experiment with
+that operator.
+
+133
+00:06:11,260 --> 00:06:13,800
+And with that, we've covered
+the comparison operators
+
+134
+00:06:13,800 --> 00:06:16,080
+for doing queries
+within MongoDB.
+
+135
+00:06:16,080 --> 00:06:18,420
+These significantly expand
+the types of queries
+
+136
+00:06:18,420 --> 00:00:00,000
+that we can do against
+a MongoDB collection.
+

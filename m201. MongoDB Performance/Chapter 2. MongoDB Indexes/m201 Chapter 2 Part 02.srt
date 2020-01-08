@@ -1,0 +1,629 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:05.380
+In this video, I want to talk
+about single field indexes.
+
+3
+00:00:05.380 --> 00:00:08.180
+The single field index
+is the simplest index
+
+4
+00:00:08.180 --> 00:00:10.520
+that MongoDB has to offer.
+
+5
+00:00:10.520 --> 00:00:13.460
+It will form the foundation
+for all later indexes
+
+6
+00:00:13.460 --> 00:00:15.000
+that we'll discuss.
+
+7
+00:00:15.000 --> 00:00:18.080
+And we'll be describing
+all of those in contrast
+
+8
+00:00:18.080 --> 00:00:21.970
+with the based on behaviors
+that we'll learn about here.
+
+9
+00:00:21.970 --> 00:00:25.100
+A single field index is
+exactly what it sounds like.
+
+10
+00:00:25.100 --> 00:00:29.280
+It's an index that captures
+just the keys on a single field,
+
+11
+00:00:29.280 --> 00:00:31.410
+and it has the
+following key features.
+
+12
+00:00:31.410 --> 00:00:33.390
+The keys are from
+only one field.
+
+13
+00:00:33.390 --> 00:00:37.320
+We can find a single value
+for that indexed field.
+
+14
+00:00:37.320 --> 00:00:39.540
+We can find a range of values.
+
+15
+00:00:39.540 --> 00:00:43.650
+We can use dot notation to index
+the fields in our subdocuments.
+
+16
+00:00:43.650 --> 00:00:46.410
+And we can use it to find
+several distinct values
+
+17
+00:00:46.410 --> 00:00:48.199
+with a single query.
+
+18
+00:00:48.199 --> 00:00:49.740
+By the end of this
+section you should
+
+19
+00:00:49.740 --> 00:00:51.600
+be able to create
+single field indexes,
+
+20
+00:00:51.600 --> 00:00:55.180
+and use them in each of
+the cases listed here.
+
+21
+00:00:55.180 --> 00:00:57.840
+Let's go ahead and see what
+this looks like in the shell.
+
+22
+00:00:57.840 --> 00:00:59.910
+First, let's go ahead
+and import some data
+
+23
+00:00:59.910 --> 00:01:01.740
+by using the Mongo
+import command
+
+24
+00:01:01.740 --> 00:01:04.920
+and, we're going to import
+the people.json on file.
+
+25
+00:01:04.920 --> 00:01:07.080
+Let's go ahead and use
+the Mongo import command.
+
+26
+00:01:07.080 --> 00:01:09.415
+Import the people.json file.
+
+27
+00:01:09.415 --> 00:01:11.040
+Now, let's fire up
+the shell, and run a
+
+28
+00:01:11.040 --> 00:01:15.170
+find query on our new
+people collection.
+
+29
+00:01:15.170 --> 00:01:16.930
+So here's the query
+we're going to run.
+
+30
+00:01:16.930 --> 00:01:19.300
+We're going to try to find
+all the documents that
+
+31
+00:01:19.300 --> 00:01:24.340
+have a SSN, which is a social
+security number, of this value.
+
+32
+00:01:24.340 --> 00:01:28.150
+And you'll notice I've appended
+this "explain" function of pass
+
+33
+00:01:28.150 --> 00:01:30.232
+and this execution
+stats parameter.
+
+34
+00:01:30.232 --> 00:01:32.440
+And this is so that we can
+get some extra information
+
+35
+00:01:32.440 --> 00:01:34.420
+about our query.
+
+36
+00:01:34.420 --> 00:01:36.100
+Now, there's a lot
+of output here.
+
+37
+00:01:36.100 --> 00:01:38.890
+In other lessons, we'll dig into
+this output much more deeply,
+
+38
+00:01:38.890 --> 00:01:41.950
+but for now there's just a
+few fields we care about.
+
+39
+00:01:41.950 --> 00:01:45.250
+If I scroll up here, you can
+see that the query planner says
+
+40
+00:01:45.250 --> 00:01:48.070
+that we're doing a
+collection scan, which
+
+41
+00:01:48.070 --> 00:01:51.200
+means that we're looking at
+every document in the database.
+
+42
+00:01:51.200 --> 00:01:54.790
+And if we scroll down here, we
+can look at execution stats,
+
+43
+00:01:54.790 --> 00:01:57.136
+and see that we had to
+examine 50,000 documents.
+
+44
+00:01:57.136 --> 00:01:58.510
+Which makes sense
+because there's
+
+45
+00:01:58.510 --> 00:02:00.814
+50,000 documents
+in this collection,
+
+46
+00:02:00.814 --> 00:02:02.230
+and since we had
+a collection scan
+
+47
+00:02:02.230 --> 00:02:04.990
+we had to look at
+all 50,000 documents.
+
+48
+00:02:04.990 --> 00:02:06.760
+We had to look at
+50,000 documents,
+
+49
+00:02:06.760 --> 00:02:09.680
+even though we only
+returned one document.
+
+50
+00:02:09.680 --> 00:02:11.980
+So this is a very bad ratio.
+
+51
+00:02:11.980 --> 00:02:14.050
+Even though we only had
+to return one document,
+
+52
+00:02:14.050 --> 00:02:15.580
+we had look at 50,000.
+
+53
+00:02:15.580 --> 00:02:17.990
+It's not very efficient.
+
+54
+00:02:17.990 --> 00:02:21.280
+You'll also notice that we
+looked at zero index keys,
+
+55
+00:02:21.280 --> 00:02:24.010
+and that's because we
+did a collection scan.
+
+56
+00:02:24.010 --> 00:02:25.750
+We didn't use an index
+because we haven't
+
+57
+00:02:25.750 --> 00:02:27.670
+created any indexes yet.
+
+58
+00:02:27.670 --> 00:02:30.050
+Let's go ahead and do that now.
+
+59
+00:02:30.050 --> 00:02:34.350
+Here I'm creating an
+index on the SSN field,
+
+60
+00:02:34.350 --> 00:02:36.050
+and I'm saying one
+to specify that it's
+
+61
+00:02:36.050 --> 00:02:38.600
+going to be an ascending index.
+
+62
+00:02:38.600 --> 00:02:41.930
+Now, that I've ran this command,
+MongoDB built the index.
+
+63
+00:02:41.930 --> 00:02:45.680
+And by doing that, MongoDB had
+a look at every single document
+
+64
+00:02:45.680 --> 00:02:46.990
+in the collection.
+
+65
+00:02:46.990 --> 00:02:50.360
+And then it pulls
+out the SSN field.
+
+66
+00:02:50.360 --> 00:02:53.180
+If the SSN field is not
+present on a document,
+
+67
+00:02:53.180 --> 00:02:57.450
+then that key entry is
+going to have a null value.
+
+68
+00:02:57.450 --> 00:02:59.720
+Let's go ahead and
+run our query again.
+
+69
+00:02:59.720 --> 00:03:01.190
+I want to show you a cool trick.
+
+70
+00:03:01.190 --> 00:03:04.580
+Here I'm going to create an
+explainable object, where
+
+71
+00:03:04.580 --> 00:03:07.130
+instead of putting
+explain after the find,
+
+72
+00:03:07.130 --> 00:03:10.040
+I'm going to put it
+directly on a collection.
+
+73
+00:03:10.040 --> 00:03:14.550
+Now, I can just run "find"
+on my explainable object.
+
+74
+00:03:14.550 --> 00:03:17.160
+So I'm running the same
+query as I did before.
+
+75
+00:03:17.160 --> 00:03:19.570
+Now, this time when we
+look at the explain output,
+
+76
+00:03:19.570 --> 00:03:24.800
+we'll notice that the winning
+plan is now an index scan.
+
+77
+00:03:24.800 --> 00:03:26.960
+So we're not doing a
+collection scan anymore.
+
+78
+00:03:26.960 --> 00:03:30.680
+And if we scroll down
+to execution stats,
+
+79
+00:03:30.680 --> 00:03:33.200
+we'll see that we returned the
+same document we did before.
+
+80
+00:03:33.200 --> 00:03:34.730
+We return one document.
+
+81
+00:03:34.730 --> 00:03:37.350
+But rather than looking
+at 50,000 documents,
+
+82
+00:03:37.350 --> 00:03:39.230
+we only had to look
+at one document.
+
+83
+00:03:39.230 --> 00:03:42.500
+We only have to look at the
+one document that we returned,
+
+84
+00:03:42.500 --> 00:03:44.090
+which is awesome.
+
+85
+00:03:44.090 --> 00:03:46.040
+And that's because
+we're able to use index
+
+86
+00:03:46.040 --> 00:03:48.350
+keys to find our document.
+
+87
+00:03:48.350 --> 00:03:50.720
+In this case we had
+to use one index key.
+
+88
+00:03:50.720 --> 00:03:53.570
+We immediately
+found the index key
+
+89
+00:03:53.570 --> 00:03:57.500
+that had the value of our
+query, and that index key
+
+90
+00:03:57.500 --> 00:04:01.910
+pointed directly to the document
+that we wanted to return.
+
+91
+00:04:01.910 --> 00:04:05.300
+This is much more efficient than
+scanning the entire collection,
+
+92
+00:04:05.300 --> 00:04:07.790
+which is what we do if
+we don't have an index
+
+93
+00:04:07.790 --> 00:04:10.280
+to use on our query.
+
+94
+00:04:10.280 --> 00:04:13.970
+Now, if the query
+predicate of my query
+
+95
+00:04:13.970 --> 00:04:17.690
+doesn't use a field
+that is indexed on,
+
+96
+00:04:17.690 --> 00:04:20.839
+you'll see from
+the explain output
+
+97
+00:04:20.839 --> 00:04:23.050
+that we weren't able
+to use that index.
+
+98
+00:04:23.050 --> 00:04:25.940
+We had do a collection scan.
+
+99
+00:04:25.940 --> 00:04:27.920
+So that means that
+because we didn't
+
+100
+00:04:27.920 --> 00:04:30.500
+use the SSN field, the
+field that we indexed on,
+
+101
+00:04:30.500 --> 00:04:32.750
+we still had to look
+at 50,000 documents
+
+102
+00:04:32.750 --> 00:04:36.480
+to return the 10
+documents that we wanted.
+
+103
+00:04:36.480 --> 00:04:38.310
+Now, we know that
+MongoDB allows us
+
+104
+00:04:38.310 --> 00:04:42.246
+to use dot notation to query
+inside of a subdocument.
+
+105
+00:04:42.246 --> 00:04:43.620
+But you can also
+use dot notation
+
+106
+00:04:43.620 --> 00:04:45.660
+when specifying indexes.
+
+107
+00:04:45.660 --> 00:04:48.270
+Let's use a simple example
+to illustrate this.
+
+108
+00:04:48.270 --> 00:04:50.520
+Here, I'm going to insert a
+document into the examples
+
+109
+00:04:50.520 --> 00:04:51.840
+collection.
+
+110
+00:04:51.840 --> 00:04:53.880
+This document will
+have a field that
+
+111
+00:04:53.880 --> 00:04:56.070
+has a subdocument as its value.
+
+112
+00:04:56.070 --> 00:04:57.510
+And the subdocument
+has two keys,
+
+113
+00:04:57.510 --> 00:05:00.006
+One called index field and
+one called other field.
+
+114
+00:05:00.006 --> 00:05:01.380
+And I'll go ahead
+and also insert
+
+115
+00:05:01.380 --> 00:05:04.290
+another document that
+has similar fields,
+
+116
+00:05:04.290 --> 00:05:06.580
+but with different values.
+
+117
+00:05:06.580 --> 00:05:09.810
+And like I was saying,
+we can specify an index
+
+118
+00:05:09.810 --> 00:05:13.500
+that uses dot notation
+to index on the fields
+
+119
+00:05:13.500 --> 00:05:15.900
+of our embedded document.
+
+120
+00:05:15.900 --> 00:05:20.730
+And this way, when we use
+dot notation in our queries,
+
+121
+00:05:20.730 --> 00:05:22.920
+we'll still be able
+to use an index,
+
+122
+00:05:22.920 --> 00:05:27.330
+as illustrated by our
+explain output, right here.
+
+123
+00:05:27.330 --> 00:05:29.880
+By the way, I want to point
+out that we should never
+
+124
+00:05:29.880 --> 00:05:34.125
+index on the field that points
+to a subdocument, because doing
+
+125
+00:05:34.125 --> 00:05:37.890
+so we'd have to query on
+the entire subdocument.
+
+126
+00:05:37.890 --> 00:05:39.672
+It's much better
+to use dot notation
+
+127
+00:05:39.672 --> 00:05:41.880
+when querying because we
+can just query on the fields
+
+128
+00:05:41.880 --> 00:05:44.640
+that we care about
+in our subdocuments.
+
+129
+00:05:44.640 --> 00:05:47.160
+If you do need to index
+on more than one field,
+
+130
+00:05:47.160 --> 00:05:49.200
+you can use a compound
+index, which we'll
+
+131
+00:05:49.200 --> 00:05:51.560
+learn about in another lesson.

@@ -1,0 +1,639 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.210
+In this lesson, we
+are going to walk you
+
+3
+00:00:02.210 --> 00:00:05.750
+through how to build complex
+aggregation framework
+
+4
+00:00:05.750 --> 00:00:09.680
+pipelines using the Java
+driver aggregation builders.
+
+5
+00:00:09.680 --> 00:00:12.000
+But before we get into
+the complex parts.
+
+6
+00:00:12.000 --> 00:00:14.540
+first, we are going to see
+how to create a single stage
+
+7
+00:00:14.540 --> 00:00:15.780
+aggregation.
+
+8
+00:00:15.780 --> 00:00:18.410
+In this case, I would like
+to know how many movies
+
+9
+00:00:18.410 --> 00:00:20.570
+have been produced in Portugal.
+
+10
+00:00:20.570 --> 00:00:23.060
+I can express a variable here
+specifying the country that I
+
+11
+00:00:23.060 --> 00:00:25.580
+want to filter on, and
+then what I'm going to do
+
+12
+00:00:25.580 --> 00:00:30.530
+is use an aggregation framework
+to answer that question.
+
+13
+00:00:30.530 --> 00:00:32.659
+For that, what I'll
+need to have is
+
+14
+00:00:32.659 --> 00:00:37.460
+a pipeline defined to hold
+all of our aggregation stages.
+
+15
+00:00:37.460 --> 00:00:40.370
+In this particular case,
+there will be just one stage
+
+16
+00:00:40.370 --> 00:00:42.170
+in our pipeline, the $match .
+
+17
+00:00:42.170 --> 00:00:45.860
+Stage The $match
+stage will require
+
+18
+00:00:45.860 --> 00:00:50.180
+an expression, a filtering
+criteria, a match criteria.
+
+19
+00:00:50.180 --> 00:00:53.090
+And in that case I'm going just
+to say that the field countries
+
+20
+00:00:53.090 --> 00:00:56.950
+need to match, or be equals, to
+the country that I'm defining
+
+21
+00:00:56.950 --> 00:00:58.610
+here, which is Portugal.
+
+22
+00:00:58.610 --> 00:01:00.410
+Now, instead of
+manually constructing
+
+23
+00:01:00.410 --> 00:01:03.830
+the BSON document that
+expresses the aggregation stage,
+
+24
+00:01:03.830 --> 00:01:07.700
+you should use the
+Aggregates builder class.
+
+25
+00:01:07.700 --> 00:01:10.730
+Aggregates provides a set of
+syntactic sugar class builders
+
+26
+00:01:10.730 --> 00:01:15.590
+and methods for each one of the
+supported aggregation stages.
+
+27
+00:01:15.590 --> 00:01:17.630
+Although we can build
+any aggregation stage
+
+28
+00:01:17.630 --> 00:01:19.610
+by appending
+document, or our BSON
+
+29
+00:01:19.610 --> 00:01:22.100
+objects with their
+respective expressions,
+
+30
+00:01:22.100 --> 00:01:27.410
+Aggregates allows us to be more
+concise in the stage build up,
+
+31
+00:01:27.410 --> 00:01:28.610
+with less typing.
+
+32
+00:01:28.610 --> 00:01:30.440
+So, in this case here,
+the $match method
+
+33
+00:01:30.440 --> 00:01:32.690
+takes in arguments, which
+is a filter expression
+
+34
+00:01:32.690 --> 00:01:34.340
+that we defined previously.
+
+35
+00:01:34.340 --> 00:01:38.030
+And sets it into the
+variable matchStage
+
+36
+00:01:38.030 --> 00:01:42.390
+I can then add to an
+array pipeline of stages.
+
+37
+00:01:42.390 --> 00:01:45.160
+And once we have appended
+the matchStage to the array
+
+38
+00:01:45.160 --> 00:01:49.130
+pipeline, we can then execute by
+calling the collection command
+
+39
+00:01:49.130 --> 00:01:50.780
+aggregate.
+
+40
+00:01:50.780 --> 00:01:52.820
+As a result of the
+aggregate method,
+
+41
+00:01:52.820 --> 00:01:55.070
+we get back an
+aggregate iterable
+
+42
+00:01:55.070 --> 00:01:57.200
+Similar to the other
+iterable, this object
+
+43
+00:01:57.200 --> 00:02:00.320
+allows us to iterate
+over the result sets.
+
+44
+00:02:00.320 --> 00:02:02.150
+In this case, I'm
+going to iterate
+
+45
+00:02:02.150 --> 00:02:05.180
+into buildMatchStageResults.
+
+46
+00:02:05.180 --> 00:02:07.700
+By running this, this
+should be producing
+
+47
+00:02:07.700 --> 00:02:11.190
+a list of 152 movies
+produced in Portugal.
+
+48
+00:02:11.190 --> 00:02:13.690
+So let's look into that.
+
+49
+00:02:13.690 --> 00:02:15.370
+And our assert is correct.
+
+50
+00:02:15.370 --> 00:02:17.710
+A single aggregation
+pipeline, in particular,
+
+51
+00:02:17.710 --> 00:02:19.690
+the $match stage,
+could be achieved
+
+52
+00:02:19.690 --> 00:02:21.860
+by using the find command.
+
+53
+00:02:21.860 --> 00:02:24.170
+So let's use something a
+little bit more interesting,
+
+54
+00:02:24.170 --> 00:02:26.830
+which is exactly what we
+should be using the aggregation
+
+55
+00:02:26.830 --> 00:02:28.200
+framework for.
+
+56
+00:02:28.200 --> 00:02:32.020
+So let's build here our
+pipeline again of BSON objects.
+
+57
+00:02:32.020 --> 00:02:35.620
+And what I want to know now
+is for all movies in Portugal,
+
+58
+00:02:35.620 --> 00:02:38.620
+sum the number of times a
+particular cast member gets
+
+59
+00:02:38.620 --> 00:02:40.690
+to visit such a lovely place.
+
+60
+00:02:40.690 --> 00:02:42.910
+How many times has an
+individual cast member
+
+61
+00:02:42.910 --> 00:02:46.280
+participated in a movie
+produced in this country?
+
+62
+00:02:46.280 --> 00:02:49.480
+And of course, let's not forget
+to return the results sorted
+
+63
+00:02:49.480 --> 00:02:51.520
+ascending regarding
+the number of gigs,
+
+64
+00:02:51.520 --> 00:02:53.770
+and number of counts
+of times that they
+
+65
+00:02:53.770 --> 00:02:57.460
+produced, or been part of a
+movie produced in Portugal.
+
+66
+00:02:57.460 --> 00:03:00.450
+The aggregation command that
+we would operate in the Mongo
+
+67
+00:03:00.450 --> 00:03:02.200
+shell should be something
+similar to this,
+
+68
+00:03:02.200 --> 00:03:05.770
+where we match,
+unwind, and then group
+
+69
+00:03:05.770 --> 00:03:10.570
+based on the sum of counts, and
+then, at the end, sort on it.
+
+70
+00:03:10.570 --> 00:03:14.200
+So, the match stage will be very
+similar to what we already done
+
+71
+00:03:14.200 --> 00:03:18.250
+before, where we have the
+country, the filter equality,
+
+72
+00:03:18.250 --> 00:03:21.010
+and creating the
+matchStage object.
+
+73
+00:03:21.010 --> 00:03:24.730
+Then we have to unwind using
+Aggregates.unwind and passing
+
+74
+00:03:24.730 --> 00:03:27.550
+the field we want to unwind on.
+
+75
+00:03:27.550 --> 00:03:31.690
+Group based on the cast name,
+and count the number of times
+
+76
+00:03:31.690 --> 00:03:34.750
+a cast member appears
+in the result set.
+
+77
+00:03:34.750 --> 00:03:38.560
+So we need to first
+specify what kind of field
+
+78
+00:03:38.560 --> 00:03:40.390
+we're going to use to group on.
+
+79
+00:03:40.390 --> 00:03:43.332
+It's going to be
+called a groupIdcast.
+
+80
+00:03:43.332 --> 00:03:45.790
+Group operations are in place
+to do some sort of completion
+
+81
+00:03:45.790 --> 00:03:47.050
+operation.
+
+82
+00:03:47.050 --> 00:03:49.950
+Operations like sum,
+average, min, max,
+
+83
+00:03:49.950 --> 00:03:52.780
+are all good candidates be
+used alongside with group
+
+84
+00:03:52.780 --> 00:03:53.790
+operations.
+
+85
+00:03:53.790 --> 00:03:56.140
+And there is a Java
+builder for that.
+
+86
+00:03:56.140 --> 00:03:59.860
+The Accumulators class handles
+all accumulation operations
+
+87
+00:03:59.860 --> 00:04:01.570
+within a group stage.
+
+88
+00:04:01.570 --> 00:04:04.860
+So we can use here the
+Accumulators.sum method,
+
+89
+00:04:04.860 --> 00:04:07.000
+specifying the field name
+where we want to collect
+
+90
+00:04:07.000 --> 00:04:08.590
+the values of the sum.
+
+91
+00:04:08.590 --> 00:04:11.680
+And, obviously, passing 1, which
+in this case, we are summing 1.
+
+92
+00:04:11.680 --> 00:04:14.590
+But it could be any expression,
+like for example, summing
+
+93
+00:04:14.590 --> 00:04:16.779
+all fields of a given value.
+
+94
+00:04:16.779 --> 00:04:19.209
+After that, we just need
+to build our group stage
+
+95
+00:04:19.209 --> 00:04:23.110
+by calling Aggregates.group
+and passing on the groupIdcast
+
+96
+00:04:23.110 --> 00:04:26.110
+and sum1 accumulation.
+
+97
+00:04:26.110 --> 00:04:28.010
+And finally, we want to sort.
+
+98
+00:04:28.010 --> 00:04:31.720
+And for sorting, we can just
+call a Sorts expression,
+
+99
+00:04:31.720 --> 00:04:35.240
+the sort order, and
+call the sort stage
+
+100
+00:04:35.240 --> 00:04:38.230
+by building it via
+the Aggregates.sort
+
+101
+00:04:38.230 --> 00:04:40.810
+and passing on the sort order.
+
+102
+00:04:40.810 --> 00:04:42.790
+With all these
+stages, we are now
+
+103
+00:04:42.790 --> 00:04:44.560
+ready to call our
+aggregate method
+
+104
+00:04:44.560 --> 00:04:48.160
+with a bit more complex of a
+pipeline than a single $match
+
+105
+00:04:48.160 --> 00:04:49.300
+stage.
+
+106
+00:04:49.300 --> 00:04:52.030
+So we need to add
+all of those stages
+
+107
+00:04:52.030 --> 00:04:56.250
+to our pipeline in the order
+that we want it to be executed,
+
+108
+00:04:56.250 --> 00:04:58.540
+and call the aggregate
+method on the collection,
+
+109
+00:04:58.540 --> 00:04:59.940
+passing on that pipeline.
+
+110
+00:04:59.940 --> 00:05:01.690
+The aggregation
+framework also provides
+
+111
+00:05:01.690 --> 00:05:04.030
+stages that combine
+operations that are typically
+
+112
+00:05:04.030 --> 00:05:05.990
+expressed by several stages.
+
+113
+00:05:05.990 --> 00:05:09.190
+For example, $sortByCount
+combines both the group,
+
+114
+00:05:09.190 --> 00:05:12.970
+with a sum accumulator,
+with the source stage.
+
+115
+00:05:12.970 --> 00:05:13.690
+Don't believe me?
+
+116
+00:05:13.690 --> 00:05:15.940
+Well, let's check it out.
+
+117
+00:05:15.940 --> 00:05:19.360
+First of all, let's build
+this shorter pipeline
+
+118
+00:05:19.360 --> 00:05:22.990
+variable, which is again,
+an array of BSON objects.
+
+119
+00:05:22.990 --> 00:05:26.830
+Then, we need to build a
+slightly shorter pipeline.
+
+120
+00:05:26.830 --> 00:05:29.930
+We have already built
+our $match and $unwind,
+
+121
+00:05:29.930 --> 00:05:32.350
+so let's add them here.
+
+122
+00:05:32.350 --> 00:05:35.200
+And then we can create
+the $sortByCount stage,
+
+123
+00:05:35.200 --> 00:05:39.197
+which should do exactly the same
+thing as our group and our sort
+
+124
+00:05:39.197 --> 00:05:42.230
+stages that we defined before.
+
+125
+00:05:42.230 --> 00:05:43.810
+And in this case,
+what we just need
+
+126
+00:05:43.810 --> 00:05:46.960
+to do is call the
+Aggregates.sortByCount,
+
+127
+00:05:46.960 --> 00:05:49.000
+pass on the field
+expression saying
+
+128
+00:05:49.000 --> 00:05:51.310
+that we want to do it on cast.
+
+129
+00:05:51.310 --> 00:05:54.700
+Then finally, we can
+assert that both pipelines
+
+130
+00:05:54.700 --> 00:05:56.220
+provide the same results.
+
+131
+00:05:56.220 --> 00:05:58.480
+So let's check it out.
+
+132
+00:05:58.480 --> 00:06:00.670
+And that is absolutely correct.
+
+133
+00:06:00.670 --> 00:06:03.580
+Both results will
+have the same, even
+
+134
+00:06:03.580 --> 00:06:06.190
+though they were built
+with different stages
+
+135
+00:06:06.190 --> 00:06:08.280
+in their pipelines.

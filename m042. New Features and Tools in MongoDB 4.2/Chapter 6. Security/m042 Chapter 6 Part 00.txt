@@ -1,0 +1,75 @@
+All right, welcome back.
+
+In this lesson, we're going to discuss a new feature that prevents passwords for being exposed in the MongoDB configuration file.
+
+MongoDB configuration files often contain all the information necessary to start up a MongoDB process.
+
+In some ways, it's a good thing that all this information can be contained in one place.
+
+We know which file to edit when we want to change something, and we know where to look when something changes.
+
+If we decide to change the tls mode, for example, we'd see that reflected here.
+
+However, there's some trade to this approach.
+
+In particular, including an entry for password secrets in the configuration file leaves sensitive data exposed in plain text if not properly secured.
+
+Exposing these passwords as strings in the YAML can complicate auditing within an organization in addition to deepening the fallout in the event of a system compromise.
+
+So instead of pointing MongoD to a config file and storing security parameters in this file, we can reference some environmental variable on the local system.
+
+In this case, the environmental variable has to be a function, which means that we can do something simple like just returning a string.
+
+This is probably not the most secure.
+
+So like any other bash function, we can make a web request here if we want.
+
+This web request can retrieve something from an external service, for example, a password vault.
+
+So just to see how this works, we're going to take a look at the old configuration file format, where we had to pass the password as a string.
+
+So in this example, the tls certificate we're using to start up MongoD is protected with a password.
+
+And in our configuration file, the certificate key file password is passed as a string just m042password.
+
+This variable is pretty sensitive.
+
+So let's pass it as an environmental variable instead.
+
+So in this example, we passed this exec parameter and asked it to execute the environmental variable get_certificate_password.
+
+So get_certificate_password is just a function on the local system that returns our certificate's password.
+
+Here the -n removes the new line and white space around the string m042password.
+
+This way, the configuration file can use this string without manipulating it further.
+
+So we can use this configuration to start up MongoD with this command.
+
+Note that we need to pass this additional parameter configExpand and then specify that we want to use the exec option in our config file.
+
+We can see a log message noting that it did process the exec config expansion, and the process started successfully.
+
+So we can also do instead of passing an environmental variable is ask MongoDB to make a web request.
+
+As we showed earlier, we can make a web request through the environmental variable, but MongoDB provides a way to do it directly from the configuration file.
+
+This option will use the local web request library on whatever platform you're running on.
+
+So that'll be WinHTTP on Windows or libcurl on any other platform.
+
+So in this example, the password for our tls certificate we're using to start up MongoD is passed from a web request with __rest.
+
+We don't have as much control over the rest call as we did on the local environment variable.
+
+So while we could just trim out the whitespace from the environmental variable, this file is on another server.
+
+So we're going to specify that we want a string output and then trim the whitespace around it.
+
+And when we launched MongoD with this config file, we need to specify that we're going to make a rest call in the config.
+
+And that took a minute, because it needed to make a request to a different server, but it eventually did start successfully.
+
+So just to recap in this lesson, we discussed the new alternatives to storing passwords in config files.
+
+As a reminder, those two alternatives are environmental variables and web requests.

@@ -1,0 +1,243 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.330
+Many of these cases
+require the ability
+
+3
+00:00:02.330 --> 00:00:04.760
+to manipulate,
+inspect, and analyze,
+
+4
+00:00:04.760 --> 00:00:07.250
+data across multiple dimensions.
+
+5
+00:00:07.250 --> 00:00:09.530
+Apart from this,
+these use cases often
+
+6
+00:00:09.530 --> 00:00:11.550
+required that this data
+categorization meets
+
+7
+00:00:11.550 --> 00:00:15.140
+strict application as well
+SLAs, service level agreements,
+
+8
+00:00:15.140 --> 00:00:18.920
+to enable responsive
+Interfaces In MongoDB 3.4,
+
+9
+00:00:18.920 --> 00:00:21.950
+we are introducing support
+for facet navigation enabling
+
+10
+00:00:21.950 --> 00:00:24.290
+developers to quickly
+create an interface that
+
+11
+00:00:24.290 --> 00:00:27.125
+characterizes query results
+across multiple dimensions
+
+12
+00:00:27.125 --> 00:00:29.000
+or facets.
+
+13
+00:00:29.000 --> 00:00:31.790
+Application users can then
+narrow their query results
+
+14
+00:00:31.790 --> 00:00:35.480
+by selecting a facet value as
+a subsequent filter providing
+
+15
+00:00:35.480 --> 00:00:38.590
+an intuitive interface
+to exploring a data set.
+
+16
+00:00:38.590 --> 00:00:42.230
+Facetf navigation is heavily
+used for browsing data catalogs
+
+17
+00:00:42.230 --> 00:00:45.349
+and grouping the data
+in analytics use cases.
+
+18
+00:00:45.349 --> 00:00:47.390
+Combining facet navigation
+with the functionality
+
+19
+00:00:47.390 --> 00:00:49.520
+of the MongoDB
+aggregation framework
+
+20
+00:00:49.520 --> 00:00:53.210
+provides a powerful way to
+manipulate data and analyze it.
+
+21
+00:00:53.210 --> 00:00:56.270
+Extending MongoDB usage to a
+wider range of applications
+
+22
+00:00:56.270 --> 00:00:58.960
+with minimum overhead.
+
+23
+00:00:58.960 --> 00:01:00.590
+What is faceting?
+
+24
+00:01:00.590 --> 00:01:03.050
+Faceting is a popular
+analytics capability
+
+25
+00:01:03.050 --> 00:01:04.910
+that allows users
+to explore data
+
+26
+00:01:04.910 --> 00:01:08.390
+by applying multiple filters
+and characterizations.
+
+27
+00:01:08.390 --> 00:01:10.070
+Using this approach
+an application
+
+28
+00:01:10.070 --> 00:01:11.810
+classifies each
+information element
+
+29
+00:01:11.810 --> 00:01:13.950
+along multiple
+explicit dimensions,
+
+30
+00:01:13.950 --> 00:01:17.090
+called facets, enabling the
+classifications to be accessed
+
+31
+00:01:17.090 --> 00:01:19.920
+in order in multiple ways.
+
+32
+00:01:19.920 --> 00:01:22.370
+For example, let's
+consider a user catalog
+
+33
+00:01:22.370 --> 00:01:24.620
+for a popular
+social media-- sites
+
+34
+00:01:24.620 --> 00:01:28.220
+like LinkedIn in
+this example let's
+
+35
+00:01:28.220 --> 00:01:31.650
+do a search on the catalog.
+
+36
+00:01:31.650 --> 00:01:35.060
+This search is looking for
+users with the term MongoDB
+
+37
+00:01:35.060 --> 00:01:37.010
+somewhere in their profile.
+
+38
+00:01:37.010 --> 00:01:41.360
+Initial results set return
+is roughly 200k users.
+
+39
+00:01:41.360 --> 00:01:44.240
+The location and
+current company facets
+
+40
+00:01:44.240 --> 00:01:47.870
+can be used to further narrow
+down the results set according
+
+41
+00:01:47.870 --> 00:01:49.650
+to certain criteria.
+
+42
+00:01:49.650 --> 00:01:52.260
+For example, if a user chooses
+to limit the result's sets
+
+43
+00:01:52.260 --> 00:01:54.530
+to only users in
+the United States,
+
+44
+00:01:54.530 --> 00:01:58.960
+then the result set will
+narrow down to near 62k users.
+
+45
+00:01:58.960 --> 00:02:00.780
+Facets in MongoDB
+are implemented
+
+46
+00:02:00.780 --> 00:02:02.930
+using the aggregation
+framework and comprehend
+
+47
+00:02:02.930 --> 00:02:04.790
+a few different stages.
+
+48
+00:02:04.790 --> 00:02:07.190
+We will be covering
+single facet queries,
+
+49
+00:02:07.190 --> 00:02:12.320
+manual, automatic bucketing,
+and rendering multiple facets.
+
+50
+00:02:12.320 --> 00:02:15.707
+Well let's get ourselves
+busy working with facets.
+
+51
+00:02:15.707 --> 00:02:16.207

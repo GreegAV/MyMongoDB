@@ -1,0 +1,626 @@
+
+1
+00:00:00.000 --> 00:00:01.170
+
+
+2
+00:00:01.170 --> 00:00:03.000
+The most interesting
+type of relationship
+
+3
+00:00:03.000 --> 00:00:05.520
+is the one-to-many relationship.
+
+4
+00:00:05.520 --> 00:00:07.350
+First, because if
+all our data is only
+
+5
+00:00:07.350 --> 00:00:09.560
+composed of one-to-one
+relationships,
+
+6
+00:00:09.560 --> 00:00:13.140
+a spreadsheet application
+like Excel could do the job,
+
+7
+00:00:13.140 --> 00:00:15.690
+at least for a small data set.
+
+8
+00:00:15.690 --> 00:00:18.300
+As for the many-to-many
+relationships, most of them
+
+9
+00:00:18.300 --> 00:00:21.810
+can be expressed as two
+one-to-many relationships.
+
+10
+00:00:21.810 --> 00:00:23.370
+We will describe
+this in more detail
+
+11
+00:00:23.370 --> 00:00:26.706
+in the many-to-many
+relationship lesson.
+
+12
+00:00:26.706 --> 00:00:30.300
+A one-to-many relationship means
+that an object of a given type
+
+13
+00:00:30.300 --> 00:00:33.630
+is associated with n
+objects of a second type,
+
+14
+00:00:33.630 --> 00:00:35.880
+while the relationship
+in the opposite direction
+
+15
+00:00:35.880 --> 00:00:38.610
+means that each of the
+objects of the second type
+
+16
+00:00:38.610 --> 00:00:42.720
+can only be associated with
+one object on the one side.
+
+17
+00:00:42.720 --> 00:00:44.640
+As an example of
+this relationship,
+
+18
+00:00:44.640 --> 00:00:47.040
+we use a person and
+their credit cards,
+
+19
+00:00:47.040 --> 00:00:49.260
+or a blog entry
+and its comments.
+
+20
+00:00:49.260 --> 00:00:52.710
+A person has n credit cards,
+but each of these credit cards
+
+21
+00:00:52.710 --> 00:00:56.760
+belongs to one and
+only one person.
+
+22
+00:00:56.760 --> 00:00:59.100
+Using MongoDB and
+its document model,
+
+23
+00:00:59.100 --> 00:01:02.350
+give us a few ways to represent
+this kind of relationship.
+
+24
+00:01:02.350 --> 00:01:04.800
+We can embed each document
+from the many side
+
+25
+00:01:04.800 --> 00:01:06.930
+into the document
+on the one side.
+
+26
+00:01:06.930 --> 00:01:09.900
+Or vise versa, we can embed
+the document from the one side
+
+27
+00:01:09.900 --> 00:01:12.750
+into each document
+on the many side.
+
+28
+00:01:12.750 --> 00:01:14.520
+Instead of using a
+single collection
+
+29
+00:01:14.520 --> 00:01:16.290
+and embedding the
+information in it,
+
+30
+00:01:16.290 --> 00:01:18.900
+we keep the documents in
+two separate collections
+
+31
+00:01:18.900 --> 00:01:22.530
+and reference documents from
+one collection in documents
+
+32
+00:01:22.530 --> 00:01:25.670
+of the other collection.
+
+33
+00:01:25.670 --> 00:01:27.560
+Using our product
+catalog use case,
+
+34
+00:01:27.560 --> 00:01:29.990
+let's have a look at all
+of these representation
+
+35
+00:01:29.990 --> 00:01:32.810
+of the one-to-many relationship.
+
+36
+00:01:32.810 --> 00:01:35.630
+The first representation
+embeds the end documents
+
+37
+00:01:35.630 --> 00:01:37.700
+as an array of sub documents.
+
+38
+00:01:37.700 --> 00:01:40.370
+In our product catalog,
+we keep the top reviews
+
+39
+00:01:40.370 --> 00:01:42.410
+of an item within
+the item itself
+
+40
+00:01:42.410 --> 00:01:45.230
+because we want to display
+these reviews once the item gets
+
+41
+00:01:45.230 --> 00:01:47.030
+retrieved from the database.
+
+42
+00:01:47.030 --> 00:01:50.330
+In other words, items are
+the main objects we access.
+
+43
+00:01:50.330 --> 00:01:53.600
+And when we do so, we want to
+bring in all the associated top
+
+44
+00:01:53.600 --> 00:01:55.850
+reviews with them.
+
+45
+00:01:55.850 --> 00:01:57.800
+For simple applications
+where the number
+
+46
+00:01:57.800 --> 00:02:00.110
+of embedded documents
+is small,, this
+
+47
+00:02:00.110 --> 00:02:03.720
+is the most common
+representation.
+
+48
+00:02:03.720 --> 00:02:08.080
+The information that is needed
+together stays together.
+
+49
+00:02:08.080 --> 00:02:11.560
+As for quartering on the many
+side, which is now embedded,
+
+50
+00:02:11.560 --> 00:02:15.040
+we use multi key indexes,
+which are designed for indexing
+
+51
+00:02:15.040 --> 00:02:18.010
+values in array fields.
+
+52
+00:02:18.010 --> 00:02:21.100
+The second representation
+of one-to-many relationships
+
+53
+00:02:21.100 --> 00:02:23.950
+is to embed the document
+from the one side
+
+54
+00:02:23.950 --> 00:02:25.900
+in each of the
+documents associated
+
+55
+00:02:25.900 --> 00:02:28.540
+with it from the many side.
+
+56
+00:02:28.540 --> 00:02:30.580
+Let's use an as the
+count of document
+
+57
+00:02:30.580 --> 00:02:33.820
+associated to our
+document on the one side.
+
+58
+00:02:33.820 --> 00:02:36.160
+A good example will be an
+address and the order's
+
+59
+00:02:36.160 --> 00:02:38.380
+delivery to the address.
+
+60
+00:02:38.380 --> 00:02:40.540
+Over time, because many
+orders were delivered
+
+61
+00:02:40.540 --> 00:02:43.780
+to the same address, we have
+a one-to-many relationship
+
+62
+00:02:43.780 --> 00:02:46.540
+between address and orders.
+
+63
+00:02:46.540 --> 00:02:48.538
+Application are more
+likely to handle orders
+
+64
+00:02:48.538 --> 00:02:50.830
+than trying to figure out
+everything shipped to a given
+
+65
+00:02:50.830 --> 00:02:53.110
+location.
+
+66
+00:02:53.110 --> 00:02:58.280
+The access pattern's focus
+is on orders, not addresses.
+
+67
+00:02:58.280 --> 00:03:00.680
+As a result, it makes
+more sense for us
+
+68
+00:03:00.680 --> 00:03:04.550
+to store the address, the
+one side of the relationship,
+
+69
+00:03:04.550 --> 00:03:07.250
+on every order, the many
+sides of the relationship,
+
+70
+00:03:07.250 --> 00:03:10.550
+rather than the
+other way around.
+
+71
+00:03:10.550 --> 00:03:12.950
+This representation
+is less often used.
+
+72
+00:03:12.950 --> 00:03:14.900
+The main disadvantage
+of this representation
+
+73
+00:03:14.900 --> 00:03:16.520
+is that the embedded
+object must be
+
+74
+00:03:16.520 --> 00:03:19.610
+duplicated in many locations.
+
+75
+00:03:19.610 --> 00:03:22.040
+However, the nature of
+the embedded information
+
+76
+00:03:22.040 --> 00:03:22.820
+is static--
+
+77
+00:03:22.820 --> 00:03:26.180
+hardly ever changes-- such
+as the shipping address
+
+78
+00:03:26.180 --> 00:03:27.290
+of the order.
+
+79
+00:03:27.290 --> 00:03:29.090
+It is, in fact,
+better to store it
+
+80
+00:03:29.090 --> 00:03:31.340
+in the order document itself.
+
+81
+00:03:31.340 --> 00:03:34.470
+If the address for a given
+customer changes in the future,
+
+82
+00:03:34.470 --> 00:03:36.950
+it does not that affect
+all the previous orders
+
+83
+00:03:36.950 --> 00:03:39.830
+and where they got delivered.
+
+84
+00:03:39.830 --> 00:03:43.190
+The third representation
+is to have two collections.
+
+85
+00:03:43.190 --> 00:03:46.250
+From the one side, we
+reference the many side.
+
+86
+00:03:46.250 --> 00:03:48.950
+To do so, we need an
+array of references.
+
+87
+00:03:48.950 --> 00:03:53.030
+In our zips collection,
+which contain our zip codes,
+
+88
+00:03:53.030 --> 00:03:56.780
+we create an array of stores
+where each element in the array
+
+89
+00:03:56.780 --> 00:04:00.110
+is a store ID value that
+identifies documents
+
+90
+00:04:00.110 --> 00:04:02.220
+in the store's collection.
+
+91
+00:04:02.220 --> 00:04:04.940
+The referencing
+representations are great.
+
+92
+00:04:04.940 --> 00:04:08.060
+If we can't or don't need to
+embed the remaining entity
+
+93
+00:04:08.060 --> 00:04:11.780
+information, we get to know
+all the references, the stores,
+
+94
+00:04:11.780 --> 00:04:15.230
+without making a second query
+on the store's collection.
+
+95
+00:04:15.230 --> 00:04:17.779
+If the entries in the array
+are descriptive enough,
+
+96
+00:04:17.779 --> 00:04:21.490
+we are saving
+ourselves some queries.
+
+97
+00:04:21.490 --> 00:04:23.370
+However, in this
+representation, we
+
+98
+00:04:23.370 --> 00:04:27.240
+need to keep in sync the area
+references and their reference
+
+99
+00:04:27.240 --> 00:04:28.320
+documents.
+
+100
+00:04:28.320 --> 00:04:30.030
+If we need the
+reference document,
+
+101
+00:04:30.030 --> 00:04:34.710
+we must also delete the
+reference to this document.
+
+102
+00:04:34.710 --> 00:04:37.920
+MongoDB does not currently
+support foreign keys or cascade
+
+103
+00:04:37.920 --> 00:04:41.610
+deletes, therefore there is
+no way for all references
+
+104
+00:04:41.610 --> 00:04:44.790
+to automatically be removed
+on document deletion.
+
+105
+00:04:44.790 --> 00:04:47.250
+The application must
+perform all of this sort
+
+106
+00:04:47.250 --> 00:04:49.470
+of data management.
+
+107
+00:04:49.470 --> 00:04:51.470
+More commonly,
+references are stored
+
+108
+00:04:51.470 --> 00:04:53.820
+in the documents on
+the many side of a one
+
+109
+00:04:53.820 --> 00:04:55.660
+to many relationship.
+
+110
+00:04:55.660 --> 00:04:57.420
+For example, we may
+have a collection
+
+111
+00:04:57.420 --> 00:04:59.760
+of zip codes, each
+zip code adding
+
+112
+00:04:59.760 --> 00:05:02.130
+possibly many stores in it.
+
+113
+00:05:02.130 --> 00:05:04.380
+By adding a single
+field called zip
+
+114
+00:05:04.380 --> 00:05:07.100
+in each of my
+stores documents, I
+
+115
+00:05:07.100 --> 00:05:11.250
+can reference the document
+in the zips collection.
+
+116
+00:05:11.250 --> 00:05:13.440
+Compared to the
+previous representation,
+
+117
+00:05:13.440 --> 00:05:16.320
+if we delete a store, there
+is no additional reference
+
+118
+00:05:16.320 --> 00:05:19.200
+to remove because the
+reference is inside
+
+119
+00:05:19.200 --> 00:05:21.990
+the document we are removing.
+
+120
+00:05:21.990 --> 00:05:25.230
+To recap this lesson, when
+representing one-to-many
+
+121
+00:05:25.230 --> 00:05:28.200
+relationships, there
+is a lot of choices--
+
+122
+00:05:28.200 --> 00:05:32.400
+embed or reference and choose
+the side between one and many.
+
+123
+00:05:32.400 --> 00:05:35.730
+Duplication may occur when
+embedding on the many side.
+
+124
+00:05:35.730 --> 00:05:39.750
+However, it may be OK
+or even preferable.
+
+125
+00:05:39.750 --> 00:05:42.990
+Prefer embedding over
+referencing for simplicity,
+
+126
+00:05:42.990 --> 00:05:46.470
+or when there is a small
+number of reference documents,
+
+127
+00:05:46.470 --> 00:05:50.540
+as all related information
+is kept together.
+
+128
+00:05:50.540 --> 00:05:54.570
+Embed on the side of the
+most queried collection.
+
+129
+00:05:54.570 --> 00:05:57.750
+Prefer referencing when the
+associated documents are not
+
+130
+00:05:57.750 --> 00:06:01.880
+always needed with the most
+often queried documents.

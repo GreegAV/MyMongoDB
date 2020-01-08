@@ -1,0 +1,151 @@
+Apart from the make lots of connections to servers file, in the handouts of this lesson, you're also going to see this CFG file, connections_singlenode file.
+
+Make sure you also place that into shared, so we can use it from our m312-vagrant-env box.
+
+Once you have it, the next step to do is basically connect to our bigger machine.
+
+Once we are in our vagrant box, let's just spin up a mongod, passing on as parameter, then -f and the configuration file that we recently downloaded from the lessons handout.
+
+Now, what this script does is sets up a mongod that listens on port 27000-- 27,000.
+
+Now, it's time to connect our super inefficient file, our make lots of connections to servers.py, which, in turn, takes a few parameters to operate.
+
+As you can see here, we need to specify a host, the ports, and if we were using a replica set name, and then a number of connections.
+
+OK, we can do that.
+
+But before we do that, let's open another tab, and within our mongo m312 vagrant box, let's start our mongostat to start capturing some traffic on this box.
+
+So we know that our mongod is listening on port 27000.
+
+And we know that mongostat can do that.
+
+Now, this is pretty, pretty noisy over here, so there's a lot of different statistics being collected that I'm probably not that interested in.
+
+Let's filter out some of that by just outputting a few, like the number of commands, the number of dirty memory, used memory, virtual size, residence size, connections, and the time stamp.
+
+Once we do that, we are going to get a much, much cleaner output of our mongostat.
+
+OK, let me jump back to our main tab where I can go ahead and run my script, my make_lots_of_connections script.
+
+We're going to connect 27000, and we're going to launch 100 different connections.
+
+Actually, we're going to be launching 100 different processes of this make lots of connections to servers script.
+
+Once I run this, and if I go back to our mongo stats, we will see that our dirty and used memory are pretty low, around 0%.
+
+This is because we are not really allocating any data into our cache.
+
+We're basically just connecting to the instance.
+
+However, on the virtual size and the residence size we do see a bit of a bump.
+
+Once this script finishes, and I can see here is a drop between 102 connections to 2 connections, there's been a slight drop on the virtual size.
+
+The residence size, however, continues to be allocated.
+
+We're going to see about that in just a few moments.
+
+So we've seen that there's a bump on virtual size and residence size.
+
+Obviously, as well in the number of connections.
+
+So let's play around with this a little bit more.
+
+Let's go ahead, instead of connecting to 100 different processes, let's put 200 in place.
+
+Once I do that, I can see that now I have a significant bump again on my virtual size.
+
+So connections do occupy space in memory, especially in virtual size, but also in my residence size.
+
+So there is, in fact, an increase in the amount of memory that I need to allocate some incoming connections of my system.
+
+So let's increase it once more, the number of processes and connections that I'm going to do to my server.
+
+Let's bring it up to 600.
+
+And here is something a little bit odd that is happening.
+
+Although I have requested for 600, the number of connections that I see established to my mongod does not increase more than 200.
+
+Why is that?
+
+What is going on?
+
+Why such a low value?
+
+By default, MongoDB allows incoming connections up to 65,536.
+
+This is the maximum amount of connections that a single node can establish.
+
+But 200 is far from this value.
+
+So what is going on?
+
+Why my connections value is only 200?
+
+Let's get out of my mongostat, and let's tail my log file.
+
+OK?
+
+I see that a lot of connections ended.
+
+Let's bring back our process to life, again, to see and capture what's going on.
+
+All right, now my logs are telling me a couple of important messages here.
+
+First of all, I'm starting new threads, and I'm getting connections being refused.
+
+This comes with a nice message saying that I'm refusing connections because I may not open more than 200.
+
+Now, we know that the default allows us to go to 65,000-plus connections.
+
+We probably can't afford to do that on this virtual machine.
+
+That's fine.
+
+But 200 is still a very low value.
+
+So what can be the root cause of this issue?
+
+And this brings us to a particular set that I would like to raise up-- how to detect poorly configured hosts.
+
+The first place to look for would not be our log file.
+
+It will probably be our configuration file.
+
+So let's have a look to that /shared/connections singlenode.cfg file that we are currently using in our system.
+
+Now, as you can see here, we are artificially capping the maximum amount of incoming connections to 200.
+
+So even if we have an application trying to establish more than 200 connections, those plus 200 will be refused, which is a good thing, because we are specifically saying to the system, hey, do not allow more than 200 connections.
+
+So you might consider that what's limiting our ability in this particular case of establishing more connections is our own configuration.
+
+So be aware of this value if you're trying to debug why your application is not enabled to provide more connections than the ones that you are seeing through the mongostat.
+
+So if we want to get rid of that, let's just remove the max incoming connections to 200 from the configuration file.
+
+Let's go into our mongod, and let's shut down the server in a clean fashion.
+
+And let's bring our along with you back again with the new configuration place.
+
+Sweet, we now have removed that limitation of 200 from our configuration file.
+
+Let's bring our mongostat command back again so we can see that now we have our mongod up and running again.
+
+And let's try again to launch 600 connections from this script.
+
+Great!
+
+We can see that our mongod has 600 new connections established.
+
+And we see a bump, as well, in the virtual size memory allocation.
+
+Now, my question to you guys-- is that a good thing?
+
+Should we have close to a gigabyte of memory allocated for 600 connections that literally are not doing much?
+
+They're just been established.
+
+We're going to talk about that on the following lesson.

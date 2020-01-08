@@ -1,0 +1,328 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:04.500
+Timeouts are one of those
+things that sometimes are just
+
+3
+00:00:04.500 --> 00:00:07.200
+neglected, either
+because we believe
+
+4
+00:00:07.200 --> 00:00:10.250
+that they are mythical
+creatures that don't exist,
+
+5
+00:00:10.250 --> 00:00:13.170
+or because we don't think
+they are very important.
+
+6
+00:00:13.170 --> 00:00:16.800
+But I can assure you, that they
+are very, very real, and very
+
+7
+00:00:16.800 --> 00:00:18.290
+important.
+
+8
+00:00:18.290 --> 00:00:22.200
+Timeouts are not a
+bad thing, per se.
+
+9
+00:00:22.200 --> 00:00:26.520
+They are actually a guarantee
+that a given operation does not
+
+10
+00:00:26.520 --> 00:00:27.241
+take forever.
+
+11
+00:00:27.241 --> 00:00:28.740
+Either the communication
+between one
+
+12
+00:00:28.740 --> 00:00:31.920
+node and another for the
+network, or an operation
+
+13
+00:00:31.920 --> 00:00:35.550
+going on, or even just a
+process calling a task,
+
+14
+00:00:35.550 --> 00:00:38.070
+like an IO task
+or a network task,
+
+15
+00:00:38.070 --> 00:00:40.620
+or just calling
+some other process
+
+16
+00:00:40.620 --> 00:00:42.740
+to do something that it needs.
+
+17
+00:00:42.740 --> 00:00:46.020
+In either case, timeouts
+are not the problem,
+
+18
+00:00:46.020 --> 00:00:48.510
+they are guarantees.
+
+19
+00:00:48.510 --> 00:00:50.880
+However, when they
+do happen, that
+
+20
+00:00:50.880 --> 00:00:52.620
+means that something
+in our system
+
+21
+00:00:52.620 --> 00:00:55.860
+is not responding, or
+taking longer than expected,
+
+22
+00:00:55.860 --> 00:00:58.800
+or longer than acceptable.
+
+23
+00:00:58.800 --> 00:01:03.030
+In a MongoDB cluster, there are
+a few timeouts that can occur,
+
+24
+00:01:03.030 --> 00:01:05.790
+and they are reported in
+the form of timeout errors.
+
+25
+00:01:05.790 --> 00:01:08.250
+We're going to have Server
+Selection Timeout, which
+
+26
+00:01:08.250 --> 00:01:12.360
+can occur on our client side,
+where no MongoDB server is
+
+27
+00:01:12.360 --> 00:01:14.610
+available after connection.
+
+28
+00:01:14.610 --> 00:01:18.270
+So if we have an established
+connection to a MongoDB,
+
+29
+00:01:18.270 --> 00:01:22.170
+and we write, or do an insert
+operation, but in the meantime
+
+30
+00:01:22.170 --> 00:01:24.750
+that node became
+idle or not present,
+
+31
+00:01:24.750 --> 00:01:28.050
+or the network was
+simply gone, we
+
+32
+00:01:28.050 --> 00:01:33.780
+will get back a MongoDB Server
+Selection Timeout error.
+
+33
+00:01:33.780 --> 00:01:37.110
+WTimeout is a flag
+of our write concern
+
+34
+00:01:37.110 --> 00:01:42.630
+that applications can set
+to acknowledge writes.
+
+35
+00:01:42.630 --> 00:01:45.600
+We can use it to
+specify that, given
+
+36
+00:01:45.600 --> 00:01:52.200
+an insert or write operation, if
+we require that operation to be
+
+37
+00:01:52.200 --> 00:01:58.680
+confirmed by all nodes
+involved in the W node flag,
+
+38
+00:01:58.680 --> 00:02:04.260
+if they do not comply within
+the specified wTimeout,
+
+39
+00:02:04.260 --> 00:02:09.930
+a wTimeout error is sent back
+within the response saying
+
+40
+00:02:09.930 --> 00:02:13.650
+well, you know what, we
+tried, but we could not
+
+41
+00:02:13.650 --> 00:02:18.300
+comply with the timeout for
+that write acknowledge across,
+
+42
+00:02:18.300 --> 00:02:23.200
+in this case, all three nodes
+within two milliseconds.
+
+43
+00:02:23.200 --> 00:02:26.820
+Now that does not necessarily
+mean that our write operation
+
+44
+00:02:26.820 --> 00:02:29.610
+did not complete it.
+
+45
+00:02:29.610 --> 00:02:33.660
+We will see about the
+details in a few seconds.
+
+46
+00:02:33.660 --> 00:02:37.200
+Another time out that we can
+set from the application side
+
+47
+00:02:37.200 --> 00:02:42.420
+is max timeout in milliseconds
+parameter for a given cursor
+
+48
+00:02:42.420 --> 00:02:43.830
+operation.
+
+49
+00:02:43.830 --> 00:02:47.520
+While wTimeout is related
+with write concern,
+
+50
+00:02:47.520 --> 00:02:53.910
+max time milliseconds is a
+cursor operations parameter,
+
+51
+00:02:53.910 --> 00:03:00.330
+which means that if we
+extend a given operation more
+
+52
+00:03:00.330 --> 00:03:03.530
+than the specified
+max time ms, we
+
+53
+00:03:03.530 --> 00:03:06.780
+are going to get back
+an execution timeout.
+
+54
+00:03:06.780 --> 00:03:12.420
+Our operation could not complete
+on the expected maximum time
+
+55
+00:03:12.420 --> 00:03:15.660
+for it to be accomplished.
+
+56
+00:03:15.660 --> 00:03:18.670
+So if we have a connection,
+percent in operation,
+
+57
+00:03:18.670 --> 00:03:23.970
+and if it doesn't complete by
+then, we will get a timeout.
+
+58
+00:03:23.970 --> 00:03:26.340
+And finally, we have
+a network timeout,
+
+59
+00:03:26.340 --> 00:03:30.000
+which occurs while a connection,
+or even an instruction,
+
+60
+00:03:30.000 --> 00:03:32.880
+takes longer than the
+admissible expected time
+
+61
+00:03:32.880 --> 00:03:35.970
+to complete at network level.
+
+62
+00:03:35.970 --> 00:03:39.450
+It can be related with
+socket timeouts, networks,
+
+63
+00:03:39.450 --> 00:03:43.380
+impairments, some
+wobbly switches
+
+64
+00:03:43.380 --> 00:03:49.170
+not deciding in due time what to
+connect and when to connect to.
+
+65
+00:03:49.170 --> 00:03:52.500
+Those are generally out
+of control of MongoDB,
+
+66
+00:03:52.500 --> 00:03:57.330
+they are mostly related with
+network configuration itself.
+
+67
+00:03:57.330 --> 00:04:00.570
+But now let's see some of
+these, especially wTimeout
+
+68
+00:04:00.570 --> 00:04:03.620
+and execution timeout in action.

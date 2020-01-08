@@ -1,0 +1,17 @@
+Encryption plays an important part in any security infrastructure.
+
+In this series of videos, we're going to discuss the different corruption options that MongoDB supports.
+
+There are two discrete categories of encryption with regards to MongoDB.
+
+Be There's Transfer Encryption, and then there's also Encryption at Rest.
+
+Transfer Encryption, as the name implies, refers to encrypting information over network traffic between the client and the server.
+
+Encryption at Rest concerns actually encrypting the data that we store on disk.
+
+There are two broad classes of approaches to encrypting data at rest with MongoDB.
+
+There's storage level encryption, and application level encryption.
+
+We'll take a deep dive into each of these topics later in this course.

@@ -1,0 +1,404 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.290
+While transport encryption
+between client and server
+
+3
+00:00:03.290 --> 00:00:05.880
+is very important,
+it's equally important
+
+4
+00:00:05.880 --> 00:00:07.740
+that the members
+of our replica set
+
+5
+00:00:07.740 --> 00:00:12.150
+are also using TLS or
+SSL to communicate.
+
+6
+00:00:12.150 --> 00:00:14.610
+Remember, a security
+system is only
+
+7
+00:00:14.610 --> 00:00:17.490
+as strong as its weakest link.
+
+8
+00:00:17.490 --> 00:00:19.770
+Setting up TLS
+within a replica set
+
+9
+00:00:19.770 --> 00:00:21.984
+is a relatively
+straightforward process.
+
+10
+00:00:21.984 --> 00:00:23.400
+At a high level,
+we're essentially
+
+11
+00:00:23.400 --> 00:00:26.640
+doing the same thing as setting
+it up with a standalone server,
+
+12
+00:00:26.640 --> 00:00:28.860
+but for each member
+in a replica set.
+
+13
+00:00:28.860 --> 00:00:30.505
+Let's go ahead and do this.
+
+14
+00:00:30.505 --> 00:00:32.130
+Hopefully by now
+you're starting to get
+
+15
+00:00:32.130 --> 00:00:34.050
+the feel of setting
+up your replica
+
+16
+00:00:34.050 --> 00:00:36.360
+sets in different modes.
+
+17
+00:00:36.360 --> 00:00:39.240
+Here we're requiring SSL,
+because the whole point
+
+18
+00:00:39.240 --> 00:00:42.480
+of this exercise
+is to enable SSL
+
+19
+00:00:42.480 --> 00:00:44.536
+in between the members
+of our replica set.
+
+20
+00:00:44.536 --> 00:00:46.160
+And then of course,
+we're going to have
+
+21
+00:00:46.160 --> 00:00:49.380
+to pass in our
+servers certificate,
+
+22
+00:00:49.380 --> 00:00:52.290
+our ca certificate so that
+we can identify and verify
+
+23
+00:00:52.290 --> 00:00:54.270
+that everyone is who
+they say they are,
+
+24
+00:00:54.270 --> 00:00:56.130
+we'll give our
+replica set a name,
+
+25
+00:00:56.130 --> 00:01:01.380
+in this case myEncryptedReplSet,
+specify the db path, the log
+
+26
+00:01:01.380 --> 00:01:05.730
+path, the port, and
+we'll fork this process.
+
+27
+00:01:05.730 --> 00:01:06.660
+Awesome.
+
+28
+00:01:06.660 --> 00:01:09.780
+Now we just need to do this two
+more times for the other two
+
+29
+00:01:09.780 --> 00:01:11.820
+members in our replica set.
+
+30
+00:01:11.820 --> 00:01:13.650
+And as we've done
+many times before,
+
+31
+00:01:13.650 --> 00:01:17.150
+the only thing I changed here
+is the db path, log path,
+
+32
+00:01:17.150 --> 00:01:21.300
+and port number, leaving all
+the other parameters the same.
+
+33
+00:01:21.300 --> 00:01:21.960
+And here we go.
+
+34
+00:01:21.960 --> 00:01:28.620
+Here is the last command, only
+changing the db path, log path,
+
+35
+00:01:28.620 --> 00:01:30.060
+and port number again.
+
+36
+00:01:30.060 --> 00:01:30.870
+Awesome.
+
+37
+00:01:30.870 --> 00:01:33.006
+Now all four of our
+MongoDBs are up and running.
+
+38
+00:01:33.006 --> 00:01:35.130
+Now that we have each of
+the members of our replica
+
+39
+00:01:35.130 --> 00:01:37.350
+set up and running,
+we can go ahead
+
+40
+00:01:37.350 --> 00:01:40.650
+and connect to the first
+server, initialize the ReplSet,
+
+41
+00:01:40.650 --> 00:01:42.670
+and add the other members.
+
+42
+00:01:42.670 --> 00:01:44.280
+So here we're going
+to need to use
+
+43
+00:01:44.280 --> 00:01:49.980
+--ssl option saying that we're
+going to connect via SSL.
+
+44
+00:01:49.980 --> 00:01:53.640
+And of course, we'll then
+need to provide our client SSL
+
+45
+00:01:53.640 --> 00:01:57.904
+certificate and our
+ca's certificate
+
+46
+00:01:57.904 --> 00:02:00.070
+so that we know the server
+is who they say they are.
+
+47
+00:02:00.070 --> 00:02:01.920
+We're now connected
+and we can go ahead
+
+48
+00:02:01.920 --> 00:02:05.310
+and initialized the ReplSet
+and add the other members
+
+49
+00:02:05.310 --> 00:02:06.930
+of our replica set.
+
+50
+00:02:06.930 --> 00:02:09.690
+We can go ahead now and
+initiate our ReplSet.
+
+51
+00:02:09.690 --> 00:02:13.320
+Here I'm passing in the
+configuration for our ReplSet
+
+52
+00:02:13.320 --> 00:02:14.960
+specifying the
+name of the replica
+
+53
+00:02:14.960 --> 00:02:19.180
+set, the version, and an
+array of all the members.
+
+54
+00:02:19.180 --> 00:02:22.890
+Each member is an object that
+has its ID and respective host
+
+55
+00:02:22.890 --> 00:02:23.710
+name.
+
+56
+00:02:23.710 --> 00:02:25.522
+And it's as simple as that.
+
+57
+00:02:25.522 --> 00:02:27.480
+Now there's something I
+want to point out here.
+
+58
+00:02:27.480 --> 00:02:30.810
+I used localhost instead
+of the actual hostname
+
+59
+00:02:30.810 --> 00:02:32.220
+on my machine,
+which is something
+
+60
+00:02:32.220 --> 00:02:33.840
+that I don't normally do.
+
+61
+00:02:33.840 --> 00:02:37.620
+And the reason I did that
+is because my certificate,
+
+62
+00:02:37.620 --> 00:02:39.600
+my server certificate,
+if we look in here
+
+63
+00:02:39.600 --> 00:02:44.430
+we have this
+server.pem key file.
+
+64
+00:02:44.430 --> 00:02:47.880
+If we go ahead and look at the
+contents of this key file using
+
+65
+00:02:47.880 --> 00:02:50.610
+the open SSL command,
+specifying x509
+
+66
+00:02:50.610 --> 00:02:53.100
+since this is an
+x509 certificate,
+
+67
+00:02:53.100 --> 00:02:55.890
+and then provide it as an end
+in parameter, and just go ahead
+
+68
+00:02:55.890 --> 00:02:57.810
+and get out the text.
+
+69
+00:02:57.810 --> 00:03:00.810
+We have the public
+key in here and stuff,
+
+70
+00:03:00.810 --> 00:03:02.850
+but there's a really
+important field,
+
+71
+00:03:02.850 --> 00:03:05.910
+which is the subject
+alternative name.
+
+72
+00:03:05.910 --> 00:03:10.350
+And here, I have two alternative
+names, one is localhost
+
+73
+00:03:10.350 --> 00:03:16.710
+and the other is 127.0.0.1 which
+is also localhost obviously.
+
+74
+00:03:16.710 --> 00:03:20.760
+And I have to use one
+of these two names.
+
+75
+00:03:20.760 --> 00:03:24.000
+Whatever names are under
+the alternative name,
+
+76
+00:03:24.000 --> 00:03:26.160
+those are the
+hostnames that you have
+
+77
+00:03:26.160 --> 00:03:29.640
+to use to initialize the
+members of your replica set.
+
+78
+00:03:29.640 --> 00:03:32.520
+If I try to use education
+dash iMac, which
+
+79
+00:03:32.520 --> 00:03:37.690
+is the name of this machine, and
+passed in the port of 27 0 17
+
+80
+00:03:37.690 --> 00:03:40.050
+I would actually get a
+SSL handshake failure.
+
+81
+00:03:40.050 --> 00:03:43.050
+So that's just one little common
+gotcha I wanted to make clear.
+
+82
+00:03:43.050 --> 00:03:45.150
+If you run into this
+you want to make sure
+
+83
+00:03:45.150 --> 00:03:49.210
+that you check the alternate
+names in your actual server key
+
+84
+00:03:49.210 --> 00:03:50.760
+files.

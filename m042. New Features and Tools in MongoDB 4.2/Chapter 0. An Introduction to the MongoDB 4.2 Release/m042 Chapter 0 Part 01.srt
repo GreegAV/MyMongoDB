@@ -1,0 +1,593 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:01.030
+Hello.
+
+3
+00:00:01.030 --> 00:00:01.900
+My name is Matt.
+
+4
+00:00:01.900 --> 00:00:03.525
+And in this lesson,
+we're going to look
+
+5
+00:00:03.525 --> 00:00:06.317
+at the virtual environment
+for this course M042.
+
+6
+00:00:06.317 --> 00:00:07.900
+So throughout this
+course, we're going
+
+7
+00:00:07.900 --> 00:00:11.092
+to show examples of the new
+features in MongoDB 4.2.
+
+8
+00:00:11.092 --> 00:00:13.675
+And we want to give you a way
+of testing out these features so
+
+9
+00:00:13.675 --> 00:00:15.490
+that you can feel
+comfortable using them.
+
+10
+00:00:15.490 --> 00:00:18.100
+So one option is to spin
+up a replica set locally
+
+11
+00:00:18.100 --> 00:00:20.392
+and then follow along lessons
+on your local machine.
+
+12
+00:00:20.392 --> 00:00:22.600
+If you feel comfortable
+doing this, you should do it.
+
+13
+00:00:22.600 --> 00:00:24.933
+But you should bear in mind
+that in order for everything
+
+14
+00:00:24.933 --> 00:00:28.240
+to run locally you need to have
+the dependencies installed as
+
+15
+00:00:28.240 --> 00:00:30.490
+well as the necessary
+handout files to follow along
+
+16
+00:00:30.490 --> 00:00:31.717
+with the lesson.
+
+17
+00:00:31.717 --> 00:00:33.550
+This is all possible,
+as we'll provide links
+
+18
+00:00:33.550 --> 00:00:36.430
+to download dependencies
+and distribute the handouts.
+
+19
+00:00:36.430 --> 00:00:38.560
+But there is an easier solution.
+
+20
+00:00:38.560 --> 00:00:40.900
+Using the virtual machine
+for this course, called
+
+21
+00:00:40.900 --> 00:00:44.390
+m042-vagrant-env, we can
+download and provision
+
+22
+00:00:44.390 --> 00:00:46.090
+an environment that
+already contains
+
+23
+00:00:46.090 --> 00:00:48.410
+the necessary dependencies
+for this course
+
+24
+00:00:48.410 --> 00:00:50.440
+as well as any handout files.
+
+25
+00:00:50.440 --> 00:00:53.410
+In this case, we would call
+the VM the guest machine.
+
+26
+00:00:53.410 --> 00:00:57.080
+And we refer to our local
+machine as the host machine.
+
+27
+00:00:57.080 --> 00:00:59.450
+Once we provision the
+VM, we can start up
+
+28
+00:00:59.450 --> 00:01:02.480
+a replica set without needing
+to download anything else.
+
+29
+00:01:02.480 --> 00:01:06.260
+In addition, using the course VM
+helps MongoDB university staff
+
+30
+00:01:06.260 --> 00:01:09.967
+such as myself diagnose
+and debug potential issues,
+
+31
+00:01:09.967 --> 00:01:12.050
+because we're very familiar
+with this environment,
+
+32
+00:01:12.050 --> 00:01:15.300
+and we may not be as familiar
+with your local machine.
+
+33
+00:01:15.300 --> 00:01:18.260
+So without further ado, let's
+take a look inside the VM.
+
+34
+00:01:18.260 --> 00:01:20.750
+So I'm just going to make a
+new directory for this course
+
+35
+00:01:20.750 --> 00:01:22.730
+and then cd into it.
+
+36
+00:01:22.730 --> 00:01:25.160
+So I just downloaded
+the VM from the handouts
+
+37
+00:01:25.160 --> 00:01:28.310
+on the university site, and now
+it's in my Downloads folder.
+
+38
+00:01:28.310 --> 00:01:32.430
+So I'm just going to copy
+it into my m042 folder here.
+
+39
+00:01:32.430 --> 00:01:35.840
+So now I'm inside the VM
+folder m042-vagrant-env,
+
+40
+00:01:35.840 --> 00:01:38.210
+and there are only two
+files in here to start out--
+
+41
+00:01:38.210 --> 00:01:41.150
+the Vagrantfile, which contains
+some of the baseline hardware
+
+42
+00:01:41.150 --> 00:01:43.940
+configurations for the VM
+and the provisioning file
+
+43
+00:01:43.940 --> 00:01:46.790
+as a shell script that downloads
+all the necessary dependencies
+
+44
+00:01:46.790 --> 00:01:48.570
+and files for this course.
+
+45
+00:01:48.570 --> 00:01:51.590
+So using this command, I can
+bring the VM up and then run
+
+46
+00:01:51.590 --> 00:01:54.267
+the provisioning file
+in one fell swoop.
+
+47
+00:01:54.267 --> 00:01:56.100
+So we have to wait a
+minute for this to run.
+
+48
+00:01:56.100 --> 00:01:57.892
+But when it's done, it
+should read "Welcome
+
+49
+00:01:57.892 --> 00:02:00.020
+to M042 Vagrant Box."
+
+50
+00:02:00.020 --> 00:02:01.610
+If we see that
+message, we'll know
+
+51
+00:02:01.610 --> 00:02:04.068
+that the machine was booted
+up, and the provisioning script
+
+52
+00:02:04.068 --> 00:02:05.230
+ran successfully.
+
+53
+00:02:05.230 --> 00:02:06.980
+So now we can log into
+the Vagrant machine
+
+54
+00:02:06.980 --> 00:02:09.722
+with SSH using the
+command vagrant ssh.
+
+55
+00:02:09.722 --> 00:02:11.180
+And we can see the
+shell prompt has
+
+56
+00:02:11.180 --> 00:02:13.597
+changed to reflect that we're
+now logged in to the Vagrant
+
+57
+00:02:13.597 --> 00:02:14.570
+machine.
+
+58
+00:02:14.570 --> 00:02:17.120
+So remember, our provisioning
+script already downloaded
+
+59
+00:02:17.120 --> 00:02:18.020
+MongoDB.
+
+60
+00:02:18.020 --> 00:02:20.217
+So we can spin up a
+mongod process immediately
+
+61
+00:02:20.217 --> 00:02:21.800
+after logging into
+the Vagrant machine
+
+62
+00:02:21.800 --> 00:02:23.570
+for the very first time.
+
+63
+00:02:23.570 --> 00:02:26.415
+I can connect to the
+database I just started.
+
+64
+00:02:26.415 --> 00:02:28.040
+I'm just going to
+shut down this server
+
+65
+00:02:28.040 --> 00:02:30.290
+so I can start up a new one.
+
+66
+00:02:30.290 --> 00:02:32.410
+So now I've just shut down
+that database process,
+
+67
+00:02:32.410 --> 00:02:34.313
+and I've exited from
+the Mongo shell,
+
+68
+00:02:34.313 --> 00:02:36.730
+so that I can start up a new
+database process that's bound
+
+69
+00:02:36.730 --> 00:02:38.690
+to a different IP address.
+
+70
+00:02:38.690 --> 00:02:40.510
+So the guest VM
+has been configured
+
+71
+00:02:40.510 --> 00:02:45.970
+to be accessed on the IP
+address 192.168.42.100.
+
+72
+00:02:45.970 --> 00:02:48.460
+So if you want to access this
+mongod server from your host
+
+73
+00:02:48.460 --> 00:02:52.005
+machine, you need to bind your
+Mongo ID to that IP address.
+
+74
+00:02:52.005 --> 00:02:53.710
+So now that that's
+started successfully,
+
+75
+00:02:53.710 --> 00:02:56.525
+I'm actually just going to
+exit the Vagrant machine.
+
+76
+00:02:56.525 --> 00:02:58.400
+So now I'm connected
+back to my host machine.
+
+77
+00:02:58.400 --> 00:03:01.520
+But the mongod process is still
+running inside the guest VM.
+
+78
+00:03:01.520 --> 00:03:03.580
+I can connect to
+that mongod process
+
+79
+00:03:03.580 --> 00:03:06.640
+using the IP address of the VM.
+
+80
+00:03:06.640 --> 00:03:09.940
+The --host flag allows us to
+specify a network interface
+
+81
+00:03:09.940 --> 00:03:11.290
+where mongod is running.
+
+82
+00:03:11.290 --> 00:03:13.660
+And I started that process
+in the default port,
+
+83
+00:03:13.660 --> 00:03:16.570
+so all I need to do is
+specify a host here.
+
+84
+00:03:16.570 --> 00:03:19.240
+So one reason you might want
+to connect to the guest VM
+
+85
+00:03:19.240 --> 00:03:20.878
+from your host machine
+is if you wanted
+
+86
+00:03:20.878 --> 00:03:23.170
+to connect with Compass,
+which was running on your host
+
+87
+00:03:23.170 --> 00:03:25.030
+machine, to a
+mongod process that
+
+88
+00:03:25.030 --> 00:03:28.090
+was running inside the
+guest machine or the VM.
+
+89
+00:03:28.090 --> 00:03:31.270
+So to do this, we can just
+specify the same hostname here
+
+90
+00:03:31.270 --> 00:03:33.190
+and the connection
+credentials on Compass.
+
+91
+00:03:33.190 --> 00:03:35.056
+And then we should
+be able to connect.
+
+92
+00:03:35.056 --> 00:03:36.980
+I'm just going to
+connect back to Vagrant
+
+93
+00:03:36.980 --> 00:03:40.290
+with SSH very quickly to
+show you one more thing.
+
+94
+00:03:40.290 --> 00:03:42.080
+So when the home
+directory of Vagrant,
+
+95
+00:03:42.080 --> 00:03:44.600
+which is the directory it'll
+direct you to as you first
+
+96
+00:03:44.600 --> 00:03:47.330
+connect, there's this folder
+in the home directory called
+
+97
+00:03:47.330 --> 00:03:48.310
+Shared.
+
+98
+00:03:48.310 --> 00:03:50.720
+Now, this folder is what we
+call a synced folder, which
+
+99
+00:03:50.720 --> 00:03:53.357
+means that it's synced
+to your host machine.
+
+100
+00:03:53.357 --> 00:03:54.940
+When you bring up
+the Vagrant machine,
+
+101
+00:03:54.940 --> 00:03:57.820
+there are actually two Shared
+folders that get created.
+
+102
+00:03:57.820 --> 00:04:00.010
+The first gets created
+on your host machine,
+
+103
+00:04:00.010 --> 00:04:02.877
+and the second gets created
+inside the Vagrant machine.
+
+104
+00:04:02.877 --> 00:04:04.460
+These two folders
+are linked together.
+
+105
+00:04:04.460 --> 00:04:06.370
+So you can share documents
+between your host
+
+106
+00:04:06.370 --> 00:04:08.710
+machine and your course VM.
+
+107
+00:04:08.710 --> 00:04:12.130
+If you place any file on one
+of these folders or remove one,
+
+108
+00:04:12.130 --> 00:04:14.454
+that change will be reflected
+in the other folder.
+
+109
+00:04:14.454 --> 00:04:16.329
+So be careful, because
+you could accidentally
+
+110
+00:04:16.329 --> 00:04:18.250
+delete things from
+your host machine
+
+111
+00:04:18.250 --> 00:04:20.140
+while you're still in the VM.
+
+112
+00:04:20.140 --> 00:04:22.029
+So that concludes our
+lesson on Vagrant.
+
+113
+00:04:22.029 --> 00:04:23.820
+Just to recap, the
+virtual environment
+
+114
+00:04:23.820 --> 00:04:26.320
+is used to mitigate the need
+to download course dependencies
+
+115
+00:04:26.320 --> 00:04:27.740
+on your local machine.
+
+116
+00:04:27.740 --> 00:04:30.547
+The VM will come with
+everything pre-installed.
+
+117
+00:04:30.547 --> 00:04:32.380
+If you want to share
+files between your host
+
+118
+00:04:32.380 --> 00:04:36.220
+system and your VM, the Shared
+folder will help you do that.
+
+119
+00:04:36.220 --> 00:04:38.370
+Lastly, Vagrant is
+optional in this course,
+
+120
+00:04:38.370 --> 00:04:39.523
+as there is no homework.
+
+121
+00:04:39.523 --> 00:04:41.190
+So if you want to use
+your local machine
+
+122
+00:04:41.190 --> 00:04:43.960
+to test out the new
+features, please feel free.
+
+123
+00:04:43.960 --> 00:04:46.790
+But this approach is
+most likely easier.

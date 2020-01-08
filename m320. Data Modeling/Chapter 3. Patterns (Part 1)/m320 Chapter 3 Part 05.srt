@@ -1,0 +1,187 @@
+
+1
+00:00:00.000 --> 00:00:02.320
+Our third concern,
+when using patterns,
+
+2
+00:00:02.320 --> 00:00:04.390
+is referential integrity.
+
+3
+00:00:04.390 --> 00:00:07.990
+Referential integrity has some
+similarities to staleness.
+
+4
+00:00:07.990 --> 00:00:10.870
+It may be OK for the system
+to have some extra or missing
+
+5
+00:00:10.870 --> 00:00:13.810
+links, as long as they get
+corrected within the given
+
+6
+00:00:13.810 --> 00:00:15.780
+period of time.
+
+7
+00:00:15.780 --> 00:00:19.997
+Why do we get referential
+integrity issues?
+
+8
+00:00:19.997 --> 00:00:21.830
+Frequently, it may be
+the result of deleting
+
+9
+00:00:21.830 --> 00:00:23.247
+a piece of information
+[INAUDIBLE]
+
+10
+00:00:23.247 --> 00:00:28.280
+document-- for example, without
+deleting the references to it.
+
+11
+00:00:28.280 --> 00:00:30.770
+In the big data
+world, we can also
+
+12
+00:00:30.770 --> 00:00:32.810
+associate referential
+integrity issues
+
+13
+00:00:32.810 --> 00:00:34.820
+to adding distributed
+system, where
+
+14
+00:00:34.820 --> 00:00:38.660
+a related piece of information
+live on different machines.
+
+15
+00:00:38.660 --> 00:00:41.900
+At this time, the MongoDB server
+does not support foreign keys
+
+16
+00:00:41.900 --> 00:00:44.540
+and associated cascading
+deletes and updates
+
+17
+00:00:44.540 --> 00:00:47.900
+responsible for keeping
+referential integrity.
+
+18
+00:00:47.900 --> 00:00:51.810
+It is the responsibility of
+the application to do so.
+
+19
+00:00:51.810 --> 00:00:57.280
+Here again, the main concern is
+data quality and reliability.
+
+20
+00:00:57.280 --> 00:00:59.260
+For delayed
+referential integrity,
+
+21
+00:00:59.260 --> 00:01:01.930
+we can, again, rely
+on change streams.
+
+22
+00:01:01.930 --> 00:01:04.436
+For keeping the referential
+integrity [INAUDIBLE],,
+
+23
+00:01:04.436 --> 00:01:07.390
+we can avoid using references
+by embedding information
+
+24
+00:01:07.390 --> 00:01:10.300
+in a single document,
+instead of linking it.
+
+25
+00:01:10.300 --> 00:01:13.180
+Or we can use MongoDB with be
+multi-document transactions
+
+26
+00:01:13.180 --> 00:01:17.630
+to update multiple documents
+at once [INAUDIBLE]..
+
+27
+00:01:17.630 --> 00:01:20.870
+To recap, we can tame these
+three concerns-- duplication,
+
+28
+00:01:20.870 --> 00:01:23.270
+staleness, and
+referential integrity--
+
+29
+00:01:23.270 --> 00:01:25.490
+by understanding the
+following for every piece
+
+30
+00:01:25.490 --> 00:01:27.560
+of data in your database.
+
+31
+00:01:27.560 --> 00:01:32.000
+Should or could the information
+be duplicated or not?
+
+32
+00:01:32.000 --> 00:01:34.810
+And if it has to be duplicated
+and consistently updated,
+
+33
+00:01:34.810 --> 00:01:38.350
+resolve the duplication
+with bulk updates.
+
+34
+00:01:38.350 --> 00:01:41.830
+What is the tolerated
+or acceptable staleness?
+
+35
+00:01:41.830 --> 00:01:45.630
+Resolve with updates
+based on change streams.
+
+36
+00:01:45.630 --> 00:01:49.140
+Which pieces of data require
+referential integrity?
+
+37
+00:01:49.140 --> 00:01:51.510
+Resolve or prevent
+inconsistencies
+
+38
+00:01:51.510 --> 00:01:54.860
+with change streams
+or transactions.

@@ -1,0 +1,196 @@
+1
+00:00:00,350 --> 00:00:04,380
+at this point<font color="#E5E5E5"> I'm going</font><font color="#CCCCCC"> to</font><font color="#E5E5E5"> deploy my new</font>
+
+2
+00:00:04,380 --> 00:00:06,210
+replica<font color="#E5E5E5"> set and it's spinning up my</font>
+
+3
+00:00:06,210 --> 00:00:09,330
+<font color="#CCCCCC">Mongo deep processes now and we can see</font>
+
+4
+00:00:09,330 --> 00:00:12,870
+them<font color="#E5E5E5"> here here here back to</font><font color="#CCCCCC"> the</font><font color="#E5E5E5"> UI by</font>
+
+5
+00:00:12,870 --> 00:00:15,719
+<font color="#E5E5E5">clicking on metrics</font><font color="#CCCCCC"> I can see what's</font>
+
+6
+00:00:15,719 --> 00:00:19,560
+<font color="#CCCCCC">going</font><font color="#E5E5E5"> on so I'm in cloud manager looking</font>
+
+7
+00:00:19,560 --> 00:00:21,330
+at my deployment<font color="#E5E5E5"> and I have a</font><font color="#CCCCCC"> cluster</font>
+
+8
+00:00:21,330 --> 00:00:23,250
+set up on<font color="#E5E5E5"> my VM so I can look at</font>
+
+9
+00:00:23,250 --> 00:00:25,470
+<font color="#E5E5E5">monitoring for my replica set I can</font><font color="#CCCCCC"> see</font>
+
+10
+00:00:25,470 --> 00:00:28,050
+up counters connections page faults<font color="#CCCCCC"> all</font>
+
+11
+00:00:28,050 --> 00:00:30,210
+of these by default and if I scroll down
+
+12
+00:00:30,210 --> 00:00:34,290
+<font color="#E5E5E5">I can decide what I'm monitoring</font><font color="#CCCCCC"> as I</font>
+
+13
+00:00:34,290 --> 00:00:37,110
+click on these I can see them appear in
+
+14
+00:00:37,110 --> 00:00:39,300
+my monitoring window I can get
+
+15
+00:00:39,300 --> 00:00:41,579
+historical monitoring information<font color="#E5E5E5"> and I</font>
+
+16
+00:00:41,579 --> 00:00:43,770
+can choose how granular that information
+
+17
+00:00:43,770 --> 00:00:47,190
+is I can choose<font color="#CCCCCC"> my zoom and there's the</font>
+
+18
+00:00:47,190 --> 00:00:49,770
+granularity obviously I just spend this
+
+19
+00:00:49,770 --> 00:00:51,329
+up so I'm<font color="#CCCCCC"> not</font><font color="#E5E5E5"> going to be able to see</font>
+
+20
+00:00:51,329 --> 00:00:53,190
+things<font color="#E5E5E5"> that happened five years ago</font><font color="#CCCCCC"> but</font>
+
+21
+00:00:53,190 --> 00:00:55,680
+<font color="#E5E5E5">you get the idea</font><font color="#CCCCCC"> for shorter time</font>
+
+22
+00:00:55,680 --> 00:00:57,660
+windows like one hour you can also have
+
+23
+00:00:57,660 --> 00:01:01,170
+a shorter granularity this is all just a
+
+24
+00:01:01,170 --> 00:01:03,420
+quick<font color="#E5E5E5"> overview for more information on</font>
+
+25
+00:01:03,420 --> 00:01:04,979
+<font color="#E5E5E5">the features take a look at em one to</font>
+
+26
+00:01:04,979 --> 00:01:06,720
+<font color="#E5E5E5">two are a cloud and ops manager</font><font color="#CCCCCC"> of</font>
+
+27
+00:01:06,720 --> 00:01:09,720
+course<font color="#E5E5E5"> we're</font><font color="#CCCCCC"> on University we'll add a</font>
+
+28
+00:01:09,720 --> 00:01:12,510
+link in the lecture notes finally<font color="#E5E5E5"> there</font>
+
+29
+00:01:12,510 --> 00:01:13,710
+are<font color="#E5E5E5"> a lot more features in these</font>
+
+30
+00:01:13,710 --> 00:01:15,270
+products but one<font color="#E5E5E5"> that I really want</font><font color="#CCCCCC"> to</font>
+
+31
+00:01:15,270 --> 00:01:16,860
+draw your attention<font color="#CCCCCC"> to is the fact</font><font color="#E5E5E5"> that</font>
+
+32
+00:01:16,860 --> 00:01:20,130
+<font color="#E5E5E5">we can set</font><font color="#CCCCCC"> up alerts</font><font color="#E5E5E5"> with these we</font><font color="#CCCCCC"> can</font>
+
+33
+00:01:20,130 --> 00:01:22,170
+get an<font color="#E5E5E5"> email</font><font color="#CCCCCC"> or text whenever something</font>
+
+34
+00:01:22,170 --> 00:01:25,369
+exceeds a certain threshold
+
+35
+00:01:31,010 --> 00:01:33,830
+here I can create<font color="#CCCCCC"> one win disk space</font>
+
+36
+00:01:33,830 --> 00:01:37,400
+utilization<font color="#CCCCCC"> goes above 90%</font><font color="#E5E5E5"> send me an</font>
+
+37
+00:01:37,400 --> 00:01:40,510
+email and a text<font color="#E5E5E5"> message</font><font color="#CCCCCC"> and save</font>
+
+38
+00:01:40,510 --> 00:01:42,920
+we can also add alerts<font color="#E5E5E5"> for billing by</font>
+
+39
+00:01:42,920 --> 00:01:44,750
+the<font color="#E5E5E5"> way if our bill exceeds a</font><font color="#CCCCCC"> certain</font>
+
+40
+00:01:44,750 --> 00:01:48,230
+amount<font color="#CCCCCC"> okay</font><font color="#E5E5E5"> so what did we learn</font><font color="#CCCCCC"> we</font>
+
+41
+00:01:48,230 --> 00:01:50,030
+learned the<font color="#CCCCCC"> basics</font><font color="#E5E5E5"> of what cloud</font>
+
+42
+00:01:50,030 --> 00:01:51,860
+managers<font color="#E5E5E5"> automation and monitoring</font>
+
+43
+00:01:51,860 --> 00:01:53,810
+agents can do we learned how to<font color="#E5E5E5"> use</font>
+
+44
+00:01:53,810 --> 00:01:55,940
+automation<font color="#CCCCCC"> to spin up our cluster and we</font>
+
+45
+00:01:55,940 --> 00:01:58,040
+<font color="#CCCCCC">learned how to</font><font color="#E5E5E5"> look at monitoring and</font>
+
+46
+00:01:58,040 --> 00:02:00,280
+some of the<font color="#E5E5E5"> things that we can monitor</font>
+
+47
+00:02:00,280 --> 00:02:02,990
+finally we<font color="#E5E5E5"> found out where we can set</font><font color="#CCCCCC"> up</font>
+
+48
+00:02:02,990 --> 00:02:05,450
+alerts<font color="#CCCCCC"> and that's a quick overview</font><font color="#E5E5E5"> of</font>
+
+49
+00:02:05,450 --> 00:00:00,000
+cloud and<font color="#E5E5E5"> ops manager</font>
+

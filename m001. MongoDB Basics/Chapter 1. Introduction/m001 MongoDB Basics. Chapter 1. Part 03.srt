@@ -1,0 +1,156 @@
+1
+00:00:00,720 --> 00:00:04,230
+Once connected, you should see
+a screen that looks like this.
+
+2
+00:00:04,230 --> 00:00:05,840
+Here in the main
+panel, we can see
+
+3
+00:00:05,840 --> 00:00:08,750
+a list of the databases
+contained in this cluster.
+
+4
+00:00:08,750 --> 00:00:15,290
+In MongoDB, a database serves
+as a namespace for collections.
+
+5
+00:00:15,290 --> 00:00:19,940
+Collections store individual
+records called documents.
+
+6
+00:00:19,940 --> 00:00:24,210
+This graphic illustrates the
+relationship between databases,
+
+7
+00:00:24,210 --> 00:00:27,820
+collections, and documents.
+
+8
+00:00:27,820 --> 00:00:30,810
+This hierarchy allows us
+to group together records
+
+9
+00:00:30,810 --> 00:00:33,900
+of similar items
+within collections,
+
+10
+00:00:33,900 --> 00:00:37,350
+and group collections required
+for the same application
+
+11
+00:00:37,350 --> 00:00:39,810
+within the same database.
+
+12
+00:00:39,810 --> 00:00:42,900
+We can also establish security
+policies that authorize users
+
+13
+00:00:42,900 --> 00:00:44,940
+with different roles
+and different levels
+
+14
+00:00:44,940 --> 00:00:50,120
+of access at the database,
+or collection, level.
+
+15
+00:00:50,120 --> 00:00:53,010
+MongoDB does not currently
+support authorization settings
+
+16
+00:00:53,010 --> 00:00:55,860
+specific to
+individual documents.
+
+17
+00:00:55,860 --> 00:01:01,000
+Each database and collection
+combination define a namespace.
+
+18
+00:01:01,000 --> 00:01:03,750
+We typically reference
+a specific collection
+
+19
+00:01:03,750 --> 00:01:07,740
+by expressing the name of the
+database, followed by a dot,
+
+20
+00:01:07,740 --> 00:01:10,740
+followed by the name
+of the collection.
+
+21
+00:01:10,740 --> 00:01:12,690
+Returning to
+Compass, here we have
+
+22
+00:01:12,690 --> 00:01:15,410
+a listing of all the
+databases in this cluster.
+
+23
+00:01:15,410 --> 00:01:19,440
+With a little bit of information
+about the size of the database,
+
+24
+00:01:19,440 --> 00:01:21,900
+the number of
+collections it contains,
+
+25
+00:01:21,900 --> 00:01:24,480
+and the number of indexes
+on these collections.
+
+26
+00:01:24,480 --> 00:01:27,130
+We won't say too much about
+indexes in this course.
+
+27
+00:01:27,130 --> 00:01:30,570
+You'll want to take the MongoDB
+performance course for that.
+
+28
+00:01:30,570 --> 00:01:34,590
+Just look for M201 on the
+MongoDB university website.
+
+29
+00:01:34,590 --> 00:01:37,360
+By the way, if the list
+of databases you're seeing
+
+30
+00:01:37,360 --> 00:01:39,360
+differs a little bit from
+what I'm showing here,
+
+31
+00:01:39,360 --> 00:01:39,860
+don't worry about that.
+
+32
+00:01:40,360 --> 00:00:00,000
+We update this cluster from time to time with new datasets.
+

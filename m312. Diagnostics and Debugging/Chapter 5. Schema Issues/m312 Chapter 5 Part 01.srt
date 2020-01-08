@@ -1,0 +1,421 @@
+
+1
+00:00:00.000 --> 00:00:00.090
+
+
+2
+00:00:00.090 --> 00:00:02.310
+Here's the scenario,
+you've got an application.
+
+3
+00:00:02.310 --> 00:00:06.000
+And as your user base grows,
+your user activity grows
+
+4
+00:00:06.000 --> 00:00:07.980
+and your server
+speed is dropping.
+
+5
+00:00:07.980 --> 00:00:11.040
+You've got a dev environment
+that's set up just like prod,
+
+6
+00:00:11.040 --> 00:00:13.590
+and your goal is to figure
+out what's going on.
+
+7
+00:00:13.590 --> 00:00:14.700
+Let's check it out.
+
+8
+00:00:14.700 --> 00:00:17.590
+First, let's go into our
+VM and start a replica set.
+
+9
+00:00:17.590 --> 00:00:21.900
+
+
+10
+00:00:21.900 --> 00:00:22.800
+Great.
+
+11
+00:00:22.800 --> 00:00:25.590
+Next, let's generate our
+data set with this script.
+
+12
+00:00:25.590 --> 00:00:27.670
+This might take a few minutes.
+
+13
+00:00:27.670 --> 00:00:30.330
+OK, so the next script is
+going to simulate a home
+
+14
+00:00:30.330 --> 00:00:33.210
+page for a user at an
+e-commerce web site.
+
+15
+00:00:33.210 --> 00:00:35.730
+I just wrote something to print
+everything out in the shell,
+
+16
+00:00:35.730 --> 00:00:37.313
+but it should give
+you an idea of what
+
+17
+00:00:37.313 --> 00:00:41.100
+the web site would look like
+and what data it would display.
+
+18
+00:00:41.100 --> 00:00:42.930
+OK so at this point
+when I hit Enter,
+
+19
+00:00:42.930 --> 00:00:46.680
+I'm going to do a simulated
+user log in on my site's landing
+
+20
+00:00:46.680 --> 00:00:47.710
+page.
+
+21
+00:00:47.710 --> 00:00:49.254
+This is an e-commerce site.
+
+22
+00:00:49.254 --> 00:00:50.670
+That's what it's
+going to display.
+
+23
+00:00:50.670 --> 00:00:53.190
+Again, we're assuming we're
+doing this in a development
+
+24
+00:00:53.190 --> 00:00:54.040
+environment.
+
+25
+00:00:54.040 --> 00:00:55.770
+Let's turn on the
+profiler first.
+
+26
+00:00:55.770 --> 00:00:56.910
+I'll do this in a new tab.
+
+27
+00:00:56.910 --> 00:01:00.150
+
+
+28
+00:01:00.150 --> 00:01:03.000
+OK now that my
+profiler is on, I'm
+
+29
+00:01:03.000 --> 00:01:07.270
+going to go back, hit
+Enter, and see what happens.
+
+30
+00:01:07.270 --> 00:01:10.800
+So I want you to imagine that
+a log-in page is displayed--
+
+31
+00:01:10.800 --> 00:01:12.100
+something like this.
+
+32
+00:01:12.100 --> 00:01:13.200
+It's saying hello.
+
+33
+00:01:13.200 --> 00:01:14.730
+This is your name.
+
+34
+00:01:14.730 --> 00:01:16.056
+Here's your username.
+
+35
+00:01:16.056 --> 00:01:17.430
+I know it was
+generated randomly,
+
+36
+00:01:17.430 --> 00:01:19.770
+so the user name doesn't
+look much like the name.
+
+37
+00:01:19.770 --> 00:01:22.080
+Tells us when our
+last log-in was.
+
+38
+00:01:22.080 --> 00:01:24.810
+Looks like we have a
+cart ready for checkout.
+
+39
+00:01:24.810 --> 00:01:29.030
+We're buying some
+forks, pillow, etc.
+
+40
+00:01:29.030 --> 00:01:30.510
+We've got some
+contact information
+
+41
+00:01:30.510 --> 00:01:33.420
+to review, some phone
+numbers, an address.
+
+42
+00:01:33.420 --> 00:01:38.100
+OK, well let's go back,
+shut off our profiler,
+
+43
+00:01:38.100 --> 00:01:40.530
+and let's see how
+many documents we got.
+
+44
+00:01:40.530 --> 00:01:42.120
+15.
+
+45
+00:01:42.120 --> 00:01:44.700
+OK, so this is my first sign
+that something went wrong.
+
+46
+00:01:44.700 --> 00:01:47.310
+Here, I just went
+to a landing page.
+
+47
+00:01:47.310 --> 00:01:50.820
+I did one thing and
+I've got 15 queries that
+
+48
+00:01:50.820 --> 00:01:52.385
+seem to have hit my database.
+
+49
+00:01:52.385 --> 00:01:55.020
+That doesn't look good.
+
+50
+00:01:55.020 --> 00:01:58.050
+Let's just look at these
+planned summaries real quick.
+
+51
+00:01:58.050 --> 00:02:00.990
+Index scan, index
+scan, ID hack, which
+
+52
+00:02:00.990 --> 00:02:04.890
+is basically an index scan
+using the underscore ID field.
+
+53
+00:02:04.890 --> 00:02:08.280
+OK everything is using
+an index, so that's good.
+
+54
+00:02:08.280 --> 00:02:09.810
+My queries are
+efficient, it's just
+
+55
+00:02:09.810 --> 00:02:11.790
+that I've got so many of them.
+
+56
+00:02:11.790 --> 00:02:12.990
+Let's look a little deeper.
+
+57
+00:02:12.990 --> 00:02:15.700
+
+
+58
+00:02:15.700 --> 00:02:20.290
+OK, query on phone numbers.
+
+59
+00:02:20.290 --> 00:02:23.970
+Query on phone numbers.
+
+60
+00:02:23.970 --> 00:02:26.670
+Query on phone numbers.
+
+61
+00:02:26.670 --> 00:02:28.367
+That's a good piece
+of information.
+
+62
+00:02:28.367 --> 00:02:30.450
+When a collection is being
+queried multiple times,
+
+63
+00:02:30.450 --> 00:02:32.310
+that's a sign that the
+application is just
+
+64
+00:02:32.310 --> 00:02:34.230
+finding one document
+at a time when it might
+
+65
+00:02:34.230 --> 00:02:36.960
+be able to find multiple ones.
+
+66
+00:02:36.960 --> 00:02:39.450
+Right now the database is
+asking for these phone numbers
+
+67
+00:02:39.450 --> 00:02:41.970
+by their underscore ID
+three times in a row
+
+68
+00:02:41.970 --> 00:02:43.200
+all for a single user.
+
+69
+00:02:43.200 --> 00:02:45.030
+And I know it was a
+single user because I
+
+70
+00:02:45.030 --> 00:02:49.500
+generated this set of queries
+by logging in as just that user.
+
+71
+00:02:49.500 --> 00:02:52.230
+Now, the underscore IDs
+that we're looking for
+
+72
+00:02:52.230 --> 00:02:54.300
+are actually all different.
+
+73
+00:02:54.300 --> 00:02:56.940
+Note that this
+one ends with a 9.
+
+74
+00:02:56.940 --> 00:02:59.320
+This one ends with a b.
+
+75
+00:02:59.320 --> 00:03:01.435
+This one ends with a d.
+
+76
+00:03:01.435 --> 00:03:04.200
+So they're not quite asking
+the exact same question,
+
+77
+00:03:04.200 --> 00:03:07.470
+but it's asking very similar
+questions all in a group.
+
+78
+00:03:07.470 --> 00:03:09.990
+This is an anti-pattern in
+any database, by the way--
+
+79
+00:03:09.990 --> 00:03:12.780
+and that includes MongoDB,
+relational databases,
+
+80
+00:03:12.780 --> 00:03:13.980
+whatever you're looking at.
+
+81
+00:03:13.980 --> 00:03:16.920
+The problem is with how the
+application was written.
+
+82
+00:03:16.920 --> 00:03:19.885
+Instead of doing a query for
+just one record at a time,
+
+83
+00:03:19.885 --> 00:03:22.260
+a smart application would
+group together the phone number
+
+84
+00:03:22.260 --> 00:03:24.930
+queries and then query the
+database for an underscore ID
+
+85
+00:03:24.930 --> 00:03:29.160
+that matches any from that
+set of three underscore IDs.
+
+86
+00:03:29.160 --> 00:03:31.140
+That's really not a
+schema design issue
+
+87
+00:03:31.140 --> 00:03:33.510
+and it wouldn't require a
+change of schema to fix.
+
+88
+00:03:33.510 --> 00:03:36.480
+But it is an anti-pattern
+and it's worth noticing.
+
+89
+00:03:36.480 --> 00:03:39.120
+OK let's move on, I'm going
+to use a little aggregation
+
+90
+00:03:39.120 --> 00:03:43.010
+to eliminate the redundant
+queries on each namespace.

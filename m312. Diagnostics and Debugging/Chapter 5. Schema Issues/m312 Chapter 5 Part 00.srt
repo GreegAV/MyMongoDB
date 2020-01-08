@@ -1,0 +1,169 @@
+
+1
+00:00:00.000 --> 00:00:00.630
+
+
+2
+00:00:00.630 --> 00:00:02.280
+Let's talk about schema design.
+
+3
+00:00:02.280 --> 00:00:04.620
+Obviously this isn't a
+schema design course,
+
+4
+00:00:04.620 --> 00:00:06.960
+but you do want to be
+able to identify some
+
+5
+00:00:06.960 --> 00:00:09.000
+of the most obvious
+signs of a bad schema
+
+6
+00:00:09.000 --> 00:00:10.890
+and what they might mean.
+
+7
+00:00:10.890 --> 00:00:13.710
+The thing to keep in mind is
+that the structure of your data
+
+8
+00:00:13.710 --> 00:00:15.090
+affects performance.
+
+9
+00:00:15.090 --> 00:00:17.040
+This can't be emphasized enough.
+
+10
+00:00:17.040 --> 00:00:18.660
+If you're at least
+aware of this fact
+
+11
+00:00:18.660 --> 00:00:21.430
+you can be mindful when
+creating an application.
+
+12
+00:00:21.430 --> 00:00:23.670
+Now, in your application
+evidence of schema
+
+13
+00:00:23.670 --> 00:00:26.740
+design problems can show
+themselves in a few ways.
+
+14
+00:00:26.740 --> 00:00:28.740
+First, you might have
+a situation where
+
+15
+00:00:28.740 --> 00:00:31.470
+every time a user lands on
+a page or clicks a button
+
+16
+00:00:31.470 --> 00:00:34.920
+or otherwise does just one
+thing the application fires off
+
+17
+00:00:34.920 --> 00:00:36.960
+a whole bunch of queries.
+
+18
+00:00:36.960 --> 00:00:40.170
+A separate problem can arise
+if the application is packing
+
+19
+00:00:40.170 --> 00:00:43.290
+lots of rarely used data
+into it's frequently accessed
+
+20
+00:00:43.290 --> 00:00:44.510
+documents.
+
+21
+00:00:44.510 --> 00:00:48.000
+MongoDB needs to hold at minimum
+an entire document in RAM
+
+22
+00:00:48.000 --> 00:00:49.920
+in order to read
+from it, and it often
+
+23
+00:00:49.920 --> 00:00:52.650
+needs to pull multiple
+documents into the cache
+
+24
+00:00:52.650 --> 00:00:54.360
+at the same time.
+
+25
+00:00:54.360 --> 00:00:56.640
+If your application is
+packing rarely use data
+
+26
+00:00:56.640 --> 00:00:59.070
+into a document that needs
+to be touched frequently,
+
+27
+00:00:59.070 --> 00:01:01.140
+that means it's
+more likely to evict
+
+28
+00:01:01.140 --> 00:01:02.970
+other important
+data from the cache
+
+29
+00:01:02.970 --> 00:01:05.010
+when that document gets read.
+
+30
+00:01:05.010 --> 00:01:07.440
+Multiply this across a
+collection and the net result
+
+31
+00:01:07.440 --> 00:01:09.870
+is that the server could
+be paging a lot more data
+
+32
+00:01:09.870 --> 00:01:13.080
+than necessary in order to
+service the application.
+
+33
+00:01:13.080 --> 00:01:15.180
+In this chapter we'll
+investigate some examples
+
+34
+00:01:15.180 --> 00:01:17.460
+of these issues, find
+their root causes,
+
+35
+00:01:17.460 --> 00:01:19.030
+and discuss how to fix them.
+
+36
+00:01:19.030 --> 00:01:20.840
+Let's get started.

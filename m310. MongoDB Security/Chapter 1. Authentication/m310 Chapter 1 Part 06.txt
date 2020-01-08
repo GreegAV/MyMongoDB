@@ -1,0 +1,97 @@
+Now we're going to talk about authentication on a sharded cluster.
+
+For the most part, this is exactly the same as authentication on a standalone server.
+
+However, there are a few key differences that you should be made aware of.
+
+First of all, since we're dealing with a sharded cluster instead of a standalone server, we're going to want to connect to a mongos instead of a mongod.
+
+Similarly, when our clients want to authenticate and connect to our sharded cluster, they'll connect and authenticate through a mongos instance.
+
+In order to go ahead and set up this sharded cluster, I'm going to use a really helpful set of tools called mtools.
+
+Mtools is, as you can see, a collection of scripts to set up MongoDB test environments, and parse individualized MongoDB logs.
+
+So in mtools, there's this handy utility called mlaunch, which is a script to quickly spin up local test environments, including replica sets and sharded systems.
+
+So we'll go ahead and use mlaunch to set up our replica set.
+
+So you can see here's mlaunch.
+
+And we're saying that we want to set up a sharded cluster with three shards, each shard being a replica set with three nodes.
+
+And we want three configuration servers.
+
+And we want authentication to be enabled.
+
+So this will set up that cluster.
+
+It'll take a second.
+
+We can go ahead and use ps and pipe the output into grep to see what commands were ran to set up this sharded cluster.
+
+And as you can see here, we're just setting up nine different mongods in the typical fashion, and then specifying that we want to use keyFile for internal authentication between the nine different mongods.
+
+And of course, there's also a mongos.
+
+And that mongos passes in the different configuration data to the configuration servers.
+
+And that's how mlaunch set it all up.
+
+But if we want to go ahead and connect to this server, we can just run mongo, and see that we're connected.
+
+Now, when we try to run show dbs, we're not authorized to run this command because internal authentication has now been enabled on the server because we're using keyfile-based authentication, which uses internal authentication, which will automatically enable client authentication.
+
+The localhost exception does not apply to us right now because we used mlaunch.
+
+If we would have set up this cluster on our own, we wouldn't have this issue.
+
+But mlaunch actually, by default, will set up a user with the name user, and the password password.
+
+So we can go ahead and authenticate against that user right now.
+
+We're now authenticated to our sharded cluster, and we can run commands like db.system.users.find, and see the different users in our system.
+
+And that's pretty much how authentication works on a sharded cluster.
+
+Basically, what we do is we use internal authentication to automatically enable client-based authentication on the sharded cluster.
+
+So there's something I want to point out here.
+
+As of MongoDB 2.6, user information like this is no longer stored on either the mongos or on any of our three shards.
+
+This information is actually all stored on our configuration servers.
+
+So that's really important to keep in mind.
+
+So there's another important thing I want to point out to you, and that is that we still have the ability to connect directly to a mongod in our sharded cluster.
+
+And you're going to want to do this at times when you need to do administrative task, like cleaning up orphans or compacting your data or reconfiguring a replica set or something.
+
+But this is really important to point out because while authentication is still applicable on this individual mongod because we're using internal authentication, which as we know, automatically enables client-based authentication, which prevents me from running show dbs-- I'm not authorized to execute this command-- it's important to realize that the localhost exception still applies.
+
+So there are no users on this individual mongod because, like I said before, all the user data is stored on the configuration servers.
+
+There are no users on this individual mongod.
+
+So that means that the localhost exception still applies if I'm connected locally, which means I can just create a user.
+
+So in this case, I can just create this localAdmin user, who is a root user.
+
+And now I can authenticate against them.
+
+And now I have access to any information that I want on this shard.
+
+It's important to realize that this gotcha exists, and it's probably a good idea to disable the localhost exception on your individual shards.
+
+So if you wanted to do this, you'd do it via a setParameter for mongod.
+
+So to show you what that looks like, that would look like this.
+
+You would say mongod --setParameter enableLocalhostAuthBypass, and you'd set it equal to false.
+
+And then, of course, you would still pass in keyFile and all the other stuff that you would use to set up your sharded cluster.
+
+I'm assuming you're not using mlaunch.
+
+It's important to realize that you probably are going to want to disable the localhost exception on your individual mongods in your sharded cluster to prevent the risk that somebody could directly connect to one of them, and then do whatever they wanted on that individual mongod.

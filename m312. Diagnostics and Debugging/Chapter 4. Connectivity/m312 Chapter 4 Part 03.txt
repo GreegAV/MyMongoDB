@@ -1,0 +1,53 @@
+Our max time milliseconds value.
+
+For this, I'm going to be using the help of my friends.
+
+I'm going to import them into our data sets, test, and a collection called friends.
+
+Once this is fully imported, I'm going to be able to do some queries using my maxTimeMS parameter.
+
+I'm going to connect to my primary.
+
+And here, I'm going to express the following query.
+
+I'm going to find from my friends everyone that has an e, h value within their email.
+
+But I'm going to set the special parameter called maxTimeMS and I'm going to say, anything above one millisecond, if it takes more to complete, I don't want to know about it.
+
+I want it to be killed.
+
+And I don't want to have anything to do with that.
+
+So I'm going to throw that into a cursor.
+
+And I'm going to iterate over the full amount of the results of my cursor.
+
+Boom, I get an operation exceeded time, exceeded time limit code.
+
+And this will result in an execution timeout error.
+
+I can still see some of the results.
+
+And this is because the cursor will act in batches.
+
+So the first batch will be very, very quick because data will be in memory.
+
+But then after that, a few pages will need to be fetched from disk or some new indexes will need to be traversed to get the result back.
+
+And some of those operations will take more than the expected one millisecond maxTimeMS.
+
+And therefore I will get that error back.
+
+From the application, we will need to manage these timeouts.
+
+And they are a signal that we may want to change our settings, maybe having less aggressive timeouts for maxTimeMS or do something about our query that will not get into trouble more than our SLA, for example, will require.
+
+So a few things that we've learned today, timeouts generate some exceptions.
+
+We've seen that.
+
+Your application needs to be ready to catch those timeouts.
+
+So if your developers come up to you and say that they are seeing those kinds of errors and asking why, you should explain what those mean for their application and how they should be treating them.
+
+And timeouts should be set so they happen rarely, so that your application can respond properly.

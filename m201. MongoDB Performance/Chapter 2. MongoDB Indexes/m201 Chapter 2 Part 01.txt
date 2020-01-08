@@ -1,0 +1,137 @@
+Databases tend to have this nice feature that allows data to be persisted using the server's file system.
+
+But how do they do it?
+
+Which files do they write information to?
+
+How these files are organized?
+
+How do databases collections, indexes, get to get organized within the data structures and storage engines that support the persistency layer of your database?
+
+These are the topics we're going to discuss in this lesson.
+
+The way that MongoDB stores data will differ between the different storage engines that MongoDB supports.
+
+The particular details of how each storage engine organize data in detail are out of scope, but let's review at a high level how the different storage engines organize data.
+
+Now, MongoDB allows us to create a few data management objects.
+
+We have databases, which are logical groups of collections, collections, which are operational units that group documents together.
+
+We're going to have indexes on collections over [INAUDIBLE] presence on documents.
+
+And obviously, we're going to have documents, atomic units of information used by applications.
+
+But before we jump into the overview of the data structures, let's have a peek into the dbpath content of our MongoDB directory.
+
+Here, I'm going to start my mongod, pointing my dbpath to data/db.
+
+Now, this is the default MongoDB data path.
+
+But I just want to reinforce the fact that you can change it to another alternative dbpath if you wish to do so.
+
+All right.
+
+I started the process.
+
+And this is going to be a very short lived instruction, because I'm going to shut down the server again.
+
+If we ls that data/db folder, we can see that immediately MongoDB stores and starts writing a bunch of different documents in some directories.
+
+For each collection, or index, the WiredTiger storage engine will write an individual file.
+
+We start with a MDB catalog file that contains the catalog of all different collections and indexes that this particular mongod contains.
+
+But we can have a little bit more elaborate file system in data structures than this plain flat organization.
+
+Let's go ahead and remove that data/db folder, remove all its content.
+
+Let's recreate the folder again.
+
+And now let's launch the mongod with a little with more flavor.
+
+I'm going to use the same dbpath, the same logpath as well, the same file for logging.
+
+I'm also going to fork the process.
+
+And I'm going to add this directoryperdb instruction.
+
+Once I do that, I'm also going to write a single document on a particular new collection that doesn't exist at the moment, hello, and inserting it on collection a.
+
+And then, I'm just going to go ahead and shut down the server.
+
+If I look into the folder, my dbpath again, I can see that now I have a slightly different organization of data.
+
+I'm going to have these three new folders, admin, local, and hello.
+
+Admin and local are default databases that MongoDB creates.
+
+Hello is the newly created database that we've created on the previous instruction.
+
+By specifying dash dash directoryperdb, we'll get slightly different organization in the way that we are going to have a folder for each single database that this mongod raised.
+
+If we look into the subfolder inside of our dbpath for our newly created database, we will see that we are going to have one collection and one index file.
+
+Collection for our a database collection, and obviously you will always have an underscore there's ID index.
+
+So this is the file that we have created.
+
+But we can go a little bit step forward in terms of organization of our data, especially on WiredTiger.
+
+I repeated exactly the same process.
+
+I created, again, our hello database.
+
+And here, I've shut down our mongod again.
+
+If we look into our database folder, our dbpath, we can see that we're still creating one single folder for each database that our mongod holds.
+
+But if we're looking at the hello database now, we're going to have a different organization.
+
+We're going to have a single directory for collections and one for all index files.
+
+So that sounds cool and all, but what does this have to do with performance anyway?
+
+Well, if you have several disks in your server, this will enable a great deal of I/O paralyzation.
+
+To do this, we create symbolic links to mount points on different physical drives.
+
+Every time you write or read from our database, we will most likely be using the two data structures, the collections and the indexes that support our queries, or when we need to be updated, we will write the data to the collection and to the indexes too.
+
+Paralyzation of I/O can improve the overall throughput of our persistency layer, and therefore, positively impacting the performance of operations.
+
+Mongod also offers compression while storing information on disc.
+
+We instruct our storage engine to store data on disk using a compression algorithm.
+
+This has a direct impact on performance by performing smaller I/O operations, which means that smaller data is faster I/O, at the cost of CPU cycles.
+
+Before writing data to disk, data will be allocated in memory.
+
+Without getting ourselves too overwhelmed in details of memory allocation, all data is eventually written to this, for persistency reasons.
+
+This process will be triggered by two main ways, user side, by specifying a particular writeConcorn, or forcing an [INAUDIBLE] sync operation within administration command, or by the periodical internal process that regulates how data needs to be flushed and synced into the data file.
+
+This is defined by sync periods.
+
+Journaling is as well an essential component of our persistency mechanism.
+
+The journal file acts as a safeguard against data corruption caused by incomplete data file writes.
+
+The system suffers a shut down and expected data stored in the journal will be used to recover into a consistent correct state.
+
+Now, journal has its own file structure that include individual write operations.
+
+To minimize the performance impact of journal, the journal flushes our performed using group commits in a compressed format.
+
+All writes to the journal file are atomic, ensuring consistency of on this journal files.
+
+From the application perspective, and taking performance of operations in mind, we can also force data to be synced to journal before acknowledging a write.
+
+This is using j equals true in our writeConcern.
+
+That said, keep in mind that these will have some impact in the performance of your application.
+
+We will wait till the sync is done to disk, and then confirm back that the write has been acknowledged.
+
+And this is how data is stored on disk.

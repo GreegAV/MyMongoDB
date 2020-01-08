@@ -1,0 +1,87 @@
+Now as you can see from this diagram, once you have a shard cluster in hand, there will be a bunch of different nodes that you need to consider.
+
+And with those nodes will come some communication, and therefore latency.
+
+The client application will talk to our MongoSes.
+
+The MongoSes themselves will establish connections with config servers to fetch all the configuration of all your shards, and obviously with the shard nodes to retrieve the information requested by the application.
+
+So there's a lot of communication between all different elements of this topology for a given shard cluster.
+
+Now, all of this communication and the fact that the nodes can be spread apart from each other, latency will have an impact in your application performance.
+
+As you can imagine, not only the fact that you're going to have different nodes talking to each other, but also within the replica sets themselves, there will be some entropy caused into the network by the replication mechanism.
+
+As you can imagine, having to talk to a single replica set, or with a different set of shard nodes, will have its latency consequences.
+
+There are architectures that try to minimize the impact of latency in your application given a shard cluster.
+
+Things like co-locating a MongoS within the same server as your application server to minimize the number of network hoops required to access the shard nodes are some of the strategies enforced to minimize the impact of latency.
+
+And if the nodes are correctly connected without passing through very slow or latent or even low-bandwidth network segments, then the effect of latency in your overall performance of a distributed system will be marginal.
+
+However, the speed of light limit is still there.
+
+And if your application server sits in Barcelona, tries to reach a shard node that is placed, for example, in Palo Alto, then this will not be done without paying the latency toll.
+
+And this drives us to another important aspect of working with distributed systems, especially in how reads are concerned.
+
+In MongoDB, there are two types of reads that we can perform in a shard cluster.
+
+Scattered gathered, where are we ping all nodes of our shard cluster for the information corresponding to a given query, or routed queries, where we ask one single shard node or a small amount of shard nodes for the data that your application is requesting.
+
+These two different types of reads, routed queries and scattered gathered will have two different performance profiles.
+
+With scattered gather, we will pay the price for asking everyone for the information that we need to reply for a single query, while in routed queries, we only need to ask one or a very small set of the elements for all the data that we need.
+
+The difference will be based on if we are using the shard key on our queries or not.
+
+If we are not using the shard key, we will be performing scattered gathered queries, where the system is not able to determine with exact precision which of the nodes contains the information that you need to satisfy your client request, while in routed queries, that's completely different, by using the shard key, our MongoSes can pinpoint exactly which shards contain the information relevant for our client query.
+
+Sorting in a sharded cluster involves a few hurdles.
+
+From the application perspective, this is totally transparent.
+
+It works exactly in the same way as a single node replica set.
+
+You do not need to change a single comma in your code.
+
+But from within the shard cluster, things change a little bit.
+
+After you [INAUDIBLE] the query that contains the sort, the MongoS will then drive the request to the designated shards and locally a sort will be performed.
+
+Once that local sort is performed, then a final sort merge will need to occur in the primary shards of our database.
+
+Once that sort merge is performed, then we return back the information to our clients.
+
+The same set of operations and logic will be applied with the skip or even with the limit.
+
+The application will send their query to MongoS.
+
+MongoS will select the designated shards, and local skip and limit will be performed.
+
+And once those results are done, a final merge of that result set is performed on the primary shard.
+
+And then the result is sent back to our clients through the MongoS.
+
+As you can see, there's a few more steps in the overall chain of requests that need to be attended by the shard cluster before providing back a correct answer in terms of limit and skip, but also in terms of sorting.
+
+Let's recap what we've learned today.
+
+There are a few things that you need to know before sharding.
+
+Have you reached the vertical scaling limit of your cluster?
+
+Have you considered how your data is growing, how it is accessed, and determined a good shard key.
+
+Latency will be involved in a distributed system.
+
+There's no way to avoid it.
+
+It might be minimized with good architectures to do so, but it will still be something that you need to consider from a performance perspective.
+
+Scattered gathered and routed queries are two completely different profiles in terms of read response in a distributed system, so pay close attention to that.
+
+Sorting, limit, and skip will also have its hurdles within a given distributed system for correctness and to reflect the exact request that our clients are asking for.
+
+And this is all we have on performance considerations for distributed systems.

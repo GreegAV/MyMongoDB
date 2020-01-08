@@ -1,0 +1,89 @@
+The MongoDB download comes with a set of different tools, apart from the obvious MongoD and MongoS binaries.
+
+I've downloaded the tarball for the distribution into the shared directory.
+
+Let's unpack it and see what's there.
+
+We can find tools to import and export our data, like mongoimport and mongoexport.
+
+We can also have tools like mongodump and mongorestore, which import binary format data files and export them.
+
+We've got bsondump, which converts BSON dump files into more human readable JSON, and mongouplog, which allows us to pull a replica set uplog and apply it to a local server.
+
+There's also a helper tool for GridFS called mongofiles.
+
+But more important for this course, we have server diagnostic tools, mongostat, mongotop, mongoreplay, mongoperf, and mongoldap.
+
+Mongoldap allows us to validate the ldap configuration settings for our MongoD.
+
+You point it at an LDAP server, either directly or by pointing it to a MongoDB configuration file, so it can test the connectivity and validation of the configuration against a given LDAP server.
+
+This tool is used only to validate and diagnose LDAP configuration issues.
+
+You can learn more about it in our security course M310, so I won't go into it here.
+
+Mongoperf is a performance testing tool.
+
+This tool tests your server's disk I/O performance.
+
+Given a set of conditions reflected in a config file, the tool will subject your server to an I/O test.
+
+This tool has limited reach and should be used only for basic I/O assessments of your disk subsystem.
+
+Take any results with a grain of salt.
+
+This test may show how much I/O per second your disks are capable of doing under a very specific set of conditions.
+
+But in real world situations, other operations, like rebalancing indexes, navigating b-trees, and allocating resources to other applications running in your server can affect your disk performance.
+
+And mongoperf can't fully measure the effect of those other factors.
+
+Next up is mongoreplay, a network diagnostics and analysis tool.
+
+It allows us to do three important things, monitor, record, and playback network traffic for analysis and debugging purposes.
+
+This is an excellent tool that allows QA teams to test production traffic and see how it changes in the deployment, like different hardware, different cluster configurations, and different choices of storage engine will affect performance.
+
+After the fact analysis of events for debugging purposes, or even fault injection, can be done by capturing traffic and later replaying it to understand the system tolerance to failure.
+
+Let's spin up some servers.
+
+And mongoreplay is going to need some extra privileges in order to do its job, so we'll sudo this command.
+
+Using mongoreplay, we can see the traffic exchange between our MongoD primary and the other servers in the replica set.
+
+We would also see network traffic to a shell or application via a driver.
+
+We'll see more about MongoDB replay later in the course.
+
+And finally, we have our two classic server diagnostic tools, mongostat and mongotop.
+
+Here's mongostat.
+
+It's a real time statistics tool.
+
+The font is big enough that it's wrapping on the stream, but you get the idea.
+
+It provides quite an overview of the stats of a currently running MongoD or MongoS per time interval.
+
+By default, it's sampling once per second.
+
+We have inserts, queries, updates, deletes, and others.
+
+It's also capable of providing a global view of the statistics on all servers in a cluster by specifying the minus minus discover flag.
+
+The way mongostat works is it connects to the servers it's monitoring, periodically sending the server status command, parsing the results, calculating the difference between the relevant values in the server status documents during each sampling interval, and printing it out for later use to see.
+
+Mongotop does a very simple analysis of the time consumed per second on different name spaces.
+
+This tool measures the amount of time spent reading, writing, and their total aggregate per sampling unit, default one second, on the various different name spaces.
+
+It's a nice tool to get a sense of what type of work load is hitting the different databases in collections.
+
+Maybe you have some with more reads, some with more rights, et cetera.
+
+Right now, I'm not doing anything, so everything is zero.
+
+So those are the server tools we use for analysis.
+
+No single tool is usually going to be enough to give us a good diagnosis of a problem, so we'll use multiple tools when we look at a problem in order to form hypotheses, and either validate, or reject them as appropriate.

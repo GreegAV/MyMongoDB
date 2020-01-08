@@ -1,0 +1,148 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.330
+Cross shard distributed
+transactions will always
+
+3
+00:00:03.330 --> 00:00:06.240
+need to coordinate a commit
+across shards, incurring
+
+4
+00:00:06.240 --> 00:00:10.290
+more performance costs than if a
+transaction targeted one shard.
+
+5
+00:00:10.290 --> 00:00:12.180
+For the most
+performant workloads,
+
+6
+00:00:12.180 --> 00:00:14.040
+try to optimize
+your transactions
+
+7
+00:00:14.040 --> 00:00:15.990
+to target one shard.
+
+8
+00:00:15.990 --> 00:00:18.900
+You can do this by
+targeting queries
+
+9
+00:00:18.900 --> 00:00:21.900
+with your shard
+key value included.
+
+10
+00:00:21.900 --> 00:00:24.600
+If you do not send your
+shard key value in the query,
+
+11
+00:00:24.600 --> 00:00:27.150
+all shards must be targeted.
+
+12
+00:00:27.150 --> 00:00:29.640
+Secondly, you can
+try and co-locate
+
+13
+00:00:29.640 --> 00:00:33.270
+chunks that may be access
+together within a transaction.
+
+14
+00:00:33.270 --> 00:00:36.330
+A chunk is a set of documents
+within a defined range
+
+15
+00:00:36.330 --> 00:00:38.640
+of shard key values.
+
+16
+00:00:38.640 --> 00:00:40.830
+If you logically
+have data that is
+
+17
+00:00:40.830 --> 00:00:42.480
+likely to be accessed
+together, you
+
+18
+00:00:42.480 --> 00:00:45.210
+can leverage zones
+to co-locate chunks
+
+19
+00:00:45.210 --> 00:00:47.130
+so that it's more likely
+a transaction will
+
+20
+00:00:47.130 --> 00:00:49.980
+target only one shard.
+
+21
+00:00:49.980 --> 00:00:51.630
+If your application
+use case does not
+
+22
+00:00:51.630 --> 00:00:55.320
+allow for co-locating
+data, try, if possible,
+
+23
+00:00:55.320 --> 00:00:57.900
+to write to only one shard.
+
+24
+00:00:57.900 --> 00:00:59.730
+Writing to only one
+shard regardless
+
+25
+00:00:59.730 --> 00:01:01.770
+of the number of
+shards you read from
+
+26
+00:01:01.770 --> 00:01:06.360
+can save on some of the
+commit protocols steps.
+
+27
+00:01:06.360 --> 00:01:08.400
+While writing to one
+shard within transaction
+
+28
+00:01:08.400 --> 00:01:11.250
+is more performant than
+writing to several shards,
+
+29
+00:01:11.250 --> 00:01:14.310
+this approach is still
+not as optimized as only
+
+30
+00:01:14.310 --> 00:01:17.580
+targeting one shard for
+all reads and writes
+
+31
+00:01:17.580 --> 00:01:20.090
+within the transaction.

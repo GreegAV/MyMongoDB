@@ -1,0 +1,90 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.490
+Now that we've looked at
+how to audit DDL operations,
+
+3
+00:00:03.490 --> 00:00:07.470
+let's take a moment and look
+at how to audit DML operations.
+
+4
+00:00:07.470 --> 00:00:09.690
+The other common
+statement category in SQL
+
+5
+00:00:09.690 --> 00:00:13.980
+is DML, or Data
+Manipulation Language.
+
+6
+00:00:13.980 --> 00:00:16.440
+As the name implies, DML
+refers to the manipulation
+
+7
+00:00:16.440 --> 00:00:19.020
+of data within your database.
+
+8
+00:00:19.020 --> 00:00:22.050
+With MongoDB, we generally
+refer to DML operations
+
+9
+00:00:22.050 --> 00:00:26.820
+as CRUD-- the ability to
+create, read, update, and delete
+
+10
+00:00:26.820 --> 00:00:28.020
+our data.
+
+11
+00:00:28.020 --> 00:00:30.555
+With regards to auditing
+DML, virtually all
+
+12
+00:00:30.555 --> 00:00:34.590
+of the operations that we
+would consider DML operations
+
+13
+00:00:34.590 --> 00:00:37.890
+fall underneath the
+authCheck action type.
+
+14
+00:00:37.890 --> 00:00:42.030
+This is because CRUD operations
+are passed as parameters
+
+15
+00:00:42.030 --> 00:00:44.230
+to the authCheck event.
+
+16
+00:00:44.230 --> 00:00:47.970
+Every time that you try to
+create, read, update or destroy
+
+17
+00:00:47.970 --> 00:00:50.652
+data within your
+database, authCheck
+
+18
+00:00:50.652 --> 00:00:52.860
+is going to be the action
+type that's actually firing
+
+19
+00:00:52.860 --> 00:00:55.280
+from an auditing perspective.

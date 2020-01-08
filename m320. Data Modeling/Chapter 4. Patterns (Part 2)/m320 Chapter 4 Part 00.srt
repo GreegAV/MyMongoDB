@@ -1,0 +1,774 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.330
+Some computations are
+very expensive to do.
+
+3
+00:00:03.330 --> 00:00:07.090
+If you store your information
+as base units in your database,
+
+4
+00:00:07.090 --> 00:00:09.630
+you may find yourself redoing
+the same computations,
+
+5
+00:00:09.630 --> 00:00:12.810
+manipulations, or
+transformations over and over.
+
+6
+00:00:12.810 --> 00:00:16.020
+In big data systems, these
+kinds of repeated computations
+
+7
+00:00:16.020 --> 00:00:18.660
+can lead to very
+poor performance.
+
+8
+00:00:18.660 --> 00:00:22.170
+What kind of transformations
+are usually applied to data?
+
+9
+00:00:22.170 --> 00:00:23.190
+The list is long.
+
+10
+00:00:23.190 --> 00:00:26.670
+However, they usually fall into
+one of those three categories--
+
+11
+00:00:26.670 --> 00:00:29.520
+mathematical operations,
+fan out operations,
+
+12
+00:00:29.520 --> 00:00:31.270
+and roll-up operations.
+
+13
+00:00:31.270 --> 00:00:33.840
+We will group those under
+a new pattern, which we
+
+14
+00:00:33.840 --> 00:00:36.300
+will call the computed pattern.
+
+15
+00:00:36.300 --> 00:00:39.510
+The mathematical operations
+are easy to identify.
+
+16
+00:00:39.510 --> 00:00:42.330
+These are the ones where we
+compute a sum or an average,
+
+17
+00:00:42.330 --> 00:00:44.490
+find a median, et cetera.
+
+18
+00:00:44.490 --> 00:00:47.640
+These are often associated with
+calling a built-in function
+
+19
+00:00:47.640 --> 00:00:48.720
+in the server.
+
+20
+00:00:48.720 --> 00:00:52.210
+Why does it matter that we
+want to apply a pattern here?
+
+21
+00:00:52.210 --> 00:00:55.200
+Let's say we have a write
+operation that comes in.
+
+22
+00:00:55.200 --> 00:00:59.540
+This piece of data is added as a
+document to a given collection.
+
+23
+00:00:59.540 --> 00:01:03.300
+Another part of the application
+reads this collection and does,
+
+24
+00:01:03.300 --> 00:01:05.459
+let's say, a sum on the numbers.
+
+25
+00:01:05.459 --> 00:01:09.580
+If we are doing 1,000 times
+more reads than writes,
+
+26
+00:01:09.580 --> 00:01:11.820
+the sum operation we
+do with those reads
+
+27
+00:01:11.820 --> 00:01:15.900
+is identical and very often
+does the exact same calculation
+
+28
+00:01:15.900 --> 00:01:19.320
+for each of those
+read operations.
+
+29
+00:01:19.320 --> 00:01:22.680
+We can save ourselves from
+all those identical operations
+
+30
+00:01:22.680 --> 00:01:26.340
+by calculating the results when
+we get a new piece of data.
+
+31
+00:01:26.340 --> 00:01:28.350
+Once we have a
+new piece of data,
+
+32
+00:01:28.350 --> 00:01:31.140
+we read the other
+element for the sum
+
+33
+00:01:31.140 --> 00:01:34.950
+and store the result in another
+collection with documents
+
+34
+00:01:34.950 --> 00:01:38.340
+more appropriate to keep
+the sum for that element.
+
+35
+00:01:38.340 --> 00:01:42.360
+This results in much fewer
+computation in the system,
+
+36
+00:01:42.360 --> 00:01:45.720
+and we also reduce the
+amount of data being read.
+
+37
+00:01:45.720 --> 00:01:50.040
+See here, each sum reads
+all those documents.
+
+38
+00:01:50.040 --> 00:01:53.220
+Since we don't have to do the
+computation that at read time,
+
+39
+00:01:53.220 --> 00:01:56.310
+we also save on those
+read operations, too.
+
+40
+00:01:56.310 --> 00:02:00.210
+In this example, that will
+be 1,000 fewer computation
+
+41
+00:02:00.210 --> 00:02:02.790
+and 1,000 fewer reads.
+
+42
+00:02:02.790 --> 00:02:06.060
+A good example of this will be
+keeping track of ticket sales
+
+43
+00:02:06.060 --> 00:02:07.980
+and then reporting
+the sale numbers--
+
+44
+00:02:07.980 --> 00:02:09.630
+let's say for a specific movie--
+
+45
+00:02:09.630 --> 00:02:11.250
+on a movie website.
+
+46
+00:02:11.250 --> 00:02:13.710
+There are likely fewer
+screening happening
+
+47
+00:02:13.710 --> 00:02:16.170
+per hour, which will
+be all right, than page
+
+48
+00:02:16.170 --> 00:02:20.250
+views for the given movie where
+we want to display the sums.
+
+49
+00:02:20.250 --> 00:02:22.650
+So instead of summing
+those screenings document
+
+50
+00:02:22.650 --> 00:02:25.530
+to display the total
+viewer and sales every time
+
+51
+00:02:25.530 --> 00:02:27.900
+access the movie,
+we are better off
+
+52
+00:02:27.900 --> 00:02:30.060
+keeping the information
+in the document
+
+53
+00:02:30.060 --> 00:02:33.600
+and updating it every time we
+get a new screening document.
+
+54
+00:02:33.600 --> 00:02:35.100
+We don't have to
+keep the screenings
+
+55
+00:02:35.100 --> 00:02:37.590
+once the calculation is done.
+
+56
+00:02:37.590 --> 00:02:40.810
+However, the idea was to
+regenerate the sums if needed,
+
+57
+00:02:40.810 --> 00:02:43.900
+or give us the ability
+to do more analytics.
+
+58
+00:02:43.900 --> 00:02:45.570
+Fan out operations.
+
+59
+00:02:45.570 --> 00:02:47.550
+First, what does fan out means?
+
+60
+00:02:47.550 --> 00:02:51.780
+It means to do many tasks to
+represent one logical task.
+
+61
+00:02:51.780 --> 00:02:53.400
+There are two basic schemes.
+
+62
+00:02:53.400 --> 00:02:56.130
+Either you fan out on
+reads, which means in order
+
+63
+00:02:56.130 --> 00:02:59.010
+to return the appropriate
+data, the query must fetch data
+
+64
+00:02:59.010 --> 00:03:01.710
+from different locations,
+or you found out
+
+65
+00:03:01.710 --> 00:03:04.560
+on writes, which means
+every logical write
+
+66
+00:03:04.560 --> 00:03:08.610
+operation translate into several
+writes to different documents.
+
+67
+00:03:08.610 --> 00:03:12.720
+In doing so, the read does
+not have to fan out anymore,
+
+68
+00:03:12.720 --> 00:03:16.480
+as the data is
+pre-organized at write time.
+
+69
+00:03:16.480 --> 00:03:18.900
+If you don't pay
+attention to this pattern,
+
+70
+00:03:18.900 --> 00:03:22.140
+you are likely doing
+fan out on reads.
+
+71
+00:03:22.140 --> 00:03:24.720
+Why would you use
+fan out on writes?
+
+72
+00:03:24.720 --> 00:03:27.690
+If the system has plenty of time
+when the information arrives
+
+73
+00:03:27.690 --> 00:03:30.930
+compared to the acceptable
+latency of returning data
+
+74
+00:03:30.930 --> 00:03:33.060
+on read operation,
+then preparing
+
+75
+00:03:33.060 --> 00:03:36.390
+the data at write time
+makes a lot of sense.
+
+76
+00:03:36.390 --> 00:03:38.610
+Note that if you are
+doing more writes
+
+77
+00:03:38.610 --> 00:03:42.060
+then reads so the system
+becomes bound by writes,
+
+78
+00:03:42.060 --> 00:03:45.030
+this may not be a
+good pattern to apply.
+
+79
+00:03:45.030 --> 00:03:47.970
+A good example for this pattern
+will be a social networking
+
+80
+00:03:47.970 --> 00:03:50.010
+system for sharing photos.
+
+81
+00:03:50.010 --> 00:03:53.250
+The system may copy the new
+photo on each follower's home
+
+82
+00:03:53.250 --> 00:03:55.230
+page as it gets the new photo.
+
+83
+00:03:55.230 --> 00:03:57.840
+This way, when a user
+load its own page,
+
+84
+00:03:57.840 --> 00:04:00.810
+the system does not have to
+spend resources assembling
+
+85
+00:04:00.810 --> 00:04:04.260
+all the information from all
+the people this user follows.
+
+86
+00:04:04.260 --> 00:04:06.840
+Everything needed for
+the user's home page
+
+87
+00:04:06.840 --> 00:04:09.960
+would be available via
+single document, which
+
+88
+00:04:09.960 --> 00:04:13.410
+lead to a much better
+experience with the site.
+
+89
+00:04:13.410 --> 00:04:14.850
+Roll-up operations.
+
+90
+00:04:14.850 --> 00:04:16.800
+We use this terminology
+in a position
+
+91
+00:04:16.800 --> 00:04:18.690
+to drill-down operation.
+
+92
+00:04:18.690 --> 00:04:21.870
+In the roll-up operation,
+we merge data together.
+
+93
+00:04:21.870 --> 00:04:25.170
+For example, grouping categories
+together in a parent category
+
+94
+00:04:25.170 --> 00:04:26.580
+will be a roll-up.
+
+95
+00:04:26.580 --> 00:04:30.600
+Grouping time-based data from
+small intervals to large ones
+
+96
+00:04:30.600 --> 00:04:33.000
+will be another good
+example of a roll-up.
+
+97
+00:04:33.000 --> 00:04:34.710
+This type of roll-up
+is often seen
+
+98
+00:04:34.710 --> 00:04:39.090
+in reporting for hourly, daily,
+monthly, or yearly summaries.
+
+99
+00:04:39.090 --> 00:04:42.660
+Any operation that wants
+to see data at a high level
+
+100
+00:04:42.660 --> 00:04:45.450
+is basically looking
+at rolling up data.
+
+101
+00:04:45.450 --> 00:04:48.420
+Mathematical computations
+are roll-ups.
+
+102
+00:04:48.420 --> 00:04:50.610
+However, roll-ups
+are more generic.
+
+103
+00:04:50.610 --> 00:04:52.620
+You can often think
+of roll-up data
+
+104
+00:04:52.620 --> 00:04:55.140
+as running a group operation.
+
+105
+00:04:55.140 --> 00:04:57.900
+So similarly to
+mathematical computation,
+
+106
+00:04:57.900 --> 00:04:59.990
+doing those roll-ups
+at right time
+
+107
+00:04:59.990 --> 00:05:02.180
+may make more sense
+than having our read
+
+108
+00:05:02.180 --> 00:05:05.660
+operation pay the costs of
+processing the transformations.
+
+109
+00:05:05.660 --> 00:05:08.180
+Let's look at a
+concrete example.
+
+110
+00:05:08.180 --> 00:05:11.570
+An inventory has
+different wine types.
+
+111
+00:05:11.570 --> 00:05:15.980
+The inventory change once in a
+while, however, not frequently.
+
+112
+00:05:15.980 --> 00:05:19.070
+What is more frequent is
+looking at the wine organized
+
+113
+00:05:19.070 --> 00:05:20.910
+by various categories.
+
+114
+00:05:20.910 --> 00:05:22.790
+For example, I may
+want to see the count
+
+115
+00:05:22.790 --> 00:05:26.210
+of wine types per country
+of origin or per type
+
+116
+00:05:26.210 --> 00:05:28.520
+so I can buy what is
+missing in my inventory
+
+117
+00:05:28.520 --> 00:05:31.160
+to cover all my customer needs.
+
+118
+00:05:31.160 --> 00:05:33.880
+If I'm looking more often at
+the information on the right,
+
+119
+00:05:33.880 --> 00:05:36.680
+the non-aggregated data
+than the changes that
+
+120
+00:05:36.680 --> 00:05:38.780
+are happening on my
+collection on the left,
+
+121
+00:05:38.780 --> 00:05:41.120
+it makes more sense
+to generate this data
+
+122
+00:05:41.120 --> 00:05:44.240
+and cache it in the
+appropriate documents.
+
+123
+00:05:44.240 --> 00:05:46.760
+When should you apply
+the computed pattern?
+
+124
+00:05:46.760 --> 00:05:49.280
+If you see you are
+using a lot of CPU,
+
+125
+00:05:49.280 --> 00:05:51.020
+this may be a sign
+that you're doing
+
+126
+00:05:51.020 --> 00:05:54.920
+much more than transferring
+data from and to the disk.
+
+127
+00:05:54.920 --> 00:05:56.960
+Keep in mind that some
+tasks like compressing
+
+128
+00:05:56.960 --> 00:05:59.480
+and decompressing data
+between the disk and the cache
+
+129
+00:05:59.480 --> 00:06:02.040
+requires a lot of CPU, too.
+
+130
+00:06:02.040 --> 00:06:04.640
+Secondly, if you have
+long read operation
+
+131
+00:06:04.640 --> 00:06:07.410
+that depends on complex
+aggregation queries,
+
+132
+00:06:07.410 --> 00:06:10.070
+you might want to
+make them run faster.
+
+133
+00:06:10.070 --> 00:06:12.560
+Time to formalize
+a computed pattern.
+
+134
+00:06:12.560 --> 00:06:15.290
+The problem the computer
+pattern addresses
+
+135
+00:06:15.290 --> 00:06:18.440
+is avoiding doing the same
+computation over and over,
+
+136
+00:06:18.440 --> 00:06:20.780
+especially if they're expensive.
+
+137
+00:06:20.780 --> 00:06:23.690
+The solution is to
+perform the computation
+
+138
+00:06:23.690 --> 00:06:25.940
+and store the result in
+the appropriate document
+
+139
+00:06:25.940 --> 00:06:27.140
+and collection.
+
+140
+00:06:27.140 --> 00:06:29.090
+If you need to redo
+the computation
+
+141
+00:06:29.090 --> 00:06:30.710
+or want to be able
+to redo them, just
+
+142
+00:06:30.710 --> 00:06:32.420
+keep the source of
+your computations,
+
+143
+00:06:32.420 --> 00:06:35.210
+meaning keep the smaller
+documents or piece
+
+144
+00:06:35.210 --> 00:06:36.910
+of information.
+
+145
+00:06:36.910 --> 00:06:39.680
+Common use cases where you
+may want to use the pattern
+
+146
+00:06:39.680 --> 00:06:43.970
+are the Internet of Things,
+event sourcing, time series
+
+147
+00:06:43.970 --> 00:06:48.290
+data, and any scenario where you
+do repeated similar aggregation
+
+148
+00:06:48.290 --> 00:06:49.790
+queries.
+
+149
+00:06:49.790 --> 00:06:52.190
+The benefits you get
+from the computed pattern
+
+150
+00:06:52.190 --> 00:06:55.660
+are faster read and less
+utilization of resources,
+
+151
+00:06:55.660 --> 00:06:57.390
+mostly CPU and disk.
+
+152
+00:06:57.390 --> 00:06:59.420
+However, it may be
+difficult to diagnose
+
+153
+00:06:59.420 --> 00:07:02.720
+that you may benefit from such
+patterns on a large existing
+
+154
+00:07:02.720 --> 00:07:03.680
+cluster.
+
+155
+00:07:03.680 --> 00:07:06.110
+It is easy to abuse
+the computed pattern.
+
+156
+00:07:06.110 --> 00:07:09.200
+Use it when you need it, as
+the required computation may
+
+157
+00:07:09.200 --> 00:07:12.140
+add complexity to
+the application code.
+
+158
+00:07:12.140 --> 00:07:12.980
+So here it is.
+
+159
+00:07:12.980 --> 00:07:15.500
+This is our computed pattern.
+
+160
+00:07:15.500 --> 00:07:18.330
+In summary, the computed
+pattern is a useful pattern
+
+161
+00:07:18.330 --> 00:07:23.140
+if you want to avoid performing
+similar operations many times.

@@ -1,0 +1,113 @@
+In this lesson, we're going to consider logical operators.
+
+In particular, we're going to focus on $or and $and.
+
+Now I also want to make you aware that there is a $not operator and a $nor operator.
+
+But in this lesson, we're going to look just at "or" and "and".
+
+Let's take a look at an example using the $or operator.
+
+What we're going to do here is look for documents based on their rating using both the tomato meter, which is produced by the reviews of the general public who care to comment, and the metacritic, which is a score generated based on the reviews of movie critics.
+
+Now the assumption baked into this query is that the general public are easier graders than movie critics.
+
+We're looking for documents in our movie details collection that have a tomato dot meter rating greater than 95 or a metacritic rating of greater than 88.
+
+Let's look at the syntax here.
+
+$or takes as a value an array in which we specify selectors.
+
+In this case, we're using greater than 95 for tomato meter and greater than 88 for metacritic.
+
+Now let's run this query and take a look at the results.
+
+We can see that "Toy Story 3" actually matched both criteria.
+
+It has a tomato meter rating of greater than 95 and a metacritic score of greater than 92.
+
+And then here's one where the general public and the critics we're pretty far apart in rating this movie-- this being the document for "Groundhog Day".
+
+So again, $or takes an array as an argument.
+
+The elements of the array are selectors.
+
+Any one of which can be true in order to match a document that will be returned by this query.
+
+Now let's look at the $and operator.
+
+Something that I want to point out about $and is that it's necessary only in certain situations.
+
+For example, we could use $and here and restrict results to those movies where both the metacritic score and the tomato meter score were high.
+
+Let's look at an example of that.
+
+So now only movies where both tomato meter and metacritic scores are high are being returned to us.
+
+But the thing to note is that the $and operator in this particular query is superfluous.
+
+The reason being that the query we just did here is equivalent to this one.
+
+Selectors in a filter are implicitly anded together already.
+
+And we can see that if we apply this query without the use of $and that we get exactly the same search results.
+
+So why is there a $and operator?
+
+The reason is because sometimes we need to specify the same field more than once in a filter.
+
+If I were to try to do this, using just a simple filter, I would not get the intended results because the keys in a JSON document must be unique.
+
+For example, if our query were this instead, the last use of the metacritic key would be the one used.
+
+The $and operator allows me to specify multiple constraints on the same field in situations such as this where I need to do so.
+
+In this case, we need all documents for which metacritic is not equal to null, but does exist.
+
+Remember that null will match keys that actually have the value null and those that do not contain the key at all.
+
+This type of query might be useful for an application in which we know we've got a little bit of dirty data where possibly there are fields that have a metacritic value that is equal to null.
+
+But what we really want is for all our metacritic values to actually have a numerical value of some kind.
+
+And so if I execute this, then I do get documents where the metacritic field exists and where I do have a value other than null for that field.
+
+And we can always flip this to see only documents where metacritic is null and the field actually exists.
+
+Let's run this query instead.
+
+Now, there aren't actually any such documents in this collection.
+
+And what I mean by that is they're not in fact any documents where the metacritic field has a value of null.
+
+So let's create one.
+
+For this, I'm going to go to Compass.
+
+And despite the fact that the document we're looking for is already right here, I would like to limit the result set that we're looking at to just this document.
+
+Applying that filter, we see one document returned and that it is in fact "Once Upon a Time in the West".
+
+Now, in order to create a document that has a null value for metacritic, what I'm going to do here is use the copy document button that I see to the right of my document here in the Compass Interface.
+
+That pulls up a modal with a copy of that document and gives me an opportunity to insert it.
+
+But before I insert it, what I want to do is go to the metacritic field change its value to null and make sure that I change its type to null, as well.
+
+Then what I'll do is insert it.
+
+But first, note that there is no underscore ID for this copy of the document.
+
+When I insert it, another score ID value will be created for me.
+
+And now I have two documents that have this title.
+
+The first is the original document.
+
+And the second is my copy with metacritic set to null.
+
+Now if I run that same query in a shell, we can see that we match the document we just inserted.
+
+Before we close this lesson, I'll just go back to Compass and delete that document I inserted to clean up after myself.
+
+So again, remember that $and is used in situations where we need to specify multiple criteria on the same field.

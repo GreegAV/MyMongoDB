@@ -1,0 +1,173 @@
+1
+00:00:00,000 --> 00:00:00,499
+
+
+2
+00:00:00,499 --> 00:00:01,960
+As we get started
+with this course,
+
+3
+00:00:01,960 --> 00:00:04,650
+I'd like to talk about grading
+and a few other logistics
+
+4
+00:00:04,650 --> 00:00:07,710
+just to make sure you know
+how this course works.
+
+5
+00:00:07,710 --> 00:00:10,920
+You'll see three different types
+of exercises in this course--
+
+6
+00:00:10,920 --> 00:00:13,680
+quizzes, labs--
+which we also call
+
+7
+00:00:13,680 --> 00:00:16,470
+homework-- and a final exam.
+
+8
+00:00:16,470 --> 00:00:20,550
+You'll see quizzes after most
+lesson videos in this course.
+
+9
+00:00:20,550 --> 00:00:22,140
+All quizzes are ungraded.
+
+10
+00:00:22,140 --> 00:00:24,960
+They're there to allow you
+to test your understanding
+
+11
+00:00:24,960 --> 00:00:26,880
+of the lesson material.
+
+12
+00:00:26,880 --> 00:00:30,630
+You'll see labs-- or homework,
+as we sometimes call them--
+
+13
+00:00:30,630 --> 00:00:32,580
+throughout each chapter.
+
+14
+00:00:32,580 --> 00:00:34,770
+The scores you get
+on your labs make up
+
+15
+00:00:34,770 --> 00:00:37,170
+50% of your final grade.
+
+16
+00:00:37,170 --> 00:00:40,080
+Then at the very end of
+the course is a final exam.
+
+17
+00:00:40,080 --> 00:00:42,570
+This makes up the other
+50% of your grade.
+
+18
+00:00:42,570 --> 00:00:44,880
+In terms of a course
+schedule, in the first week
+
+19
+00:00:44,880 --> 00:00:47,220
+of this course, we
+release chapter one.
+
+20
+00:00:47,220 --> 00:00:49,650
+We release chapter two
+in the second week,
+
+21
+00:00:49,650 --> 00:00:51,730
+and then in the third
+week of the course,
+
+22
+00:00:51,730 --> 00:00:55,380
+we release both chapter
+three and the final exam.
+
+23
+00:00:55,380 --> 00:00:56,995
+And don't worry--
+these two together
+
+24
+00:00:56,995 --> 00:00:59,370
+are short enough that you
+should be able to complete them
+
+25
+00:00:59,370 --> 00:01:01,260
+all in week three.
+
+26
+00:01:01,260 --> 00:01:03,930
+Please make sure you
+check the course syllabus
+
+27
+00:01:03,930 --> 00:01:07,920
+for the exact release dates
+for weeks one, two, and three.
+
+28
+00:01:07,920 --> 00:01:11,100
+In the syllabus, you'll
+also find due dates
+
+29
+00:01:11,100 --> 00:01:15,210
+for when the labs or homework
+are due for each week.
+
+30
+00:01:15,210 --> 00:01:18,070
+Once we've passed the due
+date for the final exam,
+
+31
+00:01:18,070 --> 00:01:22,050
+if you've achieved a
+grade of 65% or better,
+
+32
+00:01:22,050 --> 00:01:26,110
+you'll receive a statement of
+completion for this course.
+
+33
+00:01:26,110 --> 00:01:28,860
+And again, we generate the
+statements of completion
+
+34
+00:01:28,860 --> 00:01:31,800
+after the due date
+for the final exam.
+
+35
+00:01:31,800 --> 00:01:34,090
+That's it for the
+essential course logistics.
+
+36
+00:01:34,090 --> 00:00:00,000
+We're glad you're learning
+with us, and good luck.
+

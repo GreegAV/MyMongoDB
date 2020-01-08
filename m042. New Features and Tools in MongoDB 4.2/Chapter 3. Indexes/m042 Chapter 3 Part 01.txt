@@ -1,0 +1,103 @@
+Hi there.
+
+In this lesson, we're going to talk about wildcard indexes.
+
+Wildcard indexes are a new index type in MongoDB.
+
+Which, as their name suggests, allow you to dynamically create indexes on all fields, or a selected subset of fields for each document in a collection.
+
+Let's take a step back and talk about why we would want to use this feature.
+
+Here at MongoDB, we always say that you should only index fields that your queries frequently access.
+
+And that still applies.
+
+Wildcard indexes aren't a replacement for traditional indexes.
+
+So remember, indexes are great for query performance, but come at a cost.
+
+Each index needs to be maintained.
+
+And every document that's written to the database needs to update all the relevant indexes as well.
+
+Then why would we index everything, I hear you say.
+
+And I can definitely understand your trepidation.
+
+There is a method to our madness, however.
+
+Some workloads have unpredictable access patterns.
+
+For instance, sensor data for IoT use cases, or weather stations.
+
+In such cases, each query may include a combination of an arbitrarily large number of different fields.
+
+This can make it very difficult to plan an effective indexing strategy.
+
+For these workloads, we needed a way to be able to index on multiple fields without the overhead of maintaining multiple indexes.
+
+MongoDB indexes any scalar values associated with a specified path or paths.
+
+For fields that are documents, MongoDB descends into the document and creates index keys for each field value paired finds.
+
+For fields that are arrays, MongoDB creates an index key for each value in the array.
+
+This is similar to how multi key indexes handle arrays at the moment.
+
+If the array contains sub-documents, MongoDB again will descend through those documents, and index all field value pairs.
+
+Let's have a look at how we can use these indexes.
+
+Let's say we have a collection, and decide that we want every field in the collection to be indexed.
+
+Without wildcard indexes, we would have to create and maintain a lot of indexes based on whatever new access pattern our application uses.
+
+If we instead use a wildcard index, we can assume that certain indexes exist without the need to manually create them.
+
+So let's have a look at our weather collection here, which we've loaded into Atlas Cluster using the sample data feature.
+
+We've created a new application, and during testing have noticed that the access pattern is completely unpredictable.
+
+And are really struggling to see a pattern where a set of indexes would serve all our queries efficiently.
+
+Wildcard indexes give us the ability to index all fields in all documents in a collection.
+
+We want to index all fields in the sample_weather collection.
+
+Let's jump into a Mongo Shell and do that.
+
+This command uses $** as a wildcard operator, which tells MongoDB to index everything in the collection.
+
+OK, so our index is created.
+
+Let's check it out.
+
+We're going to query on a nested document in our collection.
+
+Let's say that we need to view all data points where a wave height is 0.5.
+
+Let's write a query to get that data from our database.
+
+OK, so here we're querying on a sub-document of wave measurement that waves are height.
+
+So great, our query used the index.
+
+But what if we wanted to query on two fields in the document?
+
+So here, we're querying on two fields.
+
+Let's say I execute the query and look at our Explain Plan again.
+
+We have a winning plan, which uses an index.
+
+And we also have our rejected plans down below.
+
+So what you may have noticed is that each of these plans is on a single field index.
+
+And this is because the wildcard index will generate one virtual single field index at query execution time.
+
+And then the planner will assess them using the standard query plan score.
+
+This is because the wildcard index will generate one virtual single field at execution time for each field in the query.
+
+And the planner will assess them using standard plan scoring.

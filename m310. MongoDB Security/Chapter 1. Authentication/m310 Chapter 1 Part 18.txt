@@ -1,0 +1,125 @@
+Now let's take a moment and discuss how to configure MongoDB for internal authentication between the members of a replica set or sharded cluster.
+
+There are two methods for internal authentication between nodes with MongoDB, key file based authentication, and X509 certificate based authentication.
+
+Let's first walk through how to set MongoDB to use key file based authentication.
+
+If you recall correctly, key files use the scram shaw one, challenge response authentication mechanism.
+
+The key files between the members of our replica set act as a shared pass route between each of the members.
+
+Key files can be between 6 and 1024 characters in length.
+
+And can only contain characters in the Base 64 set.
+
+Let's go ahead and generic our key file.
+
+Here I'm going to use the open SSL command to generate a random 1024 character string, random characters, Base 64 set.
+
+755 ends up being 1024 characters with the Base 64 set.
+
+And then we just redirect this output to a key file called MongoDB dash key file.
+
+Now this key file has been created, the next thing we want to do is set this file to be read only.
+
+So here I'm using chmod.
+
+Saying 400 for read only.
+
+And then Mongo DB key file, they key file we just created.
+
+Now that we have our key file ready to go, we can go ahead and create the members of our replica set.
+
+The first thing we're going to want to do is create a folder for each database.
+
+Here we have replica set 1, 2, and 3.
+
+Each of which will have a subfolder called DB.
+
+The -p option for mkdir will automatically create folders if there is some kind of dependency that doesn't exist.
+
+Now that these folders have been created, we can go ahead and start our first member in our replica set.
+
+Here is the command to start our first node.
+
+We're saying MongoD.
+
+We're saying the repl set option, giving a name to our replica set called my repl set.
+
+Of course, we're going to use db path, log path.
+
+Since we are going to have three members in our replica set, we're going to go ahead and specify ports for each of them.
+
+I'm going to start with 27 0 17.
+
+We're going to pass in the fork.
+
+And then, of course, we're going to pass in our key file that we just created.
+
+The first process is started successfully.
+
+Here's the second member of our replica set.
+
+The only thing I'd change here was the file path and the port.
+
+And now we can start our last member.
+
+Here is the last member of our replica set I just changed the path again and the port number again.
+
+And all three of our members are now started.
+
+We can now go ahead and use the Mongo shell to initiate the replica set.
+
+Since I used the default port for our first member of 27 0 17, the Mongo shell automatically is going to connect to that first number.
+
+And from here, we can go ahead and initialize the replica set with RS initiate.
+
+The replica set has now been initiated.
+
+But if we try to add members to our replica set, we will fail.
+
+And this is because internal authentication automatically enables client authorization.
+
+So let's go ahead and use the locals exception to create our first user and then authenticate against that user.
+
+So we need to switch the admin database.
+
+And then we can go ahead and create our user.
+
+I'm creating a user called Kirby whose password is password.
+
+With a root roll.
+
+It was successfully added.
+
+And now can go ahead and authenticate against Kirby.
+
+Here we go.
+
+I'm going to use db.auth.
+
+[?
+
+pass the end ?] Kirby, and password.
+
+And you can see we've successfully authenticated.
+
+And now we can go ahead and add the members of our replica set.
+
+So here I'm using replica set add specifying the host of my machine and the port of our second member which is 27 0 18.
+
+You can see that it was successfully added.
+
+I can just go ahead and add the third member of our replica set.
+
+Awesome.
+
+So now all the members of our replica set are using a shared key file for authentication.
+
+And we can verify that everything is good by running rs status.
+
+Here we go.
+
+Here are all the different members of our replica set.
+
+There is number one, the primary, and we have our two secondaries.

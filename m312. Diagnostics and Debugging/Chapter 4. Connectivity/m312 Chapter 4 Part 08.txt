@@ -1,0 +1,75 @@
+OK, let's talk about something that doesn't come up often, but which does come up.
+
+The interaction between write concern and throughput.
+
+When using write concern, which you almost certainly should do, the server must acknowledge each write back to the driver.
+
+That acknowledgement can be delayed, or otherwise not returned, for any number of reasons, but it's possible to create cluster architectures that can outright prevent acknowledgement when even a single server goes down.
+
+It's also possible to set things up so that reasonable delays in acknowledgement result in errors.
+
+Let's take a look.
+
+In write concern, we have a W parameter.
+
+It specifies how many servers need to perform the write before it gets acknowledged.
+
+In write concern, we have this W parameter.
+
+It specifies how many servers need to perform the write before it gets acknowledged.
+
+The default write concern is w: 1.
+
+This means that the driver receives acknowledgement from the primary once it, the primary, has performed the write.
+
+This is acceptable for some use cases, but it's mathematically possible for that server to go down before the write has made it to any other servers.
+
+In cases where the application needs to be robust against any single point of failure, it's necessary to use a write concern of two or more.
+
+Under almost all such cases, the preferred write concern is majority.
+
+This ensures that acknowledged writes will be durable, except in cases where you lose a majority of your servers.
+
+Note that I'm being very precise about my language.
+
+It doesn't necessarily guarantee that your writes will get acknowledged, even if your primary, which requires a majority of votes, is up.
+
+At least not for all architectures, as we'll see.
+
+By the way, I'm going to focus on write concern, but this applies to read concern as well, for architectures that use it.
+
+Let's dig in a little deeper.
+
+Starting with w: 1.
+
+First, our driver sends out a write, then the server performs the write, but the acknowledgement hasn't yet been sent.
+
+This situation doesn't last long, because the acknowledgement is sent back as fast as the server can make it happen.
+
+When acknowledgment occurs, the data could be in this state written to just your primary, or perhaps it's made it to one of the secondaries by the time it gets acknowledged.
+
+I'm just showing you all of the possibilities for completeness.
+
+Now, what if the write concern is majority?
+
+Now things get a little more interesting.
+
+For a three member replica set, a majority means two copies of the data, each on different servers.
+
+So a write has to propagate beyond the primary, and then that fact has to get communicated back to the primary before it can be acknowledged.
+
+So, after we write to the primary, the secondary performs the write, then the secondary lets the primary know it's got the write, and then the primary can acknowledge that write to the driver.
+
+Obviously, it could go to the other secondary first, or to both.
+
+Now what if there's a partition?
+
+It still works fine, because it has the other secondary.
+
+So, a network partition, or a secondary going down, won't cause much of a problem, in and of itself, for this vanilla setup.
+
+Obviously, things get even more complicated when you're dealing with, say, a five member replica set, and a write concern of majority, but we're not going to go into that level of detail here.
+
+OK, so that's a description of how things generally work in vanilla replica sets.
+
+Now we'll talk about what can go wrong.

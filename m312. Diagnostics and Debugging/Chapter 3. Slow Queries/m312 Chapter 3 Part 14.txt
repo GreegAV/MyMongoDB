@@ -1,0 +1,71 @@
+Talking about getting our hands dirty, let's do that right now by looking at those different methods of creating an index.
+
+First, I'm going to prepare my system.
+
+Let's prepare this setup.
+
+We're going to want a three-member replica set that starts on port 30,000 of localhost.
+
+And we'll prepare a collection with some data that we can build indexes on.
+
+We'll also build one index just to make it feel like a regular production system.
+
+Great.
+
+And let's see what our data looks like.
+
+In this example, we'll want to add an index on the Social Security number to our collection.
+
+First, let's look at the existing indexes.
+
+Great.
+
+We can see that there's no index on Social Security numbers.
+
+So let's create it.
+
+The index has been created.
+
+And the command reports the number of indexes before and after the index creation process.
+
+This looks good.
+
+The index, by the way, is also building on the secondaries.
+
+I can connect to one of those and confirm.
+
+I'm going I want to give myself permission to read from a secondary.
+
+I can connect to one of those and confirm.
+
+I'll give myself permission to read from a secondary.
+
+And here's my index on Social Security number.
+
+Next, let's go back to the primary, drop the index, and create it in the background.
+
+It looks pretty much the same as the previous operation.
+
+So how can we tell that the index was built in the background?
+
+One way to find out is to look into the log.
+
+I'm going to let bash do the work for me.
+
+And there's our log file.
+
+Let's look at the index options.
+
+And here, the index got built in the background with background true.
+
+I can also see this if I look at the command components.
+
+And here, once again, is our createIndex command with background true.
+
+Interestingly, in the commands, I can also see my dropIndex command.
+
+A difference between the background and foreground builds is that this command will yield the collection locks more often, letting other [?
+
+rights ?] happen.
+
+Again, for that reason, you would prefer building an index in the background instead of building it in the foreground on a production system.

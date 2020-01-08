@@ -1,0 +1,75 @@
+When talking about performance, we cannot forget about the actual hardware configuration that will support our database and application deployments.
+
+A full disclosure of how to tune and size your hardware needs, for a given deployment, are out of scope for this course.
+
+We have other specific courses on this subject.
+
+That we recommend you guys to take.
+
+But let's just do a quick pass on the hardware and configuration of our system, and why it becomes an essential consideration for the overall performance of your deployments.
+
+MongoDB is a high performance database.
+
+But to operate correctly, while supporting your applications, requires adequate hardware provisioning.
+
+Let's review which hardware resources and configurations we have available.
+
+And how MongoDB uses those computational resources.
+
+A computer or server can be represented in its essence by the Von Neumann architecture.
+
+Where we are going to have a CPU for processing and calculations.
+
+Memory for execution.
+
+Disk and IO-- although you may consider Disk as another type of IO.
+
+For persistency and communications between servers, or even within our host processes.
+
+These are the main resources that MongoDB relies on to operate adequately.
+
+In MongoDB deployments, as in many other modern databases, memory is a quintessential resource.
+
+Over the past few years, the availability of RAM and the fall of its production costs contributed for the development of databases' architectures.
+
+That privileged the users of this fast and performant resource.
+
+The fact that RAM or memory is 25 times faster than common SSDs also makes this transition of Disk oriented into RAM oriented a nice, strong appealing factor for databases to be designed around usage of memory.
+
+As a result of this, MongoDB has storage engines that are either very dependent on RAM, or even completely in memory [?
+
+execution ?] modes for its data management operations.
+
+A significant number of operations rely heavily in RAM.
+
+Like the aggregation pipeline operations, the index traversing.
+
+Writes are first performed in RAM allocated pages.
+
+The query engine requires RAM to retrieve the quarter results.
+
+And finally, connections are handling memory.
+
+Roughly, one megabyte per established connection.
+
+And therefore they require memory space.
+
+It is safe to say that the more RAM you have available, the more performance your department of MongoDB will tend to be.
+
+CPU is used by all applications for computational processing.
+
+Databases are just another category of applications.
+
+MongoDB is no different.
+
+But the utilization of this resource is generally more attached with two main factors.
+
+Storage engines that we are using, and the concurrency level that your MongoDB instance will be subjected to.
+
+By default, MongoDB will try to use all available CPU cores to respond to incoming requests.
+
+Our non-locking concurrency control mechanism, using wired tag or storage engine, rely heavily in the CPU to process these requests.
+
+This means that if we have non-blocking operations, like writing different documents concurrently or responding to an incoming query requests like Reads, MongoDB will perform better the more CPU resources we have available.
+
+Also, there are certain operations, like page compression, data calculation operations, aggregation framework operations, and map reduce, amongst others that will require the availability of CPU cycles.

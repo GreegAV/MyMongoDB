@@ -1,0 +1,55 @@
+Another issue that can come up is write contention.
+
+This is a complicated issue.
+
+So let's draw it out.
+
+When a document is updated in the WiredTiger storage engine, it uses a copy-on-write approach.
+
+First, a new version of the document is prepared.
+
+During this process, only the original document is visible to any applications.
+
+Then the update is committed by switching a pointer in a single CPU operation.
+
+And suddenly, the old version of the document is no longer available, but the new version is.
+
+This is how things work when everything's going smoothly.
+
+And it's how you can simultaneously both read from and write to the same document at the same time.
+
+You simply read from the old version while the new version is being prepared.
+
+And once the new version is in place, queries will read from that.
+
+This method, known as multiversion concurrency control, is also how the storage engine is able to achieve so much throughput.
+
+However, an issue occurs when you have multiple writers all trying to update the same document at the same time.
+
+In this case, the writers don't realize that other writes are updating the document.
+
+There aren't any locks.
+
+It just uses optimistic concurrency protocols.
+
+So what happens?
+
+Here, I'm drawing what would happen if three writers were trying to simultaneously update the same document.
+
+Each of them would begin preparing a new document on its own.
+
+They all devote system resources to the update, including CPU cycles and allocation of RAM.
+
+But only one update can happen.
+
+Maybe in this example, it's v2-3.
+
+The pointer is flipped and these versions fail.
+
+But those writes still need to occur.
+
+So if they're valid, they'll write to this version of the document.
+
+Now, in this example, two writes had to be repeated.
+
+But you can imagine a scenario where you have 20 writes and 19 of them have to be repeated.

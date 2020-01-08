@@ -1,0 +1,71 @@
+Two useful database methods are dB.currentOp, and dB.killOp.
+
+Let's go into the shell and take a look at currentOp.
+
+First, we'll spin up our cluster-- great.
+
+We'll go into the shell, and we'll run currentOp.
+
+This is a large document, so let's scroll to the top.
+
+CurrentOp will tell you what the server is doing, that is, what its current operations are.
+
+You can scroll down to this inprog array, and you can see that each operation has its own document.
+
+The document tells you all kinds of information about the operation, but let's focus on just a few fields.
+
+First, you've got this "seconds running" field.
+
+That'll let you know how long the thread has been operating.
+
+Here, it's basically zero.
+
+Next, you've got this "op" field, which is telling us that we're looking at a command.
+
+And you've got your "opID" field, which is a number.
+
+If you have an operation that's running for a long time, and you'd like to kill it, you can pass that opID to dB.killOp.
+
+let's do an example.
+
+I'm going to need three shell connections to do this.
+
+So let's open up a few terminal tabs and VagrantSSH on each of them.
+
+OK, so now I have one, two, three shell instances connected, and I'm back at the first one.
+
+I've written this function, insertDocs, and what it's going to do is it's going to hammer the database with inserts.
+
+Each document containing a string full of filler text.
+
+Each document is going to be just a hair over 80 kilobytes, and most of that is just this filler field.
+
+Let's get it started.
+
+We'll let that run for a few seconds, and then we're going to do a find query that is really inefficient.
+
+Let's go to a different shell terminal and run it there.
+
+All this function is going to do is it's going to run this find query, which uses regex.
+
+It's going to search for the ASDF string somewhere in that big filler field, and it's not going to find it.
+
+I have this little try except clause, so that we can print out the error that we get, and that's all that it does.
+
+Let's start it up.
+
+While those are going on-- our document insertion and our query-- I'm going to go to a third connection to the database, and I'm going to use dB.currentOp.
+
+OK, I have this "op" query on this namespace.
+
+It's a collections scan, filler ASDF, regex.
+
+Great, it's been running for 29 seconds, and it's opID is 25963.
+
+Let's kill it.
+
+OK, and if I go back to my query, that long-running find is no longer being executed.
+
+Instead, I've got this "operation was interrupted" error, and the query is done.
+
+And that's how you use currentOp and killOp.

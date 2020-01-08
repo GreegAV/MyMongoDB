@@ -1,0 +1,69 @@
+When dealing with database schema and data modeling, we sometimes find ourselves doing things because we saw something on the internet or got some friendly advice on how to do things, which might not be the most correct way and based on some misconceptions.
+
+One of the most common misconceptions about data modeling in MongoDB is that modeling is schemaless, meaning that it doesn't really matter which field documents have or how different the documents can be from one another, or even how many collections you might have per database.
+
+Although that can be a flattering way of positioning in the flexibility of MongoDB, this is not practical in reality.
+
+What MongoDB unquestionably has is a very flexible data model.
+
+There are no default rules on what documents should be looking like apart from having correctly been defined in BSON and containing a primary key.
+
+But most importantly, all data as some sort of structure and therefore, a schema.
+
+MongoDB he just happens to make it easier for you to deal with that later rather than sooner.
+
+Before you jump into an ERD or UML tooling, in order to determine the full scope of your data structures, it tends to be preferable to start building your application and finding out from that particular experience what the data structure should look like.
+
+However, if you do know your usage pattern how your data is accessed, which queries are critical to your application, and ratios between reads and writes, you will be able to extract a very good model, even before rewriting the full application to make it scale with MongoDB.
+
+Being flexible means that your application changes.
+
+And it's not unreasonable to think that that will not be the case.
+
+You will be able to accommodate those changes without experiencing a painful migration process, like in traditional relational databases.
+
+When you start having a pretty good idea of how documents should be looking like and should be shaped out and which data types those fields you have, you'll be able to enforce those rules in MongoDB by using document validation.
+
+Another misconception is that all information, regardless of how data should be manipulated, can be stored in one single document.
+
+There are some use cases where this approach is actually correct.
+
+But the reality is that this is not the way applications in general use data.
+
+Think about your user profile, where we have a profile data.
+
+And that gives us the current state of the user.
+
+But when thinking about all the different changes that that given user might incur over a period of time, like for example, all the variations in musical tastes, profile messages, new friendships, new likes, new reviews, new romantic partnerships, you might get a good understanding that that profile will grow.
+
+If you tried to store all that information, 99% of the time all you do is get the latest version of that profile.
+
+You might not be helping your application all that much by storing all these sorts of information of that user in one big document.
+
+As a user interacts more with your application, more data will be accumulated, and your performance will be dropping considerably.
+
+Keeping the amount of information stored per individual documents to the data that your application uses and having different models to deal with historical data or other types of data that are not always accessed is something that we'll be looking into in this course, as well.
+
+And there is also this perception that there is no way to perform a join between documents in MongoDB.
+
+While MongoDB does not call dollar look up a join, for many good reasons, you can still perform all sorts of joins in MongoDB.
+
+But it can certainly do these types of relational operations in MongoDB.
+
+We will be showing you models where you can make the most out of them on top of Mongo.
+
+Sometimes, finding a schema design that suits your application or application needs is not an easy job to do.
+
+Data, at times, may be very, very unstructured or with quite a high degree of variation.
+
+This course will teach you how to look harder with the tools and procedures to identify such a schema.
+
+That said, MongoDB will most definitely shine on these three main aspects.
+
+You can run MongoDB anywhere.
+
+You can use MongoDB for any type of data.
+
+And you can put your data everywhere.
+
+We will be looking into ways of showing how to design for scalability, flexibility, and performance, showing how MongoDB allows you to deal with change, scale, and make your applications more dynamic and flexible.

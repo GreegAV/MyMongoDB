@@ -1,0 +1,721 @@
+1
+00:00:00,000 --> 00:00:00,510
+
+
+2
+00:00:00,510 --> 00:00:03,450
+In this lesson, we're
+going to cover replication
+
+3
+00:00:03,450 --> 00:00:05,630
+and how it makes your
+data more durable.
+
+4
+00:00:05,630 --> 00:00:08,760
+MongoDB uses asynchronous,
+statement-based replication
+
+5
+00:00:08,760 --> 00:00:10,460
+because it's
+platform independent
+
+6
+00:00:10,460 --> 00:00:13,050
+and allows more flexibility
+within a replica set.
+
+7
+00:00:13,050 --> 00:00:16,082
+But first, let's just talk
+about what replication is.
+
+8
+00:00:16,082 --> 00:00:17,790
+Replication is the
+concept of maintaining
+
+9
+00:00:17,790 --> 00:00:19,624
+multiple copies of your data.
+
+10
+00:00:19,624 --> 00:00:21,540
+This is a really important
+concept in MongoDB,
+
+11
+00:00:21,540 --> 00:00:23,820
+but really in any
+database system.
+
+12
+00:00:23,820 --> 00:00:25,680
+The main reason why
+replication is necessary
+
+13
+00:00:25,680 --> 00:00:28,013
+is because you can never
+assume that all of your servers
+
+14
+00:00:28,013 --> 00:00:29,480
+will always be available.
+
+15
+00:00:29,480 --> 00:00:31,105
+Whether you have to
+perform maintenance
+
+16
+00:00:31,105 --> 00:00:34,290
+on a data center or a disaster
+wipes out your data entirely,
+
+17
+00:00:34,290 --> 00:00:36,914
+your servers will experience
+downtime at some point.
+
+18
+00:00:36,914 --> 00:00:39,330
+The point of replication is
+to make sure that in the event
+
+19
+00:00:39,330 --> 00:00:42,600
+your server goes down, you
+can still access your data.
+
+20
+00:00:42,600 --> 00:00:45,600
+This concept is
+called availability.
+
+21
+00:00:45,600 --> 00:00:47,460
+A database that does
+not use replication
+
+22
+00:00:47,460 --> 00:00:49,440
+only has a single
+database server,
+
+23
+00:00:49,440 --> 00:00:51,740
+and we refer to these
+as standalone nodes.
+
+24
+00:00:51,740 --> 00:00:54,290
+In a standalone
+setup, databases can
+
+25
+00:00:54,290 --> 00:00:56,700
+service reads and writes only
+while that single node is
+
+26
+00:00:56,700 --> 00:00:57,610
+up and running.
+
+27
+00:00:57,610 --> 00:01:01,380
+But if the node goes down, we
+lose all access to that data.
+
+28
+00:01:01,380 --> 00:01:04,040
+Our reads and writes
+won't reach the server.
+
+29
+00:01:04,040 --> 00:01:06,270
+Now in a replicated
+solution, we have
+
+30
+00:01:06,270 --> 00:01:08,580
+a couple extra nodes
+on hand, and they
+
+31
+00:01:08,580 --> 00:01:10,680
+hold copies of our data.
+
+32
+00:01:10,680 --> 00:01:12,870
+In MongoDB, a group
+of nodes that each
+
+33
+00:01:12,870 --> 00:01:16,220
+have copies of the same data
+is called a replica set.
+
+34
+00:01:16,220 --> 00:01:18,899
+And in a replica set, all
+data is handled by default
+
+35
+00:01:18,899 --> 00:01:20,940
+in one of the nodes, and
+it's up to the remaining
+
+36
+00:01:20,940 --> 00:01:22,505
+nodes in the set
+to sync up with it
+
+37
+00:01:22,505 --> 00:01:23,880
+and replicate any
+new data that's
+
+38
+00:01:23,880 --> 00:01:26,450
+been written through an
+asynchronous mechanism.
+
+39
+00:01:26,450 --> 00:01:28,920
+The node where data is sent
+is called the primary node,
+
+40
+00:01:28,920 --> 00:01:31,980
+and all the other nodes are
+referred to as secondary nodes.
+
+41
+00:01:31,980 --> 00:01:34,290
+The goal here is for all
+nodes to stay consistent
+
+42
+00:01:34,290 --> 00:01:35,300
+with each other.
+
+43
+00:01:35,300 --> 00:01:37,230
+So if our application
+is using the database,
+
+44
+00:01:37,230 --> 00:01:39,780
+and the primary node goes down,
+one of the secondary nodes
+
+45
+00:01:39,780 --> 00:01:44,070
+can take its place as primary
+in a process known as failover.
+
+46
+00:01:44,070 --> 00:01:46,140
+The nodes decide
+specifically which
+
+47
+00:01:46,140 --> 00:01:49,320
+secondary will become the
+primary through an election.
+
+48
+00:01:49,320 --> 00:01:51,210
+And this name is
+not a coincidence.
+
+49
+00:01:51,210 --> 00:01:54,270
+The secondary nodes actually
+vote for one another
+
+50
+00:01:54,270 --> 00:01:57,390
+to decide which secondary
+will become the primary.
+
+51
+00:01:57,390 --> 00:02:00,420
+In a durable replica set,
+failover can take place
+
+52
+00:02:00,420 --> 00:02:02,452
+quickly, so that
+no data is lost,
+
+53
+00:02:02,452 --> 00:02:03,910
+and the applications
+using the data
+
+54
+00:02:03,910 --> 00:02:06,930
+will continue communicating with
+the replica set as if nothing
+
+55
+00:02:06,930 --> 00:02:08,434
+had ever happened.
+
+56
+00:02:08,434 --> 00:02:10,350
+And once the node comes
+back up, and it's sure
+
+57
+00:02:10,350 --> 00:02:13,130
+that it can catch up and sync
+on the latest copy of the data,
+
+58
+00:02:13,130 --> 00:02:16,590
+it will rejoin the
+replica set automatically.
+
+59
+00:02:16,590 --> 00:02:18,800
+Availability and
+redundancy of data
+
+60
+00:02:18,800 --> 00:02:22,140
+are typical properties of a
+durable database solution.
+
+61
+00:02:22,140 --> 00:02:24,450
+Data replication can
+take one of two forms.
+
+62
+00:02:24,450 --> 00:02:27,961
+There is binary replication and
+statement-based replication.
+
+63
+00:02:27,961 --> 00:02:30,210
+We'll take a look at the
+differences between these two
+
+64
+00:02:30,210 --> 00:02:34,050
+approaches, and we'll start
+with binary replication.
+
+65
+00:02:34,050 --> 00:02:37,590
+So let's say we insert this
+document into our database.
+
+66
+00:02:37,590 --> 00:02:39,990
+After the write completes,
+we have a few bytes on disk
+
+67
+00:02:39,990 --> 00:02:42,240
+that were written to
+contain some new data.
+
+68
+00:02:42,240 --> 00:02:44,190
+The way binary
+replication works is
+
+69
+00:02:44,190 --> 00:02:47,430
+by examining the exact bytes
+that changed in the data files
+
+70
+00:02:47,430 --> 00:02:50,340
+and recording those
+changes in a binary log.
+
+71
+00:02:50,340 --> 00:02:53,940
+The secondary nodes then
+receive a copy of the binary log
+
+72
+00:02:53,940 --> 00:02:55,320
+and write the
+specified data that
+
+73
+00:02:55,320 --> 00:02:58,020
+changed to the exact byte
+locations that are specified
+
+74
+00:02:58,020 --> 00:02:59,760
+on the binary log.
+
+75
+00:02:59,760 --> 00:03:02,550
+Replicating data this way is
+pretty easy on the secondaries
+
+76
+00:03:02,550 --> 00:03:04,530
+because they get really
+specific instructions
+
+77
+00:03:04,530 --> 00:03:07,290
+on what bytes to change
+and what to change them to.
+
+78
+00:03:07,290 --> 00:03:08,791
+And in fact, the
+secondaries aren't
+
+79
+00:03:08,791 --> 00:03:11,040
+even aware of the statements
+that they're replicating.
+
+80
+00:03:11,040 --> 00:03:13,456
+This can be nice because there's
+no context about the data
+
+81
+00:03:13,456 --> 00:03:16,050
+required to replicate a write.
+
+82
+00:03:16,050 --> 00:03:18,330
+However, using
+binary replication
+
+83
+00:03:18,330 --> 00:03:20,130
+assumes that the
+operating system
+
+84
+00:03:20,130 --> 00:03:23,110
+is consistent across
+the entire replica set.
+
+85
+00:03:23,110 --> 00:03:25,460
+For example, if our primary
+node is running Windows,
+
+86
+00:03:25,460 --> 00:03:27,470
+the secondaries can't
+use the same binary log
+
+87
+00:03:27,470 --> 00:03:28,780
+if they run Linux.
+
+88
+00:03:28,780 --> 00:03:30,717
+And if they do have the
+same operating system,
+
+89
+00:03:30,717 --> 00:03:33,300
+all machines in the replica set
+must have the same instruction
+
+90
+00:03:33,300 --> 00:03:33,800
+set.
+
+91
+00:03:33,800 --> 00:03:38,040
+So either Windows x86 or
+x64 and the same version
+
+92
+00:03:38,040 --> 00:03:40,480
+of the database server
+running on each machine.
+
+93
+00:03:40,480 --> 00:03:42,540
+In other words, using
+binary replication
+
+94
+00:03:42,540 --> 00:03:44,190
+requires a very
+strict consistency
+
+95
+00:03:44,190 --> 00:03:46,800
+across every machine
+running in a replica set.
+
+96
+00:03:46,800 --> 00:03:48,690
+Even forgetting to
+update the database
+
+97
+00:03:48,690 --> 00:03:52,670
+server on one of the nodes
+could result in corrupted data.
+
+98
+00:03:52,670 --> 00:03:54,780
+Statement-based
+replication is pretty much
+
+99
+00:03:54,780 --> 00:03:55,850
+what it sounds like.
+
+100
+00:03:55,850 --> 00:03:57,960
+After a write is completed
+on the primary node,
+
+101
+00:03:57,960 --> 00:04:00,110
+the write statement itself
+is stored in the oplog,
+
+102
+00:04:00,110 --> 00:04:02,010
+and the secondaries
+then sync their oplogs
+
+103
+00:04:02,010 --> 00:04:04,350
+with the primary's oplog and
+replay any new statements
+
+104
+00:04:04,350 --> 00:04:06,090
+on their own data.
+
+105
+00:04:06,090 --> 00:04:08,670
+This approach works regardless
+of the operating system
+
+106
+00:04:08,670 --> 00:04:11,630
+or instruction set of the
+nodes in the replica set.
+
+107
+00:04:11,630 --> 00:04:14,580
+MongoDB uses
+statement-based replication,
+
+108
+00:04:14,580 --> 00:04:17,490
+but the right commands actually
+undergo a small transformation
+
+109
+00:04:17,490 --> 00:04:19,290
+before they're
+stored in the oplog.
+
+110
+00:04:19,290 --> 00:04:21,409
+And the goal here of
+the transformation
+
+111
+00:04:21,409 --> 00:04:23,700
+is to make sure that the
+statements stored in the oplog
+
+112
+00:04:23,700 --> 00:04:25,533
+can be applied an
+indefinite number of times
+
+113
+00:04:25,533 --> 00:04:27,900
+while still resulting
+in the same data state.
+
+114
+00:04:27,900 --> 00:04:30,420
+This property is
+called idempotency.
+
+115
+00:04:30,420 --> 00:04:32,370
+For example, let's
+say that we had
+
+116
+00:04:32,370 --> 00:04:36,030
+a statement that incremented the
+paid views on a website by 1.
+
+117
+00:04:36,030 --> 00:04:38,470
+The primary already applied
+this statement to its data,
+
+118
+00:04:38,470 --> 00:04:41,190
+so it knows that after
+incrementing page use by 1,
+
+119
+00:04:41,190 --> 00:04:45,000
+the total page views
+went from 1,000 to 1,001.
+
+120
+00:04:45,000 --> 00:04:46,980
+It would actually
+transform this statement
+
+121
+00:04:46,980 --> 00:04:51,480
+into a statement that
+sets page views to 1,001
+
+122
+00:04:51,480 --> 00:04:53,714
+and then store that
+statement in the oplog.
+
+123
+00:04:53,714 --> 00:04:55,380
+When statements are
+replicated this way,
+
+124
+00:04:55,380 --> 00:04:57,000
+we can replay the
+oplog as many times
+
+125
+00:04:57,000 --> 00:05:00,395
+as we want without worrying
+about data consistency.
+
+126
+00:05:00,395 --> 00:05:01,770
+Now let's take a
+look at the pros
+
+127
+00:05:01,770 --> 00:05:05,070
+and cons of binary and
+statement-based replication.
+
+128
+00:05:05,070 --> 00:05:06,690
+The binary approach
+requires less data
+
+129
+00:05:06,690 --> 00:05:08,370
+to be stored in the
+binary log, which
+
+130
+00:05:08,370 --> 00:05:10,328
+means that less data is
+passed from the primary
+
+131
+00:05:10,328 --> 00:05:11,730
+to the secondaries.
+
+132
+00:05:11,730 --> 00:05:13,620
+Binary replication
+can be a lot faster
+
+133
+00:05:13,620 --> 00:05:16,230
+than statement-based replication
+because less work is required
+
+134
+00:05:16,230 --> 00:05:18,240
+by the secondaries when
+actually replicating
+
+135
+00:05:18,240 --> 00:05:19,595
+from the binary log.
+
+136
+00:05:19,595 --> 00:05:20,970
+The data that
+needs to be changed
+
+137
+00:05:20,970 --> 00:05:23,659
+is written directly into
+the log in that case.
+
+138
+00:05:23,659 --> 00:05:25,575
+On the other hand,
+statement-based replication
+
+139
+00:05:25,575 --> 00:05:29,940
+in MongoDB writes actual
+MongoDB commands into the oplog,
+
+140
+00:05:29,940 --> 00:05:32,130
+so the oplog is a little bigger.
+
+141
+00:05:32,130 --> 00:05:34,530
+However, statements
+are not bound
+
+142
+00:05:34,530 --> 00:05:36,450
+to a specific
+operating system or
+
+143
+00:05:36,450 --> 00:05:38,100
+any machine-level dependency.
+
+144
+00:05:38,100 --> 00:05:39,990
+So there are few
+constraints on the machines
+
+145
+00:05:39,990 --> 00:05:43,310
+in a replica set in MongoDB.
+
+146
+00:05:43,310 --> 00:05:46,260
+This is valuable for any
+cross-platform solution
+
+147
+00:05:46,260 --> 00:05:49,050
+that requires multiple operating
+systems in the same replica
+
+148
+00:05:49,050 --> 00:00:00,000
+set.
+

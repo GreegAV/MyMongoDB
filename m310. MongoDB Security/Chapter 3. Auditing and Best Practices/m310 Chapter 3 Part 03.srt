@@ -1,0 +1,191 @@
+
+1
+00:00:00.000 --> 00:00:00.680
+
+
+2
+00:00:00.680 --> 00:00:05.300
+In this video, we're going
+to talk about audit filters.
+
+3
+00:00:05.300 --> 00:00:09.000
+And so by now, you might be
+asking yourself the question,
+
+4
+00:00:09.000 --> 00:00:13.760
+what is logged by default
+when we have auditing enabled?
+
+5
+00:00:13.760 --> 00:00:16.760
+And we already know that
+there are four categories
+
+6
+00:00:16.760 --> 00:00:20.570
+of events that can be logged
+through MongoDB's auditing
+
+7
+00:00:20.570 --> 00:00:22.010
+system.
+
+8
+00:00:22.010 --> 00:00:26.090
+There are Schema,
+or DDL, Operations.
+
+9
+00:00:26.090 --> 00:00:29.390
+There are Replica Set and
+Sharded Cluster Operations.
+
+10
+00:00:29.390 --> 00:00:32.870
+There are Authentication and
+Authorization Operations.
+
+11
+00:00:32.870 --> 00:00:38.030
+And finally, there are CRUD,
+also known as DML, Operations.
+
+12
+00:00:38.030 --> 00:00:44.180
+But by default, we only
+audit these three categories.
+
+13
+00:00:44.180 --> 00:00:46.430
+And the reason this
+is is the same reason
+
+14
+00:00:46.430 --> 00:00:49.100
+we have audit filters
+in the first place.
+
+15
+00:00:49.100 --> 00:00:51.590
+And that's because when
+we audit everything,
+
+16
+00:00:51.590 --> 00:00:53.330
+we have too many logs.
+
+17
+00:00:53.330 --> 00:00:55.210
+And we also have
+performance loss.
+
+18
+00:00:55.210 --> 00:00:58.040
+We have performance loss
+because we're constantly writing
+
+19
+00:00:58.040 --> 00:01:00.590
+to disk for every operation.
+
+20
+00:01:00.590 --> 00:01:03.170
+That's why CRUD is not
+audited by default,
+
+21
+00:01:03.170 --> 00:01:05.239
+even when auditing is enabled.
+
+22
+00:01:05.239 --> 00:01:09.830
+If CRUD was enabled by default,
+then virtually every operation
+
+23
+00:01:09.830 --> 00:01:12.369
+on your database would
+have an additional write.
+
+24
+00:01:12.369 --> 00:01:13.910
+And those additional
+writes are going
+
+25
+00:01:13.910 --> 00:01:16.190
+to make you lose performance
+on your database.
+
+26
+00:01:16.190 --> 00:01:18.110
+And moreover, we just
+have too many logs.
+
+27
+00:01:18.110 --> 00:01:19.640
+We were just logging
+so much stuff,
+
+28
+00:01:19.640 --> 00:01:21.960
+it's hard to even
+know what's going on.
+
+29
+00:01:21.960 --> 00:01:24.490
+And that's why
+audit filters exist.
+
+30
+00:01:24.490 --> 00:01:27.350
+Audit filters, like the
+logs that they describe,
+
+31
+00:01:27.350 --> 00:01:29.060
+are defined in JSON.
+
+32
+00:01:29.060 --> 00:01:32.841
+We specify an audit filter
+using a filter document.
+
+33
+00:01:32.841 --> 00:01:34.340
+As you can see,
+this filter document
+
+34
+00:01:34.340 --> 00:01:36.020
+is pretty straightforward.
+
+35
+00:01:36.020 --> 00:01:37.670
+Here, we're creating
+a filter document
+
+36
+00:01:37.670 --> 00:01:40.760
+where we want to log any time
+that there's a createCollection
+
+37
+00:01:40.760 --> 00:01:43.250
+or dropCollection, atype.
+
+38
+00:01:43.250 --> 00:01:46.130
+Essentially, all we're doing
+is writing a query document
+
+39
+00:01:46.130 --> 00:01:48.080
+with the MongoDB
+query language as
+
+40
+00:01:48.080 --> 00:01:50.980
+if we are querying these logs.

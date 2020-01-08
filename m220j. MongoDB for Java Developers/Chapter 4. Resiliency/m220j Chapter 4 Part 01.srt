@@ -1,0 +1,208 @@
+
+1
+00:00:00.000 --> 00:00:00.170
+
+
+2
+00:00:00.170 --> 00:00:01.670
+In this lesson,
+we're going to cover
+
+3
+00:00:01.670 --> 00:00:03.510
+connection pooling in MongoDB.
+
+4
+00:00:03.510 --> 00:00:05.760
+So connection pooling is
+all about reusing database
+
+5
+00:00:05.760 --> 00:00:06.810
+connections.
+
+6
+00:00:06.810 --> 00:00:08.340
+The connection
+pool itself is just
+
+7
+00:00:08.340 --> 00:00:10.200
+the cache of
+database connections
+
+8
+00:00:10.200 --> 00:00:11.770
+maintains that
+they can be reused
+
+9
+00:00:11.770 --> 00:00:13.957
+when future requests to
+the database are required.
+
+10
+00:00:13.957 --> 00:00:16.290
+When issuing several different
+requests of the database,
+
+11
+00:00:16.290 --> 00:00:17.970
+we could take the lazy
+approach and just create
+
+12
+00:00:17.970 --> 00:00:20.430
+a new connection whenever
+we needed to make a request.
+
+13
+00:00:20.430 --> 00:00:21.846
+And then when the
+request is done,
+
+14
+00:00:21.846 --> 00:00:23.181
+we just destroy the connection.
+
+15
+00:00:23.181 --> 00:00:25.680
+The issue with this approach
+is that establishing a database
+
+16
+00:00:25.680 --> 00:00:27.420
+connection requires
+time and computing
+
+17
+00:00:27.420 --> 00:00:29.850
+resources to complete the
+handshake with the server
+
+18
+00:00:29.850 --> 00:00:30.864
+and everything else.
+
+19
+00:00:30.864 --> 00:00:32.280
+We're essentially
+paying the costs
+
+20
+00:00:32.280 --> 00:00:33.780
+of waiting for this
+connection to be
+
+21
+00:00:33.780 --> 00:00:35.520
+established for every request.
+
+22
+00:00:35.520 --> 00:00:37.484
+Connection pooling helps
+reduce the overhead
+
+23
+00:00:37.484 --> 00:00:39.900
+of creating database connections
+by creating a whole bunch
+
+24
+00:00:39.900 --> 00:00:41.050
+right off the bat.
+
+25
+00:00:41.050 --> 00:00:43.050
+The next requests come
+in different connections
+
+26
+00:00:43.050 --> 00:00:45.690
+in the pool get allocated
+to fulfill these requests.
+
+27
+00:00:45.690 --> 00:00:48.120
+By default, the driver will
+create a connection pool
+
+28
+00:00:48.120 --> 00:00:49.980
+of 100 connections to share.
+
+29
+00:00:49.980 --> 00:00:51.600
+The default of
+100 connections is
+
+30
+00:00:51.600 --> 00:00:53.640
+adequate for most applications.
+
+31
+00:00:53.640 --> 00:00:56.140
+Additionally, if we didn't
+use a connection pool
+
+32
+00:00:56.140 --> 00:00:57.867
+and suddenly got a
+whole lot of requests,
+
+33
+00:00:57.867 --> 00:01:00.450
+we might easily reach the limit
+that our hardware and software
+
+34
+00:01:00.450 --> 00:01:02.490
+could handle, leading
+to a lot of errors
+
+35
+00:01:02.490 --> 00:01:04.200
+and unhappy developers.
+
+36
+00:01:04.200 --> 00:01:06.159
+So just to recap,
+connection pools
+
+37
+00:01:06.159 --> 00:01:08.200
+allow connections to be
+recycled for new requests
+
+38
+00:01:08.200 --> 00:01:09.300
+to the database.
+
+39
+00:01:09.300 --> 00:01:11.790
+To the developer, this will
+make database operations
+
+40
+00:01:11.790 --> 00:01:14.220
+look faster because the cost
+to create a new connection
+
+41
+00:01:14.220 --> 00:01:15.700
+has already been paid.
+
+42
+00:01:15.700 --> 00:01:17.640
+In the Mongo drivers,
+the default connection
+
+43
+00:01:17.640 --> 00:01:19.260
+pools 100 connections
+large, which
+
+44
+00:01:19.260 --> 00:01:22.700
+should be fine for most
+average applications.

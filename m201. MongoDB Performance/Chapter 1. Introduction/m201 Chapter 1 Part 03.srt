@@ -1,0 +1,214 @@
+
+1
+00:00:00.000 --> 00:00:00.320
+
+
+2
+00:00:00.320 --> 00:00:02.040
+Let's discuss the
+content that is going
+
+3
+00:00:02.040 --> 00:00:03.910
+to be covered in this course.
+
+4
+00:00:03.910 --> 00:00:05.670
+Other than the
+overview chapter, there
+
+5
+00:00:05.670 --> 00:00:09.330
+are four main chapters
+on performance, Indexes,
+
+6
+00:00:09.330 --> 00:00:12.240
+Index Operations,
+CRUD Optimizations,
+
+7
+00:00:12.240 --> 00:00:14.040
+and Performance on Clusters.
+
+8
+00:00:14.040 --> 00:00:16.350
+In the first
+chapter, Indexes, you
+
+9
+00:00:16.350 --> 00:00:18.550
+learn how indexes
+are a critical part
+
+10
+00:00:18.550 --> 00:00:20.880
+of providing efficient
+access to the data that
+
+11
+00:00:20.880 --> 00:00:22.480
+lives in your database.
+
+12
+00:00:22.480 --> 00:00:24.570
+Here, you'll learn
+about what indexes
+
+13
+00:00:24.570 --> 00:00:27.030
+are, how both indexes
+and other data
+
+14
+00:00:27.030 --> 00:00:30.960
+are stored on disk, the most
+common types of indexes, how we
+
+15
+00:00:30.960 --> 00:00:33.690
+can optimize sorting
+through the use of indexes,
+
+16
+00:00:33.690 --> 00:00:35.910
+and the different types
+of secondary indexes
+
+17
+00:00:35.910 --> 00:00:37.710
+and their properties.
+
+18
+00:00:37.710 --> 00:00:40.920
+After we've covered what indexes
+are, in the second chapter,
+
+19
+00:00:40.920 --> 00:00:42.540
+we'll then discuss
+how we practically
+
+20
+00:00:42.540 --> 00:00:44.030
+work with these indexes.
+
+21
+00:00:44.030 --> 00:00:47.850
+Here, we'll discuss how to
+build, discover, delete,
+
+22
+00:00:47.850 --> 00:00:52.980
+and rebalance indexes, query
+plans, the explain method, how
+
+23
+00:00:52.980 --> 00:00:57.000
+to use hint and index filters,
+how indexes impact our servers
+
+24
+00:00:57.000 --> 00:00:59.310
+resources, and
+finally, we'll examine
+
+25
+00:00:59.310 --> 00:01:01.190
+some basic benchmarking.
+
+26
+00:01:01.190 --> 00:01:04.644
+We'll then dig into chapter
+3, CRUD Optimizations,
+
+27
+00:01:04.644 --> 00:01:06.810
+where we'll talk about what
+other factors can affect
+
+28
+00:01:06.810 --> 00:01:09.300
+performance, as
+well as how indexes
+
+29
+00:01:09.300 --> 00:01:11.190
+can interact with your queries.
+
+30
+00:01:11.190 --> 00:01:13.380
+Here, we're going to
+examine optimizing
+
+31
+00:01:13.380 --> 00:01:18.750
+your CRUD optimizations, covered
+queries, regular expressions,
+
+32
+00:01:18.750 --> 00:01:22.860
+insert performance, index fields
+with a mixture of data types,
+
+33
+00:01:22.860 --> 00:01:25.620
+and last we'll take a look
+at how indexes interact
+
+34
+00:01:25.620 --> 00:01:28.070
+with the aggregation pipeline.
+
+35
+00:01:28.070 --> 00:01:31.460
+In the last chapter, we'll
+talk about distributed systems.
+
+36
+00:01:31.460 --> 00:01:33.770
+Here, you're going to
+learn about performance
+
+37
+00:01:33.770 --> 00:01:37.040
+considerations in a
+distributed system,
+
+38
+00:01:37.040 --> 00:01:40.040
+increasing write performance
+with sharding, reading
+
+39
+00:01:40.040 --> 00:01:42.530
+from secondaries in
+your replica sets,
+
+40
+00:01:42.530 --> 00:01:45.170
+replica sets with
+specialized indexes,
+
+41
+00:01:45.170 --> 00:01:47.630
+and finally, we'll discuss how
+to optimize your aggregation
+
+42
+00:01:47.630 --> 00:01:49.280
+pipeline.
+
+43
+00:01:49.280 --> 00:01:51.804
+That's a great overview of
+the content in this course.
+
+44
+00:01:51.804 --> 00:01:53.720
+Now that you know what
+we're going to discuss,
+
+45
+00:01:53.720 --> 00:01:55.720
+let's get started.

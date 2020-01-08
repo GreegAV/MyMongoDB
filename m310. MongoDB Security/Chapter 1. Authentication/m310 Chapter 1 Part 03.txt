@@ -1,0 +1,133 @@
+SCRAM-SHA-1 is one of the five mechanisms for authentication to MongoDB as a client user.
+
+It's also the default authentication mechanism for MongoDB.
+
+SCRAM-SHA-1 is a client response mechanism for authentication.
+
+In the case of MongoDB, it's a username and password way to authenticate to MongoDB.
+
+Just remember that when we say SCRAM-SHA-1, we're talking about authenticating via your username and password.
+
+SCRAM-SHA-1 is an internet engineering task force standard.
+
+It defines best practice methods for implementation of challenge/response mechanisms for authenticating users with passwords.
+
+I don't want to get into the nitty gritty details of SCRAM-SHA-1, but you can know that it'll protect you from the following attacks.
+
+First there's eavesdropping.
+
+This is where an attacker can read all the traffic exchanged between the client and the server.
+
+To protect against this, a client never sends their password as plain text over the network.
+
+Then we have replay.
+
+This is where an attacker can resend the client's valid responses to the server.
+
+This is mitigated because each authentication session is made up by unique [INAUDIBLE], so that each protocol messages are only valid for a single session.
+
+Database compromise.
+
+This is where an attacker can read the contents of the servers persistent memory.
+
+SCRAM-SHA-1 mitigates this by salting and iteratively hashing the passwords before storing them.
+
+With SCRAM-SHA-1, an attacker is unable to pose as a server without the knowledge of a client's credentials, therefore completely mitigating the malicious server attack.
+
+MongoDB-CR is another one of the five client or user authentication mechanisms supported by MongoDB.
+
+MongoDB-CR is another challenge/response authentication mechanism.
+
+It is also another user name and password authentication mechanism.
+
+With the release of 3.0, SCRAM-SHA-1 has effectively replaced MongoDB-CR.
+
+This means that, as of 3.0, MongoDB-CR has been deprecated.
+
+You will only encounter MongoDB-CR on versions of MongoDB older than 3.0 or on servers that were upgraded from a previous version to 3.0 or above.
+
+If you do encounter MongoDB-Cr in production, it's highly recommended that you upgrade to a version of MongoDB where SCRAM-SHA-1 is supported, and that you then migrate this old users from MongoDB-CR to SCRAM-SHA-1.
+
+We'll have a lesson that walks you through this process later in the course.
+
+Another commonly used authentication mechanism by MongoDB is X.509.
+
+X.509 is a certificate-based authentication mechanism.
+
+It became an authentication option as of version 2.6.
+
+With X.509, you are required to have a TLS connection.
+
+If you're using MongoDB 3.2.6 or greater, then your version of MongoDB is already compiled with TLS support.
+
+If it's not, then it's easy to compile a version that has TLS support included.
+
+LDAP is yet another authentication mechanism for client authentication with MongoDB.
+
+It stands for Lightweight Directory Access Protocol.
+
+It's important to note that LDAP support is only provided in the Enterprise version of MongoDB.
+
+LDAP is a directory service protocol commonly used within companies.
+
+It provides a mechanism for accessing and maintaining distributed directory information.
+
+LDAP provides a mechanism for accessing and maintaining distributed directory information over a network.
+
+This protocol is thus frequently used by email and other programs to look up information from a server.
+
+With LDAP of authentication support, users can authenticate to MongoDB using their LDAP credentials.
+
+This makes LDAP an external authentication mechanism.
+
+This means that the actual credentials used to authenticate the client are not stored directly in MongoDB.
+
+Kerberos is the last client authentication mechanism for MongoDB.
+
+It's important to note that like LDAP, Kerberos authentication support is only provided in the Enterprise version of MongoDB.
+
+Developed at MIT, Kerberos is an industry standard authentication protocol for large client server systems.
+
+Kerberos is widely accepted to be a very secure authentication mechanism.
+
+Kerberos differs from LDAP in that it was designed specifically for the purpose of authentication.
+
+LDAP, on the other hand, wasn't designed specifically for authentication but rather for storing metadata about users in an organization.
+
+Like LDAP, Kerberos authentication support can authenticate a user to MongoDB using their Kerberos credentials.
+
+Again, this makes Kerberos an external authentication mechanism.
+
+This means that the actual credentials used to authenticate the client are not stored in MongoDB.
+
+Not only is it important to ensure that your clients can securely connect to MongoDB, but it's also important that the nodes in a replica set or sharded cluster are able to communicate securely.
+
+If your MongoDB replica set or sharded cluster spans multiple data centers or touches the internet in any way, it's very important that you enable internal authentication.
+
+However, even while most internal networks are considered to be secure, enabling internal authentication is still highly recommended in closed networks to prevent attacks where a network becomes compromised.
+
+MongoDB currently supports two internal authentication mechanisms.
+
+There's keyfile authentication which uses SCRAM-SHA-1 and X.509 authentication.
+
+With keyfile authentication, the contents of your keyfile essentially act as a shared password between the members of your replica set or sharded cluster.
+
+The same keyfile must be present on each member that talks to one another.
+
+Because of this, it's highly important that you keep this file secure.
+
+The actual contents of your keyfile must be between 6 and 1,024 characters, and may only contain characters in the Base64 character set.
+
+It's important to note that all whitespace characters are ignored.
+
+So my password and mypassword are effectively the same.
+
+X.509 is another internal authentication mechanism.
+
+And it utilizes certificates to authenticate members to one another.
+
+While you can use the same certificate on all members, it is highly recommended that you issue a different certificate to each member.
+
+This way, if one of the certificates is compromised, you'll only need to reissue and deploy that one certificate instead of having to update your entire cluster.
+
+Finally, it's important to note that whenever you enable internal authentication, either with X.509 or with keyfile based authentication, this automatically will enable client authentication.

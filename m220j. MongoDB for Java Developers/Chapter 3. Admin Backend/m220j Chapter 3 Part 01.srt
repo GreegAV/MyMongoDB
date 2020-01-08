@@ -1,0 +1,420 @@
+
+1
+00:00:00.000 --> 00:00:00.240
+
+
+2
+00:00:00.240 --> 00:00:01.823
+In this lesson, we're
+going to discuss
+
+3
+00:00:01.823 --> 00:00:03.240
+read concerns in MongoDB.
+
+4
+00:00:03.240 --> 00:00:04.710
+So read concerns
+are similar write
+
+5
+00:00:04.710 --> 00:00:07.170
+concerns, in that they both
+involve how many nodes have
+
+6
+00:00:07.170 --> 00:00:09.409
+applied a database operation.
+
+7
+00:00:09.409 --> 00:00:11.700
+While write concerns affect
+the acknowledgment received
+
+8
+00:00:11.700 --> 00:00:14.250
+by the driver after a
+write, read concerns
+
+9
+00:00:14.250 --> 00:00:16.892
+affect the data returned
+by a read operation.
+
+10
+00:00:16.892 --> 00:00:19.350
+Different read concerns are
+referred to as different levels
+
+11
+00:00:19.350 --> 00:00:21.960
+of read isolation because
+you can essentially
+
+12
+00:00:21.960 --> 00:00:24.207
+isolate a read from the
+rest of the database
+
+13
+00:00:24.207 --> 00:00:26.040
+if the data being read
+has only been written
+
+14
+00:00:26.040 --> 00:00:27.900
+to one of the nodes in the set.
+
+15
+00:00:27.900 --> 00:00:30.030
+If data can be read by
+clients before that data
+
+16
+00:00:30.030 --> 00:00:32.500
+has been replicated to
+a majority of nodes,
+
+17
+00:00:32.500 --> 00:00:35.095
+it's considered a low
+level of read isolation.
+
+18
+00:00:35.095 --> 00:00:36.720
+The read concern you
+choose will depend
+
+19
+00:00:36.720 --> 00:00:39.810
+on how consistent your view
+of the database needs to be.
+
+20
+00:00:39.810 --> 00:00:41.370
+So by default,
+when an application
+
+21
+00:00:41.370 --> 00:00:45.180
+sends a read to Mongo, Mongo
+will use Read Concern Local.
+
+22
+00:00:45.180 --> 00:00:47.160
+From the perspective
+of the database client,
+
+23
+00:00:47.160 --> 00:00:49.680
+the data read using Read
+Concerned Local has only been
+
+24
+00:00:49.680 --> 00:00:51.386
+written to the primary node.
+
+25
+00:00:51.386 --> 00:00:53.010
+In the vast majority
+of cases, the data
+
+26
+00:00:53.010 --> 00:00:55.800
+will also have been written to
+the secondary nodes in the set.
+
+27
+00:00:55.800 --> 00:00:57.720
+But the client only
+has proof that this one
+
+28
+00:00:57.720 --> 00:00:59.170
+note applied the write.
+
+29
+00:00:59.170 --> 00:01:01.230
+This means that there's
+a chance, however slim,
+
+30
+00:01:01.230 --> 00:01:04.510
+that the data returned by
+this read will be rolled back.
+
+31
+00:01:04.510 --> 00:01:07.050
+This would happen if sometime
+after this data is returned,
+
+32
+00:01:07.050 --> 00:01:09.450
+the primary goes down and
+the secondaries haven't
+
+33
+00:01:09.450 --> 00:01:10.809
+replicated the data yet.
+
+34
+00:01:10.809 --> 00:01:12.600
+That means that when
+one of these two nodes
+
+35
+00:01:12.600 --> 00:01:15.307
+becomes the primary, this
+primary will be secondary.
+
+36
+00:01:15.307 --> 00:01:17.640
+And it'll be rolled back to
+match the state of whichever
+
+37
+00:01:17.640 --> 00:01:19.350
+node became the new primary.
+
+38
+00:01:19.350 --> 00:01:21.170
+So the default read
+concern MongoDB
+
+39
+00:01:21.170 --> 00:01:23.580
+is Local, which reads
+whatever copy of the data
+
+40
+00:01:23.580 --> 00:01:26.160
+exists on the primary node,
+regardless of whether or not
+
+41
+00:01:26.160 --> 00:01:28.350
+the other nodes have
+replicated that data.
+
+42
+00:01:28.350 --> 00:01:29.830
+And for the vast
+majority of reads,
+
+43
+00:01:29.830 --> 00:01:31.680
+Read Concern Local is just fine.
+
+44
+00:01:31.680 --> 00:01:33.720
+But we might want a higher
+level of consistency
+
+45
+00:01:33.720 --> 00:01:36.125
+on some of our reads, which
+we can achieve with a read
+
+46
+00:01:36.125 --> 00:01:37.457
+concern called Majority.
+
+47
+00:01:37.457 --> 00:01:40.040
+When a database client sends a
+read to Mongo with Read Concern
+
+48
+00:01:40.040 --> 00:01:42.210
+Majority, it can
+verifiably claim
+
+49
+00:01:42.210 --> 00:01:43.770
+that the data it
+gets back has been
+
+50
+00:01:43.770 --> 00:01:45.960
+replicated to a majority
+of nodes in the set.
+
+51
+00:01:45.960 --> 00:01:47.779
+The benefit of this
+read concern level
+
+52
+00:01:47.779 --> 00:01:49.320
+is that once data
+has been replicated
+
+53
+00:01:49.320 --> 00:01:51.960
+to majority of nodes, it's
+very durable in the event
+
+54
+00:01:51.960 --> 00:01:52.950
+of a failure.
+
+55
+00:01:52.950 --> 00:01:55.240
+Even if the current
+primary fails,
+
+56
+00:01:55.240 --> 00:01:57.000
+this secondary can
+be elected primary,
+
+57
+00:01:57.000 --> 00:01:58.890
+and then the data
+will get rolled back.
+
+58
+00:01:58.890 --> 00:02:00.990
+One thing to note here,
+if these secondaries
+
+59
+00:02:00.990 --> 00:02:02.850
+aren't done replicating
+data at the time
+
+60
+00:02:02.850 --> 00:02:04.970
+that this primary
+receives the read, then
+
+61
+00:02:04.970 --> 00:02:06.510
+whenever the copy
+of the data has
+
+62
+00:02:06.510 --> 00:02:08.370
+been copied to a
+majority of nodes,
+
+63
+00:02:08.370 --> 00:02:10.600
+will be returned to the client.
+
+64
+00:02:10.600 --> 00:02:13.140
+This means that if my
+age in the primary is 66
+
+65
+00:02:13.140 --> 00:02:15.690
+but the secondaries
+still think that I'm 65,
+
+66
+00:02:15.690 --> 00:02:18.570
+the age returned to
+the client will be 65
+
+67
+00:02:18.570 --> 00:02:20.370
+because in a
+three-node replica set,
+
+68
+00:02:20.370 --> 00:02:22.980
+two members are required
+to constitute a majority.
+
+69
+00:02:22.980 --> 00:02:24.810
+So clearly, Read
+Concern Majority
+
+70
+00:02:24.810 --> 00:02:26.880
+might return
+slightly stale data,
+
+71
+00:02:26.880 --> 00:02:29.042
+but provides a higher
+level of read isolation.
+
+72
+00:02:29.042 --> 00:02:30.750
+So you can be more
+confident the data you
+
+73
+00:02:30.750 --> 00:02:32.937
+received won't get rolled back.
+
+74
+00:02:32.937 --> 00:02:34.770
+For this reason, it's
+most useful in reading
+
+75
+00:02:34.770 --> 00:02:37.630
+mission-critical data, because
+lower levels of read isolation
+
+76
+00:02:37.630 --> 00:02:39.630
+have slightly higher
+chance of being rolled back
+
+77
+00:02:39.630 --> 00:02:40.814
+in an emergency.
+
+78
+00:02:40.814 --> 00:02:42.480
+If your application's
+core functionality
+
+79
+00:02:42.480 --> 00:02:44.910
+depends on one read, like
+checking a user's account
+
+80
+00:02:44.910 --> 00:02:46.640
+balance, then you
+probably want that read
+
+81
+00:02:46.640 --> 00:02:48.390
+to have a higher durability.
+
+82
+00:02:48.390 --> 00:02:51.660
+So just to recap, issuing a
+read with Read Concern Local
+
+83
+00:02:51.660 --> 00:02:53.610
+will return whatever
+copy of the data
+
+84
+00:02:53.610 --> 00:02:56.010
+exists on the primary
+node in the set.
+
+85
+00:02:56.010 --> 00:02:58.290
+Issuing a read with
+Read Concern Majority
+
+86
+00:02:58.290 --> 00:02:59.850
+will return whatever
+copy of data
+
+87
+00:02:59.850 --> 00:03:03.520
+has been replicated to a
+majority of nodes in the set.

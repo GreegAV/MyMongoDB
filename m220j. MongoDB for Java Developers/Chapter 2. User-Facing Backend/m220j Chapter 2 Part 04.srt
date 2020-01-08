@@ -1,0 +1,728 @@
+
+1
+00:00:00.000 --> 00:00:01.910
+
+
+2
+00:00:01.910 --> 00:00:04.730
+In this lesson, we are going
+to review the different cursor
+
+3
+00:00:04.730 --> 00:00:06.920
+methods that the find
+command provides,
+
+4
+00:00:06.920 --> 00:00:10.070
+as well as the alternative
+aggregation framework stages
+
+5
+00:00:10.070 --> 00:00:12.950
+to similar or
+equivalent functionality
+
+6
+00:00:12.950 --> 00:00:15.730
+within the context of
+an aggregation pipeline.
+
+7
+00:00:15.730 --> 00:00:18.620
+We will cover things like
+the FindIterable sort,
+
+8
+00:00:18.620 --> 00:00:22.730
+limit, and skip methods,
+the aggregate method,
+
+9
+00:00:22.730 --> 00:00:25.557
+as well as briefly review
+some of the builders
+
+10
+00:00:25.557 --> 00:00:27.140
+that we've already
+been talking about,
+
+11
+00:00:27.140 --> 00:00:29.810
+like Sorts and Aggregates.
+
+12
+00:00:29.810 --> 00:00:34.130
+And just to clarify, we're going
+to have a small 1,000-document
+
+13
+00:00:34.130 --> 00:00:36.500
+dummy collection
+called sortable.
+
+14
+00:00:36.500 --> 00:00:38.870
+More often than not, the
+results of our queries
+
+15
+00:00:38.870 --> 00:00:40.460
+are required to be sorted.
+
+16
+00:00:40.460 --> 00:00:42.560
+Databases do a good job
+sorting those for us,
+
+17
+00:00:42.560 --> 00:00:45.560
+so that we don't have to
+implement extra logic to sort
+
+18
+00:00:45.560 --> 00:00:48.870
+the results after they've been
+sent back to the application.
+
+19
+00:00:48.870 --> 00:00:51.950
+In MongoDB, we can do
+this by appending the sort
+
+20
+00:00:51.950 --> 00:00:54.950
+method to the FindIterable.
+
+21
+00:00:54.950 --> 00:00:58.340
+In this case I want to be
+able to sort all my documents
+
+22
+00:00:58.340 --> 00:01:01.710
+by field 'i' descending.
+
+23
+00:01:01.710 --> 00:01:05.670
+We can start by defining
+the sort criteria using
+
+24
+00:01:05.670 --> 00:01:11.350
+the Sorts.descending method and
+placing that into a Bson object
+
+25
+00:01:11.350 --> 00:01:14.310
+sortBy_i_Descending.
+
+26
+00:01:14.310 --> 00:01:16.680
+Then what we can do
+is a full table scan
+
+27
+00:01:16.680 --> 00:01:19.710
+by passing the sorting
+arguments, the Bson
+
+28
+00:01:19.710 --> 00:01:22.764
+that we just created,
+to the sort method.
+
+29
+00:01:22.764 --> 00:01:24.180
+Finally, what we
+want to make sure
+
+30
+00:01:24.180 --> 00:01:26.100
+is that we got all
+the results, the 1,000
+
+31
+00:01:26.100 --> 00:01:30.160
+documents in our
+sortedArray, which we do,
+
+32
+00:01:30.160 --> 00:01:34.470
+and then check if the first
+elements of this sortedArray
+
+33
+00:01:34.470 --> 00:01:37.025
+matches the highest
+value of our collection
+
+34
+00:01:37.025 --> 00:01:40.296
+'i' documents, which is 999.
+
+35
+00:01:40.296 --> 00:01:42.970
+We run the test to make
+sure that everything
+
+36
+00:01:42.970 --> 00:01:45.460
+is matching our assertions.
+
+37
+00:01:45.460 --> 00:01:48.010
+In addition to sorting
+the query outputs,
+
+38
+00:01:48.010 --> 00:01:49.870
+we might be
+interested in sections
+
+39
+00:01:49.870 --> 00:01:53.410
+of the results set instead of
+retrieving the whole set all
+
+40
+00:01:53.410 --> 00:01:54.530
+the time.
+
+41
+00:01:54.530 --> 00:01:57.070
+So skip is another
+cursor method that we can
+
+42
+00:01:57.070 --> 00:01:59.620
+call from the Iterable object.
+
+43
+00:01:59.620 --> 00:02:02.050
+Out of the 1,000 documents
+that we have in our collection,
+
+44
+00:02:02.050 --> 00:02:04.770
+we might want to
+skip the first 990.
+
+45
+00:02:04.770 --> 00:02:07.450
+For that we just need to
+append the number of documents
+
+46
+00:02:07.450 --> 00:02:09.820
+we want to skip.
+
+47
+00:02:09.820 --> 00:02:12.310
+In this specific
+case, we are not
+
+48
+00:02:12.310 --> 00:02:15.517
+specifying a particular
+sort order to our documents.
+
+49
+00:02:15.517 --> 00:02:17.350
+This means that the
+results will be returned
+
+50
+00:02:17.350 --> 00:02:19.900
+in their $natural
+sort order, which
+
+51
+00:02:19.900 --> 00:02:21.880
+implies that the
+documents will be returned
+
+52
+00:02:21.880 --> 00:02:27.350
+based on how they got stored or
+created in the database server.
+
+53
+00:02:27.350 --> 00:02:29.140
+And we can see
+the effect of this
+
+54
+00:02:29.140 --> 00:02:31.630
+if we try to remove
+one of the documents.
+
+55
+00:02:31.630 --> 00:02:34.990
+In this case, the document
+where 'i' matches the value
+
+56
+00:02:34.990 --> 00:02:38.080
+10 and inserting it back again.
+
+57
+00:02:38.080 --> 00:02:41.260
+If we rerun the query
+with the same skip,
+
+58
+00:02:41.260 --> 00:02:46.240
+we will find that the highest
+value of our array lists
+
+59
+00:02:46.240 --> 00:02:50.410
+will be the one which
+has the value 'i' of 10.
+
+60
+00:02:50.410 --> 00:02:53.110
+This means that
+using skip on its own
+
+61
+00:02:53.110 --> 00:02:55.090
+without determining a
+particular sort order
+
+62
+00:02:55.090 --> 00:02:58.900
+may result in different
+documents, given that they are
+
+63
+00:02:58.900 --> 00:03:01.990
+bound to the insertion
+order of documents,
+
+64
+00:03:01.990 --> 00:03:04.610
+not the values of the
+fields they represent.
+
+65
+00:03:04.610 --> 00:03:07.990
+But there is nothing stopping us
+from sorting and then skipping
+
+66
+00:03:07.990 --> 00:03:10.050
+at the same time.
+
+67
+00:03:10.050 --> 00:03:14.310
+The order by which we define
+the sort and skip instructions
+
+68
+00:03:14.310 --> 00:03:17.310
+is completely irrelevant.
+
+69
+00:03:17.310 --> 00:03:20.340
+By running the tests, we can
+see that all of our sorts
+
+70
+00:03:20.340 --> 00:03:23.140
+match our expectation.
+
+71
+00:03:23.140 --> 00:03:25.790
+And the important thing
+to understand about skip
+
+72
+00:03:25.790 --> 00:03:27.290
+is that the database
+will still have
+
+73
+00:03:27.290 --> 00:03:30.560
+to iterate over all the
+documents in the collection.
+
+74
+00:03:30.560 --> 00:03:33.650
+Only returns after the
+skipped number of documents
+
+75
+00:03:33.650 --> 00:03:35.060
+has been reached.
+
+76
+00:03:35.060 --> 00:03:37.880
+However, it will
+still need to traverse
+
+77
+00:03:37.880 --> 00:03:43.080
+the collection and indexes to
+return the matching documents.
+
+78
+00:03:43.080 --> 00:03:46.050
+Another cursor method is limit.
+
+79
+00:03:46.050 --> 00:03:48.000
+The ability to define
+how many documents
+
+80
+00:03:48.000 --> 00:03:51.570
+we want to retrieve from the
+collection on a given query.
+
+81
+00:03:51.570 --> 00:03:53.550
+If we limit it here
+to 10, the number
+
+82
+00:03:53.550 --> 00:03:58.080
+of expected results of our
+collecting list should be 10.
+
+83
+00:03:58.080 --> 00:04:00.120
+One interesting
+aspect of limits is
+
+84
+00:04:00.120 --> 00:04:03.600
+that we can use this to
+influence the cursor batch
+
+85
+00:04:03.600 --> 00:04:04.800
+size.
+
+86
+00:04:04.800 --> 00:04:07.650
+The cursor batch size determines
+the number of documents
+
+87
+00:04:07.650 --> 00:04:10.530
+returned in one cursor batch.
+
+88
+00:04:10.530 --> 00:04:13.440
+If our query hits 1 million
+elements or documents,
+
+89
+00:04:13.440 --> 00:04:16.560
+you may not want to wait
+till all of those elements
+
+90
+00:04:16.560 --> 00:04:18.990
+are returned to start
+processing the result set.
+
+91
+00:04:18.990 --> 00:04:22.440
+Therefore each time we
+open a cursor or iterable,
+
+92
+00:04:22.440 --> 00:04:25.740
+the results are sent back to the
+application in smaller batches,
+
+93
+00:04:25.740 --> 00:04:28.980
+hence the cursor batch size.
+
+94
+00:04:28.980 --> 00:04:31.830
+By default the Java driver
+will set the batch size
+
+95
+00:04:31.830 --> 00:04:34.080
+to 0, which means
+the driver will
+
+96
+00:04:34.080 --> 00:04:37.320
+use the server defined
+batchSize, which by default is
+
+97
+00:04:37.320 --> 00:04:40.110
+101 documents.
+
+98
+00:04:40.110 --> 00:04:43.290
+However, you can define your own
+batchSize for a final operation
+
+99
+00:04:43.290 --> 00:04:47.370
+by specifying the batchSize,
+calling the batchSize method.
+
+100
+00:04:47.370 --> 00:04:49.080
+Getting all the cursor
+methods together
+
+101
+00:04:49.080 --> 00:04:51.690
+is done by appending
+each one of those methods
+
+102
+00:04:51.690 --> 00:04:53.590
+to the resulting find iterable.
+
+103
+00:04:53.590 --> 00:04:56.040
+We run the tests.
+
+104
+00:04:56.040 --> 00:04:58.520
+Everything matches green.
+
+105
+00:04:58.520 --> 00:05:01.280
+Instead of cursor methods, we
+can use the aggregation stages
+
+106
+00:05:01.280 --> 00:05:03.080
+to accomplish the same results.
+
+107
+00:05:03.080 --> 00:05:05.460
+Why do we need an
+aggregation stage to do this?
+
+108
+00:05:05.460 --> 00:05:09.880
+Well, the need for intermediary
+sort, limit, and skip stages
+
+109
+00:05:09.880 --> 00:05:12.360
+exist in multiple
+pipeline executions,
+
+110
+00:05:12.360 --> 00:05:15.080
+so these stages are
+readily available for usage
+
+111
+00:05:15.080 --> 00:05:17.240
+within the
+aggregation pipelines.
+
+112
+00:05:17.240 --> 00:05:18.620
+Let's start with limits.
+
+113
+00:05:18.620 --> 00:05:22.010
+If we want to specify
+in our movies dataset,
+
+114
+00:05:22.010 --> 00:05:24.410
+we can run the following query.
+
+115
+00:05:24.410 --> 00:05:27.530
+Now that we know how to
+do it in the find command,
+
+116
+00:05:27.530 --> 00:05:29.870
+let's do it again within
+our aggregation pipeline
+
+117
+00:05:29.870 --> 00:05:33.350
+by specifying the $limit stage.
+
+118
+00:05:33.350 --> 00:05:37.790
+We add the Aggregates.limit
+to two results,
+
+119
+00:05:37.790 --> 00:05:40.760
+and then we execute
+that same method
+
+120
+00:05:40.760 --> 00:05:44.840
+by calling aggregate with
+the pipeline that we created.
+
+121
+00:05:44.840 --> 00:05:47.320
+And all of them are there.
+
+122
+00:05:47.320 --> 00:05:50.850
+Now let's look at the $sort
+stage and sort method together.
+
+123
+00:05:50.850 --> 00:05:53.970
+To specify the $sort
+stage, we can use again
+
+124
+00:05:53.970 --> 00:05:57.900
+the builder Aggregates.sort,
+specifying the Sorts.ascending
+
+125
+00:05:57.900 --> 00:05:59.140
+on year.
+
+126
+00:05:59.140 --> 00:06:02.100
+And we can also
+build a match stage
+
+127
+00:06:02.100 --> 00:06:05.190
+by calling the
+Aggregates.match method.
+
+128
+00:06:05.190 --> 00:06:08.600
+Again, all the results
+of these two lists
+
+129
+00:06:08.600 --> 00:06:12.650
+should match and be
+exactly the same.
+
+130
+00:06:12.650 --> 00:06:14.580
+Now let's put it all together.
+
+131
+00:06:14.580 --> 00:06:17.880
+Now that we know that we can use
+sort, limit, and skip methods
+
+132
+00:06:17.880 --> 00:06:22.740
+together by appending these
+methods to the find command,
+
+133
+00:06:22.740 --> 00:06:25.200
+we should be able to do
+exactly the same thing using
+
+134
+00:06:25.200 --> 00:06:28.290
+the aggregation stages, where we
+can define the different stages
+
+135
+00:06:28.290 --> 00:06:30.780
+using the builder.
+
+136
+00:06:30.780 --> 00:06:32.730
+But there is a
+significant distinction
+
+137
+00:06:32.730 --> 00:06:36.420
+between how we execute the find
+command with the cursor methods
+
+138
+00:06:36.420 --> 00:06:39.720
+and how we execute the different
+stages of our aggregation
+
+139
+00:06:39.720 --> 00:06:41.070
+pipeline.
+
+140
+00:06:41.070 --> 00:06:45.120
+For aggregation, the order
+of stages in the pipeline
+
+141
+00:06:45.120 --> 00:06:46.200
+does matter.
+
+142
+00:06:46.200 --> 00:06:48.340
+Since we are setting
+up a pipeline,
+
+143
+00:06:48.340 --> 00:06:50.850
+the results will vary
+given the processing
+
+144
+00:06:50.850 --> 00:06:53.400
+order of the different stages.
+
+145
+00:06:53.400 --> 00:07:01.020
+If we execute this test, this
+will be reflected in our sort.
+
+146
+00:07:01.020 --> 00:07:03.120
+Let's do a little
+bit of a recap here.
+
+147
+00:07:03.120 --> 00:07:07.050
+Cursor methods have
+equivalent aggregation stages.
+
+148
+00:07:07.050 --> 00:07:08.880
+The order by which
+the cursor methods
+
+149
+00:07:08.880 --> 00:07:10.410
+are appended to
+the find iterable
+
+150
+00:07:10.410 --> 00:07:12.880
+does not impact the results.
+
+151
+00:07:12.880 --> 00:07:14.790
+On the other hand,
+the order by which
+
+152
+00:07:14.790 --> 00:07:17.820
+aggregation stages are
+defined within the pipeline
+
+153
+00:07:17.820 --> 00:07:19.820
+does matter.

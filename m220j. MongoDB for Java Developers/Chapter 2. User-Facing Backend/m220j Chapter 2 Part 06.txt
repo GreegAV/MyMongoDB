@@ -1,0 +1,51 @@
+There are times where we are not sure if a document really exists in the collection and we just want to update it if it already exists.
+
+Something like update or insert if it does not exist.
+
+Well, MongoDB allows for that in a very straightforward way.
+
+Let's go ahead and instantiate our documents about Final Fantasy from our good friends at Square Enix.
+
+And instead of going to the database, run a query, and check if the document already exists, we are going to emit an update command with the flag upsert equals true.
+
+We set the query predicate that finds the video game based on this title and we try to update it.
+
+If we do not provide the upsert flag and just set the document to be updated based on the title, if the document does not exist, the number of match documents should be zero.
+
+So as the number of modified counts of the documents.
+
+On the other hand, if we do provide an upsert flag by setting the update options document with the upsert flag to true and adding those options to the update method by specifying it on the updateOne.
+
+In this case, our number of modified count is still going to be 0 given that there's no documents in the collection to be modified.
+
+However, the upsert ID, as a result of the insert, will be set to not null and should be of type object ID.
+
+Another component of the update or insert upsert is that we can set values just in case we are inserting the document.
+
+Let's say we add a field called just insert if the document did not exist before, but do not set the field if the document already exists.
+
+Let's try to update Final Fantasy, which already exists.
+
+We need to set up an object that defines the update operation, sets the title, and appends the field just inserted with a string yes.
+
+So that can be done here, where we specify update object one sets the title to Final Fantasy 1, and sets also an option here set on insert just inserted while the string equals the string yes.
+
+We specify the query filter and run the updateOne.
+
+In this case, the field will not be present when we query for this document back from the database, running exactly the expected filter, finding Final Fantasy 1 now, and we retrieve the first.
+
+We can see that no such field just inserted exists.
+
+On the other hand, if the document is not updated but inserted, like in this case a new document called title CS:GO, we specify the update object as a set of documents two and we specify as well a set on insert of the same flag just inserted with a flag set to a string yes.
+
+Once we run the updateOne, then we will see that the field is correctly set, querying the collection using the upsert ID field in the update result object.
+
+In this case, we can assert that, yes, since the CS:GO game did not exist before, caught the flag just inserted.
+
+Running the tests for test upsert document, everything gets correctly tested.
+
+But let's recap.
+
+We can insert new documents using both the insertOne and insertMany collection methods.
+
+Update using a dollar upsert flag set to true allows us to insert new documents on update if they don't already exist, and using set on insert update operator provides a way to set specific fields only in the case of insert.

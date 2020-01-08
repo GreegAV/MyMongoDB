@@ -1,0 +1,71 @@
+Let's start with the concern of duplication.
+
+Why do we have duplication?
+
+It is usually the result of embedding information in a given document for faster access.
+
+The concern is that it makes handling changes to duplicated information a challenge for correctness and consistency, where multiple documents across different collections may need to be updated.
+
+There is this general misconception that duplication should not exist.
+
+In some cases, duplication is better than no duplication.
+
+However, not all pieces of information are affected in the same way by duplication.
+
+Let's start with a situation where duplicating information is better than not doing it.
+
+Let's link orders of products to the address of the customer that placed the order by using a reference to a customer document.
+
+Updating the address for this customer updates information for the already fulfilled shipments, order that have been already delivered to the customer.
+
+This is not the desired behavior.
+
+The shipments were made to the customer's address at that point in time, either when the order was made or before the customer changed their address.
+
+So the address reference in a given order is unlikely to be changed.
+
+Embedding a copy of the address within the shipment document will ensure we keep the correct value.
+
+When the customer moves, we add another shipping address on file.
+
+Using this new address for new orders, does not affect the already shipped orders.
+
+The next duplication situation to consider is when the copy data does not ever change.
+
+Let's say we want to model movies and actors.
+
+Movies have many actors and actors play in many movies.
+
+So this is a typical many-to-many relationship.
+
+Avoiding duplication in a many-to-many relationship requires us to keep two collections and create references between the documents in the two collections.
+
+If we list the actors in a given movie document, we are creating duplication.
+
+However, once the movie is released, the list of actors does not change.
+
+So duplication on this unchanging information is also perfectly acceptable.
+
+This leaves us with the last duplication situation, the duplication of a piece of information that needs to or may change with time.
+
+For this example, let's use the revenues for a given movie, which is stored within the movie, and the revenues earned per screening.
+
+Oh, yeah, with said duplication add to be a single value in two locations.
+
+In this case, we have duplication between the sum store in the movie document and the revenue store in the screening documents used to compute the total sum.
+
+This type of situation, where we must keep multiple values in sync over time, makes us ask the question is the benefit of having this sum precomputed surpassing the cost and trouble of keeping it in sync?
+
+If yes, then use this computed pattern.
+
+If not, don't use it.
+
+Here, if we want the sum to be synchronized, it may be the responsibility of the application to keep it in sync.
+
+Meaning, whenever the application writes a new document to the collection or updates the value of an existing document, it must update the sum.
+
+Alternatively, we could add another application or job to do it.
+
+But how often should we actually recalculate the sum?
+
+This brings us to the next concern we must consider when using patterns, staleness.

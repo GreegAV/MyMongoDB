@@ -1,0 +1,13 @@
+Now that we've looked at how to audit DDL operations, let's take a moment and look at how to audit DML operations.
+
+The other common statement category in SQL is DML, or Data Manipulation Language.
+
+As the name implies, DML refers to the manipulation of data within your database.
+
+With MongoDB, we generally refer to DML operations as CRUD-- the ability to create, read, update, and delete our data.
+
+With regards to auditing DML, virtually all of the operations that we would consider DML operations fall underneath the authCheck action type.
+
+This is because CRUD operations are passed as parameters to the authCheck event.
+
+Every time that you try to create, read, update or destroy data within your database, authCheck is going to be the action type that's actually firing from an auditing perspective.

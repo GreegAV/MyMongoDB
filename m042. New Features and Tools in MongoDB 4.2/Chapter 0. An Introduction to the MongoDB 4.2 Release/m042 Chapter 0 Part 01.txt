@@ -1,0 +1,113 @@
+Hello.
+
+My name is Matt.
+
+And in this lesson, we're going to look at the virtual environment for this course M042.
+
+So throughout this course, we're going to show examples of the new features in MongoDB 4.2.
+
+And we want to give you a way of testing out these features so that you can feel comfortable using them.
+
+So one option is to spin up a replica set locally and then follow along lessons on your local machine.
+
+If you feel comfortable doing this, you should do it.
+
+But you should bear in mind that in order for everything to run locally you need to have the dependencies installed as well as the necessary handout files to follow along with the lesson.
+
+This is all possible, as we'll provide links to download dependencies and distribute the handouts.
+
+But there is an easier solution.
+
+Using the virtual machine for this course, called m042-vagrant-env, we can download and provision an environment that already contains the necessary dependencies for this course as well as any handout files.
+
+In this case, we would call the VM the guest machine.
+
+And we refer to our local machine as the host machine.
+
+Once we provision the VM, we can start up a replica set without needing to download anything else.
+
+In addition, using the course VM helps MongoDB university staff such as myself diagnose and debug potential issues, because we're very familiar with this environment, and we may not be as familiar with your local machine.
+
+So without further ado, let's take a look inside the VM.
+
+So I'm just going to make a new directory for this course and then cd into it.
+
+So I just downloaded the VM from the handouts on the university site, and now it's in my Downloads folder.
+
+So I'm just going to copy it into my m042 folder here.
+
+So now I'm inside the VM folder m042-vagrant-env, and there are only two files in here to start out-- the Vagrantfile, which contains some of the baseline hardware configurations for the VM and the provisioning file as a shell script that downloads all the necessary dependencies and files for this course.
+
+So using this command, I can bring the VM up and then run the provisioning file in one fell swoop.
+
+So we have to wait a minute for this to run.
+
+But when it's done, it should read "Welcome to M042 Vagrant Box." If we see that message, we'll know that the machine was booted up, and the provisioning script ran successfully.
+
+So now we can log into the Vagrant machine with SSH using the command vagrant ssh.
+
+And we can see the shell prompt has changed to reflect that we're now logged in to the Vagrant machine.
+
+So remember, our provisioning script already downloaded MongoDB.
+
+So we can spin up a mongod process immediately after logging into the Vagrant machine for the very first time.
+
+I can connect to the database I just started.
+
+I'm just going to shut down this server so I can start up a new one.
+
+So now I've just shut down that database process, and I've exited from the Mongo shell, so that I can start up a new database process that's bound to a different IP address.
+
+So the guest VM has been configured to be accessed on the IP address 192.168.42.100.
+
+So if you want to access this mongod server from your host machine, you need to bind your Mongo ID to that IP address.
+
+So now that that's started successfully, I'm actually just going to exit the Vagrant machine.
+
+So now I'm connected back to my host machine.
+
+But the mongod process is still running inside the guest VM.
+
+I can connect to that mongod process using the IP address of the VM.
+
+The --host flag allows us to specify a network interface where mongod is running.
+
+And I started that process in the default port, so all I need to do is specify a host here.
+
+So one reason you might want to connect to the guest VM from your host machine is if you wanted to connect with Compass, which was running on your host machine, to a mongod process that was running inside the guest machine or the VM.
+
+So to do this, we can just specify the same hostname here and the connection credentials on Compass.
+
+And then we should be able to connect.
+
+I'm just going to connect back to Vagrant with SSH very quickly to show you one more thing.
+
+So when the home directory of Vagrant, which is the directory it'll direct you to as you first connect, there's this folder in the home directory called Shared.
+
+Now, this folder is what we call a synced folder, which means that it's synced to your host machine.
+
+When you bring up the Vagrant machine, there are actually two Shared folders that get created.
+
+The first gets created on your host machine, and the second gets created inside the Vagrant machine.
+
+These two folders are linked together.
+
+So you can share documents between your host machine and your course VM.
+
+If you place any file on one of these folders or remove one, that change will be reflected in the other folder.
+
+So be careful, because you could accidentally delete things from your host machine while you're still in the VM.
+
+So that concludes our lesson on Vagrant.
+
+Just to recap, the virtual environment is used to mitigate the need to download course dependencies on your local machine.
+
+The VM will come with everything pre-installed.
+
+If you want to share files between your host system and your VM, the Shared folder will help you do that.
+
+Lastly, Vagrant is optional in this course, as there is no homework.
+
+So if you want to use your local machine to test out the new features, please feel free.
+
+But this approach is most likely easier.

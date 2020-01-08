@@ -1,0 +1,462 @@
+1
+00:00:00,000 --> 00:00:00,670
+
+
+2
+00:00:00,670 --> 00:00:02,590
+In general, the
+core write commands
+
+3
+00:00:02,590 --> 00:00:04,602
+all support write concern.
+
+4
+00:00:04,602 --> 00:00:06,935
+Now, we've talked about this
+all at a pretty high level.
+
+5
+00:00:06,935 --> 00:00:08,570
+Write concern makes
+a lot more sense
+
+6
+00:00:08,570 --> 00:00:10,410
+when you watch it in action.
+
+7
+00:00:10,410 --> 00:00:12,080
+In an earlier
+lesson, we showed you
+
+8
+00:00:12,080 --> 00:00:15,410
+how an application writes
+"behave" during a failover
+
+9
+00:00:15,410 --> 00:00:16,370
+event.
+
+10
+00:00:16,370 --> 00:00:19,000
+Let's return to that example
+now but to talk about
+
+11
+00:00:19,000 --> 00:00:20,690
+write concern.
+
+12
+00:00:20,690 --> 00:00:22,760
+We have our
+three-member replica set
+
+13
+00:00:22,760 --> 00:00:26,420
+with an application inserting
+data into the primary.
+
+14
+00:00:26,420 --> 00:00:29,330
+As you might remember, data
+is replicated from the primary
+
+15
+00:00:29,330 --> 00:00:31,220
+to the secondaries.
+
+16
+00:00:31,220 --> 00:00:33,980
+The default write
+concern is one.
+
+17
+00:00:33,980 --> 00:00:36,980
+So even though we don't set
+the write concern explicitly,
+
+18
+00:00:36,980 --> 00:00:39,050
+the application
+implicitly assigns
+
+19
+00:00:39,050 --> 00:00:41,249
+it a write concern of one.
+
+20
+00:00:41,249 --> 00:00:43,040
+At this point, we know
+that our primary has
+
+21
+00:00:43,040 --> 00:00:45,050
+received the write operation.
+
+22
+00:00:45,050 --> 00:00:46,700
+We've received one
+acknowledgment based
+
+23
+00:00:46,700 --> 00:00:48,410
+on our write concern of one.
+
+24
+00:00:48,410 --> 00:00:50,900
+Since that matches the
+write concern we requested,
+
+25
+00:00:50,900 --> 00:00:52,530
+we're good to go.
+
+26
+00:00:52,530 --> 00:00:54,530
+But what would happen
+if the primary failed
+
+27
+00:00:54,530 --> 00:00:57,540
+at this point of time before
+it completes replicating
+
+28
+00:00:57,540 --> 00:01:00,300
+this write to the secondaries?
+
+29
+00:01:00,300 --> 00:01:02,560
+The secondaries
+won't see the write.
+
+30
+00:01:02,560 --> 00:01:04,790
+While it was successful
+on a single node,
+
+31
+00:01:04,790 --> 00:01:06,440
+we had no guarantee
+that the write
+
+32
+00:01:06,440 --> 00:01:09,530
+had propagated to the
+remaining replica set members.
+
+33
+00:01:09,530 --> 00:01:11,420
+Even though we got the
+level of write concern
+
+34
+00:01:11,420 --> 00:01:12,950
+we asked for, the
+guarantee level
+
+35
+00:01:12,950 --> 00:01:15,530
+was too low to
+accommodate the scenario.
+
+36
+00:01:15,530 --> 00:01:17,720
+As far as our
+application is concerned,
+
+37
+00:01:17,720 --> 00:01:19,640
+this was a successful write.
+
+38
+00:01:19,640 --> 00:01:22,040
+But when this primary
+comes back online the right
+
+39
+00:01:22,040 --> 00:01:24,110
+would actually be rolled back.
+
+40
+00:01:24,110 --> 00:01:27,155
+Let's imagine the same scenario
+but with a write concern
+
+41
+00:01:27,155 --> 00:01:29,064
+of majority.
+
+42
+00:01:29,064 --> 00:01:30,980
+That means we now would
+need an acknowledgment
+
+43
+00:01:30,980 --> 00:01:35,030
+from two members of our
+three-member replica set.
+
+44
+00:01:35,030 --> 00:01:38,390
+The application waits
+until the primary reports
+
+45
+00:01:38,390 --> 00:01:39,890
+that at least one
+of the secondaries
+
+46
+00:01:39,890 --> 00:01:42,190
+has also acknowledged the write.
+
+47
+00:01:42,190 --> 00:01:44,420
+With two acknowledgments
+the application
+
+48
+00:01:44,420 --> 00:01:47,060
+can consider the
+write a success.
+
+49
+00:01:47,060 --> 00:01:49,700
+Now if the primary
+happens to go down,
+
+50
+00:01:49,700 --> 00:01:52,040
+we have a reasonable
+guarantee that at least one
+
+51
+00:01:52,040 --> 00:01:55,220
+of the secondaries has
+received the write operation.
+
+52
+00:01:55,220 --> 00:01:57,192
+If I set the write
+concern to three,
+
+53
+00:01:57,192 --> 00:01:59,150
+the application would
+require an acknowledgment
+
+54
+00:01:59,150 --> 00:02:01,100
+from all three members
+before considering
+
+55
+00:02:01,100 --> 00:02:02,519
+the write successful.
+
+56
+00:02:02,519 --> 00:02:04,310
+At this point, you
+might be thinking, well,
+
+57
+00:02:04,310 --> 00:02:06,910
+I want guarantees
+of data durability.
+
+58
+00:02:06,910 --> 00:02:08,660
+So shouldn't I always
+set my write concern
+
+59
+00:02:08,660 --> 00:02:10,820
+as high as possible?
+
+60
+00:02:10,820 --> 00:02:13,520
+Well, a stronger level
+of durability guarantee
+
+61
+00:02:13,520 --> 00:02:15,410
+comes with the trade off.
+
+62
+00:02:15,410 --> 00:02:18,110
+Specifically, you have to
+wait for the acknowledgments
+
+63
+00:02:18,110 --> 00:02:19,580
+to come in.
+
+64
+00:02:19,580 --> 00:02:22,640
+That means your write operations
+may take longer than required
+
+65
+00:02:22,640 --> 00:02:26,450
+if you requested a lesser or
+even no write acknowledgment.
+
+66
+00:02:26,450 --> 00:02:28,910
+As the number of replica
+set nodes increase,
+
+67
+00:02:28,910 --> 00:02:33,710
+write operations may take even
+longer to return as successful.
+
+68
+00:02:33,710 --> 00:02:35,960
+Alternatively, what happens
+if one of your secondaries
+
+69
+00:02:35,960 --> 00:02:37,560
+are down?
+
+70
+00:02:37,560 --> 00:02:41,130
+Based on our write concern,
+we need an acknowledgment
+
+71
+00:02:41,130 --> 00:02:44,040
+from three members
+of the replica set.
+
+72
+00:02:44,040 --> 00:02:46,590
+This write now blocks
+until the secondary
+
+73
+00:02:46,590 --> 00:02:51,130
+comes back online which may
+take longer than is acceptable.
+
+74
+00:02:51,130 --> 00:02:54,320
+This is where the W timeout
+option comes in handy.
+
+75
+00:02:54,320 --> 00:02:55,900
+You can set it to
+a reasonable time
+
+76
+00:02:55,900 --> 00:02:57,970
+wherein the application
+stops waiting
+
+77
+00:02:57,970 --> 00:03:02,600
+and moves forward throwing an
+error related to write concern.
+
+78
+00:03:02,600 --> 00:03:05,800
+Remember, the timeout error does
+not mean that the write failed.
+
+79
+00:03:05,800 --> 00:03:08,530
+We can see here that the primary
+and at least one secondary
+
+80
+00:03:08,530 --> 00:03:09,790
+did acknowledge.
+
+81
+00:03:09,790 --> 00:03:12,340
+But because we timed out
+waiting for the requested write
+
+82
+00:03:12,340 --> 00:03:15,070
+concern, as far as the
+application is concerned,
+
+83
+00:03:15,070 --> 00:03:18,520
+it did not receive the level
+of guarantee it requested.
+
+84
+00:03:18,520 --> 00:03:20,500
+Generally, setting
+a W of majority
+
+85
+00:03:20,500 --> 00:03:23,650
+is a nice middle ground between
+fast writes and durability
+
+86
+00:03:23,650 --> 00:03:25,450
+guarantees.
+
+87
+00:03:25,450 --> 00:03:28,270
+To recap, write concern
+allows your applications
+
+88
+00:03:28,270 --> 00:03:30,310
+to request a certain
+number of acknowledgments
+
+89
+00:03:30,310 --> 00:03:34,210
+for a write operation
+for the MongoDB cluster.
+
+90
+00:03:34,210 --> 00:03:36,670
+These acknowledgments
+represent increasing durability
+
+91
+00:03:36,670 --> 00:03:39,560
+guarantees for a given
+write operations.
+
+92
+00:03:39,560 --> 00:03:42,410
+Write concern comes with a
+trade off of write speed.
+
+93
+00:03:42,410 --> 00:03:45,550
+The higher guarantee you
+need that a right is durable,
+
+94
+00:03:45,550 --> 00:03:49,900
+the more time the overall write
+operation requires to complete.
+
+95
+00:03:49,900 --> 00:03:52,960
+MongoDB supports a write
+concern on all deployment types.
+
+96
+00:03:52,960 --> 00:03:55,720
+That means standalone, replica
+sets, and sharded clusters
+
+97
+00:03:55,720 --> 00:00:00,000
+all support write concern.
+

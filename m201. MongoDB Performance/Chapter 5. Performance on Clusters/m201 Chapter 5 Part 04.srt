@@ -1,0 +1,610 @@
+
+1
+00:00:00.000 --> 00:00:00.002
+
+
+2
+00:00:00.002 --> 00:00:01.460
+In this lesson,
+we're going to talk
+
+3
+00:00:01.460 --> 00:00:03.890
+about reading from
+secondaries as it relates
+
+4
+00:00:03.890 --> 00:00:05.809
+to performance in MongoDB.
+
+5
+00:00:05.809 --> 00:00:07.850
+We're going to spend some
+time talking about when
+
+6
+00:00:07.850 --> 00:00:09.630
+reading from secondaries
+is a good idea,
+
+7
+00:00:09.630 --> 00:00:12.082
+and we're also discuss
+when it's a bad idea.
+
+8
+00:00:12.082 --> 00:00:13.790
+Before we talk about
+when it's a bad idea
+
+9
+00:00:13.790 --> 00:00:15.560
+to read from a secondary,
+let's first talk
+
+10
+00:00:15.560 --> 00:00:17.150
+about read preference.
+
+11
+00:00:17.150 --> 00:00:19.310
+When we read data
+out of MongoDB,
+
+12
+00:00:19.310 --> 00:00:21.710
+there's always an
+associated read preference.
+
+13
+00:00:21.710 --> 00:00:23.690
+By default, this is
+set to a primary,
+
+14
+00:00:23.690 --> 00:00:26.870
+meaning that all of our
+reads will go to the primary.
+
+15
+00:00:26.870 --> 00:00:29.840
+There are several other read
+preferences available to us,
+
+16
+00:00:29.840 --> 00:00:31.760
+but discussing what
+each of these do,
+
+17
+00:00:31.760 --> 00:00:34.880
+and when you'd use them, is out
+of the scope for this lesson.
+
+18
+00:00:34.880 --> 00:00:37.130
+For now, we're just going
+discuss the read preferences
+
+19
+00:00:37.130 --> 00:00:39.110
+relevant to performance.
+
+20
+00:00:39.110 --> 00:00:42.380
+Like I said, by default,
+mongoDB's read preference is
+
+21
+00:00:42.380 --> 00:00:44.840
+primary, meaning that
+all reads and writes
+
+22
+00:00:44.840 --> 00:00:47.420
+are going to go in to
+your primary server.
+
+23
+00:00:47.420 --> 00:00:49.970
+If you change the read
+preference to secondary, then
+
+24
+00:00:49.970 --> 00:00:53.060
+all your reads will be routed
+to one of the secondaries.
+
+25
+00:00:53.060 --> 00:00:55.950
+When your read preferences is
+set to secondary preferred,
+
+26
+00:00:55.950 --> 00:00:58.370
+then that means your
+reads will be preferred
+
+27
+00:00:58.370 --> 00:01:01.130
+to go to a secondary, but if
+there aren't any available
+
+28
+00:01:01.130 --> 00:01:03.560
+then your reads will be
+routed to the primary.
+
+29
+00:01:03.560 --> 00:01:05.757
+And finally, we
+have nearest, where
+
+30
+00:01:05.757 --> 00:01:08.090
+we will read from the member
+that has the lowest network
+
+31
+00:01:08.090 --> 00:01:09.290
+latency.
+
+32
+00:01:09.290 --> 00:01:10.850
+Now, it's super
+important for you
+
+33
+00:01:10.850 --> 00:01:13.130
+to understand that whenever
+we read from a secondary,
+
+34
+00:01:13.130 --> 00:01:14.546
+that there's the
+chance that we're
+
+35
+00:01:14.546 --> 00:01:16.070
+going to be reading stale data.
+
+36
+00:01:16.070 --> 00:01:18.470
+Since all writes come
+into our primary, when
+
+37
+00:01:18.470 --> 00:01:20.630
+we read from the primary,
+we are guaranteed
+
+38
+00:01:20.630 --> 00:01:23.250
+to be reading the latest
+state of our data.
+
+39
+00:01:23.250 --> 00:01:26.260
+This is called
+strong consistency.
+
+40
+00:01:26.260 --> 00:01:28.840
+On the other hand, when we
+read from the secondaries,
+
+41
+00:01:28.840 --> 00:01:31.270
+we're not guaranteed to be
+reading the most up to date
+
+42
+00:01:31.270 --> 00:01:32.870
+copy of our data.
+
+43
+00:01:32.870 --> 00:01:35.140
+This is because our data
+is being asynchronously
+
+44
+00:01:35.140 --> 00:01:39.040
+replicated to our secondaries
+as writes occur on the primary.
+
+45
+00:01:39.040 --> 00:01:41.512
+This is called
+eventual consistency.
+
+46
+00:01:41.512 --> 00:01:42.970
+So anytime that
+our read preference
+
+47
+00:01:42.970 --> 00:01:45.130
+isn't set to
+primary, the default,
+
+48
+00:01:45.130 --> 00:01:47.560
+we need to make sure that
+our application or client is
+
+49
+00:01:47.560 --> 00:01:49.461
+OK with reading stale data.
+
+50
+00:01:49.461 --> 00:01:51.460
+Now that we understand
+how we can change the way
+
+51
+00:01:51.460 --> 00:01:53.230
+we read our data,
+let's discuss it
+
+52
+00:01:53.230 --> 00:01:55.210
+when it's a good idea to do so.
+
+53
+00:01:55.210 --> 00:01:56.920
+The two most common
+performance scenarios
+
+54
+00:01:56.920 --> 00:02:00.050
+for reading from secondaries
+is for offloading work,
+
+55
+00:02:00.050 --> 00:02:01.690
+and for doing local reads.
+
+56
+00:02:01.690 --> 00:02:04.912
+Let's talk about offloading
+work onto secondaries.
+
+57
+00:02:04.912 --> 00:02:06.370
+A great example of
+this is that you
+
+58
+00:02:06.370 --> 00:02:08.440
+might need to run an
+analytics or reporting
+
+59
+00:02:08.440 --> 00:02:10.750
+job against your data.
+
+60
+00:02:10.750 --> 00:02:13.540
+This is a great example
+because the queries required
+
+61
+00:02:13.540 --> 00:02:17.500
+to do analytics are generally
+resource intensive and long
+
+62
+00:02:17.500 --> 00:02:19.130
+running.
+
+63
+00:02:19.130 --> 00:02:21.440
+We don't want to execute
+these queries on our primary,
+
+64
+00:02:21.440 --> 00:02:24.140
+because the reads and writes
+coming from our application
+
+65
+00:02:24.140 --> 00:02:25.910
+would be affected.
+
+66
+00:02:25.910 --> 00:02:29.180
+So with this set up, we get
+the best of both worlds.
+
+67
+00:02:29.180 --> 00:02:31.700
+Our application continues
+to read the most up
+
+68
+00:02:31.700 --> 00:02:35.720
+to date copy of our information,
+just like it always has.
+
+69
+00:02:35.720 --> 00:02:38.270
+And we're also able to run
+these long running and resource
+
+70
+00:02:38.270 --> 00:02:41.510
+intensive queries made
+by our analytics job.
+
+71
+00:02:41.510 --> 00:02:43.580
+Now, I want to point out
+that this is possible
+
+72
+00:02:43.580 --> 00:02:47.180
+because our analytics job is
+OK with reading still data.
+
+73
+00:02:47.180 --> 00:02:49.400
+This is typically true
+for batch operations,
+
+74
+00:02:49.400 --> 00:02:52.770
+since they don't expect to
+be ran on the latest data.
+
+75
+00:02:52.770 --> 00:02:55.070
+Another great use case for
+reading from secondaries
+
+76
+00:02:55.070 --> 00:02:57.620
+is for local reads in
+geographically distributed
+
+77
+00:02:57.620 --> 00:02:59.090
+replica sets.
+
+78
+00:02:59.090 --> 00:03:01.820
+In this case, we have
+two application servers,
+
+79
+00:03:01.820 --> 00:03:04.070
+one on the west coast
+of the United States,
+
+80
+00:03:04.070 --> 00:03:06.020
+and the other on the east coast.
+
+81
+00:03:06.020 --> 00:03:08.780
+In this hypothetical
+scenario, one of our members
+
+82
+00:03:08.780 --> 00:03:11.930
+is located on one coast, and
+the remaining two members
+
+83
+00:03:11.930 --> 00:03:13.940
+are located on the other coast.
+
+84
+00:03:13.940 --> 00:03:16.190
+This is favorable when
+application clients
+
+85
+00:03:16.190 --> 00:03:20.260
+need to have low latency, but
+are OK with reading stale data.
+
+86
+00:03:20.260 --> 00:03:23.960
+We've discussed the two most
+common best practice use cases
+
+87
+00:03:23.960 --> 00:03:25.520
+for reading from secondaries.
+
+88
+00:03:25.520 --> 00:03:29.780
+Now let's discuss why it's a bad
+idea to read from secondaries.
+
+89
+00:03:29.780 --> 00:03:32.210
+First of all, it's not
+generally a great idea to rad
+
+90
+00:03:32.210 --> 00:03:33.820
+from secondaries.
+
+91
+00:03:33.820 --> 00:03:36.170
+Secondaries exist to
+provide high availability
+
+92
+00:03:36.170 --> 00:03:39.740
+to our database, not to
+provide increased performance.
+
+93
+00:03:39.740 --> 00:03:42.110
+Sharding increases the
+read and write capacity
+
+94
+00:03:42.110 --> 00:03:44.210
+by distributing read
+and write operations
+
+95
+00:03:44.210 --> 00:03:45.930
+across a group of machines.
+
+96
+00:03:45.930 --> 00:03:49.160
+And this is often a better
+strategy for adding capacity.
+
+97
+00:03:49.160 --> 00:03:51.040
+Two commonly
+encountered bad ideas,
+
+98
+00:03:51.040 --> 00:03:53.420
+is to increase your
+overall read throughput
+
+99
+00:03:53.420 --> 00:03:56.120
+by reading from secondaries,
+and to read from secondaries
+
+100
+00:03:56.120 --> 00:03:58.320
+in sharded clusters.
+
+101
+00:03:58.320 --> 00:03:59.940
+Some people have
+the false notion
+
+102
+00:03:59.940 --> 00:04:02.820
+that if their primary is
+overworked by writes, then
+
+103
+00:04:02.820 --> 00:04:05.430
+they can offload their
+reads to secondaries.
+
+104
+00:04:05.430 --> 00:04:08.410
+This is not the case, because
+as writes come into our primary,
+
+105
+00:04:08.410 --> 00:04:10.590
+they're replicated
+to the secondaries.
+
+106
+00:04:10.590 --> 00:04:12.510
+This means all members
+of a replica set
+
+107
+00:04:12.510 --> 00:04:15.630
+have roughly about the same
+amount of write traffic.
+
+108
+00:04:15.630 --> 00:04:18.881
+On the other hand, if a
+primary is overworked by reads,
+
+109
+00:04:18.881 --> 00:04:21.089
+and you're OK with stale
+data, then it's totally fine
+
+110
+00:04:21.089 --> 00:04:22.560
+to read from secondaries.
+
+111
+00:04:22.560 --> 00:04:26.090
+Now a really terrible idea is
+to read from the secondaries
+
+112
+00:04:26.090 --> 00:04:27.900
+in a sharded cluster.
+
+113
+00:04:27.900 --> 00:04:30.180
+In general, it's a
+very bad idea to ever
+
+114
+00:04:30.180 --> 00:04:33.570
+connect directly to a shard
+to read or write data.
+
+115
+00:04:33.570 --> 00:04:36.840
+When we query the secondary
+of a sharded collection,
+
+116
+00:04:36.840 --> 00:04:40.560
+we may return stale results
+with missing or duplicated data
+
+117
+00:04:40.560 --> 00:04:44.130
+because of incomplete or
+terminated chunk migrations.
+
+118
+00:04:44.130 --> 00:04:45.390
+So we should never do this.
+
+119
+00:04:45.390 --> 00:04:47.640
+We should never read
+directly from a shard,
+
+120
+00:04:47.640 --> 00:04:49.600
+whether it's a primary
+or a secondary.
+
+121
+00:04:49.600 --> 00:04:51.960
+But secondaries are
+definitely worse.
+
+122
+00:04:51.960 --> 00:04:53.970
+And this should give
+you a good overview
+
+123
+00:04:53.970 --> 00:04:55.680
+of reading from secondaries.
+
+124
+00:04:55.680 --> 00:04:58.470
+We discussed some different
+good ideas with regards
+
+125
+00:04:58.470 --> 00:05:00.150
+to reading from
+secondaries, but then we
+
+126
+00:05:00.150 --> 00:05:02.790
+also discussed some
+bad ideas with regards
+
+127
+00:05:02.790 --> 00:05:05.350
+to reading from secondaries.

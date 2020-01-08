@@ -1,0 +1,61 @@
+Welcome back.
+
+We've made some improvements to cloud providers snapshots in Atlas.
+
+Atlas now supports Cloud Provider Snapshots from Microsoft Azure, Amazon Web Services, and Google Cloud Platform-backed clusters.
+
+Previously, there were some restrictions in the functionality we had available for Google Cloud Platform.
+
+We've added incremental backup functionality using snapshots in GCP-- that is to say that we only store a copy which contains the documents which have been altered since the last full backup.
+
+It's important to note that we're utilizing the cloud provider's native capabilities of taking a snapshot.
+
+These snapshots are effectively a disk image, and taking these snapshots is handled by the cloud provider.
+
+The incremental approach means that you incur less cost due to there being less data stored per snapshot.
+
+As the incremental approach only requires us to store the delta between these snapshots as opposed to storing a full copy of the snapshot, incremental backups allow you to store multiple snapshots without the disk space requirements of a non-incremental approach.
+
+This means Atlas now supports incremental backups on GCP and AWS using Cloud Provider Snapshots.
+
+At present, Azure doesn't offer this incremental backup capability.
+
+You can now also use GCP for multi-region backups.
+
+So how does this work?
+
+Atlas selects the primary member of the cluster at the time you enable snapshots for said cluster.
+
+Atlas stores the snapshot in the same region as the primary member, and Atlas retains the snapshots based on your retention policy.
+
+So Atlas continues to use that member and its corresponding region for snapshots and snapshot storage, even if that member is no longer primary.
+
+We automatically create a new snapshot storage volume if the existing snapshot storage volume runs out of disk space.
+
+We then create a new volume in the same region as the cluster's current primary.
+
+Atlas then takes a full-copy snapshot to maintain backup availability and continues using that member and its corresponding region for further incremental snapshots.
+
+Let's jump into the UI and configure snapshot storage for a Google Cloud-hosted cluster.
+
+Each backup policy consists of a snapshot time and one or more policy items.
+
+The backup policy time specifies the time of day in UTC that Atlas takes a snapshot for the backup policy.
+
+Snapshots taken for the Hourly policy item may occur multiple times each day depending on the frequency interval specified.
+
+Each backup policy item specifies a frequency unit and an interval and a retention time.
+
+For example, the default backup policy specifies a snapshot time of 1800 UTC, an Hourly snapshot with an interval of one hour and a retention of two days, daily snapshots with a retention of seven days, weekly snapshots with an interval of Saturday and a retention of four days, and monthly snapshots with an interval of the last day of the month and a retention of 12 months.
+
+So another improvement to our cloud provider snapshot feature is the ability to encrypt your Cloud Provider Snapshots using your own KMIP server.
+
+This effectively means that you can bring your own key to encrypt and decrypt your backups through the configured KMS service for the Atlas project.
+
+As we recently added this feature to Google Cloud Platform, this is now supported across all three cloud providers.
+
+So let's recap.
+
+Atlas now supports incremental backups on Google Cloud Platform and AWS.
+
+You can now perform cross-region backups on all three cloud providers, and you can also integrate your own KMIP server and use your own key to encrypt and decrypt your Cloud Provider Snapshots.

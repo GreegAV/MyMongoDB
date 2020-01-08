@@ -1,0 +1,17 @@
+- So our intern has gone too far, and started to change data that was logged long before his time.
+
+To solve this, we need to go back and revoke the privilege that allows the update on the internlog collection.
+
+- To do this, we just need to authenticate and run the db.revokePrivelegesFromRole command.
+
+Here's the command that we use.
+
+On the intern role, we want to revoke this right here, the ability to update on the internlog collection on any database.
+
+- It Looks like it ran successfully.
+
+Let's go ahead and check out our roll.
+
+And here again, we're going to use db.getRole to show all the privileges on the intern role.
+
+- And now if we scroll up, we can see on the internlog collection, the user is still able to insert but is no longer allowed to update on the internet log collection on any database.

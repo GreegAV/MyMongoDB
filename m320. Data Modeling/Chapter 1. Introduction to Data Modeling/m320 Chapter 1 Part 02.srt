@@ -1,0 +1,509 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.180
+When dealing with database
+schema and data modeling,
+
+3
+00:00:03.180 --> 00:00:04.980
+we sometimes find
+ourselves doing things
+
+4
+00:00:04.980 --> 00:00:07.050
+because we saw something
+on the internet
+
+5
+00:00:07.050 --> 00:00:08.970
+or got some friendly
+advice on how
+
+6
+00:00:08.970 --> 00:00:12.210
+to do things, which might
+not be the most correct way
+
+7
+00:00:12.210 --> 00:00:14.868
+and based on some
+misconceptions.
+
+8
+00:00:14.868 --> 00:00:16.410
+One of the most
+common misconceptions
+
+9
+00:00:16.410 --> 00:00:19.770
+about data modeling in MongoDB
+is that modeling is schemaless,
+
+10
+00:00:19.770 --> 00:00:21.690
+meaning that it
+doesn't really matter
+
+11
+00:00:21.690 --> 00:00:26.070
+which field documents have or
+how different the documents can
+
+12
+00:00:26.070 --> 00:00:29.340
+be from one another, or even
+how many collections you
+
+13
+00:00:29.340 --> 00:00:31.830
+might have per database.
+
+14
+00:00:31.830 --> 00:00:34.140
+Although that can be a
+flattering way of positioning
+
+15
+00:00:34.140 --> 00:00:36.330
+in the flexibility
+of MongoDB, this
+
+16
+00:00:36.330 --> 00:00:39.060
+is not practical in reality.
+
+17
+00:00:39.060 --> 00:00:43.260
+What MongoDB unquestionably has
+is a very flexible data model.
+
+18
+00:00:43.260 --> 00:00:45.690
+There are no default rules
+on what documents should
+
+19
+00:00:45.690 --> 00:00:48.600
+be looking like apart
+from having correctly
+
+20
+00:00:48.600 --> 00:00:52.920
+been defined in BSON and
+containing a primary key.
+
+21
+00:00:52.920 --> 00:00:57.570
+But most importantly, all
+data as some sort of structure
+
+22
+00:00:57.570 --> 00:00:59.700
+and therefore, a schema.
+
+23
+00:00:59.700 --> 00:01:02.160
+MongoDB he just happens
+to make it easier
+
+24
+00:01:02.160 --> 00:01:06.240
+for you to deal with that
+later rather than sooner.
+
+25
+00:01:06.240 --> 00:01:09.630
+Before you jump into
+an ERD or UML tooling,
+
+26
+00:01:09.630 --> 00:01:12.780
+in order to determine the full
+scope of your data structures,
+
+27
+00:01:12.780 --> 00:01:16.310
+it tends to be preferable to
+start building your application
+
+28
+00:01:16.310 --> 00:01:19.020
+and finding out from that
+particular experience
+
+29
+00:01:19.020 --> 00:01:21.670
+what the data structure
+should look like.
+
+30
+00:01:21.670 --> 00:01:25.170
+However, if you do
+know your usage pattern
+
+31
+00:01:25.170 --> 00:01:27.900
+how your data is
+accessed, which queries
+
+32
+00:01:27.900 --> 00:01:29.655
+are critical to
+your application,
+
+33
+00:01:29.655 --> 00:01:32.190
+and ratios between
+reads and writes,
+
+34
+00:01:32.190 --> 00:01:35.160
+you will be able to extract
+a very good model, even
+
+35
+00:01:35.160 --> 00:01:37.380
+before rewriting
+the full application
+
+36
+00:01:37.380 --> 00:01:40.590
+to make it scale with MongoDB.
+
+37
+00:01:40.590 --> 00:01:43.890
+Being flexible means that
+your application changes.
+
+38
+00:01:43.890 --> 00:01:46.050
+And it's not
+unreasonable to think
+
+39
+00:01:46.050 --> 00:01:48.030
+that that will not be the case.
+
+40
+00:01:48.030 --> 00:01:50.760
+You will be able to
+accommodate those changes
+
+41
+00:01:50.760 --> 00:01:53.820
+without experiencing
+a painful migration
+
+42
+00:01:53.820 --> 00:01:58.410
+process, like in traditional
+relational databases.
+
+43
+00:01:58.410 --> 00:02:02.490
+When you start having a pretty
+good idea of how documents
+
+44
+00:02:02.490 --> 00:02:05.640
+should be looking like
+and should be shaped out
+
+45
+00:02:05.640 --> 00:02:08.889
+and which data types
+those fields you have,
+
+46
+00:02:08.889 --> 00:02:11.100
+you'll be able to enforce
+those rules in MongoDB
+
+47
+00:02:11.100 --> 00:02:13.140
+by using document validation.
+
+48
+00:02:13.140 --> 00:02:15.270
+Another misconception
+is that all information,
+
+49
+00:02:15.270 --> 00:02:18.510
+regardless of how data
+should be manipulated,
+
+50
+00:02:18.510 --> 00:02:21.450
+can be stored in
+one single document.
+
+51
+00:02:21.450 --> 00:02:25.860
+There are some use cases where
+this approach is actually
+
+52
+00:02:25.860 --> 00:02:26.850
+correct.
+
+53
+00:02:26.850 --> 00:02:29.550
+But the reality is that this
+is not the way applications
+
+54
+00:02:29.550 --> 00:02:31.240
+in general use data.
+
+55
+00:02:31.240 --> 00:02:35.925
+Think about your user profile,
+where we have a profile data.
+
+56
+00:02:35.925 --> 00:02:38.400
+And that gives us the
+current state of the user.
+
+57
+00:02:38.400 --> 00:02:41.370
+But when thinking about
+all the different changes
+
+58
+00:02:41.370 --> 00:02:45.370
+that that given user might
+incur over a period of time,
+
+59
+00:02:45.370 --> 00:02:48.000
+like for example, all the
+variations in musical tastes,
+
+60
+00:02:48.000 --> 00:02:50.640
+profile messages, new
+friendships, new likes,
+
+61
+00:02:50.640 --> 00:02:53.490
+new reviews, new
+romantic partnerships,
+
+62
+00:02:53.490 --> 00:02:56.460
+you might get a
+good understanding
+
+63
+00:02:56.460 --> 00:02:58.410
+that that profile will grow.
+
+64
+00:02:58.410 --> 00:03:00.930
+If you tried to store
+all that information,
+
+65
+00:03:00.930 --> 00:03:05.130
+99% of the time all you do
+is get the latest version
+
+66
+00:03:05.130 --> 00:03:06.318
+of that profile.
+
+67
+00:03:06.318 --> 00:03:08.610
+You might not be helping your
+application all that much
+
+68
+00:03:08.610 --> 00:03:11.490
+by storing all these sorts of
+information of that user in one
+
+69
+00:03:11.490 --> 00:03:12.990
+big document.
+
+70
+00:03:12.990 --> 00:03:15.180
+As a user interacts more
+with your application,
+
+71
+00:03:15.180 --> 00:03:18.450
+more data will be accumulated,
+and your performance
+
+72
+00:03:18.450 --> 00:03:21.030
+will be dropping considerably.
+
+73
+00:03:21.030 --> 00:03:23.130
+Keeping the amount
+of information stored
+
+74
+00:03:23.130 --> 00:03:26.760
+per individual documents to the
+data that your application uses
+
+75
+00:03:26.760 --> 00:03:28.410
+and having different
+models to deal
+
+76
+00:03:28.410 --> 00:03:31.740
+with historical data or other
+types of data that are not
+
+77
+00:03:31.740 --> 00:03:33.720
+always accessed is
+something that we'll
+
+78
+00:03:33.720 --> 00:03:37.440
+be looking into in
+this course, as well.
+
+79
+00:03:37.440 --> 00:03:39.570
+And there is also
+this perception
+
+80
+00:03:39.570 --> 00:03:43.170
+that there is no way to perform
+a join between documents
+
+81
+00:03:43.170 --> 00:03:44.310
+in MongoDB.
+
+82
+00:03:44.310 --> 00:03:48.090
+While MongoDB does not
+call dollar look up a join,
+
+83
+00:03:48.090 --> 00:03:50.100
+for many good
+reasons, you can still
+
+84
+00:03:50.100 --> 00:03:53.280
+perform all sorts
+of joins in MongoDB.
+
+85
+00:03:53.280 --> 00:03:56.790
+But it can certainly do these
+types of relational operations
+
+86
+00:03:56.790 --> 00:03:57.840
+in MongoDB.
+
+87
+00:03:57.840 --> 00:04:02.070
+We will be showing you models
+where you can make the most
+
+88
+00:04:02.070 --> 00:04:04.740
+out of them on top of Mongo.
+
+89
+00:04:04.740 --> 00:04:06.870
+Sometimes, finding
+a schema design
+
+90
+00:04:06.870 --> 00:04:09.630
+that suits your application
+or application needs
+
+91
+00:04:09.630 --> 00:04:11.460
+is not an easy job to do.
+
+92
+00:04:11.460 --> 00:04:14.580
+Data, at times, may be
+very, very unstructured
+
+93
+00:04:14.580 --> 00:04:18.120
+or with quite a high
+degree of variation.
+
+94
+00:04:18.120 --> 00:04:20.880
+This course will teach
+you how to look harder
+
+95
+00:04:20.880 --> 00:04:24.850
+with the tools and procedures
+to identify such a schema.
+
+96
+00:04:24.850 --> 00:04:27.180
+That said, MongoDB
+will most definitely
+
+97
+00:04:27.180 --> 00:04:29.640
+shine on these
+three main aspects.
+
+98
+00:04:29.640 --> 00:04:31.680
+You can run MongoDB anywhere.
+
+99
+00:04:31.680 --> 00:04:35.190
+You can use MongoDB
+for any type of data.
+
+100
+00:04:35.190 --> 00:04:38.520
+And you can put your
+data everywhere.
+
+101
+00:04:38.520 --> 00:04:40.500
+We will be looking
+into ways of showing
+
+102
+00:04:40.500 --> 00:04:43.590
+how to design for
+scalability, flexibility,
+
+103
+00:04:43.590 --> 00:04:46.110
+and performance, showing
+how MongoDB allows you
+
+104
+00:04:46.110 --> 00:04:50.340
+to deal with change, scale,
+and make your applications more
+
+105
+00:04:50.340 --> 00:04:52.581
+dynamic and flexible.
+
+106
+00:04:52.581 --> 00:04:53.081

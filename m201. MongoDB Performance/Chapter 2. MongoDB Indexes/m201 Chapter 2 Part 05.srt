@@ -1,0 +1,826 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.150
+Let's take a look
+at compound indexes.
+
+3
+00:00:03.150 --> 00:00:08.039
+A compound index is an
+index on two or more fields,
+
+4
+00:00:08.039 --> 00:00:11.520
+and it can support queries
+based on those fields.
+
+5
+00:00:11.520 --> 00:00:13.320
+By the end of this
+lesson, you should
+
+6
+00:00:13.320 --> 00:00:17.850
+be able to identify and
+create compound indexes.
+
+7
+00:00:17.850 --> 00:00:20.280
+Let's talk for a moment
+about the structure
+
+8
+00:00:20.280 --> 00:00:22.180
+of a compound index.
+
+9
+00:00:22.180 --> 00:00:25.200
+Now, in MongoDB,
+indexes are b-trees
+
+10
+00:00:25.200 --> 00:00:28.737
+and they have an ordering,
+and that ordering is flat.
+
+11
+00:00:28.737 --> 00:00:30.570
+So if you have two
+fields, you might somehow
+
+12
+00:00:30.570 --> 00:00:33.990
+think that your indexes are
+two-dimensional in some way,
+
+13
+00:00:33.990 --> 00:00:34.740
+but they're not.
+
+14
+00:00:34.740 --> 00:00:36.750
+They're actually
+one-dimensional.
+
+15
+00:00:36.750 --> 00:00:40.410
+You can actually think of
+index keys as an ordered list.
+
+16
+00:00:40.410 --> 00:00:42.570
+Looking at this diagram,
+this is an index
+
+17
+00:00:42.570 --> 00:00:45.430
+on last name comma first name.
+
+18
+00:00:45.430 --> 00:00:48.540
+If I wanted to find a
+document for Adam Bailey,
+
+19
+00:00:48.540 --> 00:00:51.270
+I'd go to the Baley
+comma Adam index
+
+20
+00:00:51.270 --> 00:00:55.920
+key, which then points to
+the Adam Bailey document.
+
+21
+00:00:55.920 --> 00:00:58.020
+I checked this one
+index key and it
+
+22
+00:00:58.020 --> 00:01:01.630
+tells me to go in our
+collection of documents.
+
+23
+00:01:01.630 --> 00:01:03.330
+There's no checking
+of two things.
+
+24
+00:01:03.330 --> 00:01:05.519
+Even though there are
+really two fields, the index
+
+25
+00:01:05.519 --> 00:01:08.580
+itself is still one-dimensional.
+
+26
+00:01:08.580 --> 00:01:09.970
+Let's make an analogy.
+
+27
+00:01:09.970 --> 00:01:11.880
+When working with
+an index that's
+
+28
+00:01:11.880 --> 00:01:16.282
+ordered last name ascending
+comma first name ascending,
+
+29
+00:01:16.282 --> 00:01:18.240
+you may not realize it
+yet, but you're probably
+
+30
+00:01:18.240 --> 00:01:19.950
+already familiar with
+the physical index
+
+31
+00:01:19.950 --> 00:01:22.620
+that works this exact same way--
+
+32
+00:01:22.620 --> 00:01:23.580
+a phone book.
+
+33
+00:01:23.580 --> 00:01:27.330
+Like an index, a phone book has,
+as its keys, an ordered list
+
+34
+00:01:27.330 --> 00:01:28.570
+of names.
+
+35
+00:01:28.570 --> 00:01:32.260
+There is last name ascending,
+first name ascending.
+
+36
+00:01:32.260 --> 00:01:34.200
+If I want to find
+Chris Bailey, I'd
+
+37
+00:01:34.200 --> 00:01:36.720
+go to the Baley section
+of the phone book
+
+38
+00:01:36.720 --> 00:01:39.950
+and go down through
+and find Chris.
+
+39
+00:01:39.950 --> 00:01:42.000
+And then I would then
+find his phone number.
+
+40
+00:01:42.000 --> 00:01:45.070
+But in the case of MongoDB,
+it's going to be a document.
+
+41
+00:01:45.070 --> 00:01:48.150
+So if I wanted to find everyone
+with a particular last name,
+
+42
+00:01:48.150 --> 00:01:49.420
+it'd be very easy.
+
+43
+00:01:49.420 --> 00:01:51.390
+They're all grouped together.
+
+44
+00:01:51.390 --> 00:01:55.050
+However, if I wanted to find
+somebody with the name James,
+
+45
+00:01:55.050 --> 00:01:57.480
+I'd have to go through
+every single key
+
+46
+00:01:57.480 --> 00:02:01.490
+or every single document in
+order to find that person.
+
+47
+00:02:01.490 --> 00:02:05.230
+As we'll see the field
+or fields that come first
+
+48
+00:02:05.230 --> 00:02:07.590
+are in some ways more
+useful than the fields
+
+49
+00:02:07.590 --> 00:02:08.940
+that come later.
+
+50
+00:02:08.940 --> 00:02:12.000
+For this lesson, we'll be using
+the same people.gif on file
+
+51
+00:02:12.000 --> 00:02:14.054
+that we've used in
+previous lessons.
+
+52
+00:02:14.054 --> 00:02:15.720
+If you don't already
+have this imported,
+
+53
+00:02:15.720 --> 00:02:17.845
+go ahead and import it now.
+
+54
+00:02:17.845 --> 00:02:20.220
+Now that we have these documents
+imported, let's go ahead
+
+55
+00:02:20.220 --> 00:02:23.190
+and fire up Compass so we
+can look at our indexes
+
+56
+00:02:23.190 --> 00:02:25.460
+and look at some queries.
+
+57
+00:02:25.460 --> 00:02:28.839
+And now that we're in Compass,
+we can see our M201 database.
+
+58
+00:02:28.839 --> 00:02:30.380
+Go ahead and click
+it and we're going
+
+59
+00:02:30.380 --> 00:02:32.040
+to see our people collection.
+
+60
+00:02:32.040 --> 00:02:33.146
+Go ahead and click that.
+
+61
+00:02:33.146 --> 00:02:34.770
+Now that we're in
+here, we can go ahead
+
+62
+00:02:34.770 --> 00:02:39.624
+and click the Explain Plan
+Area and then paste into Query.
+
+63
+00:02:39.624 --> 00:02:41.040
+In this case, we're
+going to query
+
+64
+00:02:41.040 --> 00:02:46.260
+for last name Fraizer and first
+name Jasmine and click Apply.
+
+65
+00:02:46.260 --> 00:02:50.190
+And when I do this, we get
+the Explain Plan output.
+
+66
+00:02:50.190 --> 00:02:52.170
+So you can get this
+exact same output
+
+67
+00:02:52.170 --> 00:02:55.350
+if you wanted via
+the Mongo shell,
+
+68
+00:02:55.350 --> 00:02:57.420
+and it would look something
+like this raw JSON.
+
+69
+00:02:57.420 --> 00:02:59.717
+You'd see a bunch of
+great information--
+
+70
+00:02:59.717 --> 00:03:01.800
+literally all the information
+you could ever want.
+
+71
+00:03:01.800 --> 00:03:03.800
+For now, we're going to
+stick to the visual tree
+
+72
+00:03:03.800 --> 00:03:06.090
+and this query
+performance summary.
+
+73
+00:03:06.090 --> 00:03:08.400
+So we can immediately see
+that this query first of all
+
+74
+00:03:08.400 --> 00:03:10.420
+is on one document.
+
+75
+00:03:10.420 --> 00:03:14.120
+And to find that one document,
+it took 24 milliseconds.
+
+76
+00:03:14.120 --> 00:03:17.640
+And you see that we used
+zero index keys, which means
+
+77
+00:03:17.640 --> 00:03:19.380
+that we did not use an index.
+
+78
+00:03:19.380 --> 00:03:22.030
+Which is also
+stated right here--
+
+79
+00:03:22.030 --> 00:03:25.410
+and that we had to look
+at 50,000 documents
+
+80
+00:03:25.410 --> 00:03:27.644
+to find this one document.
+
+81
+00:03:27.644 --> 00:03:28.810
+And that's really important.
+
+82
+00:03:28.810 --> 00:03:30.930
+What really matters
+here is this ratio.
+
+83
+00:03:30.930 --> 00:03:33.540
+We had to look at
+50,000 documents,
+
+84
+00:03:33.540 --> 00:03:37.030
+even though we only
+wanted one document.
+
+85
+00:03:37.030 --> 00:03:40.410
+So now let's go ahead and
+build a single key index
+
+86
+00:03:40.410 --> 00:03:42.660
+to see how this will
+affect our performance.
+
+87
+00:03:42.660 --> 00:03:44.675
+So I'll go out and
+click Create Index.
+
+88
+00:03:44.675 --> 00:03:45.550
+We'll give it a name.
+
+89
+00:03:45.550 --> 00:03:50.610
+We'll say last name, and then
+we'll use the field last name
+
+90
+00:03:50.610 --> 00:03:53.150
+and we'll make it
+an ascending index,
+
+91
+00:03:53.150 --> 00:03:54.840
+and we'll go ahead
+and create it.
+
+92
+00:03:54.840 --> 00:03:57.790
+Now, let's go ahead
+and run it again.
+
+93
+00:03:57.790 --> 00:04:01.430
+Now, when we run again, we can
+see our performance summary,
+
+94
+00:04:01.430 --> 00:04:04.530
+and we've still got the one
+document that we wanted.
+
+95
+00:04:04.530 --> 00:04:08.070
+And we can see the 31
+documents that we then examined
+
+96
+00:04:08.070 --> 00:04:09.910
+to find that one document.
+
+97
+00:04:09.910 --> 00:04:12.260
+So this is a much better ratio--
+
+98
+00:04:12.260 --> 00:04:15.360
+one to 31 rather
+than one to 50,000.
+
+99
+00:04:15.360 --> 00:04:17.820
+And as such, you can
+see that our query time
+
+100
+00:04:17.820 --> 00:04:18.720
+is much, much slower.
+
+101
+00:04:18.720 --> 00:04:20.220
+It actually says
+zero milliseconds.
+
+102
+00:04:20.220 --> 00:04:21.720
+There's some rounding
+going on here.
+
+103
+00:04:21.720 --> 00:04:25.770
+It obviously took some
+time, but 0 is way faster
+
+104
+00:04:25.770 --> 00:04:26.986
+than what we had before.
+
+105
+00:04:26.986 --> 00:04:28.860
+And you cam see that it
+even states the index
+
+106
+00:04:28.860 --> 00:04:31.380
+that we were able to
+use-- the last name index.
+
+107
+00:04:31.380 --> 00:04:34.110
+And so this is also
+exemplified by the 31 keys
+
+108
+00:04:34.110 --> 00:04:38.120
+that we had to examine to go
+and find those 31 documents,
+
+109
+00:04:38.120 --> 00:04:41.550
+and to see whether or not
+the first name matched.
+
+110
+00:04:41.550 --> 00:04:43.710
+Because basically
+these 31 documents--
+
+111
+00:04:43.710 --> 00:04:46.110
+they all match the
+last name Frazier,
+
+112
+00:04:46.110 --> 00:04:48.030
+but there's only
+one document that
+
+113
+00:04:48.030 --> 00:04:53.010
+matches those 31 that also
+has the first name of Jasmine.
+
+114
+00:04:53.010 --> 00:04:55.600
+And we can see this
+visually over here.
+
+115
+00:04:55.600 --> 00:04:57.760
+We can see that we
+had a fetch stage.
+
+116
+00:04:57.760 --> 00:04:59.250
+We had to find
+that one document,
+
+117
+00:04:59.250 --> 00:05:00.708
+and then in our
+index scan, we were
+
+118
+00:05:00.708 --> 00:05:04.614
+able to find all the people
+who matched last name Frazier.
+
+119
+00:05:04.614 --> 00:05:06.280
+But let's actually
+make a compound index
+
+120
+00:05:06.280 --> 00:05:08.110
+and see if we can
+make this even better.
+
+121
+00:05:08.110 --> 00:05:09.740
+So we go and create
+another index.
+
+122
+00:05:09.740 --> 00:05:14.720
+I'm going name this one
+last name first name.
+
+123
+00:05:14.720 --> 00:05:19.430
+We'll click the last
+name field, ascending.
+
+124
+00:05:19.430 --> 00:05:21.250
+We're going to add
+another field--
+
+125
+00:05:21.250 --> 00:05:25.587
+first name, ascending,
+and we'll click Create.
+
+126
+00:05:25.587 --> 00:05:26.920
+Now, the order does matter here.
+
+127
+00:05:26.920 --> 00:05:29.590
+The order, as we'll talk
+about later in this video
+
+128
+00:05:29.590 --> 00:05:32.740
+or in another video, the order
+here really matters a lot.
+
+129
+00:05:32.740 --> 00:05:35.230
+So we'll click Create, and
+as you can see here now,
+
+130
+00:05:35.230 --> 00:05:37.810
+we're now able to use
+our compound index--
+
+131
+00:05:37.810 --> 00:05:39.700
+last name first name--
+
+132
+00:05:39.700 --> 00:05:42.310
+took zero seconds, so
+again it's very, very fast.
+
+133
+00:05:42.310 --> 00:05:45.040
+We found our one document, but
+this time instead of looking
+
+134
+00:05:45.040 --> 00:05:48.080
+at 31 documents and
+examining 31 keys,
+
+135
+00:05:48.080 --> 00:05:49.990
+we only had to
+examine one document--
+
+136
+00:05:49.990 --> 00:05:51.730
+the document we
+actually care about--
+
+137
+00:05:51.730 --> 00:05:54.260
+and that document's key.
+
+138
+00:05:54.260 --> 00:05:55.690
+So the ratio is one to one.
+
+139
+00:05:55.690 --> 00:05:57.940
+So the ratio of one is
+basically the best ratio
+
+140
+00:05:57.940 --> 00:05:59.090
+that we could have.
+
+141
+00:05:59.090 --> 00:06:00.850
+And if we look down
+here, we'll see
+
+142
+00:06:00.850 --> 00:06:03.400
+that we were doing an
+index scan and able
+
+143
+00:06:03.400 --> 00:06:06.040
+to use the compound index
+that we just created.
+
+144
+00:06:06.040 --> 00:06:08.200
+Much like single
+field indexes, we
+
+145
+00:06:08.200 --> 00:06:11.950
+can also use compound indexes
+to find a range of values.
+
+146
+00:06:11.950 --> 00:06:14.860
+So now, let's modify
+our query slightly.
+
+147
+00:06:14.860 --> 00:06:17.920
+So now instead of saying
+Jasmine, we'll say greater than
+
+148
+00:06:17.920 --> 00:06:23.120
+or equal to capital
+L. When we run this,
+
+149
+00:06:23.120 --> 00:06:27.580
+you'll see that we had
+examined 16 documents,
+
+150
+00:06:27.580 --> 00:06:31.010
+we had examined 16 keys, and
+we returned 16 documents.
+
+151
+00:06:31.010 --> 00:06:34.617
+So a ratio of 16
+to 16 is still one.
+
+152
+00:06:34.617 --> 00:06:35.950
+So it's a very, very good ratio.
+
+153
+00:06:35.950 --> 00:06:38.890
+We don't have to look at any
+superfluous or unnecessary
+
+154
+00:06:38.890 --> 00:06:39.880
+documents.
+
+155
+00:06:39.880 --> 00:06:43.570
+And as such, we are able to
+have a very, very fast query
+
+156
+00:06:43.570 --> 00:06:46.760
+because we are able to
+use this compound index.
+
+157
+00:06:46.760 --> 00:06:50.980
+And the reason that we only
+had to examine documents
+
+158
+00:06:50.980 --> 00:06:54.580
+that were returned is because
+the first name field are all
+
+159
+00:06:54.580 --> 00:06:55.360
+ordered.
+
+160
+00:06:55.360 --> 00:06:57.500
+We're saying greater
+than or equal to L--
+
+161
+00:06:57.500 --> 00:07:00.971
+so everything that's greater
+than the capital letter L.
+
+162
+00:07:00.971 --> 00:07:03.220
+So it's just like our phone
+book example and it's just
+
+163
+00:07:03.220 --> 00:07:04.990
+like how the index
+keys are stored.
+
+164
+00:07:04.990 --> 00:07:08.320
+All the first name fields
+with the last name of Frazier
+
+165
+00:07:08.320 --> 00:07:10.310
+are all in ascending order.
+
+166
+00:07:10.310 --> 00:07:13.490
+So we just go to the L section
+and then go straight down.
+
+167
+00:07:13.490 --> 00:07:16.870
+That's exactly what
+MongoDB is able to do.
+
+168
+00:07:16.870 --> 00:07:21.670
+And now you know how to create
+compound indexes using MongoDB.
+
+169
+00:07:21.670 --> 00:07:24.310
+You've seen how it's done
+through MongoDB Compass.
+
+170
+00:07:24.310 --> 00:07:26.380
+All of these features
+I've shown you--
+
+171
+00:07:26.380 --> 00:07:29.860
+the explain outputs and the
+ability to create indexes--
+
+172
+00:07:29.860 --> 00:07:33.440
+are also available obviously
+by the Mongo Shell.

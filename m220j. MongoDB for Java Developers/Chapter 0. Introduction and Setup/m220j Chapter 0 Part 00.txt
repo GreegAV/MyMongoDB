@@ -1,0 +1,31 @@
+Hi MongoDB Java developer, welcome to M220J.
+
+I'm Varsha and it's my pleasure to be one of your instructors.
+
+This course is one of our language variant courses for MongoDB developers.
+
+It's intended for people who have taken our introduction to MongoDB course or have two to three months of experience working with MongoDB.
+
+You should have basic familiarity with Java before starting this course.
+
+Here, you will learn how to use MongoDB's Java driver to build performant, resilient, and robust applications.
+
+You'll be put in the role of a new developer on a team implementing the database layer of an API.
+
+Each lab in this course is called a ticket and each ticket has a user story and unit tests.
+
+For a given ticket, you will read the user story, make all the tests pass, and use the pre-packaged UI to run integration tests and get your validation code for the corresponding ticket.
+
+Throughout this course, you will learn to create and share a database connection, perform the basic Create, Read, Update, and Delete operations through the driver, handle errors, utilize the MongoDB best practices and more.
+
+The technology stack is pretty simple.
+
+We're using Spring Boot, MongoDB, and React.
+
+The React application is pre-built and bundled for you and the API layer is also fully implemented.
+
+You'll only be implementing the functions which directly call to MongoDB.
+
+So welcome again to this course.
+
+We hope you enjoy the material that we've prepared for you and wish you the best of luck.

@@ -1,0 +1,314 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.100
+Now let's use mplotqueries.
+
+3
+00:00:02.100 --> 00:00:05.070
+To do this, I'm going to have to
+get out of the virtual machine.
+
+4
+00:00:05.070 --> 00:00:06.450
+I've set it up on my laptop.
+
+5
+00:00:06.450 --> 00:00:08.640
+And it'll show us
+what we want to see.
+
+6
+00:00:08.640 --> 00:00:11.050
+First, I'm going to go
+to a tab of my terminal
+
+7
+00:00:11.050 --> 00:00:13.240
+that's not in the Vagrant box.
+
+8
+00:00:13.240 --> 00:00:15.880
+I'll go into the Shared folder.
+
+9
+00:00:15.880 --> 00:00:18.520
+And we'll look at the
+help documentation.
+
+10
+00:00:18.520 --> 00:00:21.120
+This is a very rich tool and
+there are a lot of options.
+
+11
+00:00:21.120 --> 00:00:22.530
+It may look overwhelming.
+
+12
+00:00:22.530 --> 00:00:24.720
+But you can run the tool
+with all the defaults,
+
+13
+00:00:24.720 --> 00:00:26.647
+and it's likely to
+do what you want.
+
+14
+00:00:26.647 --> 00:00:28.230
+Once you become more
+accustomed to it,
+
+15
+00:00:28.230 --> 00:00:30.240
+you can do things
+like change the y-axis
+
+16
+00:00:30.240 --> 00:00:32.159
+to a logarithmic scale
+so outliers aren't
+
+17
+00:00:32.159 --> 00:00:33.990
+as distorting to your view.
+
+18
+00:00:33.990 --> 00:00:35.700
+You can create different
+types of graphs,
+
+19
+00:00:35.700 --> 00:00:37.380
+for example, looking
+at connections
+
+20
+00:00:37.380 --> 00:00:39.002
+instead of slow queries.
+
+21
+00:00:39.002 --> 00:00:40.710
+And you can overlay
+a few of those graphs
+
+22
+00:00:40.710 --> 00:00:42.720
+together to correlate events.
+
+23
+00:00:42.720 --> 00:00:45.270
+Let's go ahead and run it by
+passing the log file to it.
+
+24
+00:00:45.270 --> 00:00:49.140
+
+
+25
+00:00:49.140 --> 00:00:50.190
+This tool goes deeper.
+
+26
+00:00:50.190 --> 00:00:52.920
+And it doesn't just give you
+aggregates per query shape.
+
+27
+00:00:52.920 --> 00:00:56.556
+It plots every single slow
+query as a dot in the picture.
+
+28
+00:00:56.556 --> 00:00:57.930
+You may want to
+keep that in mind
+
+29
+00:00:57.930 --> 00:01:00.060
+if you try to plot
+millions of slow queries.
+
+30
+00:01:00.060 --> 00:01:02.070
+Reducing the scope of
+your log ahead of time
+
+31
+00:01:02.070 --> 00:01:06.070
+may save you some processing
+time for the mplotqueries tool.
+
+32
+00:01:06.070 --> 00:01:08.910
+Our x-axis is the
+timeline, while the y-axis
+
+33
+00:01:08.910 --> 00:01:11.250
+is the value in milliseconds
+each query takes.
+
+34
+00:01:11.250 --> 00:01:14.817
+And every dot in this picture
+is one of those slow queries.
+
+35
+00:01:14.817 --> 00:01:16.650
+The first thing you
+probably want to do here
+
+36
+00:01:16.650 --> 00:01:20.430
+is to narrow down the graph to
+a time frame that interests you.
+
+37
+00:01:20.430 --> 00:01:22.260
+Again, if you know
+that period in advance,
+
+38
+00:01:22.260 --> 00:01:24.342
+use mlogfilter to
+do it beforehand.
+
+39
+00:01:24.342 --> 00:01:25.800
+Let's say you want
+to pay attention
+
+40
+00:01:25.800 --> 00:01:28.740
+to the beginning of when we get
+a lot of those slow queries.
+
+41
+00:01:28.740 --> 00:01:31.590
+Just click on the Zoom
+icon and draw a rectangle
+
+42
+00:01:31.590 --> 00:01:33.900
+with your mouse.
+
+43
+00:01:33.900 --> 00:01:36.630
+The graph is a little
+less crowded now.
+
+44
+00:01:36.630 --> 00:01:39.600
+You can also get out of
+Zoom Mode when you're done.
+
+45
+00:01:39.600 --> 00:01:42.090
+There seems to be a lot of
+green dots, which correspond
+
+46
+00:01:42.090 --> 00:01:44.310
+to the hamster.wallaby
+namespace,
+
+47
+00:01:44.310 --> 00:01:47.250
+as indicated by our
+legend on the left,
+
+48
+00:01:47.250 --> 00:01:49.350
+though it may be a bit
+small for you to read.
+
+49
+00:01:49.350 --> 00:01:51.900
+My apologies to those of
+you who are colorblind.
+
+50
+00:01:51.900 --> 00:01:54.090
+I know there is a lot to parse.
+
+51
+00:01:54.090 --> 00:01:56.100
+If I wanted to omit
+this namespace,
+
+52
+00:01:56.100 --> 00:01:58.860
+I could simply click on
+the dot in the legend.
+
+53
+00:01:58.860 --> 00:02:01.560
+However, I think I want
+to keep those right now.
+
+54
+00:02:01.560 --> 00:02:04.830
+Let's look at one of those early
+green dots and click on it.
+
+55
+00:02:04.830 --> 00:02:07.200
+The corresponding query
+from the mongod log
+
+56
+00:02:07.200 --> 00:02:10.230
+is printed into the console
+where I started the tool.
+
+57
+00:02:10.230 --> 00:02:11.730
+At this point, I
+can take this query
+
+58
+00:02:11.730 --> 00:02:12.990
+and figure out if
+there is something
+
+59
+00:02:12.990 --> 00:02:14.610
+wrong with the
+indexes or conclude
+
+60
+00:02:14.610 --> 00:02:16.276
+that it's slow because
+of another issue,
+
+61
+00:02:16.276 --> 00:02:18.810
+like an overloaded system,
+an underprovisioned system,
+
+62
+00:02:18.810 --> 00:02:19.580
+et cetera.
+
+63
+00:02:19.580 --> 00:02:22.260
+We'll go through some of
+those in a more complete way
+
+64
+00:02:22.260 --> 00:02:23.835
+in other exercises.
+
+65
+00:02:23.835 --> 00:02:26.850
+For right now, we just
+want to easily identify
+
+66
+00:02:26.850 --> 00:02:28.760
+the slow queries.

@@ -1,0 +1,135 @@
+The next stage we'll learn about is $project.
+
+$project, like $match, is a vital stage to thoroughly understand, to be successful with the aggregation framework.
+
+Please don't think of $project like the projection functionality available with the find query operator.
+
+While it is true, $project is much, much more.
+
+Not only can we selectively remove and retain fields, we can reassign existing field values and derive entirely new fields.
+
+A common method or function available in many programming languages is $map.
+
+It is a higher order function that applies some transformation among a collection.
+
+If $match is like a filter method, $project is like $map.
+
+Here is the basic syntax for $project.
+
+We've appended a dollar sign to signify that it is an aggregation operator, then open up with a curly brace and close with a curly brace.
+
+Between these two braces is where we use aggregation expressions and perform field logic.
+
+More on that soon.
+
+Here is how we'd specify values to remove and retain, just like the projection functionality available with the find query operator.
+
+This specifies that we wish to remove the _id and retain the name field.
+
+Notice that since we have specified a value to retain, we must specify each value we wish to retain.
+
+Let's also keep the gravity field so we can see some difference in real data.
+
+And of course, an exception.
+
+Here we can say we're getting the name and the gravity field, but we're also getting the _id field.
+
+The _id field is the only field that we must explicitly remove.
+
+All others will be removed when we specify at least one field to retain.
+
+Also, it looks like whoever put this data together used the international system of units, so let's also just get the value.
+
+An error.
+
+One thing to keep in mind, once we start diving into documents selecting on subfields, we must surround our arguments with quotes.
+
+There, the data we wanted.
+
+$project is already showing to be pretty useful, but so far, it appears to be identical to projection available with the find query operator.
+
+Let's started exploring what makes $project so powerful.
+
+Instead of returning a subdocument with just the value field, let's directly assign the value to the gravity field.
+
+Here we can see that we are indeed reassigning the gravity field to now contain the information that was available at gravity.value.
+
+We're prepending gravity.value with a dollar sign.
+
+This is one of the many aggregation expressions, and we're directing the aggregation framework to look for and fetch the information in the document at gravity.value, or a field path expression.
+
+As discussed in the aggregation structure and syntax lesson, this is one of the ways we reference documents for information.
+
+We can also create a new field called surfaceGravity.
+
+This isn't just renaming the gravity field.
+
+It's creating an entirely new field.
+
+Very powerful.
+
+And we'll be using this functionality a lot through the course.
+
+Let's have a bit of fun and use the aggregation framework to calculate a value.
+
+I'd like to see what my weight would be on each main body in the solar system.
+
+I'm going to have to use an expression to accomplish this.
+
+We'll cover expressions in much greater detail shortly, but I'm going to break this down since this is our first time seeing it, and the syntax can catch people off guard.
+
+I weigh about 86 kilograms.
+
+Looking at our previous results, it looks like if I divide the gravity of a body by the gravity of Earth and then multiply that value by my weight, I can find out how much I'd weigh on every main body.
+
+I'm going to have to use an expression to accomplish this.
+
+The first expression I'm going to use is the $multiply arithmetic expression.
+
+$multiply takes an array of values and multiplies them together.
+
+So I know I need to multiply my weight times the ratio of a specific planet's gravity divided by the Earth's gravity.
+
+That will look something like this.
+
+I know my weight is about 86 kilograms, so I can just hard code that for now.
+
+To calculate the gravity ratio, I'll need to use the $divide arithmetic expression.
+
+$divide takes an array of two values and divides the first by the second.
+
+Within $divide, I'll need to reference the information at the value subfield within gravity.
+
+Let's see what this will look like.
+
+Here we're using a field path expression to refer to information within the document, specifically the information found at the value field within the gravity field.
+
+I know the gravity of Earth is around 9.8 meters per second per second, so I'll just hard code that in.
+
+So putting it all together, we have the following.
+
+All of this is assigned to a new field we create called myWeight.
+
+Awesome.
+
+We can see I'd weigh about 32.5 kilograms on Mars and 2,404 kilograms on the Sun.
+
+We're beginning to see the power of $project.
+
+$project is a powerful stage of the aggregation framework.
+
+Not only can we remove and retain fields, we can derive new fields and reassign existing fields.
+
+$project may be used as many times as desired within an aggregation pipeline, and it should be used aggressively to trim data out of documents that isn't required in order to keep our pipelines performant.
+
+Some key things to remember.
+
+Once we specify one field to retain, we must specify all fields we want to retain.
+
+The _id field is the only exception to this.
+
+Beyond simply removing and retaining fields, $project let's add new fields.
+
+$project can be used as many times as required with an aggregation pipeline.
+
+And finally, $project can be used to reassign values to existing field names and to derive entirely new fields.

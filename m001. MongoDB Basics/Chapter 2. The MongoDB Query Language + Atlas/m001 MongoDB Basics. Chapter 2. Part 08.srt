@@ -1,0 +1,667 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:04,140
+Now let's begin to explore some
+basic CRUD operations concepts.
+
+3
+00:00:04,140 --> 00:00:05,970
+In MongoDB, we
+typically talk about
+
+4
+00:00:05,970 --> 00:00:11,070
+create operations as inserting
+documents, or simply inserts.
+
+5
+00:00:11,070 --> 00:00:12,990
+Let's look at how to
+do this with Compass.
+
+6
+00:00:12,990 --> 00:00:15,900
+So here I am connected
+to the free tier Atlas
+
+7
+00:00:15,900 --> 00:00:18,000
+cluster I created.
+
+8
+00:00:18,000 --> 00:00:21,330
+Again, this is a sandbox
+that's perfect for developing
+
+9
+00:00:21,330 --> 00:00:24,660
+a proof of concept or
+the type of demonstration
+
+10
+00:00:24,660 --> 00:00:27,480
+and testing I'm
+doing in this course.
+
+11
+00:00:27,480 --> 00:00:29,770
+Please follow along
+in your own cluster.
+
+12
+00:00:29,770 --> 00:00:32,870
+We're going to create
+some data in this lesson.
+
+13
+00:00:32,870 --> 00:00:36,430
+First, I'd like to create a
+few simple movie documents.
+
+14
+00:00:36,430 --> 00:00:37,870
+These will mostly be throwaway.
+
+15
+00:00:37,870 --> 00:00:39,828
+So I'm going to put them
+in a collection called
+
+16
+00:00:39,828 --> 00:00:41,560
+moviesScratch.
+
+17
+00:00:41,560 --> 00:00:45,370
+Using the Compass database
+view, I can create a collection.
+
+18
+00:00:45,370 --> 00:00:48,550
+If I click on the
+video database,
+
+19
+00:00:48,550 --> 00:00:51,204
+I can view the collections
+this database contains.
+
+20
+00:00:51,204 --> 00:00:53,620
+Note, that the moviesDetails
+collection we already created
+
+21
+00:00:53,620 --> 00:00:54,700
+is here.
+
+22
+00:00:54,700 --> 00:00:57,640
+If I want to create a second
+collection by clicking
+
+23
+00:00:57,640 --> 00:00:59,470
+the Create Collection button.
+
+24
+00:00:59,470 --> 00:01:02,630
+I name my collection
+and create it.
+
+25
+00:01:02,630 --> 00:01:04,930
+If I click through
+to this collection,
+
+26
+00:01:04,930 --> 00:01:08,670
+I see that it currently
+has zero documents.
+
+27
+00:01:08,670 --> 00:01:12,810
+But I can create one by clicking
+the Insert Document button.
+
+28
+00:01:12,810 --> 00:01:20,240
+Let's create a document with
+the title Rocky, the year 1976.
+
+29
+00:01:20,240 --> 00:01:23,780
+And we'll even supply the
+Internet Movie Database ID,
+
+30
+00:01:23,780 --> 00:01:32,510
+or IMDB ID of tt0075148.
+
+31
+00:01:32,510 --> 00:01:36,380
+The Compass UI enables me to
+tab through the keys and values,
+
+32
+00:01:36,380 --> 00:01:38,880
+so entering this data is
+actually pretty quick.
+
+33
+00:01:38,880 --> 00:01:42,980
+Now for the year, I need
+to change the value type
+
+34
+00:01:42,980 --> 00:01:47,240
+to integer, more
+specifically Int32.
+
+35
+00:01:47,240 --> 00:01:50,720
+Now we can click Insert, and we
+see that this document is now
+
+36
+00:01:50,720 --> 00:01:52,430
+in the collection.
+
+37
+00:01:52,430 --> 00:01:56,090
+Collection has a total
+document count of one document.
+
+38
+00:01:56,090 --> 00:02:02,900
+Let's add another--
+title Creed, year 2015.
+
+39
+00:02:02,900 --> 00:02:10,169
+And for IMDB, the
+identifier is tt3076658.
+
+40
+00:02:10,169 --> 00:02:14,030
+Now, I can go back in and
+edit a document if I need to.
+
+41
+00:02:14,030 --> 00:02:19,910
+In this case, I forgot to change
+the type of the year to Int32.
+
+42
+00:02:19,910 --> 00:02:22,070
+So if I click Edit,
+I'm right back
+
+43
+00:02:22,070 --> 00:02:26,660
+where I was and can change
+the value type for year.
+
+44
+00:02:26,660 --> 00:02:31,550
+I click Update, and my
+document is updated.
+
+45
+00:02:31,550 --> 00:02:36,350
+We can perform exactly the same
+operation in the Mongo shell.
+
+46
+00:02:36,350 --> 00:02:39,980
+To do that, we'll need to learn
+our first method in the MongoDB
+
+47
+00:02:39,980 --> 00:02:41,150
+query language.
+
+48
+00:02:41,150 --> 00:02:44,000
+That method is insertOne.
+
+49
+00:02:44,000 --> 00:02:48,800
+insertOne is a method on the
+collection class in MongoDB.
+
+50
+00:02:48,800 --> 00:02:53,720
+To use it, we need to first
+specify which database to use.
+
+51
+00:02:53,720 --> 00:02:59,300
+And we'll use the
+video database.
+
+52
+00:02:59,300 --> 00:03:01,270
+Now you see what
+happened here is
+
+53
+00:03:01,270 --> 00:03:05,480
+that when I first attempted
+to use the video database,
+
+54
+00:03:05,480 --> 00:03:07,000
+I got a network error.
+
+55
+00:03:07,000 --> 00:03:09,620
+What happened here
+is that because I
+
+56
+00:03:09,620 --> 00:03:13,300
+left the shell inactive, it
+had terminated the connection.
+
+57
+00:03:13,300 --> 00:03:16,510
+So when I first tried to issue a
+command that requires a network
+
+58
+00:03:16,510 --> 00:03:18,110
+connection, I get an error.
+
+59
+00:03:18,110 --> 00:03:22,510
+But the shell also automatically
+reconnects to the cluster.
+
+60
+00:03:22,510 --> 00:03:25,540
+So here, where I attempted to
+use video for a second time,
+
+61
+00:03:25,540 --> 00:03:27,470
+I was successful.
+
+62
+00:03:27,470 --> 00:03:29,410
+If I show collections,
+we can see
+
+63
+00:03:29,410 --> 00:03:31,420
+that I have both my
+moviesDetails collection as
+
+64
+00:03:31,420 --> 00:03:33,670
+well as moviesScratch.
+
+65
+00:03:33,670 --> 00:03:38,470
+Now let's use insertOne to
+create another movie document
+
+66
+00:03:38,470 --> 00:03:41,410
+in the moviesScratch collection.
+
+67
+00:03:41,410 --> 00:03:43,390
+I'm already using
+the video database,
+
+68
+00:03:43,390 --> 00:03:47,440
+so db refers to
+the video database.
+
+69
+00:03:47,440 --> 00:03:52,200
+If I type db.movies, then
+I'm specifying the full name
+
+70
+00:03:52,200 --> 00:03:54,920
+space for the collection.
+
+71
+00:03:54,920 --> 00:03:59,680
+And as I said, insertOne is a
+method on the collection class,
+
+72
+00:03:59,680 --> 00:04:02,550
+so I can call it like this.
+
+73
+00:04:02,550 --> 00:04:06,540
+
+
+74
+00:04:06,540 --> 00:04:09,750
+Here we'll use
+insertOne to create yet
+
+75
+00:04:09,750 --> 00:04:14,970
+another document in the
+moviesScratch collection.
+
+76
+00:04:14,970 --> 00:04:18,300
+So db.moviesScratch
+insertOne and we
+
+77
+00:04:18,300 --> 00:04:23,050
+pass it the document
+we wish to insert.
+
+78
+00:04:23,050 --> 00:04:27,750
+The response from calling this
+method is itself a document.
+
+79
+00:04:27,750 --> 00:04:29,770
+acknowledge true
+means that we were
+
+80
+00:04:29,770 --> 00:04:32,290
+successful in making the insert.
+
+81
+00:04:32,290 --> 00:04:35,440
+And note that the
+unique identifier
+
+82
+00:04:35,440 --> 00:04:38,310
+for this document as
+created by MongoDB
+
+83
+00:04:38,310 --> 00:04:40,160
+is provided to us as well.
+
+84
+00:04:40,160 --> 00:04:41,830
+Now, insertOne
+creates a document
+
+85
+00:04:41,830 --> 00:04:43,810
+in the collection we specify.
+
+86
+00:04:43,810 --> 00:04:46,570
+This method will also
+create a collection
+
+87
+00:04:46,570 --> 00:04:49,480
+if the document did
+not already exist.
+
+88
+00:04:49,480 --> 00:04:51,400
+Now, let's do a bit
+of experimentation.
+
+89
+00:04:51,400 --> 00:04:53,440
+Having inserted the
+document, we can
+
+90
+00:04:53,440 --> 00:04:55,420
+see in the documents
+view of Compass
+
+91
+00:04:55,420 --> 00:05:00,970
+that this ID value was created
+in the document for us.
+
+92
+00:05:00,970 --> 00:05:10,010
+Here it is, 5956a ba0 at the
+end, 5956a ba0 at the end.
+
+93
+00:05:10,010 --> 00:05:17,880
+All documents in MongoDB must
+contain an underscore ID field.
+
+94
+00:05:17,880 --> 00:05:19,920
+This is the unique
+identifier for a given
+
+95
+00:05:19,920 --> 00:05:22,590
+document within a collection.
+
+96
+00:05:22,590 --> 00:05:24,870
+Therefore, all
+underscore ID values
+
+97
+00:05:24,870 --> 00:05:26,940
+within a single
+collection are unique.
+
+98
+00:05:26,940 --> 00:05:29,250
+If we don't supply
+an underscore ID,
+
+99
+00:05:29,250 --> 00:05:31,240
+MongoDB or the
+client we're using
+
+100
+00:05:31,240 --> 00:05:35,370
+will create one for us,
+as we saw happen here.
+
+101
+00:05:35,370 --> 00:05:40,970
+If an idea is created for us, it
+will be of the type object ID.
+
+102
+00:05:40,970 --> 00:05:42,780
+Due to the way they
+are created, object IDs
+
+103
+00:05:42,780 --> 00:05:46,290
+are guaranteed to be unique
+for a given collection
+
+104
+00:05:46,290 --> 00:05:48,460
+and monotonically increasing.
+
+105
+00:05:48,460 --> 00:05:51,480
+We can also insert a document
+and provide the ID value
+
+106
+00:05:51,480 --> 00:05:52,680
+ourselves.
+
+107
+00:05:52,680 --> 00:05:54,630
+Let's do an example of that.
+
+108
+00:05:54,630 --> 00:05:56,600
+Going back to the
+shell, rather than let
+
+109
+00:05:56,600 --> 00:06:00,450
+MongoDB create the underscore ID
+value for us, we'll supply one.
+
+110
+00:06:00,450 --> 00:06:03,270
+Here, I'm simply
+going to use the IMDB
+
+111
+00:06:03,270 --> 00:06:05,531
+value for this document.
+
+112
+00:06:05,531 --> 00:06:07,530
+And I'm going to leave
+everything else the same,
+
+113
+00:06:07,530 --> 00:06:10,230
+even this field,
+even the IMDB field
+
+114
+00:06:10,230 --> 00:06:11,730
+for reasons that I
+think will become
+
+115
+00:06:11,730 --> 00:06:13,530
+clear a little bit later.
+
+116
+00:06:13,530 --> 00:06:17,240
+If I hit Enter, we
+see that, again, we
+
+117
+00:06:17,240 --> 00:06:20,330
+get an acknowledgement that
+the insert was successful.
+
+118
+00:06:20,330 --> 00:06:22,280
+And we also see
+that the inserted ID
+
+119
+00:06:22,280 --> 00:06:25,280
+is the one that we
+supplied rather than one
+
+120
+00:06:25,280 --> 00:06:27,050
+that was automatically created.
+
+121
+00:06:27,050 --> 00:06:29,150
+Going back to our
+Compass interface,
+
+122
+00:06:29,150 --> 00:06:31,412
+if we refresh the
+collection, we can
+
+123
+00:06:31,412 --> 00:06:32,870
+see that we have
+two documents that
+
+124
+00:06:32,870 --> 00:06:35,120
+have exactly the
+same data in them
+
+125
+00:06:35,120 --> 00:06:39,284
+but with different
+underscore ID values.
+
+126
+00:06:39,284 --> 00:06:40,700
+In practice, you
+wouldn't actually
+
+127
+00:06:40,700 --> 00:06:44,360
+have two different documents
+that contain the same data
+
+128
+00:06:44,360 --> 00:06:47,300
+but simply had different
+underscored values.
+
+129
+00:06:47,300 --> 00:06:49,100
+And in practice, you'd
+want to make sure
+
+130
+00:06:49,100 --> 00:06:50,660
+that your underscore
+ID values were
+
+131
+00:06:50,660 --> 00:06:53,390
+of the same form in
+a given collection.
+
+132
+00:06:53,390 --> 00:06:56,770
+So you wouldn't want to have
+strings as the underscore ID
+
+133
+00:06:56,770 --> 00:06:59,210
+value for some of your
+documents and object IDs
+
+134
+00:06:59,210 --> 00:07:01,920
+as the underscore
+ID value for others.
+
+135
+00:07:01,920 --> 00:07:04,610
+Now in this lesson, we've looked
+at how to insert documents
+
+136
+00:07:04,610 --> 00:07:07,730
+into MongoDB one
+document at a time
+
+137
+00:07:07,730 --> 00:07:12,140
+and explored how to do this both
+in Compass and the Mongo shell.
+
+138
+00:07:12,140 --> 00:07:14,510
+In another lesson,
+we'll look at how
+
+139
+00:07:14,510 --> 00:00:00,000
+to do bulk inserts in
+MongoDB using insertMany.
+

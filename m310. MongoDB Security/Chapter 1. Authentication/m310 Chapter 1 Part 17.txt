@@ -1,0 +1,131 @@
+In this video we're going to talk about Kerberos and how to configure MongoDB to enable Kerberos authentication support.
+
+As we said before, Kerberos is an industry standard authentication protocol.
+
+Before talking about how Kerberos works, I want to mention that Kerberos calls users principles, and this is because a Kerberos principal is a unique identity to which Kerberos can assign tickets.
+
+So when I say principal in the context of authenticating to MongoDB, think user.
+
+Kerberos authentication support works by creating a service principle for MongoDB inside of the Kerberos KDC.
+
+This enables among MongoDB driver to request tickets from the Kerberos KDC's ticket grading service, and then once the driver has that ticket, it can then use that ticket to authenticate to MongoDB.
+
+Let's go ahead and look at how to enable Kerberos authentication support.
+
+Here I'm running a VM that already has Kerberos installed on it.
+
+I've already created a user on the KDC.
+
+Let's go ahead, and check it out.
+
+Here I'm running the tool kadmin.local.
+
+This allows us to directly modify the Kerberos KDC's database.
+
+Now here we can go ahead and list all the principles on this machine.
+
+Here's the command to do so-- listprincs, which is short for principles.
+
+And as you can see, I've already created a principal for kirby-- kirby@MONGODB.COM.
+
+Now we need to go ahead and add a principal for MongoDB so that we can issue tickets to our users, so they can authenticate with MongoDB.
+
+And here's the command to do so.
+
+I'm going to go ahead and add a principal.
+
+I'm going to generate a random key for this principle.
+
+And the naming here of the principle is very important.
+
+The first is the name of the service-- in this case, MongoDB-- followed by a slash, and then after the slash, we have the host name of the server that is running our database.
+
+Now that we have our principal created for MongoDB, we can generate a key tab, which is a file that will contain our shared secret.
+
+We'll eventually put this on our database server so that MongoDB and Kerberos can share the secret.
+
+Here's the command to generate the key tab-- key tab add dash k, the name of the key tab file-- in this case, the MongoDB dot key tab-- and then the name of our principal.
+
+Now we can go and close kadmin.local, and you can see our file.
+
+And here is our key tab, and I'm going to go ahead and copy this over to our database server.
+
+I'm now on our database server, and here's my key tab that we just generated on the other server.
+
+I'm now going to store its location in an environmental variable called KRB5_KTNAME, and this is so that MongoDB actually knows where this file is.
+
+Great, now the last thing we do before starting MongoDB is just to configure this server to talk to our KDC.
+
+I've already installed the basic program to authenticate to Kerberos with apt-get.
+
+We just need to modify the configuration file.
+
+And here's the location of the file.
+
+Etc krb5.conf.
+
+I'm going to use them to edit it and run sudo because we're operating with a NetC file.
+
+And there's a lot of stuff going on in here, but we only need to modify three places-- libdefaults, where we want to change our default realm to MONGODB.COM.
+
+Awesome.
+
+The second place is under realms.
+
+Here we want to go ahead and add the information for our MongoDB realm.
+
+Great, and here's this information.
+
+We have the KDC, the host name of our KDC, which is in this case is infrastructure.m 310.university.mongodb.com This is the server that we just ran the other commands to generate our key tab file.
+
+And then obviously the admin server, which again is on the same machine.
+
+And the last bit that we need to add is the domain realm.
+
+And here we specify .mongodb.com is equal to MONGODB.COM, and mongodb.com equals MONGODB.COM.
+
+All of this stuff is case sensitive, by the way.
+
+Let's go ahead and save this file.
+
+Now he can go ahead and enable Kerberos authentication with MongoDB.
+
+And here's the command to do so.
+
+We're going to go ahead and enable authentication, and then we're going to set the authentication mechanism to GSSAPI.
+
+API And this is the mechanism that is used by Kerberos.
+
+Our server is now up and running, and we can go ahead and connect with the MongoDB shell and create our Kerberos principal user.
+
+First we want to switch to the external database, and now that we're on the external database, we can go ahead and create our user.
+
+And here's the command to do so-- db.createUser.
+
+I pass in kirby@MONGODB.COM, our principal user as our user.
+
+I do not specify a password, and then I give them whatever rules I want.
+
+In this case, userAdminAnyDatabase.
+
+Awesome.
+
+Our user has now been successfully added.
+
+Now if I go ahead and try to run db.auth, specifying the GSSAPI mechanism with my principal name, you'll see that this failed.
+
+And this is because we haven't yet authenticated to Kerberos.
+
+So let's go ahead and exit out of the shell and authenticate to Kerberos.
+
+We authenticate Kerberos with kinit and then my principal name, which is just kirby.
+
+And it'll now asked me for kirby's password, which I happen to know because I created it on the KDC.
+
+I've now authenticated it with Kerberos, and we can now go ahead and try again to authenticate to MongoDB using my Kerberos credentials.
+
+Again, we'll have to switch the external database, and again we can try to run db.auth with the GSSAPI mechanism with my principal name.
+
+And there we go.
+
+We have now successfully authenticated to MongoDB using our Kerberos credentials.

@@ -1,0 +1,478 @@
+
+1
+00:00:00.000 --> 00:00:00.480
+
+
+2
+00:00:00.480 --> 00:00:02.040
+Let's take a look
+at a marvelous tool
+
+3
+00:00:02.040 --> 00:00:05.790
+that many databases including
+MongoDB have built in--
+
+4
+00:00:05.790 --> 00:00:07.770
+the profiler.
+
+5
+00:00:07.770 --> 00:00:10.530
+Technically, the profiler
+isn't so much of a tool
+
+6
+00:00:10.530 --> 00:00:13.450
+as it is a mode that your
+MongoDB database can be running
+
+7
+00:00:13.450 --> 00:00:15.390
+in and when in this
+mode the server will
+
+8
+00:00:15.390 --> 00:00:17.220
+store every operation
+that it sees
+
+9
+00:00:17.220 --> 00:00:19.549
+coming in into that database.
+
+10
+00:00:19.549 --> 00:00:21.090
+These operations
+will be written into
+
+11
+00:00:21.090 --> 00:00:24.970
+the system.profile collection,
+a capped collection.
+
+12
+00:00:24.970 --> 00:00:27.240
+Its size is 1
+megabyte by default,
+
+13
+00:00:27.240 --> 00:00:29.670
+and it will store one
+document per operation.
+
+14
+00:00:29.670 --> 00:00:32.040
+The profiler is off by
+default because having it on
+
+15
+00:00:32.040 --> 00:00:33.720
+can be quite expensive.
+
+16
+00:00:33.720 --> 00:00:36.000
+It turns every read
+into a read plus
+
+17
+00:00:36.000 --> 00:00:39.750
+insert, and every write query
+into a write plus insert.
+
+18
+00:00:39.750 --> 00:00:41.640
+Unless your production
+server is very
+
+19
+00:00:41.640 --> 00:00:43.159
+overpowered for
+its workload, you
+
+20
+00:00:43.159 --> 00:00:44.700
+should be very
+cautious about turning
+
+21
+00:00:44.700 --> 00:00:47.670
+the profiler on as it can
+quickly overpower your server
+
+22
+00:00:47.670 --> 00:00:52.380
+with writes, helping to saturate
+your I/O. So don't leave it on.
+
+23
+00:00:52.380 --> 00:00:55.080
+That said, it can be very
+useful for a limited time
+
+24
+00:00:55.080 --> 00:00:57.460
+in order to figure
+out what's going on.
+
+25
+00:00:57.460 --> 00:00:59.660
+We'll go into the administrative
+shell to see this.
+
+26
+00:00:59.660 --> 00:01:11.580
+
+
+27
+00:01:11.580 --> 00:01:15.690
+This is a command to tell us
+what profiling level we're at.
+
+28
+00:01:15.690 --> 00:01:18.720
+Right now, we're at zero, which
+means that the profiler is not
+
+29
+00:01:18.720 --> 00:01:20.790
+capturing any queries.
+
+30
+00:01:20.790 --> 00:01:22.800
+At level 1, we would
+capture any queries
+
+31
+00:01:22.800 --> 00:01:25.080
+that take longer than
+100 milliseconds.
+
+32
+00:01:25.080 --> 00:01:27.120
+That's useful, but keep
+in mind that we already
+
+33
+00:01:27.120 --> 00:01:29.580
+capture some information on
+those queries in the server
+
+34
+00:01:29.580 --> 00:01:31.010
+logs.
+
+35
+00:01:31.010 --> 00:01:34.230
+At level 2, however,
+we capture every query.
+
+36
+00:01:34.230 --> 00:01:35.680
+This can be quite useful.
+
+37
+00:01:35.680 --> 00:01:38.190
+We can find out the actual
+load we've got coming in,
+
+38
+00:01:38.190 --> 00:01:39.210
+for example.
+
+39
+00:01:39.210 --> 00:01:41.490
+Keep in mind that
+as of MongoDB 3.4,
+
+40
+00:01:41.490 --> 00:01:44.280
+Mongo replay is another way
+to capture those queries.
+
+41
+00:01:44.280 --> 00:01:46.830
+But for now, let's check
+out the profiler in action.
+
+42
+00:01:46.830 --> 00:01:49.710
+
+
+43
+00:01:49.710 --> 00:01:52.296
+So my profiler is
+now set to level 2.
+
+44
+00:01:52.296 --> 00:01:53.670
+If this were a
+production server,
+
+45
+00:01:53.670 --> 00:01:56.100
+it would now be writing
+massive amounts of inserts--
+
+46
+00:01:56.100 --> 00:01:57.750
+one per query it gets.
+
+47
+00:01:57.750 --> 00:02:01.660
+Now let's exit and create
+a small workload for it.
+
+48
+00:02:01.660 --> 00:02:03.820
+Here's a script I
+wrote to do just that.
+
+49
+00:02:03.820 --> 00:02:09.509
+It builds an index and then
+performs this loop 100 times.
+
+50
+00:02:09.509 --> 00:02:11.940
+Each time, it performs
+several operations--
+
+51
+00:02:11.940 --> 00:02:14.310
+inserting, reading,
+updating, and deleting.
+
+52
+00:02:14.310 --> 00:02:16.710
+This isn't a very realistic
+workload simulator,
+
+53
+00:02:16.710 --> 00:02:19.020
+but it's just to illustrate
+what we're doing.
+
+54
+00:02:19.020 --> 00:02:21.870
+Not all of the queries will
+find a document, by the way.
+
+55
+00:02:21.870 --> 00:02:24.730
+They may look for a
+document that we've deleted.
+
+56
+00:02:24.730 --> 00:02:25.410
+OK.
+
+57
+00:02:25.410 --> 00:02:26.640
+Let's run it.
+
+58
+00:02:26.640 --> 00:02:29.610
+And as always, let's be sure
+to set the profiling level back
+
+59
+00:02:29.610 --> 00:02:30.710
+to zero.
+
+60
+00:02:30.710 --> 00:02:31.320
+OK.
+
+61
+00:02:31.320 --> 00:02:33.850
+Now let's see what we've got.
+
+62
+00:02:33.850 --> 00:02:38.040
+So our 100 loops involved 2
+inserts, 2 finds, an update,
+
+63
+00:02:38.040 --> 00:02:39.430
+and a delete each.
+
+64
+00:02:39.430 --> 00:02:42.408
+That gives us 600
+documents, and I see 601.
+
+65
+00:02:42.408 --> 00:02:44.033
+Let's see what these
+entries look like.
+
+66
+00:02:44.033 --> 00:02:47.820
+
+
+67
+00:02:47.820 --> 00:02:49.950
+That's a lot to parse so
+let's take a look at some
+
+68
+00:02:49.950 --> 00:02:52.050
+of the more important fields.
+
+69
+00:02:52.050 --> 00:02:54.450
+Scrolling up, we
+see this op field.
+
+70
+00:02:54.450 --> 00:02:56.684
+This one's an insert.
+
+71
+00:02:56.684 --> 00:02:59.100
+Let's look at what we've done
+by grouping these operations
+
+72
+00:02:59.100 --> 00:03:00.870
+together with the
+aggregation pipeline
+
+73
+00:03:00.870 --> 00:03:02.692
+and see how many
+of each we've got.
+
+74
+00:03:02.692 --> 00:03:06.470
+
+
+75
+00:03:06.470 --> 00:03:08.240
+So there are
+different operations,
+
+76
+00:03:08.240 --> 00:03:09.740
+each of them counted up.
+
+77
+00:03:09.740 --> 00:03:11.870
+There is also a command there.
+
+78
+00:03:11.870 --> 00:03:12.955
+Let's see what that was.
+
+79
+00:03:12.955 --> 00:03:16.140
+
+
+80
+00:03:16.140 --> 00:03:18.340
+Ah, this was the
+drop command that we
+
+81
+00:03:18.340 --> 00:03:21.730
+did when we were done inserting
+documents and reading.
+
+82
+00:03:21.730 --> 00:03:25.164
+Now if we look just at
+our queries with op query,
+
+83
+00:03:25.164 --> 00:03:26.788
+we have a number of
+interesting fields.
+
+84
+00:03:26.788 --> 00:03:29.530
+
+
+85
+00:03:29.530 --> 00:03:31.840
+You can see that we're
+capturing some execution
+
+86
+00:03:31.840 --> 00:03:33.190
+stats for each query.
+
+87
+00:03:33.190 --> 00:03:35.830
+Our plan summary is
+another interesting field
+
+88
+00:03:35.830 --> 00:03:38.690
+as this will tell us whether
+or not we're using an index.
+
+89
+00:03:38.690 --> 00:03:40.777
+This was a collection scan.
+
+90
+00:03:40.777 --> 00:03:43.360
+Let's iterate over our documents
+and see what the plan summary
+
+91
+00:03:43.360 --> 00:03:44.320
+looks like for each.
+
+92
+00:03:44.320 --> 00:03:47.824
+
+
+93
+00:03:47.824 --> 00:03:49.240
+And sure enough,
+we're alternating
+
+94
+00:03:49.240 --> 00:03:52.360
+between using an index
+and not using an index.
+
+95
+00:03:52.360 --> 00:03:54.320
+We'll go deeper into
+the profiler later on,
+
+96
+00:03:54.320 --> 00:03:56.480
+but for now, that's
+how you use it.
+
+97
+00:03:56.480 --> 00:03:58.720
+Also, remember that
+turning on the profiler
+
+98
+00:03:58.720 --> 00:04:01.330
+will add an insert operation
+to the capped collection
+
+99
+00:04:01.330 --> 00:04:03.010
+for every read or write.
+
+100
+00:04:03.010 --> 00:04:04.630
+So I've been asked
+by our support team
+
+101
+00:04:04.630 --> 00:04:07.120
+to remind you to always
+remember to turn it off
+
+102
+00:04:07.120 --> 00:04:09.780
+in production environments.

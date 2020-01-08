@@ -1,0 +1,186 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:03.150
+Let's learn about a useful
+stage for persisting
+
+3
+00:00:03.150 --> 00:00:08.040
+the results of an
+aggregation, the $out stage.
+
+4
+00:00:08.040 --> 00:00:11.760
+The $out stage has
+the following form.
+
+5
+00:00:11.760 --> 00:00:16.410
+We specify the name of the
+output collection that we want.
+
+6
+00:00:16.410 --> 00:00:20.250
+The out stage must be the
+last stage in the pipeline.
+
+7
+00:00:20.250 --> 00:00:24.050
+As such, it can't be
+used within a facet.
+
+8
+00:00:24.050 --> 00:00:26.670
+MongoDB will create
+the collection
+
+9
+00:00:26.670 --> 00:00:29.980
+with the name specified
+if none exists.
+
+10
+00:00:29.980 --> 00:00:32.520
+Otherwise it will overwrite
+an existing collection
+
+11
+00:00:32.520 --> 00:00:35.400
+if an existing collection
+name is specified.
+
+12
+00:00:35.400 --> 00:00:37.230
+Now there's a few
+things to know.
+
+13
+00:00:37.230 --> 00:00:38.880
+It will only create
+the new collection
+
+14
+00:00:38.880 --> 00:00:40.840
+within the same database.
+
+15
+00:00:40.840 --> 00:00:43.200
+If an existing
+collection is replaced,
+
+16
+00:00:43.200 --> 00:00:46.530
+any indexes that existed
+on the original collection
+
+17
+00:00:46.530 --> 00:00:48.270
+will still be in place.
+
+18
+00:00:48.270 --> 00:00:51.270
+If the pipeline errors, it
+will not create or overwrite
+
+19
+00:00:51.270 --> 00:00:52.590
+a collection.
+
+20
+00:00:52.590 --> 00:00:55.830
+This also means that the output
+from out must honor index
+
+21
+00:00:55.830 --> 00:00:58.500
+restrictions, such
+as unique indexes,
+
+22
+00:00:58.500 --> 00:01:01.020
+can include the _id field.
+
+23
+00:01:01.020 --> 00:01:04.849
+So this aggregation here
+where we match every document,
+
+24
+00:01:04.849 --> 00:01:08.430
+perform some grouping
+operation, unwind to create many
+
+25
+00:01:08.430 --> 00:01:12.510
+documents, and then try an
+output to a new collection
+
+26
+00:01:12.510 --> 00:01:15.960
+would fail because it would
+result in many documents with
+
+27
+00:01:15.960 --> 00:01:18.750
+the same _id value.
+
+28
+00:01:18.750 --> 00:01:21.160
+And that covers the $out stage.
+
+29
+00:01:21.160 --> 00:01:23.550
+This stage is very
+useful for performing
+
+30
+00:01:23.550 --> 00:01:27.120
+an aggregation against existing
+data to do a migration,
+
+31
+00:01:27.120 --> 00:01:29.220
+seed a collection
+with useful data,
+
+32
+00:01:29.220 --> 00:01:33.150
+or distribute snapshots
+of data for analysis.
+
+33
+00:01:33.150 --> 00:01:36.780
+Here are a few things to
+remember about the $out stage.
+
+34
+00:01:36.780 --> 00:01:39.480
+It will create a new collection
+or overwrite an existing
+
+35
+00:01:39.480 --> 00:01:41.370
+collection if specified.
+
+36
+00:01:41.370 --> 00:01:44.280
+It honors indexes on
+existing collections.
+
+37
+00:01:44.280 --> 00:01:48.450
+It will not create or overwrite
+data if pipeline errors.
+
+38
+00:01:48.450 --> 00:01:51.570
+And it creates collections in
+the same database as the source
+
+39
+00:01:51.570 --> 00:01:53.720
+collection.

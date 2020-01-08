@@ -1,0 +1,617 @@
+
+1
+00:00:00.000 --> 00:00:00.540
+
+
+2
+00:00:00.540 --> 00:00:02.850
+Now that we know how new
+incoming documents will
+
+3
+00:00:02.850 --> 00:00:04.410
+be matched to
+existing documents,
+
+4
+00:00:04.410 --> 00:00:07.320
+it's good to understand
+what happens in each case
+
+5
+00:00:07.320 --> 00:00:11.970
+by default, and what other
+options are available to you.
+
+6
+00:00:11.970 --> 00:00:15.390
+When documents coming from
+the source to the target,
+
+7
+00:00:15.390 --> 00:00:19.110
+either each incoming document
+doesn't match anything
+
+8
+00:00:19.110 --> 00:00:22.020
+in the target, or it matches.
+
+9
+00:00:22.020 --> 00:00:23.730
+If nothing is
+matched, usually, you
+
+10
+00:00:23.730 --> 00:00:27.480
+will want to insert
+the new document.
+
+11
+00:00:27.480 --> 00:00:30.060
+If something is matched,
+you will probably
+
+12
+00:00:30.060 --> 00:00:33.130
+want to somehow
+overwrite this document.
+
+13
+00:00:33.130 --> 00:00:33.630
+Right?
+
+14
+00:00:33.630 --> 00:00:36.180
+Maybe update it with
+new information,
+
+15
+00:00:36.180 --> 00:00:38.310
+or completely replace it.
+
+16
+00:00:38.310 --> 00:00:42.330
+We give you two fields
+in $merge to specify
+
+17
+00:00:42.330 --> 00:00:46.550
+what action should be taken
+when there isn't a match
+
+18
+00:00:46.550 --> 00:00:48.600
+or when there is a match.
+
+19
+00:00:48.600 --> 00:00:50.370
+Both of them are optional.
+
+20
+00:00:50.370 --> 00:00:54.660
+By default, when there is no
+match, we will do an insert.
+
+21
+00:00:54.660 --> 00:01:00.420
+When there is a match, we will
+merge the new incoming document
+
+22
+00:01:00.420 --> 00:01:03.080
+with the existing document.
+
+23
+00:01:03.080 --> 00:01:06.320
+Now, a merge here means we
+will add all the top level
+
+24
+00:01:06.320 --> 00:01:09.980
+fields of the new document
+to existing document,
+
+25
+00:01:09.980 --> 00:01:12.530
+but that will preserve all
+the fields in the existing
+
+26
+00:01:12.530 --> 00:01:16.470
+document that don't exist in
+the new incoming document.
+
+27
+00:01:16.470 --> 00:01:18.650
+I'll show you an
+example of this later.
+
+28
+00:01:18.650 --> 00:01:21.980
+But you can think of
+this as sort of an update
+
+29
+00:01:21.980 --> 00:01:25.330
+with an upsert
+option set to true.
+
+30
+00:01:25.330 --> 00:01:26.140
+Right?
+
+31
+00:01:26.140 --> 00:01:31.270
+It says that update set these
+new fields into an existing
+
+32
+00:01:31.270 --> 00:01:32.120
+document.
+
+33
+00:01:32.120 --> 00:01:36.450
+If there isn't an existing
+document, then insert it.
+
+34
+00:01:36.450 --> 00:01:39.990
+So the default action
+is like an upsert
+
+35
+00:01:39.990 --> 00:01:41.610
+into the target collection.
+
+36
+00:01:41.610 --> 00:01:44.500
+That's the easiest
+way to remember it.
+
+37
+00:01:44.500 --> 00:01:47.280
+Now, the other options
+when there isn't a match
+
+38
+00:01:47.280 --> 00:01:51.120
+are discard and fail.
+
+39
+00:01:51.120 --> 00:01:54.120
+Both of these would probably
+be useful in a scenario
+
+40
+00:01:54.120 --> 00:01:57.910
+where you always expect to
+find a matching document.
+
+41
+00:01:57.910 --> 00:02:01.140
+And if a match is not found,
+then something is wrong.
+
+42
+00:02:01.140 --> 00:02:04.260
+Imagine doing some kind
+of partial processing
+
+43
+00:02:04.260 --> 00:02:08.310
+where you're calculating
+some additional information
+
+44
+00:02:08.310 --> 00:02:11.039
+to be merged with
+an existing record,
+
+45
+00:02:11.039 --> 00:02:15.550
+and if the existing record
+isn't found, that's an error.
+
+46
+00:02:15.550 --> 00:02:18.370
+In that case, you would
+want to raise an exception.
+
+47
+00:02:18.370 --> 00:02:19.990
+That would be fail.
+
+48
+00:02:19.990 --> 00:02:22.810
+In other cases, it's OK
+if you don't find a record
+
+49
+00:02:22.810 --> 00:02:24.760
+to update with the
+new information,
+
+50
+00:02:24.760 --> 00:02:26.200
+but you also don't
+want to create
+
+51
+00:02:26.200 --> 00:02:30.920
+that record, in which case
+that option would be discard.
+
+52
+00:02:30.920 --> 00:02:33.470
+Now, when there is a
+matching document found,
+
+53
+00:02:33.470 --> 00:02:37.970
+you can specify four
+options to whenMatched,
+
+54
+00:02:37.970 --> 00:02:41.180
+in addition to the
+default merge action.
+
+55
+00:02:41.180 --> 00:02:45.110
+They are replace, keep
+existing, fail, and then
+
+56
+00:02:45.110 --> 00:02:47.590
+one more special option here.
+
+57
+00:02:47.590 --> 00:02:50.420
+Replace and keep existing
+is straightforward.
+
+58
+00:02:50.420 --> 00:02:53.600
+Replace means the incoming
+document will completely
+
+59
+00:02:53.600 --> 00:02:57.320
+overwrite or replace the
+matching document in the target
+
+60
+00:02:57.320 --> 00:02:59.740
+collection.
+
+61
+00:02:59.740 --> 00:03:02.800
+Keep existing will discard
+the incoming document
+
+62
+00:03:02.800 --> 00:03:06.400
+and leave the existing document
+in the target collection
+
+63
+00:03:06.400 --> 00:03:08.350
+as it is.
+
+64
+00:03:08.350 --> 00:03:10.300
+And fail would be useful
+when you absolutely
+
+65
+00:03:10.300 --> 00:03:13.390
+do not expect to find a match.
+
+66
+00:03:13.390 --> 00:03:16.160
+I'll show you an
+example of that later.
+
+67
+00:03:16.160 --> 00:03:19.910
+The last option you have when
+a document that's incoming
+
+68
+00:03:19.910 --> 00:03:22.460
+matches an existing
+document is useful
+
+69
+00:03:22.460 --> 00:03:25.250
+when you want to merge their
+values of fields somehow,
+
+70
+00:03:25.250 --> 00:03:29.910
+but a simple merge
+option is not sufficient.
+
+71
+00:03:29.910 --> 00:03:30.410
+The.
+
+72
+00:03:30.410 --> 00:03:33.230
+Brackets here represent that
+you can specify your own custom
+
+73
+00:03:33.230 --> 00:03:35.030
+pipeline that will
+be used to compute
+
+74
+00:03:35.030 --> 00:03:38.420
+a new document to be written
+to the target collection.
+
+75
+00:03:38.420 --> 00:03:40.490
+You can compute it
+from fields of, both,
+
+76
+00:03:40.490 --> 00:03:45.110
+the incoming and existing
+versions of the document.
+
+77
+00:03:45.110 --> 00:03:49.050
+Now, the pipeline is limited to
+stages that do single document
+
+78
+00:03:49.050 --> 00:03:53.920
+transformations, like
+project or $addFields,
+
+79
+00:03:53.920 --> 00:03:57.040
+and it will be applied to
+existing matched document
+
+80
+00:03:57.040 --> 00:03:59.020
+in the target collection.
+
+81
+00:03:59.020 --> 00:04:03.520
+Any field names,
+like $a or $total,
+
+82
+00:04:03.520 --> 00:04:06.500
+are referring to fields
+in the existing document.
+
+83
+00:04:06.500 --> 00:04:09.310
+But you can refer to fields
+in the incoming document with
+
+84
+00:04:09.310 --> 00:04:12.430
+a special variable, $$new.
+
+85
+00:04:12.430 --> 00:04:14.290
+Now, this may look
+to you, very much,
+
+86
+00:04:14.290 --> 00:04:17.490
+like the new
+aggregation pipeline
+
+87
+00:04:17.490 --> 00:04:20.920
+in update, which is new in 4.2.
+
+88
+00:04:20.920 --> 00:04:21.700
+And it is.
+
+89
+00:04:21.700 --> 00:04:23.590
+It's the exact same
+implementation,
+
+90
+00:04:23.590 --> 00:04:26.350
+and we even give
+you the same alias
+
+91
+00:04:26.350 --> 00:04:30.820
+for ad fields, known as $set.
+
+92
+00:04:30.820 --> 00:04:35.230
+And what this pipeline is
+doing is, for matched document,
+
+93
+00:04:35.230 --> 00:04:40.570
+it's going to set a field total
+to a sum of already existing
+
+94
+00:04:40.570 --> 00:04:43.240
+dollar total, right here.
+
+95
+00:04:43.240 --> 00:04:47.500
+And $$newtotal, that's the
+total from the document
+
+96
+00:04:47.500 --> 00:04:50.030
+that's flowing
+through the pipeline.
+
+97
+00:04:50.030 --> 00:04:52.060
+Here's an example.
+
+98
+00:04:52.060 --> 00:04:57.840
+If you're incoming document
+has underscore ID 37 total 64,
+
+99
+00:04:57.840 --> 00:05:00.880
+and then there's
+some other field F1.
+
+100
+00:05:00.880 --> 00:05:03.430
+And our target has the
+same idea, obviously.
+
+101
+00:05:03.430 --> 00:05:05.290
+That's how they merge.
+
+102
+00:05:05.290 --> 00:05:09.370
+And it has an already existing
+total in some other F1.
+
+103
+00:05:09.370 --> 00:05:12.450
+This pipeline will only
+modify the total field.
+
+104
+00:05:12.450 --> 00:05:17.370
+It will set total to
+be the sum of the two.
+
+105
+00:05:17.370 --> 00:05:20.190
+The other two fields
+will be left alone.
+
+106
+00:05:20.190 --> 00:05:25.680
+Compare this with example
+two where, on match, we're
+
+107
+00:05:25.680 --> 00:05:29.400
+going to use replace with,
+which creates a new object.
+
+108
+00:05:29.400 --> 00:05:33.240
+And that new object is merging
+the entire new incoming
+
+109
+00:05:33.240 --> 00:05:36.840
+document-- that would be
+the one on the left here--
+
+110
+00:05:36.840 --> 00:05:40.350
+just with a single
+field object where
+
+111
+00:05:40.350 --> 00:05:46.530
+total is computed as a sum of
+new total and existing total.
+
+112
+00:05:46.530 --> 00:05:49.710
+And here, you can see that the
+F1 field is actually inherited
+
+113
+00:05:49.710 --> 00:05:53.410
+from incoming because
+it's in $$new.
+
+114
+00:05:53.410 --> 00:05:57.190
+And the only field from
+$$new that's being changed is
+
+115
+00:05:57.190 --> 00:05:58.700
+the total.
+
+116
+00:05:58.700 --> 00:06:03.090
+Now, there's one other option
+that merge syntax allows.
+
+117
+00:06:03.090 --> 00:06:05.500
+And that option is only
+allowed and only makes
+
+118
+00:06:05.500 --> 00:06:08.800
+sense when you're
+using a custom pipeline
+
+119
+00:06:08.800 --> 00:06:12.320
+for the whenMatched
+field, and that's let.
+
+120
+00:06:12.320 --> 00:06:17.940
+Let allows you to define
+variables from your incoming
+
+121
+00:06:17.940 --> 00:06:20.350
+or $$new document.
+
+122
+00:06:20.350 --> 00:06:23.670
+And if you don't specify left,
+it's exactly as if you did
+
+123
+00:06:23.670 --> 00:06:28.800
+specify left, but defining
+variable new to be $$ dollar
+
+124
+00:06:28.800 --> 00:06:32.400
+route, which is the
+entire incoming document.
+
+125
+00:06:32.400 --> 00:06:36.630
+So a different way to rewrite
+this particular pipeline
+
+126
+00:06:36.630 --> 00:06:41.220
+might be to add a let, which
+preserves just the total
+
+127
+00:06:41.220 --> 00:06:43.806
+from the new incoming document.
+
+128
+00:06:43.806 --> 00:06:49.440
+And on a match, it sets total in
+the existing document to a sum
+
+129
+00:06:49.440 --> 00:06:57.030
+of $total and $$itotal, which
+is this variable over here.

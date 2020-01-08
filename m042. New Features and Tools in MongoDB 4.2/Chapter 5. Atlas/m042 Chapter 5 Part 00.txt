@@ -1,0 +1,87 @@
+All right welcome back.
+
+In this lesson, we'll be discussing analytics nodes and the brand new tag that we can use for them on Atlas.
+
+So to understand why these analytics nodes are useful, we'll start with a replica set under a typical applications workload.
+
+The application sends writes periodically, and even if the exact amount of writes vary every day or so, we know the general trends of writes over a period of time.
+
+And ideally, our cluster is built to support the amount of writes they will receive at peak time, regardless of when that peak time actually occurs.
+
+However, our cluster is not necessarily built to handle the workload from analytics queries.
+
+Analytics are a vital part of any organization, and metrics about a company's product can completely change that product's trajectory.
+
+But while reporting is invaluable to the organization, it provides some complications to the database.
+
+Analytics or reporting queries do not come from the core application, and the workload associated with these queries is distinctly different from the workload of those application queries.
+
+These queries can have a very large workload that occurs only every few weeks or so, and for this reason, their memory foot print tends to be considerably larger.
+
+An analytics query could be an aggregation pipeline run against one of our biggest collections, and for this reason, these queries have the potential to slow down the response time for the server, and they could even block other database operations.
+
+So one of the ways we can mitigate this is by sending these analytics queries directly to a secondary node in a replica set.
+
+This won't change the total number of reads and writes in the whole system, because the same number of reads and writes will come in and out of the cluster, but as long as this secondary that we're sending our queries does not become the primary, the acting primary node will experience fewer reads as a result.
+
+What will be really ideal is if we could prevent this secondary that we're querying from ever becoming the primary to ensure sure that this analytics workload will always be isolated from the operational workload.
+
+With the new analytics node an Atlas, we can direct our queries to a read-only secondary that can't vote and cannot become the primary node.
+
+Because this analytics node can't vote in elections, the total number of voting members in our set has not been affected.
+
+And we've essentially dedicated this secondary node to analytics and reporting, so we can create any indexes that we need on this node to accommodate those types of queries.
+
+One caveat of using a secondary node for any analytics queries is that we're OK reading stale data.
+
+The query that we're running against the secondary could take a long time and the primary could receive writes while this query is still running on the secondary.
+
+But typically, with analytics queries, we're aggregating over a large amount of data and we're OK missing out on that small amount of writes.
+
+So now that we've seen the value of an analytics node, we'll see how to add one to our cluster.
+
+So here if I want to start building a new cluster.
+
+So this feature is only available on cluster tiers M10 and up, so the first thing I'm going to do is I'm going to change the cluster tier to M10 here.
+
+And then under Cloud provider and region, we can choose Advanced replication options, and it will ask us if we want to add any more electable nodes, anymore read-only nodes, or any more analytics nodes.
+
+So I can add a region here, and then say I want to add one analytics node to my cluster.
+
+I can hit Create cluster, and we can see that it's provisioning 4 servers, 3 or those are voting members in our replica set, and the fourth one is our analytics node.
+
+So now that we've just created an analytics node in our cluster, this is showing the URI options that we use to connect directly to the analytics node.
+
+Let's say we built out our reporting system in some application.
+
+If we wanted to direct all that applications traffic to the analytics node, we'd add these two options to the URI string.
+
+We specify that we want to read from a secondary node, and then we specify that we want the tag to read, analytics.
+
+Using these two options in conjunction means that if we had more than one analytics node and one of them went down, we could automatically connect to the other analytics node that was healthy.
+
+One use case of an analytics node is with charts.
+
+Charts queries are closely associated with reporting, and these types of queries have a similar workload.
+
+With the Data Sources tab and charts, we can specify analytics to target with our query.
+
+So I'll just choose a new data source here, and I'll point of the cluster I just created, and I just loaded some sample data in here.
+
+I'm going to create a chart for the sample mflix data source.
+
+Published the data source.
+
+So let's say I'm working on the chart for the movies collection I can actually change the configuration here to edit the read preference.
+
+Change from a standard secondary, to an analytics node.
+
+By choosing analytics node, we can isolate the workload of charts queries from our operational workload.
+
+Just to recap, in this lesson, we cover the value of dedicating nodes for analytics queries in MongoDB.
+
+These new analytics nodes cannot vote or become primary, which supports workload isolation from our operational workload.
+
+Now Atlas supports the creation of these nodes through the UI, and we can target analytics nodes with a read preference option.
+
+We can also specify an analytics node when querying through charts.

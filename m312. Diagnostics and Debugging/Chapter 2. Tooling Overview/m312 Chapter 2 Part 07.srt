@@ -1,0 +1,510 @@
+
+1
+00:00:00.000 --> 00:00:00.080
+
+
+2
+00:00:00.080 --> 00:00:02.730
+The MongoDB download comes
+with a set of different tools,
+
+3
+00:00:02.730 --> 00:00:05.670
+apart from the obvious
+MongoD and MongoS binaries.
+
+4
+00:00:05.670 --> 00:00:07.740
+I've downloaded the tarball
+for the distribution
+
+5
+00:00:07.740 --> 00:00:09.060
+into the shared directory.
+
+6
+00:00:09.060 --> 00:00:11.280
+Let's unpack it and
+see what's there.
+
+7
+00:00:11.280 --> 00:00:13.980
+We can find tools to
+import and export our data,
+
+8
+00:00:13.980 --> 00:00:16.180
+like mongoimport
+and mongoexport.
+
+9
+00:00:16.180 --> 00:00:18.970
+We can also have tools like
+mongodump and mongorestore,
+
+10
+00:00:18.970 --> 00:00:22.740
+which import binary format
+data files and export them.
+
+11
+00:00:22.740 --> 00:00:25.560
+We've got bsondump, which
+converts BSON dump files
+
+12
+00:00:25.560 --> 00:00:28.470
+into more human readable
+JSON, and mongouplog,
+
+13
+00:00:28.470 --> 00:00:30.720
+which allows us to pull
+a replica set uplog
+
+14
+00:00:30.720 --> 00:00:32.970
+and apply it to a local server.
+
+15
+00:00:32.970 --> 00:00:36.552
+There's also a helper tool
+for GridFS called mongofiles.
+
+16
+00:00:36.552 --> 00:00:38.010
+But more important
+for this course,
+
+17
+00:00:38.010 --> 00:00:42.240
+we have server diagnostic
+tools, mongostat, mongotop,
+
+18
+00:00:42.240 --> 00:00:46.210
+mongoreplay, mongoperf,
+and mongoldap.
+
+19
+00:00:46.210 --> 00:00:49.830
+Mongoldap allows us to validate
+the ldap configuration settings
+
+20
+00:00:49.830 --> 00:00:51.030
+for our MongoD.
+
+21
+00:00:51.030 --> 00:00:53.430
+You point it at an LDAP
+server, either directly
+
+22
+00:00:53.430 --> 00:00:56.250
+or by pointing it to a
+MongoDB configuration file,
+
+23
+00:00:56.250 --> 00:00:58.950
+so it can test the
+connectivity and validation
+
+24
+00:00:58.950 --> 00:01:01.980
+of the configuration
+against a given LDAP server.
+
+25
+00:01:01.980 --> 00:01:04.620
+This tool is used only
+to validate and diagnose
+
+26
+00:01:04.620 --> 00:01:06.240
+LDAP configuration issues.
+
+27
+00:01:06.240 --> 00:01:09.030
+You can learn more about it
+in our security course M310,
+
+28
+00:01:09.030 --> 00:01:11.190
+so I won't go into it here.
+
+29
+00:01:11.190 --> 00:01:13.680
+Mongoperf is a
+performance testing tool.
+
+30
+00:01:13.680 --> 00:01:17.160
+This tool tests your server's
+disk I/O performance.
+
+31
+00:01:17.160 --> 00:01:19.800
+Given a set of conditions
+reflected in a config file,
+
+32
+00:01:19.800 --> 00:01:22.770
+the tool will subject your
+server to an I/O test.
+
+33
+00:01:22.770 --> 00:01:25.170
+This tool has limited
+reach and should
+
+34
+00:01:25.170 --> 00:01:27.870
+be used only for basic I/O
+assessments of your disk
+
+35
+00:01:27.870 --> 00:01:28.770
+subsystem.
+
+36
+00:01:28.770 --> 00:01:30.780
+Take any results
+with a grain of salt.
+
+37
+00:01:30.780 --> 00:01:33.210
+This test may show how much
+I/O per second your disks
+
+38
+00:01:33.210 --> 00:01:35.130
+are capable of
+doing under a very
+
+39
+00:01:35.130 --> 00:01:36.430
+specific set of conditions.
+
+40
+00:01:36.430 --> 00:01:38.760
+But in real world
+situations, other operations,
+
+41
+00:01:38.760 --> 00:01:41.130
+like rebalancing indexes,
+navigating b-trees,
+
+42
+00:01:41.130 --> 00:01:44.370
+and allocating resources to
+other applications running
+
+43
+00:01:44.370 --> 00:01:46.440
+in your server can affect
+your disk performance.
+
+44
+00:01:46.440 --> 00:01:48.690
+And mongoperf can't
+fully measure the effect
+
+45
+00:01:48.690 --> 00:01:50.880
+of those other factors.
+
+46
+00:01:50.880 --> 00:01:54.150
+Next up is mongoreplay,
+a network diagnostics
+
+47
+00:01:54.150 --> 00:01:55.410
+and analysis tool.
+
+48
+00:01:55.410 --> 00:01:57.960
+It allows us to do
+three important things,
+
+49
+00:01:57.960 --> 00:02:03.150
+monitor, record, and playback
+network traffic for analysis
+
+50
+00:02:03.150 --> 00:02:04.759
+and debugging purposes.
+
+51
+00:02:04.759 --> 00:02:06.300
+This is an excellent
+tool that allows
+
+52
+00:02:06.300 --> 00:02:08.431
+QA teams to test
+production traffic
+
+53
+00:02:08.431 --> 00:02:10.139
+and see how it changes
+in the deployment,
+
+54
+00:02:10.139 --> 00:02:11.888
+like different hardware,
+different cluster
+
+55
+00:02:11.888 --> 00:02:14.310
+configurations, and different
+choices of storage engine
+
+56
+00:02:14.310 --> 00:02:16.230
+will affect performance.
+
+57
+00:02:16.230 --> 00:02:18.060
+After the fact
+analysis of events
+
+58
+00:02:18.060 --> 00:02:20.520
+for debugging purposes,
+or even fault injection,
+
+59
+00:02:20.520 --> 00:02:22.590
+can be done by capturing
+traffic and later
+
+60
+00:02:22.590 --> 00:02:26.350
+replaying it to understand the
+system tolerance to failure.
+
+61
+00:02:26.350 --> 00:02:28.470
+Let's spin up some servers.
+
+62
+00:02:28.470 --> 00:02:31.380
+And mongoreplay is going to need
+some extra privileges in order
+
+63
+00:02:31.380 --> 00:02:34.680
+to do its job, so we'll
+sudo this command.
+
+64
+00:02:34.680 --> 00:02:37.650
+Using mongoreplay, we can
+see the traffic exchange
+
+65
+00:02:37.650 --> 00:02:39.900
+between our MongoD primary
+and the other servers
+
+66
+00:02:39.900 --> 00:02:41.136
+in the replica set.
+
+67
+00:02:41.136 --> 00:02:42.510
+We would also see
+network traffic
+
+68
+00:02:42.510 --> 00:02:45.730
+to a shell or
+application via a driver.
+
+69
+00:02:45.730 --> 00:02:48.819
+We'll see more about MongoDB
+replay later in the course.
+
+70
+00:02:48.819 --> 00:02:50.610
+And finally, we have
+our two classic server
+
+71
+00:02:50.610 --> 00:02:54.150
+diagnostic tools,
+mongostat and mongotop.
+
+72
+00:02:54.150 --> 00:02:55.290
+Here's mongostat.
+
+73
+00:02:55.290 --> 00:02:56.917
+It's a real time
+statistics tool.
+
+74
+00:02:56.917 --> 00:02:59.250
+The font is big enough that
+it's wrapping on the stream,
+
+75
+00:02:59.250 --> 00:03:00.410
+but you get the idea.
+
+76
+00:03:00.410 --> 00:03:02.160
+It provides quite an
+overview of the stats
+
+77
+00:03:02.160 --> 00:03:05.160
+of a currently running MongoD
+or MongoS per time interval.
+
+78
+00:03:05.160 --> 00:03:07.170
+By default, it's
+sampling once per second.
+
+79
+00:03:07.170 --> 00:03:11.020
+We have inserts, queries,
+updates, deletes, and others.
+
+80
+00:03:11.020 --> 00:03:13.800
+It's also capable of providing
+a global view of the statistics
+
+81
+00:03:13.800 --> 00:03:15.870
+on all servers in a
+cluster by specifying
+
+82
+00:03:15.870 --> 00:03:18.240
+the minus minus discover flag.
+
+83
+00:03:18.240 --> 00:03:19.830
+The way mongostat
+works is it connects
+
+84
+00:03:19.830 --> 00:03:22.560
+to the servers it's monitoring,
+periodically sending the server
+
+85
+00:03:22.560 --> 00:03:24.270
+status command,
+parsing the results,
+
+86
+00:03:24.270 --> 00:03:26.550
+calculating the difference
+between the relevant values
+
+87
+00:03:26.550 --> 00:03:29.160
+in the server status documents
+during each sampling interval,
+
+88
+00:03:29.160 --> 00:03:31.680
+and printing it out
+for later use to see.
+
+89
+00:03:31.680 --> 00:03:33.870
+Mongotop does a
+very simple analysis
+
+90
+00:03:33.870 --> 00:03:37.129
+of the time consumed per second
+on different name spaces.
+
+91
+00:03:37.129 --> 00:03:38.670
+This tool measures
+the amount of time
+
+92
+00:03:38.670 --> 00:03:41.040
+spent reading, writing,
+and their total aggregate
+
+93
+00:03:41.040 --> 00:03:43.290
+per sampling unit,
+default one second,
+
+94
+00:03:43.290 --> 00:03:45.600
+on the various
+different name spaces.
+
+95
+00:03:45.600 --> 00:03:48.180
+It's a nice tool to get a
+sense of what type of work load
+
+96
+00:03:48.180 --> 00:03:50.490
+is hitting the different
+databases in collections.
+
+97
+00:03:50.490 --> 00:03:52.260
+Maybe you have some
+with more reads, some
+
+98
+00:03:52.260 --> 00:03:54.000
+with more rights, et cetera.
+
+99
+00:03:54.000 --> 00:03:55.690
+Right now, I'm not
+doing anything,
+
+100
+00:03:55.690 --> 00:03:57.990
+so everything is zero.
+
+101
+00:03:57.990 --> 00:04:00.900
+So those are the server
+tools we use for analysis.
+
+102
+00:04:00.900 --> 00:04:03.420
+No single tool is usually
+going to be enough to give us
+
+103
+00:04:03.420 --> 00:04:06.384
+a good diagnosis of a problem,
+so we'll use multiple tools
+
+104
+00:04:06.384 --> 00:04:07.800
+when we look at a
+problem in order
+
+105
+00:04:07.800 --> 00:04:10.380
+to form hypotheses,
+and either validate,
+
+106
+00:04:10.380 --> 00:04:12.650
+or reject them as appropriate.

@@ -1,0 +1,85 @@
+So what if we wanted to only index the subparts within the waveMeasurement field?
+
+We can use the wildcard projection option when creating the index.
+
+You may be familiar with projections from the MongoDB query language.
+
+The concept is exactly the same here, except we're specifying which fields we wish to index in the collection.
+
+The wildcard projection can be used to specify a set of fields to include in the index, or it can be used to specify a set of fields to exclude from the index.
+
+To index all subparts in the waveMeasurement field, we would do the following.
+
+OK, great.
+
+So our index is created.
+
+Let's see how our queries perform when querying a field in a nested document in the waveMeasurement field.
+
+We're going to query on waveMeasurement.
+
+seastate.quality.
+
+And have a look at the Explain plan.
+
+OK, great.
+
+So our query used the index.
+
+All good so far.
+
+But let's say we don't want to index all subparts of the waveMeasurement field.
+
+We see that we're only accessing the waveMeasurement.wave subpart.
+
+So the fields outside this double nested document are not needed.
+
+We can index on waveMeasurement.waves, and also parts using wildcard indexes also.
+
+Let's go back to the shell and see how we can do this.
+
+This command is creating an index on waveMeasurement.waves and all subparts.
+
+You may notice that we're using the familiar MongoDB query language dot notation and the $** operator that we used earlier on.
+
+So our index has been created.
+
+Let's query to see how to index works.
+
+So here, we're querying on waveMeasurement.waves.height.
+
+Great.
+
+We can see that our query used the index.
+
+One note about covered queries, that is, queries which can retrieve all the requested data from the index itself without needing to actually go to the collection.
+
+As we've seen above, queries which use multiple fields can benefit from wildcard indexes.
+
+But it's also important to note that wildcard indexes can only cover queries if the query is on a single field.
+
+In other words, if the user is querying on a single field and uses a projection which returns only that field, then the wildcard index can cover the query.
+
+Something similar to this.
+
+For queries with multiple fields, we will need to manually create compound indexes if we wish to have these queries covered.
+
+Let's review the syntax for wildcard indexes.
+
+We can use the standard createindex command to create a wildcard index.
+
+But we need to use the $** operator if we want to index everything in the collection.
+
+We can use standard dot notation to specify a subpart to index in each document.
+
+And we can also use wildcard projections to specify which fields and subpatterns we wish to index.
+
+Let's recap.
+
+Wildcard indexes are useful for unpredictable workloads.
+
+They are not a replacement for traditional standard indexes.
+
+You can index on all fields in a document or on a subset of fields, using either dot notation or wildcard projections.
+
+And that's a brief introduction to our new wildcard index feature in MongoDB 4.2.

@@ -1,0 +1,73 @@
+We can also use X.509 certificates to authenticate the members of a replica set or sharded cluster.
+
+Like with client base X.509 authentication, it's required that we use a version of MongoDB compiled with support for TLS/SSL.
+
+For the purposes of this demonstration, I've already created my own X.509 certificates for the servers.
+
+As you can see here, I have my certificate authority public key, a key file for my client, and then certificates for each of the members of my replica set.
+
+Let's go ahead and start up a replica set with X.509 internal authentication enabled.
+
+The first thing we're going to need to do is create the folders for our servers.
+
+Like before, I'm using mkdir, passing in the tack p option with replica set 1, 2, and 3, each with a subfolder called db.
+
+We can now go ahead and start up the first member of a replica set.
+
+Here is the command to start the first member of our replica set.
+
+You can see that I'm saying mongod, specifying the replica set called myReplSet.
+
+Of course, dbpath, logpath, and the default port of 27017, fork.
+
+I'm going to require ssl since we're using X.509 authentication.
+
+I'm going to specify X.509 authentication as the authorization mode.
+
+And then I'm going to pass in the first certificate for this member.
+
+And then our ca file.
+
+Our first member is up and running.
+
+We can now go ahead and start the second member.
+
+Here's the command for the second member.
+
+It's the same as the last, except we've changed the dbpath, logpath, port, and of course member file.
+
+Our second member is up and running.
+
+And now we can finally start the third member.
+
+Here's the third member's command.
+
+Same as before, except changing dbpath, logpath, port, and keyfile.
+
+All three members are now successfully started.
+
+As you would expect, you can now connect to these members and initialise and add each of the members like we did in the previous lesson.
+
+So as you can see, the commands to start each of our members are getting kind of long.
+
+It's a little bit hard to read.
+
+Now is a great time to take advantage of configuration files to configure each of the members of our replica set.
+
+I'm going to go ahead and show you what one configuration file would kind of look like.
+
+The configuration file looks pretty much exactly as you expect.
+
+We have a top level security field where we specify the authorization mode.
+
+We then have another top level field called net, which has a subfield called ssl, which has three subfields called mode, CAFile, and clusterfile.
+
+Just like before.
+
+We can now save this file and start up our MongoDB using the --config option, passing in our configuration file.
+
+And you could use these configuration files again and again and again.
+
+And it will save you a lot of time.
+
+And it'll actually prevent you from making a lot of simple mistakes.

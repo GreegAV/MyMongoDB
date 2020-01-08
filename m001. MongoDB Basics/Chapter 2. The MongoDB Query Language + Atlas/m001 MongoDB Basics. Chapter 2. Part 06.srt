@@ -1,0 +1,615 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:04,140
+Now let's look at loading
+data into your Atlas sandbox
+
+3
+00:00:04,140 --> 00:00:05,220
+cluster.
+
+4
+00:00:05,220 --> 00:00:07,200
+So here we have
+a shell connected
+
+5
+00:00:07,200 --> 00:00:09,070
+to the sandbox cluster.
+
+6
+00:00:09,070 --> 00:00:10,710
+Let's see what's there.
+
+7
+00:00:10,710 --> 00:00:12,990
+We can look at what
+databases are currently
+
+8
+00:00:12,990 --> 00:00:16,530
+in this cluster by
+typing show dbs.
+
+9
+00:00:16,530 --> 00:00:18,030
+And we can see that
+there's an admin
+
+10
+00:00:18,030 --> 00:00:21,150
+database and a local database.
+
+11
+00:00:21,150 --> 00:00:25,050
+What we'd like to do here
+is add a video database
+
+12
+00:00:25,050 --> 00:00:29,720
+that will contain a more
+detailed version of the movie's
+
+13
+00:00:29,720 --> 00:00:33,870
+data-set that we've seen
+in the class Atlas cluster.
+
+14
+00:00:33,870 --> 00:00:38,520
+Now again, here, I am connected
+to my Atlas sandbox cluster,
+
+15
+00:00:38,520 --> 00:00:40,530
+not the class Atlas cluster.
+
+16
+00:00:40,530 --> 00:00:44,430
+To follow along, you should
+connect to your own Atlas
+
+17
+00:00:44,430 --> 00:00:46,170
+sandbox cluster.
+
+18
+00:00:46,170 --> 00:00:48,930
+So in order to make things
+just a little bit easier, what
+
+19
+00:00:48,930 --> 00:00:51,840
+I'd like to do is
+encourage you to set up
+
+20
+00:00:51,840 --> 00:00:55,020
+a small folder on
+your local computer
+
+21
+00:00:55,020 --> 00:00:58,420
+where you can put the handout
+that we'll use for this lesson.
+
+22
+00:00:58,420 --> 00:01:02,110
+When you download and unzip
+the handout for this lesson,
+
+23
+00:01:02,110 --> 00:01:07,930
+you should have a directory
+titled LoadMovieDetailsDataset.
+
+24
+00:01:07,930 --> 00:01:10,840
+And it should be in your
+downloads directory.
+
+25
+00:01:10,840 --> 00:01:13,450
+The same will be true if you're
+running on a Windows machine,
+
+26
+00:01:13,450 --> 00:01:15,040
+as we can see here.
+
+27
+00:01:15,040 --> 00:01:16,540
+What I'd like to
+encourage you to do
+
+28
+00:01:16,540 --> 00:01:19,660
+is navigate to
+your home directory
+
+29
+00:01:19,660 --> 00:01:24,010
+and create a new
+folder called M001.
+
+30
+00:01:24,010 --> 00:01:28,360
+And then copy that folder,
+LoadMovieDetailsDataset,
+
+31
+00:01:28,360 --> 00:01:30,370
+into your M001 folder.
+
+32
+00:01:30,370 --> 00:01:33,340
+When complete, you
+should see that folder
+
+33
+00:01:33,340 --> 00:01:38,560
+inside the M001 folder
+in your home directory.
+
+34
+00:01:38,560 --> 00:01:41,440
+Doing the same thing on Windows
+looks something like this.
+
+35
+00:01:41,440 --> 00:01:43,990
+On your local hard drive,
+look for users and then
+
+36
+00:01:43,990 --> 00:01:45,380
+your home directory.
+
+37
+00:01:45,380 --> 00:01:47,680
+In this case, it's
+Shannon, for me.
+
+38
+00:01:47,680 --> 00:01:52,330
+And what I'm going to do here
+is create a new folder called
+
+39
+00:01:52,330 --> 00:01:58,240
+M001, and then copy
+and paste that folder
+
+40
+00:01:58,240 --> 00:02:01,716
+into my new M001 folder.
+
+41
+00:02:01,716 --> 00:02:03,340
+With this setup, it
+will be much easier
+
+42
+00:02:03,340 --> 00:02:06,940
+for us to load our data
+into our Atlast cluster.
+
+43
+00:02:06,940 --> 00:02:09,490
+Now from here on
+in this lesson, I'm
+
+44
+00:02:09,490 --> 00:02:12,600
+simply going to use the terminal
+application here on my Mac.
+
+45
+00:02:12,600 --> 00:02:15,220
+OK, so what I'm
+going to do now is
+
+46
+00:02:15,220 --> 00:02:18,100
+I'm going to quit
+the shell, because I
+
+47
+00:02:18,100 --> 00:02:23,230
+want to navigate to the
+location where I just saved
+
+48
+00:02:23,230 --> 00:02:25,510
+that movie details data-set.
+
+49
+00:02:25,510 --> 00:02:29,650
+And I should point out that the
+directory that I copied over
+
+50
+00:02:29,650 --> 00:02:35,440
+contains a js file that will end
+up running in the Mongo shell.
+
+51
+00:02:35,440 --> 00:02:37,720
+Same thing, of course,
+is true on Windows.
+
+52
+00:02:37,720 --> 00:02:41,740
+So now, in order to navigate to
+this directory, when I start up
+
+53
+00:02:41,740 --> 00:02:43,390
+my terminal
+application, I'm going
+
+54
+00:02:43,390 --> 00:02:45,140
+to be in my home directory.
+
+55
+00:02:45,140 --> 00:02:48,220
+If I type pwd, this
+will print the directory
+
+56
+00:02:48,220 --> 00:02:49,600
+I'm currently located in.
+
+57
+00:02:49,600 --> 00:02:53,230
+And as expected, it's my
+home directory on the Mac.
+
+58
+00:02:53,230 --> 00:02:56,390
+If I do a directory listing
+using the ls command,
+
+59
+00:02:56,390 --> 00:03:00,880
+I can see that M001 directory
+that I created right here.
+
+60
+00:03:00,880 --> 00:03:05,860
+And I can cd, or change
+directory, into M001
+
+61
+00:03:05,860 --> 00:03:09,160
+by typing cd and then the
+name of the directory.
+
+62
+00:03:09,160 --> 00:03:11,290
+Again, doing a
+directory listing,
+
+63
+00:03:11,290 --> 00:03:14,600
+I can see the Download
+folder that I put in there.
+
+64
+00:03:14,600 --> 00:03:19,644
+And again, I can cd
+into that folder.
+
+65
+00:03:19,644 --> 00:03:21,310
+And then with a final
+directory listing,
+
+66
+00:03:21,310 --> 00:03:23,590
+I can see the js file here.
+
+67
+00:03:23,590 --> 00:03:27,700
+OK, doing something similar
+on Windows, quitting my shell.
+
+68
+00:03:27,700 --> 00:03:30,160
+And I can see from the
+prompt that I'm actually
+
+69
+00:03:30,160 --> 00:03:31,990
+in my home directory here.
+
+70
+00:03:31,990 --> 00:03:34,630
+Now the way I do a
+directory listing on Windows
+
+71
+00:03:34,630 --> 00:03:38,746
+is with DIR, which is an
+abbreviation of directory.
+
+72
+00:03:38,746 --> 00:03:40,900
+I see M001 here.
+
+73
+00:03:40,900 --> 00:03:44,360
+As with the terminal application
+on the Mac and other bash
+
+74
+00:03:44,360 --> 00:03:48,900
+shells, I can change directory,
+do another directory listing.
+
+75
+00:03:48,900 --> 00:03:51,640
+And there, I see
+the same js file.
+
+76
+00:03:51,640 --> 00:03:53,750
+Now a couple of
+things to point out.
+
+77
+00:03:53,750 --> 00:03:57,490
+One is that I've been using tab
+completion so that I don't have
+
+78
+00:03:57,490 --> 00:03:59,475
+to type the entire directory.
+
+79
+00:03:59,475 --> 00:04:00,850
+If you type a few
+characters then
+
+80
+00:04:00,850 --> 00:04:03,400
+hit Tab, if there's
+only one directory
+
+81
+00:04:03,400 --> 00:04:06,520
+or file with that name--
+
+82
+00:04:06,520 --> 00:04:09,970
+for example, loa,
+if I type tab--
+
+83
+00:04:09,970 --> 00:04:14,470
+because that's the only
+directory with that name here,
+
+84
+00:04:14,470 --> 00:04:17,875
+the command prompt will
+complete the name for me
+
+85
+00:04:17,875 --> 00:04:19,208
+so that I don't have to type it.
+
+86
+00:04:19,209 --> 00:04:20,709
+It's just a convenience.
+
+87
+00:04:20,709 --> 00:04:24,100
+The exact same thing works
+in the terminal application
+
+88
+00:04:24,100 --> 00:04:27,430
+on the Mac and in
+most other shells.
+
+89
+00:04:27,430 --> 00:04:29,350
+The other thing that I
+want to point out here
+
+90
+00:04:29,350 --> 00:04:33,970
+is that by using arrow
+keys, we can go back
+
+91
+00:04:33,970 --> 00:04:36,620
+through the history of
+commands we've executed,
+
+92
+00:04:36,620 --> 00:04:40,210
+including when we launched
+the Mongo shell in the command
+
+93
+00:04:40,210 --> 00:04:41,020
+prompt.
+
+94
+00:04:41,020 --> 00:04:45,340
+And again, exactly the same
+thing works on the Mac.
+
+95
+00:04:45,340 --> 00:04:49,720
+Now the cool thing is that if
+I launch the Mongo shell here
+
+96
+00:04:49,720 --> 00:04:54,550
+from the folder in which
+I've saved my js file, then
+
+97
+00:04:54,550 --> 00:04:58,180
+when I launch the Mongo
+shell, the Mongo shell
+
+98
+00:04:58,180 --> 00:05:02,080
+has as its working
+directory the directory that
+
+99
+00:05:02,080 --> 00:05:04,340
+contains that js file.
+
+100
+00:05:04,340 --> 00:05:07,990
+Now, the Mongo shell is a
+fully-functional JavaScript
+
+101
+00:05:07,990 --> 00:05:09,090
+interpreter.
+
+102
+00:05:09,090 --> 00:05:11,950
+And if I take a look
+at that js file,
+
+103
+00:05:11,950 --> 00:05:14,500
+I can see that I have a
+number of JavaScript commands
+
+104
+00:05:14,500 --> 00:05:19,150
+here, including this last one,
+which loads a bunch of data.
+
+105
+00:05:19,150 --> 00:05:23,230
+The way we're going to get
+data into your sandbox cluster
+
+106
+00:05:23,230 --> 00:05:25,870
+is by running this
+JavaScript file.
+
+107
+00:05:25,870 --> 00:05:28,570
+But we're going to do
+it from the Mongo shell.
+
+108
+00:05:28,570 --> 00:05:33,160
+And I can execute this
+file using the load command
+
+109
+00:05:33,160 --> 00:05:35,590
+that the shell provides to me.
+
+110
+00:05:35,590 --> 00:05:37,660
+So, I simply need to
+type load-- this is a.
+
+111
+00:05:37,660 --> 00:05:38,730
+Function.
+
+112
+00:05:38,730 --> 00:05:40,720
+I call the load function.
+
+113
+00:05:40,720 --> 00:05:44,920
+And in parentheses, I pass
+it the name of our js file
+
+114
+00:05:44,920 --> 00:05:46,280
+in quotes.
+
+115
+00:05:46,280 --> 00:05:52,460
+Now remember, currently, we
+only have admin and local here.
+
+116
+00:05:52,460 --> 00:05:55,660
+If I run this
+command, now we can
+
+117
+00:05:55,660 --> 00:05:59,110
+see that a video
+database has been added.
+
+118
+00:05:59,110 --> 00:06:01,780
+
+
+119
+00:06:01,780 --> 00:06:05,080
+And if I want to access
+the data in this database,
+
+120
+00:06:05,080 --> 00:06:08,776
+then I can use
+the video database
+
+121
+00:06:08,776 --> 00:06:10,900
+and take a look at what
+collections are there using
+
+122
+00:06:10,900 --> 00:06:13,060
+the show collections command.
+
+123
+00:06:13,060 --> 00:06:16,780
+You can follow exactly
+these same steps in Windows
+
+124
+00:06:16,780 --> 00:06:19,030
+to load the data set,
+because the shell works
+
+125
+00:06:19,030 --> 00:06:23,290
+more or less the same
+across different platforms.
+
+126
+00:06:23,290 --> 00:06:28,700
+And if I want to take a look
+at the data that's here,
+
+127
+00:06:28,700 --> 00:06:31,850
+I can do that by
+running this command.
+
+128
+00:06:31,850 --> 00:06:35,480
+And we'll talk a whole lot more
+about the find command as we
+
+129
+00:06:35,480 --> 00:00:00,000
+dive in to the MongoDB
+query language.
+

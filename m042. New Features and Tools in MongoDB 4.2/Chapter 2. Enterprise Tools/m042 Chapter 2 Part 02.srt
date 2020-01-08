@@ -1,0 +1,521 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.009
+With MongoDB 4.2,
+we're releasing
+
+3
+00:00:02.009 --> 00:00:05.370
+our very own sync-and-source
+connectors for Apache Kafka.
+
+4
+00:00:05.370 --> 00:00:07.890
+Although slightly outside of
+the scope of this lesson, let's
+
+5
+00:00:07.890 --> 00:00:10.290
+talk about what
+Kafka is and why we'd
+
+6
+00:00:10.290 --> 00:00:12.060
+want to connect MongoDB to it.
+
+7
+00:00:12.060 --> 00:00:14.910
+At a very high level,
+Kafka is a high-performance
+
+8
+00:00:14.910 --> 00:00:16.553
+distributed messaging system.
+
+9
+00:00:16.553 --> 00:00:17.970
+It was first
+developed by LinkedIn
+
+10
+00:00:17.970 --> 00:00:20.010
+to handle their internal logs.
+
+11
+00:00:20.010 --> 00:00:24.207
+A simple way to think of Kafka
+is as a router for messages.
+
+12
+00:00:24.207 --> 00:00:26.040
+So you can configure
+Kafka to route messages
+
+13
+00:00:26.040 --> 00:00:30.060
+to and from different source and
+consumer systems, both of which
+
+14
+00:00:30.060 --> 00:00:32.100
+can be a MongoDB closer.
+
+15
+00:00:32.100 --> 00:00:34.950
+Kafka organizes data
+into messages and topics.
+
+16
+00:00:34.950 --> 00:00:37.080
+Messages can be a
+line of a log file
+
+17
+00:00:37.080 --> 00:00:39.390
+or a document in a
+MongoDB collection.
+
+18
+00:00:39.390 --> 00:00:41.880
+A topic is just a
+category or message.
+
+19
+00:00:41.880 --> 00:00:44.100
+So use cases for this would
+be a user adding an item
+
+20
+00:00:44.100 --> 00:00:46.890
+to a shopping cart
+or a tweet being
+
+21
+00:00:46.890 --> 00:00:48.630
+sent to a specific hashtag.
+
+22
+00:00:48.630 --> 00:00:50.610
+We could have a
+topic per hashtag.
+
+23
+00:00:50.610 --> 00:00:53.190
+Or another example would
+be a financial application
+
+24
+00:00:53.190 --> 00:00:55.530
+which could pull NYC
+stock trades from one
+
+25
+00:00:55.530 --> 00:00:57.630
+topic and company
+financial announcements
+
+26
+00:00:57.630 --> 00:01:00.870
+from another in order to look
+for trading opportunities.
+
+27
+00:01:00.870 --> 00:01:03.450
+So any system that
+publishes messages to Kafka
+
+28
+00:01:03.450 --> 00:01:05.640
+is called a "source," and
+anything that receives
+
+29
+00:01:05.640 --> 00:01:07.130
+input is called a "sync."
+
+30
+00:01:07.130 --> 00:01:09.660
+A source connector
+ingests entire databases
+
+31
+00:01:09.660 --> 00:01:12.570
+and streams table
+updates to Kafka topics.
+
+32
+00:01:12.570 --> 00:01:15.570
+It can also collect metrics from
+all of your application servers
+
+33
+00:01:15.570 --> 00:01:18.690
+into Kafka topics, making
+the data available for stream
+
+34
+00:01:18.690 --> 00:01:20.490
+processing low latency.
+
+35
+00:01:20.490 --> 00:01:23.520
+A sync connector delivers
+data from Kafka topics
+
+36
+00:01:23.520 --> 00:01:27.150
+into secondary applications or
+data storers such as MongoDB.
+
+37
+00:01:27.150 --> 00:01:29.550
+And the Kafka servers
+which process the messages
+
+38
+00:01:29.550 --> 00:01:30.870
+are called "brokers."
+
+39
+00:01:30.870 --> 00:01:33.540
+We can have multiple
+brokers in a Kafka closer.
+
+40
+00:01:33.540 --> 00:01:36.570
+So now that we have an
+idea of what Kafka is
+
+41
+00:01:36.570 --> 00:01:39.420
+and how MongoDB fits into
+the Kafka architecture,
+
+42
+00:01:39.420 --> 00:01:41.530
+let's have a look
+at this in action.
+
+43
+00:01:41.530 --> 00:01:44.310
+We've pre-configured a
+Kafka instance and MongoDB
+
+44
+00:01:44.310 --> 00:01:47.460
+as a Kafka source in the VM
+provided to you in this course,
+
+45
+00:01:47.460 --> 00:01:49.350
+so feel free to follow along.
+
+46
+00:01:49.350 --> 00:01:53.080
+First let's look into Kafka
+UI and see what we have.
+
+47
+00:01:53.080 --> 00:01:55.800
+If you look into the UI, you
+see that we have a Mongo dot
+
+48
+00:01:55.800 --> 00:01:57.675
+test dot sync topic.
+
+49
+00:01:57.675 --> 00:01:59.580
+And if we look at
+the Data tab here,
+
+50
+00:01:59.580 --> 00:02:01.410
+you should see something
+familiar to you
+
+51
+00:02:01.410 --> 00:02:02.640
+in the messages.
+
+52
+00:02:02.640 --> 00:02:05.190
+We've got MongoDB
+documents embedded.
+
+53
+00:02:05.190 --> 00:02:07.070
+And not just
+documents, but change
+
+54
+00:02:07.070 --> 00:02:09.300
+stream events which are
+streaming from our MongoDB
+
+55
+00:02:09.300 --> 00:02:10.500
+instance.
+
+56
+00:02:10.500 --> 00:02:12.390
+That is because we've
+configured our MongoDB
+
+57
+00:02:12.390 --> 00:02:14.470
+to send change stream
+events to Kafka.
+
+58
+00:02:14.470 --> 00:02:16.980
+And that means that if
+we add or we update data
+
+59
+00:02:16.980 --> 00:02:19.080
+in the sync collection
+in a test DB,
+
+60
+00:02:19.080 --> 00:02:22.180
+it will show up as change
+messages in the Mongo dot test
+
+61
+00:02:22.180 --> 00:02:23.860
+dot sync topic.
+
+62
+00:02:23.860 --> 00:02:25.860
+So let's test that out
+by opening up to shell,
+
+63
+00:02:25.860 --> 00:02:27.330
+inserting a document
+into the test
+
+64
+00:02:27.330 --> 00:02:29.580
+dot sync collection
+on the MongoDB.
+
+65
+00:02:29.580 --> 00:02:31.980
+You can see here
+that we are inserting
+
+66
+00:02:31.980 --> 00:02:37.510
+a document into the test
+DB in the sync collection.
+
+67
+00:02:37.510 --> 00:02:39.010
+So our document's inserted.
+
+68
+00:02:39.010 --> 00:02:41.350
+Let's jump back to
+the UI and see if we
+
+69
+00:02:41.350 --> 00:02:43.482
+can see it in our Kafka stream.
+
+70
+00:02:43.482 --> 00:02:45.190
+As you can see, our
+document has shown up
+
+71
+00:02:45.190 --> 00:02:47.560
+as a message in
+our Kafka stream.
+
+72
+00:02:47.560 --> 00:02:49.000
+With the MongoDB
+Kafka Connector,
+
+73
+00:02:49.000 --> 00:02:52.070
+we can also use
+MongoDB as a sync.
+
+74
+00:02:52.070 --> 00:02:55.120
+And what this basically means
+is that we can insert documents
+
+75
+00:02:55.120 --> 00:02:58.930
+into MongoDB from a topic
+or multiple topics in Kafka.
+
+76
+00:02:58.930 --> 00:03:02.470
+Remember, a topic is simply a
+logical partition of messages.
+
+77
+00:03:02.470 --> 00:03:05.590
+The Kafka messages are converted
+into BSON documents, which
+
+78
+00:03:05.590 --> 00:03:08.250
+are in turn inserted in the
+corresponding MongoDB target
+
+79
+00:03:08.250 --> 00:03:09.252
+collection.
+
+80
+00:03:09.252 --> 00:03:11.710
+According to the chosen Roi
+model strategy in the connector
+
+81
+00:03:11.710 --> 00:03:14.410
+config, you can use
+either a replaceOne model
+
+82
+00:03:14.410 --> 00:03:15.970
+or an UpdateOne model.
+
+83
+00:03:15.970 --> 00:03:18.100
+Either model will
+perform an upsert
+
+84
+00:03:18.100 --> 00:03:20.680
+if the data does not
+exist in the collection.
+
+85
+00:03:20.680 --> 00:03:23.230
+One thing to remember is
+the data coming into Kafka
+
+86
+00:03:23.230 --> 00:03:26.170
+may not necessarily
+be in JSON format.
+
+87
+00:03:26.170 --> 00:03:28.030
+We can get around this
+by enforcing schema
+
+88
+00:03:28.030 --> 00:03:29.740
+using Apache Avro.
+
+89
+00:03:29.740 --> 00:03:32.380
+Avro is a message serialization
+system from Apache
+
+90
+00:03:32.380 --> 00:03:35.110
+that allows you to enforce
+strict schema on data
+
+91
+00:03:35.110 --> 00:03:36.895
+coming from Kafka.
+
+92
+00:03:36.895 --> 00:03:38.770
+You can see an example
+of an Avro schema here
+
+93
+00:03:38.770 --> 00:03:42.310
+we're defining with the fields,
+their names and data types,
+
+94
+00:03:42.310 --> 00:03:44.400
+which will be enforced
+on the Kafka side
+
+95
+00:03:44.400 --> 00:03:47.470
+before being inserted
+into MongoDB.
+
+96
+00:03:47.470 --> 00:03:51.330
+MongoDB also offers rich schema
+validation using JSON schema
+
+97
+00:03:51.330 --> 00:03:53.730
+so that you can ensure that
+documents inserted from Kafka
+
+98
+00:03:53.730 --> 00:03:55.900
+follow your schema design.
+
+99
+00:03:55.900 --> 00:03:58.370
+While this isn't a
+schema design lesson,
+
+100
+00:03:58.370 --> 00:04:01.340
+it's important to remember that
+MongoDB is schema-free, not
+
+101
+00:04:01.340 --> 00:04:02.600
+schema-less.
+
+102
+00:04:02.600 --> 00:04:04.940
+Schema has a big impact
+on performance in MongoDB
+
+103
+00:04:04.940 --> 00:04:07.710
+and definitely
+should be considered.
+
+104
+00:04:07.710 --> 00:04:08.820
+So let's recap.
+
+105
+00:04:08.820 --> 00:04:11.580
+MongoDB now provides
+source and sync connectors
+
+106
+00:04:11.580 --> 00:04:13.110
+for Apache Kafka.
+
+107
+00:04:13.110 --> 00:04:15.280
+You can enforce schema on
+both the Kafka and MongoDB
+
+108
+00:04:15.280 --> 00:04:18.120
+side, using Avro
+on the Kafka side,
+
+109
+00:04:18.120 --> 00:04:21.680
+and JSON schema validation
+on the MongoDB side.

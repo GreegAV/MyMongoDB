@@ -1,0 +1,599 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.680
+In this lesson, we're going to
+talk about update operators.
+
+3
+00:00:03.680 --> 00:00:05.480
+Imagine a scenario
+where you have
+
+4
+00:00:05.480 --> 00:00:07.514
+a database of your
+favorite artists,
+
+5
+00:00:07.514 --> 00:00:09.680
+and you're trying to keep
+up with the public opinion
+
+6
+00:00:09.680 --> 00:00:10.430
+about them.
+
+7
+00:00:10.430 --> 00:00:12.320
+So you periodically
+update the rating
+
+8
+00:00:12.320 --> 00:00:15.740
+of your favorite musicians
+to match their public rating.
+
+9
+00:00:15.740 --> 00:00:17.930
+First, we set up
+a test collection
+
+10
+00:00:17.930 --> 00:00:19.640
+in the documents that go in it.
+
+11
+00:00:19.640 --> 00:00:22.280
+We're calling this
+test collection artists
+
+12
+00:00:22.280 --> 00:00:25.880
+and throwing Gorillaz and
+Weird Al Yankovic in it
+
+13
+00:00:25.880 --> 00:00:28.160
+for testing purposes.
+
+14
+00:00:28.160 --> 00:00:31.100
+You may notice that
+by some coincidence
+
+15
+00:00:31.100 --> 00:00:33.530
+the name of the band
+Gorillaz is misspelled
+
+16
+00:00:33.530 --> 00:00:35.160
+with an extra z at the end.
+
+17
+00:00:35.160 --> 00:00:37.610
+We would definitely like
+to fix that right away
+
+18
+00:00:37.610 --> 00:00:40.370
+and replace that value
+with a proper spelling.
+
+19
+00:00:40.370 --> 00:00:42.860
+There is a method that allows
+us to replace a document.
+
+20
+00:00:42.860 --> 00:00:44.630
+And it is called replaceOne.
+
+21
+00:00:44.630 --> 00:00:47.130
+Here's an example
+of how to use it.
+
+22
+00:00:47.130 --> 00:00:50.810
+First, we establish a connection
+to the artist collection
+
+23
+00:00:50.810 --> 00:00:53.730
+and retrieve the document
+that we're interested in.
+
+24
+00:00:53.730 --> 00:00:55.880
+We make sure that the band
+created in the database
+
+25
+00:00:55.880 --> 00:00:57.970
+is the same band
+that we retrieved.
+
+26
+00:00:57.970 --> 00:01:01.760
+And then we can create a
+document with the correct title
+
+27
+00:01:01.760 --> 00:01:04.160
+where Gorillaz is
+spelled accurately
+
+28
+00:01:04.160 --> 00:01:09.200
+and simply replace the document
+with our new replace band.
+
+29
+00:01:09.200 --> 00:01:12.020
+Let's test this.
+
+30
+00:01:12.020 --> 00:01:13.320
+It works!
+
+31
+00:01:13.320 --> 00:01:16.670
+However, it looks like
+this replacement operation
+
+32
+00:01:16.670 --> 00:01:20.480
+annihilated all fields other
+than the ID field and the title
+
+33
+00:01:20.480 --> 00:01:21.240
+field.
+
+34
+00:01:21.240 --> 00:01:23.550
+This is because when the
+replace method is used,
+
+35
+00:01:23.550 --> 00:01:25.940
+it replaces entire documents.
+
+36
+00:01:25.940 --> 00:01:28.370
+And since the replacement
+document that we created only
+
+37
+00:01:28.370 --> 00:01:31.760
+had the title and ID
+fields, we ended up
+
+38
+00:01:31.760 --> 00:01:36.230
+losing a bunch of data such as
+the number of albums, genre,
+
+39
+00:01:36.230 --> 00:01:38.750
+and rating, which
+is unfortunate.
+
+40
+00:01:38.750 --> 00:01:42.020
+Instead of using a method
+that replaces full documents,
+
+41
+00:01:42.020 --> 00:01:44.750
+we should use something that
+can work with better precision
+
+42
+00:01:44.750 --> 00:01:47.510
+and change only the
+field that is specified.
+
+43
+00:01:47.510 --> 00:01:50.270
+Sounds to me like
+we should use set.
+
+44
+00:01:50.270 --> 00:01:52.550
+Let us take a look at
+an example that uses set
+
+45
+00:01:52.550 --> 00:01:54.890
+when changing the band title.
+
+46
+00:01:54.890 --> 00:01:58.640
+When you use set, you want
+to use the update method.
+
+47
+00:01:58.640 --> 00:02:02.120
+So you take the collection,
+find the document
+
+48
+00:02:02.120 --> 00:02:07.920
+that you're looking to update,
+and set the field to the value
+
+49
+00:02:07.920 --> 00:02:10.280
+that you're looking
+to change it to.
+
+50
+00:02:10.280 --> 00:02:11.390
+Let's see if this works.
+
+51
+00:02:11.390 --> 00:02:14.100
+
+
+52
+00:02:14.100 --> 00:02:15.000
+Success!
+
+53
+00:02:15.000 --> 00:02:17.670
+We updated the value
+of the title field.
+
+54
+00:02:17.670 --> 00:02:19.320
+And the rest of
+the fields remained
+
+55
+00:02:19.320 --> 00:02:22.660
+as they were without being
+erased from existence,
+
+56
+00:02:22.660 --> 00:02:23.950
+which is great news.
+
+57
+00:02:23.950 --> 00:02:26.250
+This is exactly what
+we were looking for.
+
+58
+00:02:26.250 --> 00:02:28.890
+Let us look at the slightly
+different scenario now.
+
+59
+00:02:28.890 --> 00:02:32.340
+Suppose Weird Al and Gorillaz
+are now equally more popular
+
+60
+00:02:32.340 --> 00:02:33.240
+than before.
+
+61
+00:02:33.240 --> 00:02:36.180
+And we want to update their
+rating to the appropriate 9
+
+62
+00:02:36.180 --> 00:02:39.970
+from the measly 8 that
+is in the database.
+
+63
+00:02:39.970 --> 00:02:43.140
+One way of doing that
+is by using updateMany
+
+64
+00:02:43.140 --> 00:02:45.480
+in combination with set.
+
+65
+00:02:45.480 --> 00:02:49.170
+To use updateMany
+simply create a query
+
+66
+00:02:49.170 --> 00:02:51.462
+that selects all
+of the documents
+
+67
+00:02:51.462 --> 00:02:52.545
+that you're interested in.
+
+68
+00:02:52.545 --> 00:02:55.740
+In this case, we are
+looking for rating 8.
+
+69
+00:02:55.740 --> 00:02:58.950
+So every document
+with a rating of 8
+
+70
+00:02:58.950 --> 00:03:02.290
+will be now set to rating 9.
+
+71
+00:03:02.290 --> 00:03:06.656
+And you can use updateMany same
+where you would use updateOne.
+
+72
+00:03:06.656 --> 00:03:07.905
+Let's run and see if it works.
+
+73
+00:03:07.905 --> 00:03:10.520
+
+
+74
+00:03:10.520 --> 00:03:12.070
+Another success story!
+
+75
+00:03:12.070 --> 00:03:15.790
+However, there is still a better
+way to make this update happen.
+
+76
+00:03:15.790 --> 00:03:18.190
+In this example, we are
+working with numbers.
+
+77
+00:03:18.190 --> 00:03:21.770
+To be more specific we
+are working with integers.
+
+78
+00:03:21.770 --> 00:03:24.320
+Let's look at an example of
+how to achieve the same update
+
+79
+00:03:24.320 --> 00:03:27.350
+result using an
+increment operator.
+
+80
+00:03:27.350 --> 00:03:29.540
+To use an increment
+operator you can still
+
+81
+00:03:29.540 --> 00:03:32.510
+use updateMany or
+updateOne, create
+
+82
+00:03:32.510 --> 00:03:34.640
+a query that will select
+the documents that you're
+
+83
+00:03:34.640 --> 00:03:38.150
+interested in changing
+field values for,
+
+84
+00:03:38.150 --> 00:03:43.370
+and then use inc that increments
+the rating field by 1.
+
+85
+00:03:43.370 --> 00:03:46.500
+Let's run it.
+
+86
+00:03:46.500 --> 00:03:48.760
+And another success.
+
+87
+00:03:48.760 --> 00:03:50.730
+Finally, we should talk
+about those moments
+
+88
+00:03:50.730 --> 00:03:53.250
+when you realize that some
+data in your documents
+
+89
+00:03:53.250 --> 00:03:54.990
+is unnecessary.
+
+90
+00:03:54.990 --> 00:03:56.910
+Not only is that
+data unnecessary,
+
+91
+00:03:56.910 --> 00:03:58.740
+but you simply don't
+need the fields to be
+
+92
+00:03:58.740 --> 00:04:00.960
+present in the document at all.
+
+93
+00:04:00.960 --> 00:04:04.410
+Imagine that you realized
+that you no longer care
+
+94
+00:04:04.410 --> 00:04:07.140
+about the public opinion and
+you just like the music that you
+
+95
+00:04:07.140 --> 00:04:10.320
+like regardless of what the rest
+of the world thinks about it.
+
+96
+00:04:10.320 --> 00:04:14.560
+So you go into your database
+and you delete the rating field.
+
+97
+00:04:14.560 --> 00:04:16.829
+Here's an example of
+how you would do that.
+
+98
+00:04:16.829 --> 00:04:21.300
+In this case, you can use
+updateMany or updateOne.
+
+99
+00:04:21.300 --> 00:04:24.240
+We're going to find all the
+documents that have the field
+
+100
+00:04:24.240 --> 00:04:26.700
+rating at all in them.
+
+101
+00:04:26.700 --> 00:04:29.640
+And we use unset and
+specify the field
+
+102
+00:04:29.640 --> 00:04:31.860
+that we want to get rid of.
+
+103
+00:04:31.860 --> 00:04:32.860
+Let's see if it worked.
+
+104
+00:04:32.860 --> 00:04:35.990
+
+
+105
+00:04:35.990 --> 00:04:37.400
+Wonderful!
+
+106
+00:04:37.400 --> 00:04:40.030
+It looks like everything worked.
+
+107
+00:04:40.030 --> 00:04:43.450
+OK, let's make sure
+that all the test cases
+
+108
+00:04:43.450 --> 00:04:47.530
+that we used in this
+lesson work as expected.
+
+109
+00:04:47.530 --> 00:04:49.790
+Fantastic.
+
+110
+00:04:49.790 --> 00:04:52.470
+And we're done with
+update operators.
+
+111
+00:04:52.470 --> 00:04:54.950
+Let's quickly recap
+what we learned.
+
+112
+00:04:54.950 --> 00:04:58.220
+You can replace entire
+documents with replaceOne.
+
+113
+00:04:58.220 --> 00:05:00.660
+This operation may
+cause you to lose data,
+
+114
+00:05:00.660 --> 00:05:02.600
+so it isn't recommended
+for situations
+
+115
+00:05:02.600 --> 00:05:04.580
+when you need a simple update.
+
+116
+00:05:04.580 --> 00:05:07.250
+You can update a value
+in a single document
+
+117
+00:05:07.250 --> 00:05:11.090
+using the updateOne,
+set or inc operators.
+
+118
+00:05:11.090 --> 00:05:12.800
+You can update
+multiple documents
+
+119
+00:05:12.800 --> 00:05:15.950
+that match your query using
+updateMany in conjunction
+
+120
+00:05:15.950 --> 00:05:18.350
+with set or inc operators.
+
+121
+00:05:18.350 --> 00:05:20.960
+You can completely remove
+the field from a document
+
+122
+00:05:20.960 --> 00:05:25.700
+by using updateOne or updateMany
+with the unset operation.
+
+123
+00:05:25.700 --> 00:05:28.370
+For more update operators
+and their use cases,
+
+124
+00:05:28.370 --> 00:05:31.580
+feel free to check out the
+following documentation page.
+
+125
+00:05:31.580 --> 00:05:34.160
+You can also find a link
+to this documentation page
+
+126
+00:05:34.160 --> 00:05:35.600
+below the video.
+
+127
+00:05:35.600 --> 00:05:39.930
+Use these tools wisely and
+have fun building Mflix.

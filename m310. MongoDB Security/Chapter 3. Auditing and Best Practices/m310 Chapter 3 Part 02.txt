@@ -1,0 +1,75 @@
+In this video, I'm going to cover how to actually enable auditing from the command line.
+
+Here's a very typical command to start a mongod.
+
+In order to enable auditing, we add the auditDestination option.
+
+This option will take an argument which will determine where the logs go.
+
+In this case, I specified syslog, meaning that the logs will go to the system's logs.
+
+Virtually all operating systems have a system log.
+
+Your system logs are very OS dependent, so depending on your operating system, you just need to look up where your system logs are stored.
+
+And that's where these logs would go.
+
+We can also output our auditing logs to standard out.
+
+If we want to do that, we use the console keyword.
+
+Now of course, we can also output our audit logs to a file of our choosing by using the file argument.
+
+When we choose to output our logs to a file, we'll need to add two more options.
+
+And here are the two additional options, auditFormat and auditPath.
+
+auditFormat takes an argument which can either be JSON or BSON, and auditPath takes an additional argument, which, of course, is the path of where we want to store the audit log.
+
+One reason you'd output your logs in BSON instead of JSON is because BSON serializes to disk a lot faster.
+
+There's no serialization process between BSON and JSON when you just output directly to BSON.
+
+Of course, you're going to lose some ease of readability, because with a JSON the file you can just pop right into the file and read your logs immediately.
+
+But if you are worried about write performance, then you can always use BSON to have high write throughput on your audits.
+
+For now, let's stick with JSON so you can see what our logs look like easily.
+
+And we can see that our server has successfully started.
+
+And I'm going to go to another shell and go ahead and tail those logs.
+
+And here I'm using the tail command with the -f option so we can see our auditLog.json update in real time.
+
+We'll go back to another shell, and we'll connect.
+
+And now if I try to authenticate with a user that we know is phony, we should see that in the log.
+
+And here, we can see that the authentication failed.
+
+And if we go to our other shell, and we see the log right here.
+
+And just like we showed in our last video, there's an atype, a time stamp, a local and remote IP address, as well as a list of the users who executed the command, which, of course, is nothing, since we weren't logged in to anyone yet.
+
+And then you can actually see that it was an authentication action type.
+
+And here were the parameters that were passed.
+
+It was a user, "baduser." The password is redacted.
+
+And we can see that is executed on the test databse using SCRAM-SHA-1.
+
+Of course, we can also make our lives a lot easier by specifying this configuration in a configuration file, which is what I've done so already.
+
+Here I have this config.yaml file.
+
+And if we take a look, and this configuration file makes a lot of sense.
+
+We have our mongo.log going to its regular place.
+
+We have dbPath going to its regular place.
+
+And then, just like we saw in the last command, I'm saying that out auditLog will be to a file for JSON.
+
+And here is the name and path of the file.

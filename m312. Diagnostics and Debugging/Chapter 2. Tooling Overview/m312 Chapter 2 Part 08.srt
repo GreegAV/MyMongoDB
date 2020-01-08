@@ -1,0 +1,529 @@
+
+1
+00:00:00.000 --> 00:00:00.072
+
+
+2
+00:00:00.072 --> 00:00:02.280
+In this lesson, we'll be
+talking about a set of tools
+
+3
+00:00:02.280 --> 00:00:04.560
+that you should be aware
+of when debugging issues
+
+4
+00:00:04.560 --> 00:00:06.210
+with your MongoDB deployment.
+
+5
+00:00:06.210 --> 00:00:10.060
+The set of tools is
+called the Mtools package.
+
+6
+00:00:10.060 --> 00:00:12.690
+Mtools was developed by
+our support team, started
+
+7
+00:00:12.690 --> 00:00:14.790
+by our very own
+Thomas Ryeckstiess
+
+8
+00:00:14.790 --> 00:00:17.520
+to analyze and debug issues
+with MongoDB deployments
+
+9
+00:00:17.520 --> 00:00:19.200
+in an easy and elegant way.
+
+10
+00:00:19.200 --> 00:00:20.880
+It's use to identify
+and reproduce
+
+11
+00:00:20.880 --> 00:00:24.660
+issues that arise in customers
+production deployments.
+
+12
+00:00:24.660 --> 00:00:27.390
+This set of command line tools
+is made available publicly,
+
+13
+00:00:27.390 --> 00:00:30.960
+but they're not supported by
+MongoDB Inc. Mtools is not
+
+14
+00:00:30.960 --> 00:00:32.700
+part of our official
+offering, but it
+
+15
+00:00:32.700 --> 00:00:35.850
+is a set of tools and scripts
+that we maintain and develop
+
+16
+00:00:35.850 --> 00:00:38.790
+to help individuals
+analyze and debug issues
+
+17
+00:00:38.790 --> 00:00:41.220
+that they find in
+MongoDB deployments
+
+18
+00:00:41.220 --> 00:00:42.690
+and it's open source.
+
+19
+00:00:42.690 --> 00:00:45.142
+You're welcome to use
+them for [INAUDIBLE],
+
+20
+00:00:45.142 --> 00:00:47.100
+generate pull requests
+if you make improvements
+
+21
+00:00:47.100 --> 00:00:48.130
+to the tool kit.
+
+22
+00:00:48.130 --> 00:00:49.816
+Mtools is written
+in Python, so you'll
+
+23
+00:00:49.816 --> 00:00:51.690
+need to have Python
+installed on your machine
+
+24
+00:00:51.690 --> 00:00:53.431
+to run its associated scripts.
+
+25
+00:00:53.431 --> 00:00:55.680
+The package is available
+through common Python package
+
+26
+00:00:55.680 --> 00:00:58.950
+management tools, like
+pip and Easy Install.
+
+27
+00:00:58.950 --> 00:01:01.860
+The course VM will come
+with them already installed.
+
+28
+00:01:01.860 --> 00:01:05.310
+The set of tools are,
+first, mlogfilter.
+
+29
+00:01:05.310 --> 00:01:07.710
+This tool slices
+log files by time,
+
+30
+00:01:07.710 --> 00:01:11.190
+combines them, filters for slow
+queries, finds table scans,
+
+31
+00:01:11.190 --> 00:01:13.680
+shortens log lines,
+filters by attributes,
+
+32
+00:01:13.680 --> 00:01:17.310
+and converts your log
+entries into a JSON format.
+
+33
+00:01:17.310 --> 00:01:20.790
+Next up is mloginfo,
+which returns
+
+34
+00:01:20.790 --> 00:01:22.320
+information about log files--
+
+35
+00:01:22.320 --> 00:01:25.800
+things like start and end
+times for the log, the MongoDB
+
+36
+00:01:25.800 --> 00:01:28.800
+version, and special sections,
+like restarts, connections,
+
+37
+00:01:28.800 --> 00:01:32.250
+and distinct accounts of common
+events found in the logs.
+
+38
+00:01:32.250 --> 00:01:33.990
+There's also
+mplotqueries, queries
+
+39
+00:01:33.990 --> 00:01:36.030
+which we can use to
+visualize log files
+
+40
+00:01:36.030 --> 00:01:37.680
+with different types of plots.
+
+41
+00:01:37.680 --> 00:01:40.170
+This tool requires that you
+install additional graphics
+
+42
+00:01:40.170 --> 00:01:41.110
+libraries.
+
+43
+00:01:41.110 --> 00:01:43.860
+These may not be
+trivial for your system.
+
+44
+00:01:43.860 --> 00:01:48.930
+This is mlogvis, which creates
+a self-contained HTML file that
+
+45
+00:01:48.930 --> 00:01:52.260
+shows an interactive
+visualization in a web browser
+
+46
+00:01:52.260 --> 00:01:54.570
+as an alternative
+to mplot queries.
+
+47
+00:01:54.570 --> 00:01:57.360
+For the course VM, you can
+send this to the shared folder
+
+48
+00:01:57.360 --> 00:01:59.850
+and access the HTML
+file on your computer
+
+49
+00:01:59.850 --> 00:02:01.810
+where you can then view
+it in a web browser.
+
+50
+00:02:01.810 --> 00:02:03.220
+We'll see that later.
+
+51
+00:02:03.220 --> 00:02:05.220
+One of my personal
+favorites is mlaunch,
+
+52
+00:02:05.220 --> 00:02:08.610
+a script to quickly spin up test
+deployments on your local host,
+
+53
+00:02:08.610 --> 00:02:11.160
+including replica sets
+and charted clusters.
+
+54
+00:02:11.160 --> 00:02:13.380
+This requires PyMongo,
+the Python driver
+
+55
+00:02:13.380 --> 00:02:17.391
+library for MongoDB, which I've
+also pre-installed on your VM.
+
+56
+00:02:17.391 --> 00:02:19.890
+One of the really interesting
+ones from a testing standpoint
+
+57
+00:02:19.890 --> 00:02:22.260
+is mgenerate, which
+creates data sets
+
+58
+00:02:22.260 --> 00:02:25.230
+with random data based
+on a template for testing
+
+59
+00:02:25.230 --> 00:02:27.150
+and reproducing issues.
+
+60
+00:02:27.150 --> 00:02:30.180
+All of these tools together
+will help analyze, simulate,
+
+61
+00:02:30.180 --> 00:02:33.750
+and debug issues with
+MongoDB deployments.
+
+62
+00:02:33.750 --> 00:02:35.820
+We'll be using these tools
+throughout the course
+
+63
+00:02:35.820 --> 00:02:38.340
+when looking at
+concrete use cases.
+
+64
+00:02:38.340 --> 00:02:41.100
+In essence, you can associate
+each individual tool
+
+65
+00:02:41.100 --> 00:02:43.470
+with a specific feature at
+a specific point in time
+
+66
+00:02:43.470 --> 00:02:45.870
+in the creation of a scenario.
+
+67
+00:02:45.870 --> 00:02:47.976
+Mlaunch will bring
+up very quickly
+
+68
+00:02:47.976 --> 00:02:50.100
+clusters and deployments
+for developing and testing
+
+69
+00:02:50.100 --> 00:02:53.070
+on your local machine.
+
+70
+00:02:53.070 --> 00:02:55.950
+And mgenerate will allow
+us to produce server loads
+
+71
+00:02:55.950 --> 00:02:59.460
+in a test environment that
+will mimic a production load.
+
+72
+00:02:59.460 --> 00:03:02.170
+This will insert one document.
+
+73
+00:03:02.170 --> 00:03:04.270
+By providing a
+simple JSON document,
+
+74
+00:03:04.270 --> 00:03:06.700
+we can then generate many
+documents of a given shape
+
+75
+00:03:06.700 --> 00:03:08.500
+to be inserted
+into a collection.
+
+76
+00:03:08.500 --> 00:03:10.360
+The idea is to produce
+these data sets
+
+77
+00:03:10.360 --> 00:03:12.100
+in a very simple
+one-line instruction
+
+78
+00:03:12.100 --> 00:03:15.170
+command with an easily
+reproducible data set.
+
+79
+00:03:15.170 --> 00:03:17.950
+Mlaunch and mgenerate are tools
+designed to either simulate
+
+80
+00:03:17.950 --> 00:03:20.830
+or get a very close
+approximation of situations
+
+81
+00:03:20.830 --> 00:03:22.270
+we might want to debug.
+
+82
+00:03:22.270 --> 00:03:24.040
+Think of these two as
+our debugging tools
+
+83
+00:03:24.040 --> 00:03:25.660
+from the package.
+
+84
+00:03:25.660 --> 00:03:28.600
+On the other side of things,
+mlogfilter, mloginfo,
+
+85
+00:03:28.600 --> 00:03:32.680
+mplotqueries, and mlogvis will
+help us to analyze log files.
+
+86
+00:03:32.680 --> 00:03:34.270
+Once we've got a
+log file, we can
+
+87
+00:03:34.270 --> 00:03:37.240
+filter for relevant
+information with mlogfilter,
+
+88
+00:03:37.240 --> 00:03:39.580
+plot and visualize the
+execution of given commands
+
+89
+00:03:39.580 --> 00:03:41.440
+and operations, and
+retrieve information
+
+90
+00:03:41.440 --> 00:03:44.290
+from the logs on specific events
+like restarts, connections,
+
+91
+00:03:44.290 --> 00:03:45.370
+and others.
+
+92
+00:03:45.370 --> 00:03:48.520
+These four tools can be
+seen as diagnostics tools.
+
+93
+00:03:48.520 --> 00:03:51.550
+We can get general
+information with mloginfo.
+
+94
+00:03:51.550 --> 00:03:53.260
+Select only a subset
+of the components
+
+95
+00:03:53.260 --> 00:03:56.190
+to analyze with mlogfilter.
+
+96
+00:03:56.190 --> 00:03:58.080
+Notice that all of
+these entries now
+
+97
+00:03:58.080 --> 00:04:01.130
+have the replication component.
+
+98
+00:04:01.130 --> 00:04:03.810
+And we can plot and visualize
+the execution of operations
+
+99
+00:04:03.810 --> 00:04:05.761
+with either mlogvis
+or mplotqueries.
+
+100
+00:04:05.761 --> 00:04:08.230
+
+
+101
+00:04:08.230 --> 00:04:09.730
+We won't bother to
+look at that now.
+
+102
+00:04:09.730 --> 00:04:12.820
+I haven't done anything
+interesting yet with a MongoDB.
+
+103
+00:04:12.820 --> 00:04:15.130
+Obviously, since all of
+these are command line tools,
+
+104
+00:04:15.130 --> 00:04:18.339
+we can also construct pipelines
+to visualize filter and group
+
+105
+00:04:18.339 --> 00:04:20.740
+outputs from the
+different tools.
+
+106
+00:04:20.740 --> 00:04:23.640
+In short, the Mtools package
+is a great set of easy helpers
+
+107
+00:04:23.640 --> 00:04:25.510
+that we will utilize
+throughout the course.
+
+108
+00:04:25.510 --> 00:04:27.885
+You should definitely have
+all of them at your fingertips
+
+109
+00:04:27.885 --> 00:04:30.190
+to analyze debug and
+even reproduce issues
+
+110
+00:04:30.190 --> 00:04:33.060
+detected on your deployments.

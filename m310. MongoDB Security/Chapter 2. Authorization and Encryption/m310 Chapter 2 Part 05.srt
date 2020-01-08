@@ -1,0 +1,246 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:04.700
+In This video, we're going
+to talk about resources.
+
+3
+00:00:04.700 --> 00:00:07.960
+We already know that
+resources are the other half
+
+4
+00:00:07.960 --> 00:00:10.360
+of privileges in MongoDB.
+
+5
+00:00:10.360 --> 00:00:13.110
+They're the subjects
+of our actions.
+
+6
+00:00:13.110 --> 00:00:16.480
+Resources will eventually have
+their state or behavior changed
+
+7
+00:00:16.480 --> 00:00:19.280
+in some form by an action.
+
+8
+00:00:19.280 --> 00:00:24.130
+MongoDB has four resources,
+collections, databases,
+
+9
+00:00:24.130 --> 00:00:28.880
+clusters, and the special
+any resource resource.
+
+10
+00:00:28.880 --> 00:00:33.326
+All of these resources will be
+defined by a resource document.
+
+11
+00:00:33.326 --> 00:00:35.700
+Let's look at how to define
+each of these with a resource
+
+12
+00:00:35.700 --> 00:00:36.810
+document.
+
+13
+00:00:36.810 --> 00:00:39.930
+First, we'll check out
+collections and databases.
+
+14
+00:00:39.930 --> 00:00:41.770
+So here's the
+generic template that
+
+15
+00:00:41.770 --> 00:00:44.480
+is used to define a
+collection or a database.
+
+16
+00:00:44.480 --> 00:00:46.180
+Through this document,
+we can actually
+
+17
+00:00:46.180 --> 00:00:48.970
+describe a few
+different scenarios.
+
+18
+00:00:48.970 --> 00:00:51.860
+First, we can specify
+a specific database.
+
+19
+00:00:51.860 --> 00:00:55.120
+In this case, the
+products database.
+
+20
+00:00:55.120 --> 00:00:57.670
+It's important to note
+that we always have both
+
+21
+00:00:57.670 --> 00:01:00.950
+the db and the collection keys.
+
+22
+00:01:00.950 --> 00:01:03.710
+If we want to specify
+a specific database,
+
+23
+00:01:03.710 --> 00:01:07.520
+we must use an empty string as
+a value for the collection key.
+
+24
+00:01:07.520 --> 00:01:10.150
+This resource document
+would allow anyone
+
+25
+00:01:10.150 --> 00:01:14.560
+to perform the associated
+action for this resource
+
+26
+00:01:14.560 --> 00:01:18.840
+on any collection within
+the products database.
+
+27
+00:01:18.840 --> 00:01:21.770
+Conversely, if we want to
+grant someone the ability
+
+28
+00:01:21.770 --> 00:01:24.790
+to perform an action on
+a specific collection
+
+29
+00:01:24.790 --> 00:01:28.150
+across any database,
+then we use this syntax,
+
+30
+00:01:28.150 --> 00:01:31.780
+here specifying the empty
+string for the db field
+
+31
+00:01:31.780 --> 00:01:34.090
+and then specifying
+an actual collection
+
+32
+00:01:34.090 --> 00:01:36.110
+name for a collection.
+
+33
+00:01:36.110 --> 00:01:39.330
+And of course, we can
+specify a specific collection
+
+34
+00:01:39.330 --> 00:01:43.520
+for a specific database for
+any action to be performed on.
+
+35
+00:01:43.520 --> 00:01:46.710
+Finally, if we'd like to give
+someone access to perform
+
+36
+00:01:46.710 --> 00:01:51.579
+their action on any non-system
+collection on all databases,
+
+37
+00:01:51.579 --> 00:01:53.120
+then we can just
+pass an empty string
+
+38
+00:01:53.120 --> 00:01:56.700
+to both the db field and
+the collection field.
+
+39
+00:01:56.700 --> 00:01:59.150
+As far as the cluster
+resource is concerned,
+
+40
+00:01:59.150 --> 00:02:02.430
+there's really just one document
+and it looks just like this.
+
+41
+00:02:02.430 --> 00:02:04.590
+We just specify
+the cluster field
+
+42
+00:02:04.590 --> 00:02:07.190
+to be true, simple as that.
+
+43
+00:02:07.190 --> 00:02:10.770
+And finally, we have the
+any resource document,
+
+44
+00:02:10.770 --> 00:02:12.470
+which of course
+allows an action to be
+
+45
+00:02:12.470 --> 00:02:15.800
+performed on any
+resource in the database.
+
+46
+00:02:15.800 --> 00:02:17.230
+This is what it looks like.
+
+47
+00:02:17.230 --> 00:02:20.680
+We just pass in any
+resource key, a true value,
+
+48
+00:02:20.680 --> 00:02:23.580
+and this is the resource
+document for any resource.
+
+49
+00:02:23.580 --> 00:02:27.150
+Again, this resource is
+for internal usage only.
+
+50
+00:02:27.150 --> 00:02:29.610
+Avoid its use at all cost.
+
+51
+00:02:29.610 --> 00:02:32.250
+And those are the different
+resources in MongoDB.

@@ -1,0 +1,19 @@
+To correct this situation, we need to change Carol's role from dbAdmin to dbAdminAnyDatabase.
+
+Alice, our security officer, should be able to update Carol's role by using the update user command.
+
+Here, I'm ging to run the db.updateUser command.
+
+We're going to update it for Carol, and we're going to change her roles from wherever they were before, which we know is dbAdmin, to just being dbAdminAnyDatabase on the admin database.
+
+We can now confirm this by running db.getUser.
+
+And now can easily confirm that Carol does indeed have the dbAdminDatabase role.
+
+Now when we authenticate with Carol, we should be able run show dbs.
+
+And we can.
+
+Awesome.
+
+Carol can now do her job.

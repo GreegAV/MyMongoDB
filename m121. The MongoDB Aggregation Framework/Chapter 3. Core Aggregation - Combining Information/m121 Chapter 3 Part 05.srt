@@ -1,0 +1,561 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:03.810
+While modeling tree structures,
+there are different patterns
+
+3
+00:00:03.810 --> 00:00:06.390
+that we can follow
+depending on how we
+
+4
+00:00:06.390 --> 00:00:08.130
+want to juggle with our data.
+
+5
+00:00:08.130 --> 00:00:11.140
+So let's have a look, for
+example, to an org chart.
+
+6
+00:00:11.140 --> 00:00:13.020
+We're going to have the
+different individuals
+
+7
+00:00:13.020 --> 00:00:14.360
+in the company, like
+for example, we're
+
+8
+00:00:14.360 --> 00:00:15.450
+going to have our CEO.
+
+9
+00:00:15.450 --> 00:00:17.460
+And to our CEO,
+he's going to have
+
+10
+00:00:17.460 --> 00:00:22.290
+a bunch of different reports,
+like the CMO, CRO, CTO,
+
+11
+00:00:22.290 --> 00:00:24.600
+services, and CFO.
+
+12
+00:00:24.600 --> 00:00:26.610
+All of them
+reporting, obviously,
+
+13
+00:00:26.610 --> 00:00:28.890
+to this particular individual.
+
+14
+00:00:28.890 --> 00:00:31.376
+Then we're going to have
+a sublayer between this
+
+15
+00:00:31.376 --> 00:00:33.750
+where are we going to have
+the different individuals that
+
+16
+00:00:33.750 --> 00:00:35.600
+report directly to the CTO.
+
+17
+00:00:35.600 --> 00:00:38.430
+In this case, we're going to be
+having the SVP of Engineering
+
+18
+00:00:38.430 --> 00:00:42.060
+reporting directly to that
+CTO and also the VP of Product
+
+19
+00:00:42.060 --> 00:00:43.620
+also to the CTO.
+
+20
+00:00:43.620 --> 00:00:45.330
+And further down the
+line, we're going
+
+21
+00:00:45.330 --> 00:00:48.510
+to have the different reports
+of the different core areas,
+
+22
+00:00:48.510 --> 00:00:52.800
+like for example, in education,
+cloud, or even VP of Core.
+
+23
+00:00:52.800 --> 00:00:57.090
+So modeling such a
+tree in a document
+
+24
+00:00:57.090 --> 00:00:59.970
+or a structure of documents
+we might have a couple
+
+25
+00:00:59.970 --> 00:01:01.710
+of different alternatives.
+
+26
+00:01:01.710 --> 00:01:04.200
+So for example, in this
+particular structure,
+
+27
+00:01:04.200 --> 00:01:06.660
+we're going to have
+a parent reference.
+
+28
+00:01:06.660 --> 00:01:10.290
+Now a parent reference means
+that for each single document
+
+29
+00:01:10.290 --> 00:01:13.520
+we're going to have a particular
+attribute of field that
+
+30
+00:01:13.520 --> 00:01:16.230
+will indicate us
+who do we report to,
+
+31
+00:01:16.230 --> 00:01:20.700
+who is our parent in the tree
+structure, or in this case,
+
+32
+00:01:20.700 --> 00:01:23.940
+the org chart that
+we are defining.
+
+33
+00:01:23.940 --> 00:01:27.300
+So for example, here we can
+see that Carlos, our CRO,
+
+34
+00:01:27.300 --> 00:01:28.620
+reports to 1.
+
+35
+00:01:28.620 --> 00:01:32.790
+And 1 referring to the _id,
+the primary key, of Dave,
+
+36
+00:01:32.790 --> 00:01:34.680
+which is our CEO.
+
+37
+00:01:34.680 --> 00:01:36.960
+So we're going to have
+a 1 to n relationship,
+
+38
+00:01:36.960 --> 00:01:40.860
+where each document will
+point to its reports_to,
+
+39
+00:01:40.860 --> 00:01:43.770
+which in turn will be
+then the _id field value
+
+40
+00:01:43.770 --> 00:01:46.050
+of the designated parent.
+
+41
+00:01:46.050 --> 00:01:48.840
+With this schema it's
+quite easy to navigate
+
+42
+00:01:48.840 --> 00:01:50.830
+between different documents.
+
+43
+00:01:50.830 --> 00:01:53.880
+So if I want to go from
+Carlos to his reports_to,
+
+44
+00:01:53.880 --> 00:01:57.420
+or to whom he reports to, I
+just follow this and go directly
+
+45
+00:01:57.420 --> 00:02:00.870
+to Dave, which is
+value _id equals 1.
+
+46
+00:02:00.870 --> 00:02:05.080
+So there's always a link
+between reports_to and _id.
+
+47
+00:02:05.080 --> 00:02:09.479
+Now what happens if we want
+to know the full reporting
+
+48
+00:02:09.479 --> 00:02:12.060
+structure of, for example, Dave.
+
+49
+00:02:12.060 --> 00:02:15.360
+I want to know all
+of his direct reports
+
+50
+00:02:15.360 --> 00:02:18.220
+but also his direct
+reports' reports.
+
+51
+00:02:18.220 --> 00:02:22.080
+We can go and fetch,
+for example, Dave's.
+
+52
+00:02:22.080 --> 00:02:25.800
+And we know that he doesn't
+report to anyone but we have
+
+53
+00:02:25.800 --> 00:02:27.000
+his _id.
+
+54
+00:02:27.000 --> 00:02:31.020
+So if we want to know exactly
+who reports directly to Dave,
+
+55
+00:02:31.020 --> 00:02:36.360
+we can use the reference and the
+value of his _id and find all
+
+56
+00:02:36.360 --> 00:02:38.130
+of his direct reports.
+
+57
+00:02:38.130 --> 00:02:41.460
+If we want to know the full
+structure of reporting, well,
+
+58
+00:02:41.460 --> 00:02:44.760
+we would just need to go back
+and forth to do the database
+
+59
+00:02:44.760 --> 00:02:48.450
+to understand exactly, for each
+element or for each document
+
+60
+00:02:48.450 --> 00:02:52.200
+that we find, check who
+reports-to and do the query
+
+61
+00:02:52.200 --> 00:02:55.020
+again, based on his _id.
+
+62
+00:02:55.020 --> 00:02:57.990
+Now this continuous
+pinging of the database
+
+63
+00:02:57.990 --> 00:02:59.640
+is quite inefficient.
+
+64
+00:02:59.640 --> 00:03:01.620
+For each request
+that we get, we need
+
+65
+00:03:01.620 --> 00:03:03.390
+to ping the database again.
+
+66
+00:03:03.390 --> 00:03:06.060
+The alternative
+to this operation
+
+67
+00:03:06.060 --> 00:03:09.480
+will be to use our new
+operator graphLookup.
+
+68
+00:03:09.480 --> 00:03:11.790
+So in this particular
+example here,
+
+69
+00:03:11.790 --> 00:03:15.180
+I want to know the full
+reporting structure that
+
+70
+00:03:15.180 --> 00:03:17.790
+reports to our CTO, Eliot.
+
+71
+00:03:17.790 --> 00:03:19.920
+So to do this with
+graphLookup we need
+
+72
+00:03:19.920 --> 00:03:22.540
+to run a query similar to this.
+
+73
+00:03:22.540 --> 00:03:24.930
+We start by matching
+the document
+
+74
+00:03:24.930 --> 00:03:28.780
+that we want to start to analyze
+from with the match operator.
+
+75
+00:03:28.780 --> 00:03:32.010
+So in this case, I want to
+find the reporting structure
+
+76
+00:03:32.010 --> 00:03:35.820
+to Eliot, therefore, I'm going
+to match for all documents that
+
+77
+00:03:35.820 --> 00:03:37.920
+contain this particular name.
+
+78
+00:03:37.920 --> 00:03:40.720
+And then we have the
+graphLookup operator
+
+79
+00:03:40.720 --> 00:03:44.940
+that will retrieve all
+subsequent descendant documents
+
+80
+00:03:44.940 --> 00:03:47.010
+from the parent reference.
+
+81
+00:03:47.010 --> 00:03:49.320
+So this will be a self lookup.
+
+82
+00:03:49.320 --> 00:03:54.030
+Starting with the _id value of
+the previous first encountered
+
+83
+00:03:54.030 --> 00:03:57.420
+document, connecting
+from the field _id,
+
+84
+00:03:57.420 --> 00:04:00.750
+this is the field I'm going to
+search on for the subsequent
+
+85
+00:04:00.750 --> 00:04:04.590
+graphLookups, but we are going
+to be using the reports_to
+
+86
+00:04:04.590 --> 00:04:09.990
+value to match, and use that to
+use for the subsequent queries.
+
+87
+00:04:09.990 --> 00:04:12.780
+And then I'll be
+storing all documents
+
+88
+00:04:12.780 --> 00:04:16.589
+that I encounter from the
+lockup up as all_reports.
+
+89
+00:04:16.589 --> 00:04:19.529
+After I run this query,
+I'll find the document
+
+90
+00:04:19.529 --> 00:04:22.980
+that I wanted, the one that
+matches name equals Eliot.
+
+91
+00:04:22.980 --> 00:04:24.810
+I can see his title.
+
+92
+00:04:24.810 --> 00:04:28.050
+And then I can find,
+thanks to the graphLookup,
+
+93
+00:04:28.050 --> 00:04:29.740
+all his descendant reports.
+
+94
+00:04:29.740 --> 00:04:35.520
+In this case, it's going to
+be Cailin, then Andrew, Ron,
+
+95
+00:04:35.520 --> 00:04:37.650
+Shannon, and Elyse.
+
+96
+00:04:37.650 --> 00:04:42.570
+Now this just tells me all of
+the descendants beneath Eliot.
+
+97
+00:04:42.570 --> 00:04:44.670
+So in this case,
+graphLookup will
+
+98
+00:04:44.670 --> 00:04:47.930
+allow me to find all
+different nodes that
+
+99
+00:04:47.930 --> 00:04:51.870
+are beneath a particular
+node that I'm finding.
+
+100
+00:04:51.870 --> 00:04:54.420
+We can also ask the
+reverse question,
+
+101
+00:04:54.420 --> 00:04:57.480
+which is, given an
+element on the org chart,
+
+102
+00:04:57.480 --> 00:05:01.350
+what is the hierarchy to
+upper levels of reporting?
+
+103
+00:05:01.350 --> 00:05:04.160
+So for example, if I
+give the VP of Education
+
+104
+00:05:04.160 --> 00:05:06.260
+I want to know
+the full structure
+
+105
+00:05:06.260 --> 00:05:11.710
+till I get to the top parent
+of our tree, root level.
+
+106
+00:05:11.710 --> 00:05:15.800
+To do that, what we need to do
+is, again, match on the element
+
+107
+00:05:15.800 --> 00:05:18.830
+that we are interested
+on, in this case Shannon,
+
+108
+00:05:18.830 --> 00:05:23.300
+and then invert the connectFrom
+and connectTo fields,
+
+109
+00:05:23.300 --> 00:05:27.120
+but also starting with the
+different startWith value.
+
+110
+00:05:27.120 --> 00:05:30.140
+In this case, we're going to
+be starting with reports_to.
+
+111
+00:05:30.140 --> 00:05:33.890
+connectFrom will be also
+reports_to but the connect
+
+112
+00:05:33.890 --> 00:05:36.830
+field, the value that we're
+going to pick up to match
+
+113
+00:05:36.830 --> 00:05:39.950
+against reports_to will be _id.
+
+114
+00:05:39.950 --> 00:05:43.280
+And we're going to be storing
+that information, that chain,
+
+115
+00:05:43.280 --> 00:05:45.660
+into a field called bosses.
+
+116
+00:05:45.660 --> 00:05:50.300
+Once I run this, I can see that
+Shannon has the set of bosses.
+
+117
+00:05:50.300 --> 00:05:51.570
+He has Dave.
+
+118
+00:05:51.570 --> 00:05:55.980
+Eliot, and, obviously,
+his direct boss, Andrew.

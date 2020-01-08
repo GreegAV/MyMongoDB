@@ -1,0 +1,41 @@
+I'd like to spend some time to talk about KMIP, which is the Key Management Communication Protocol.
+
+MongoDB Enterprise supports secure transfer of key files with a compatible key management appliance.
+
+Using a key manager allows for the keys to be stored in the key manager instead of in some random place.
+
+By using a KMIP key management solution, it will make it very easy for you to rotate your master keys, and thus fortify your MongoDB deployment.
+
+It's important to note that using a key manager meets regulatory key management guidelines such as HIPPA, PCI, and FERPA.
+
+And this is why it's recommended over local key management.
+
+Enabling the encrypted storage engine with a KMIP server is arguably more straightforward than using a key file.
+
+For the sake of this demonstration, I'm willing to assume you already have a KMIP server up and running.
+
+In my case, I'm using pi KMIP and running it on my local machine.
+
+So you can see right here I have the certificates that I'll be using to talk from MongoD to this KMIP server.
+
+And this is a pretty simple KMIP server.
+
+We're using the py KMIP library.
+
+And then I'm just specifying my server, key files, the port I'm running on, the version of SSL I'm using, my CA file.
+
+And I'm pretty much just starting up the server.
+
+So I can just go ahead and run Python pyKMIP server.
+
+And now my KMIP server is up and running.
+
+And now we can go ahead and start our MongoD and have it connect to this KMIP server.
+
+So to start MongoDB with storage encryption turned on and using KMIP, we're just gonna pass the dash dash enable encryption flag, the dash dash KMIP server option, passing in the local host argument because I'm running the KMIP server on this machine.
+
+Then gonna pass our CA file that we're using, and our Client Certificate.
+
+And it really is as simple as that.
+
+You can see our server is up and running and waiting for connections.

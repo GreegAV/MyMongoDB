@@ -1,0 +1,6 @@
+You can read more about routing Aggregation queries in a sharded cluster on the MongoDB sharding docs.
+
+At 2:17, we describe how limit() and skip() are handled in a sharded cluster. There is a specific case not mentioned.
+
+When used in conjunction with a limit(), the mongos will pass the limit plus the value of the skip() 
+to the shards to ensure a sufficient number of documents are returned to the mongos to apply the final limit() and skip() successfully.

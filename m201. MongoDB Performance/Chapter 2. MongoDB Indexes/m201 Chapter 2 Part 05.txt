@@ -1,0 +1,179 @@
+Let's take a look at compound indexes.
+
+A compound index is an index on two or more fields, and it can support queries based on those fields.
+
+By the end of this lesson, you should be able to identify and create compound indexes.
+
+Let's talk for a moment about the structure of a compound index.
+
+Now, in MongoDB, indexes are b-trees and they have an ordering, and that ordering is flat.
+
+So if you have two fields, you might somehow think that your indexes are two-dimensional in some way, but they're not.
+
+They're actually one-dimensional.
+
+You can actually think of index keys as an ordered list.
+
+Looking at this diagram, this is an index on last name comma first name.
+
+If I wanted to find a document for Adam Bailey, I'd go to the Baley comma Adam index key, which then points to the Adam Bailey document.
+
+I checked this one index key and it tells me to go in our collection of documents.
+
+There's no checking of two things.
+
+Even though there are really two fields, the index itself is still one-dimensional.
+
+Let's make an analogy.
+
+When working with an index that's ordered last name ascending comma first name ascending, you may not realize it yet, but you're probably already familiar with the physical index that works this exact same way-- a phone book.
+
+Like an index, a phone book has, as its keys, an ordered list of names.
+
+There is last name ascending, first name ascending.
+
+If I want to find Chris Bailey, I'd go to the Baley section of the phone book and go down through and find Chris.
+
+And then I would then find his phone number.
+
+But in the case of MongoDB, it's going to be a document.
+
+So if I wanted to find everyone with a particular last name, it'd be very easy.
+
+They're all grouped together.
+
+However, if I wanted to find somebody with the name James, I'd have to go through every single key or every single document in order to find that person.
+
+As we'll see the field or fields that come first are in some ways more useful than the fields that come later.
+
+For this lesson, we'll be using the same people.gif on file that we've used in previous lessons.
+
+If you don't already have this imported, go ahead and import it now.
+
+Now that we have these documents imported, let's go ahead and fire up Compass so we can look at our indexes and look at some queries.
+
+And now that we're in Compass, we can see our M201 database.
+
+Go ahead and click it and we're going to see our people collection.
+
+Go ahead and click that.
+
+Now that we're in here, we can go ahead and click the Explain Plan Area and then paste into Query.
+
+In this case, we're going to query for last name Fraizer and first name Jasmine and click Apply.
+
+And when I do this, we get the Explain Plan output.
+
+So you can get this exact same output if you wanted via the Mongo shell, and it would look something like this raw JSON.
+
+You'd see a bunch of great information-- literally all the information you could ever want.
+
+For now, we're going to stick to the visual tree and this query performance summary.
+
+So we can immediately see that this query first of all is on one document.
+
+And to find that one document, it took 24 milliseconds.
+
+And you see that we used zero index keys, which means that we did not use an index.
+
+Which is also stated right here-- and that we had to look at 50,000 documents to find this one document.
+
+And that's really important.
+
+What really matters here is this ratio.
+
+We had to look at 50,000 documents, even though we only wanted one document.
+
+So now let's go ahead and build a single key index to see how this will affect our performance.
+
+So I'll go out and click Create Index.
+
+We'll give it a name.
+
+We'll say last name, and then we'll use the field last name and we'll make it an ascending index, and we'll go ahead and create it.
+
+Now, let's go ahead and run it again.
+
+Now, when we run again, we can see our performance summary, and we've still got the one document that we wanted.
+
+And we can see the 31 documents that we then examined to find that one document.
+
+So this is a much better ratio-- one to 31 rather than one to 50,000.
+
+And as such, you can see that our query time is much, much slower.
+
+It actually says zero milliseconds.
+
+There's some rounding going on here.
+
+It obviously took some time, but 0 is way faster than what we had before.
+
+And you cam see that it even states the index that we were able to use-- the last name index.
+
+And so this is also exemplified by the 31 keys that we had to examine to go and find those 31 documents, and to see whether or not the first name matched.
+
+Because basically these 31 documents-- they all match the last name Frazier, but there's only one document that matches those 31 that also has the first name of Jasmine.
+
+And we can see this visually over here.
+
+We can see that we had a fetch stage.
+
+We had to find that one document, and then in our index scan, we were able to find all the people who matched last name Frazier.
+
+But let's actually make a compound index and see if we can make this even better.
+
+So we go and create another index.
+
+I'm going name this one last name first name.
+
+We'll click the last name field, ascending.
+
+We're going to add another field-- first name, ascending, and we'll click Create.
+
+Now, the order does matter here.
+
+The order, as we'll talk about later in this video or in another video, the order here really matters a lot.
+
+So we'll click Create, and as you can see here now, we're now able to use our compound index-- last name first name-- took zero seconds, so again it's very, very fast.
+
+We found our one document, but this time instead of looking at 31 documents and examining 31 keys, we only had to examine one document-- the document we actually care about-- and that document's key.
+
+So the ratio is one to one.
+
+So the ratio of one is basically the best ratio that we could have.
+
+And if we look down here, we'll see that we were doing an index scan and able to use the compound index that we just created.
+
+Much like single field indexes, we can also use compound indexes to find a range of values.
+
+So now, let's modify our query slightly.
+
+So now instead of saying Jasmine, we'll say greater than or equal to capital L.
+
+When we run this, you'll see that we had examined 16 documents, we had examined 16 keys, and we returned 16 documents.
+
+So a ratio of 16 to 16 is still one.
+
+So it's a very, very good ratio.
+
+We don't have to look at any superfluous or unnecessary documents.
+
+And as such, we are able to have a very, very fast query because we are able to use this compound index.
+
+And the reason that we only had to examine documents that were returned is because the first name field are all ordered.
+
+We're saying greater than or equal to L-- so everything that's greater than the capital letter L.
+
+So it's just like our phone book example and it's just like how the index keys are stored.
+
+All the first name fields with the last name of Frazier are all in ascending order.
+
+So we just go to the L section and then go straight down.
+
+That's exactly what MongoDB is able to do.
+
+And now you know how to create compound indexes using MongoDB.
+
+You've seen how it's done through MongoDB Compass.
+
+All of these features I've shown you-- the explain outputs and the ability to create indexes-- are also available obviously by the Mongo Shell.

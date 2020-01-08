@@ -1,0 +1,660 @@
+1
+00:00:00,000 --> 00:00:00,500
+
+
+2
+00:00:00,500 --> 00:00:02,700
+Now let's take a look
+at updating documents.
+
+3
+00:00:02,700 --> 00:00:04,770
+Before we get started,
+I'd like to look
+
+4
+00:00:04,770 --> 00:00:07,740
+at the movieDetails data
+set in Compass in just
+
+5
+00:00:07,740 --> 00:00:09,360
+a little bit more detail.
+
+6
+00:00:09,360 --> 00:00:11,220
+This data set
+includes the fields
+
+7
+00:00:11,220 --> 00:00:14,430
+that you might expect, like
+title, year, and the MPAA
+
+8
+00:00:14,430 --> 00:00:15,060
+rating.
+
+9
+00:00:15,060 --> 00:00:17,310
+But it also includes
+fields that are
+
+10
+00:00:17,310 --> 00:00:22,050
+important for building a
+website designed for movie buffs
+
+11
+00:00:22,050 --> 00:00:26,100
+and others who just have a
+genuine interest in movies.
+
+12
+00:00:26,100 --> 00:00:28,380
+There's a field for the
+countries in which the movie
+
+13
+00:00:28,380 --> 00:00:31,920
+was filmed, who the writers
+were, the actors, of course,
+
+14
+00:00:31,920 --> 00:00:34,620
+and even a field
+for the movie poster
+
+15
+00:00:34,620 --> 00:00:38,040
+to provide a way of getting
+access to some visuals.
+
+16
+00:00:38,040 --> 00:00:40,740
+In addition, we have
+the Rotten Tomatoes data
+
+17
+00:00:40,740 --> 00:00:43,860
+for viewer ratings and
+awards that a given movie
+
+18
+00:00:43,860 --> 00:00:44,700
+may have won.
+
+19
+00:00:44,700 --> 00:00:47,100
+So for a movie's
+website, we can use
+
+20
+00:00:47,100 --> 00:00:49,800
+this data to provide a
+really nice picture of what
+
+21
+00:00:49,800 --> 00:00:51,960
+went into making this movie.
+
+22
+00:00:51,960 --> 00:00:55,200
+As I mentioned, while not
+all movies in this data set
+
+23
+00:00:55,200 --> 00:00:58,920
+include this field, many
+include a poster field.
+
+24
+00:00:58,920 --> 00:01:01,200
+Let's take a look at one
+that doesn't actually
+
+25
+00:01:01,200 --> 00:01:02,700
+include a poster.
+
+26
+00:01:02,700 --> 00:01:04,860
+So here we have the
+movie The Martian.
+
+27
+00:01:04,860 --> 00:01:06,690
+And as you can see
+on a quick scan
+
+28
+00:01:06,690 --> 00:01:10,020
+of the fields for this document,
+there is no poster field.
+
+29
+00:01:10,020 --> 00:01:12,960
+And in fact, there's
+no awards field either.
+
+30
+00:01:12,960 --> 00:01:15,070
+Now, we won't spend
+too much time on this,
+
+31
+00:01:15,070 --> 00:01:16,950
+but the difference
+between The Martian
+
+32
+00:01:16,950 --> 00:01:19,260
+and other movies we've
+looked at illustrates
+
+33
+00:01:19,260 --> 00:01:21,420
+something that
+sets MongoDB apart
+
+34
+00:01:21,420 --> 00:01:23,220
+from relational databases.
+
+35
+00:01:23,220 --> 00:01:26,100
+It's possible for documents
+in the same collection
+
+36
+00:01:26,100 --> 00:01:28,170
+to have different schemas.
+
+37
+00:01:28,170 --> 00:01:31,870
+And we take advantage of that
+in MongoDB in a variety of ways.
+
+38
+00:01:31,870 --> 00:01:35,640
+This is an important difference
+from relational database tables
+
+39
+00:01:35,640 --> 00:01:37,680
+in which all records
+must have exactly
+
+40
+00:01:37,680 --> 00:01:39,510
+the same set of columns.
+
+41
+00:01:39,510 --> 00:01:42,570
+One of the simplest ways in
+which we use this in a MongoDB
+
+42
+00:01:42,570 --> 00:01:45,570
+database is that for
+documents for which we
+
+43
+00:01:45,570 --> 00:01:48,150
+have no data for a
+field, we don't need
+
+44
+00:01:48,150 --> 00:01:50,340
+to include the field at all.
+
+45
+00:01:50,340 --> 00:01:53,640
+Going a bit further, many
+movies have not received awards.
+
+46
+00:01:53,640 --> 00:01:55,740
+The flexibility of
+MongoDB's data model
+
+47
+00:01:55,740 --> 00:01:58,800
+allows us to easily model awards
+for just those movies that
+
+48
+00:01:58,800 --> 00:02:01,910
+have them without creating a
+second table or a collection
+
+49
+00:02:01,910 --> 00:02:05,010
+that we must then join together
+in queries in order to get
+
+50
+00:02:05,010 --> 00:02:07,170
+all necessary data for a movie.
+
+51
+00:02:07,170 --> 00:02:10,169
+Now, there does, in fact, exist
+a movie poster for The Martian.
+
+52
+00:02:10,169 --> 00:02:13,170
+And The Martian did
+win several awards.
+
+53
+00:02:13,170 --> 00:02:17,190
+So as an example of updating
+documents in MongoDB,
+
+54
+00:02:17,190 --> 00:02:20,610
+we're going to fix this
+document by adding a poster
+
+55
+00:02:20,610 --> 00:02:23,370
+field and an awards field.
+
+56
+00:02:23,370 --> 00:02:26,490
+Now, an application might
+do this type of update
+
+57
+00:02:26,490 --> 00:02:29,310
+as the poster becomes available
+in an electronic form for use
+
+58
+00:02:29,310 --> 00:02:32,820
+on the site or even in response
+to user-contributed and
+
+59
+00:02:32,820 --> 00:02:34,530
+moderated content.
+
+60
+00:02:34,530 --> 00:02:36,330
+In the MongoDB query
+language, the method
+
+61
+00:02:36,330 --> 00:02:39,910
+for updating a single
+document is called updateOne.
+
+62
+00:02:39,910 --> 00:02:43,650
+Now, of course, we could
+add this field in Compass
+
+63
+00:02:43,650 --> 00:02:45,780
+by simply editing the document.
+
+64
+00:02:45,780 --> 00:02:48,330
+But for most update
+use cases, you're
+
+65
+00:02:48,330 --> 00:02:52,230
+going to be writing updates as
+part of your application logic,
+
+66
+00:02:52,230 --> 00:02:54,450
+and not performing
+updates by hand,
+
+67
+00:02:54,450 --> 00:02:57,180
+as we would in a GUI
+tool like Compass.
+
+68
+00:02:57,180 --> 00:02:59,850
+So here's our call to updateOne.
+
+69
+00:02:59,850 --> 00:03:02,220
+Let's talk briefly
+about the syntax.
+
+70
+00:03:02,220 --> 00:03:05,220
+The basic idea here with
+updateOne and the other two
+
+71
+00:03:05,220 --> 00:03:09,360
+update methods is that you
+first specify a filter.
+
+72
+00:03:09,360 --> 00:03:13,620
+As with find, this will identify
+the document or documents
+
+73
+00:03:13,620 --> 00:03:15,150
+that we want to update.
+
+74
+00:03:15,150 --> 00:03:18,060
+updateOne will simply
+update the first document
+
+75
+00:03:18,060 --> 00:03:19,320
+matching our filter.
+
+76
+00:03:19,320 --> 00:03:21,720
+For example, if we had
+put something in here
+
+77
+00:03:21,720 --> 00:03:25,890
+like year 1999, there would
+be dozens of documents
+
+78
+00:03:25,890 --> 00:03:27,990
+that match in this collection.
+
+79
+00:03:27,990 --> 00:03:29,940
+The first one
+retrieved by MongoDB
+
+80
+00:03:29,940 --> 00:03:31,950
+would be the one
+that got updated.
+
+81
+00:03:31,950 --> 00:03:34,260
+In this case, there
+is just one movie
+
+82
+00:03:34,260 --> 00:03:36,180
+that is titled The Martian.
+
+83
+00:03:36,180 --> 00:03:38,520
+Now, of course, in a
+web app, update script,
+
+84
+00:03:38,520 --> 00:03:41,760
+or other software application,
+we'd be using a unique
+
+85
+00:03:41,760 --> 00:03:45,510
+identifier such as the _id in
+order to specify the document
+
+86
+00:03:45,510 --> 00:03:46,580
+to update.
+
+87
+00:03:46,580 --> 00:03:50,160
+We're using the title here just
+so it's obvious exactly what
+
+88
+00:03:50,160 --> 00:03:52,110
+movie we are updating.
+
+89
+00:03:52,110 --> 00:03:55,500
+The second argument to
+updateOne specifies how
+
+90
+00:03:55,500 --> 00:03:57,720
+we want to update the document.
+
+91
+00:03:57,720 --> 00:04:01,320
+You must apply an update
+operator of some kind.
+
+92
+00:04:01,320 --> 00:04:04,620
+In this case, we're
+using the $set operator.
+
+93
+00:04:04,620 --> 00:04:08,130
+$set takes a document
+as an argument.
+
+94
+00:04:08,130 --> 00:04:11,760
+It's expecting a document that
+has one or more fields listed.
+
+95
+00:04:11,760 --> 00:04:15,060
+$set updates the document
+matching the filter
+
+96
+00:04:15,060 --> 00:04:19,709
+such that all key value
+pairs in the update document
+
+97
+00:04:19,709 --> 00:04:22,320
+are reflected in the new
+version of the document
+
+98
+00:04:22,320 --> 00:04:23,240
+we are updating.
+
+99
+00:04:23,240 --> 00:04:27,210
+For this call to updateOne,
+$set will add a field
+
+100
+00:04:27,210 --> 00:04:31,560
+called poster, with
+this URL as the value.
+
+101
+00:04:31,560 --> 00:04:34,960
+If there was an existing
+poster field in the document,
+
+102
+00:04:34,960 --> 00:04:37,060
+this would modify its value.
+
+103
+00:04:37,060 --> 00:04:39,930
+Now let's go ahead
+and copy this command,
+
+104
+00:04:39,930 --> 00:04:42,030
+and run it in our shell.
+
+105
+00:04:42,030 --> 00:04:45,870
+In this shell, we're connected
+to our Atlas sandbox cluster,
+
+106
+00:04:45,870 --> 00:04:49,470
+and are using the video
+database so that we can access
+
+107
+00:04:49,470 --> 00:04:51,390
+the movieDetails collection.
+
+108
+00:04:51,390 --> 00:04:53,190
+The response we
+get back tells us
+
+109
+00:04:53,190 --> 00:04:55,890
+that the update was
+acknowledged by the database.
+
+110
+00:04:55,890 --> 00:04:59,460
+We matched just one
+document, as expected.
+
+111
+00:04:59,460 --> 00:05:02,374
+If we had matched more,
+we'd get that count here.
+
+112
+00:05:02,374 --> 00:05:04,040
+And then the response
+indicates how many
+
+113
+00:05:04,040 --> 00:05:05,690
+documents were modified.
+
+114
+00:05:05,690 --> 00:05:09,025
+For updateOne, this value
+should always be 1 or 0.
+
+115
+00:05:09,025 --> 00:05:10,400
+Let's take a look
+at the document
+
+116
+00:05:10,400 --> 00:05:12,890
+now to see what
+changes were made.
+
+117
+00:05:12,890 --> 00:05:14,960
+And if I refresh
+the document, I can
+
+118
+00:05:14,960 --> 00:05:19,400
+see that now, in fact,
+there is a poster field.
+
+119
+00:05:19,400 --> 00:05:21,260
+Update operators, as
+you might imagine,
+
+120
+00:05:21,260 --> 00:05:23,480
+aren't limited to
+scalar updates,
+
+121
+00:05:23,480 --> 00:05:25,190
+like we just performed.
+
+122
+00:05:25,190 --> 00:05:27,540
+We can update fields
+with any legal value.
+
+123
+00:05:27,540 --> 00:05:29,540
+As a quick example,
+let's go ahead
+
+124
+00:05:29,540 --> 00:05:33,530
+and supply the awards
+field for The Martian.
+
+125
+00:05:33,530 --> 00:05:37,460
+Now, we can go ahead and
+execute this call to updateOne.
+
+126
+00:05:37,460 --> 00:05:39,440
+And note that here,
+we're doing something
+
+127
+00:05:39,440 --> 00:05:43,310
+very similar to what we did in
+our previous call to updateOne.
+
+128
+00:05:43,310 --> 00:05:46,040
+But in this case,
+our $set operator
+
+129
+00:05:46,040 --> 00:05:48,980
+is going to set an
+awards field such
+
+130
+00:05:48,980 --> 00:05:54,110
+that the value of the awards
+key will be this document.
+
+131
+00:05:54,110 --> 00:05:55,770
+Now, if we go
+ahead and run this,
+
+132
+00:05:55,770 --> 00:05:58,460
+we see that, again, we matched
+one document and modified one
+
+133
+00:05:58,460 --> 00:05:59,600
+document.
+
+134
+00:05:59,600 --> 00:06:02,540
+Going back and taking a look
+at this document in Compass,
+
+135
+00:06:02,540 --> 00:06:05,330
+we can see that our
+awards field is here,
+
+136
+00:06:05,330 --> 00:06:09,900
+with the values specified
+in our call to updateOne.
+
+137
+00:06:09,900 --> 00:06:12,290
+And with that, we've
+covered the fundamentals
+
+138
+00:06:12,290 --> 00:00:00,000
+of using updateOne.
+

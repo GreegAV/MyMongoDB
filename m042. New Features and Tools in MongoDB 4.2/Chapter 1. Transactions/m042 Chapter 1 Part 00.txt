@@ -1,0 +1,79 @@
+Hello.
+
+I'm Ali Cabral, a product manager on the core server.
+
+You may remember me from the MongoDB 4.0 university course where I introduced multi document acid transactions and replica sets.
+
+MongoDB transactions are conversational, familiar, preserve atomicity across operations, and have snapshot isolation.
+
+They are multi-document, multi-statement, and can span any namespace across your MongoDB instance.
+
+But let's remember, even before transactions were launched prior to 4.0, MongoDB atomicity at the single document level.
+
+For instance, if you updated multiple fields in a single update statement, you'd have the all or nothing execution guarantee.
+
+Now in MongoDB 4.2, we've extended multi-document transactions to sharded clusters, making application development even easier with MongoDB.
+
+However, just as we discussed with replica sets, this should not fundamentally change how you use the database.
+
+Let's review our seven transactions guidelines that still apply.
+
+First, all data modeling rules still apply.
+
+Just because you have transactions now does not mean you should start normalizing your data across tables just like you did in relational systems.
+
+To fully leverage the document model, use the rich structure of documents to store related data together.
+
+Second, transactions should not be the most common operation in your application.
+
+Really, this is a sanity check for the first guideline.
+
+When transactions are the most common operation where you always read or modify multiple documents, this often points to legacy data modeling practices that just don't apply to MongoDB.
+
+Third, pass in the session to all statements.
+
+It's very important to remember to pass in the session object to any CRUD operation you want to execute within the transaction context.
+
+Fourth, implement retry logic.
+
+Transactions can always abort.
+
+In MongoDB 4.0, we introduced error labels to listen for and respond to you by retrying the transaction or the commit.
+
+Now in MongoDB 4.2, we've introduced a new callback API for transactions that retries automatically for up to 120 seconds.
+
+You don't need to explicitly listen to error labels any longer.
+
+Fifth, don't unnecessarily leave snapshots open.
+
+When we keep transactions open, MongoDB has to keep all of the history since the snapshot time of that transaction.
+
+Once the transaction completes, the system can clean up that history.
+
+As a guardrail, we have a configurable transaction lifetime limit seconds which defaults to 60 seconds and proactively cleans up long-running transactions.
+
+You can change this value, but you must test with your expected workload and keep an eye on cache pressure buildup.
+
+You should also make sure to commit or abort even read-only transactions, as this relieves the system from needing to unnecessarily store history.
+
+Next we have our sixth and second to last guideline.
+
+To trigger write conflicts, make sure you're doing writes.
+
+Reads do not trigger write conflicts.
+
+And no-op writes do not trigger write conflicts.
+
+No-op writes are writes that don't modify the document.
+
+For instance, if I changed a color to red, and the color was already red in the document, this is a no-op and doesn't make it to the storage engine and won't trigger write conflicts.
+
+Our final and seventh guideline is plan for DDL operations.
+
+DDL operations, like create index and drop database, compete with active running transactions.
+
+When a DDL operation is waiting on a transaction to finish, no operations that need to access that namespace for the first time will be able to until the DDL operation completes.
+
+MongoDB 4.2 introduces distributed transactions, making transactions even more powerful as they extend to cross shards.
+
+This chapter will lay out the foundation for working with distributed transactions and your environment.

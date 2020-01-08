@@ -1,0 +1,436 @@
+
+1
+00:00:00.000 --> 00:00:00.520
+
+
+2
+00:00:00.520 --> 00:00:01.715
+All right, welcome back.
+
+3
+00:00:01.715 --> 00:00:04.130
+In this lesson, we're going
+to discuss a new feature that
+
+4
+00:00:04.130 --> 00:00:06.650
+prevents passwords for
+being exposed in the MongoDB
+
+5
+00:00:06.650 --> 00:00:08.330
+configuration file.
+
+6
+00:00:08.330 --> 00:00:10.100
+MongoDB configuration
+files often
+
+7
+00:00:10.100 --> 00:00:12.920
+contain all the information
+necessary to start up
+
+8
+00:00:12.920 --> 00:00:14.895
+a MongoDB process.
+
+9
+00:00:14.895 --> 00:00:17.270
+In some ways, it's a good
+thing that all this information
+
+10
+00:00:17.270 --> 00:00:18.910
+can be contained in one place.
+
+11
+00:00:18.910 --> 00:00:21.410
+We know which file to edit when
+we want to change something,
+
+12
+00:00:21.410 --> 00:00:23.960
+and we know where to look
+when something changes.
+
+13
+00:00:23.960 --> 00:00:25.740
+If we decide to
+change the tls mode,
+
+14
+00:00:25.740 --> 00:00:28.670
+for example, we'd see
+that reflected here.
+
+15
+00:00:28.670 --> 00:00:31.190
+However, there's some
+trade to this approach.
+
+16
+00:00:31.190 --> 00:00:32.840
+In particular,
+including an entry
+
+17
+00:00:32.840 --> 00:00:35.290
+for password secrets in
+the configuration file
+
+18
+00:00:35.290 --> 00:00:37.620
+leaves sensitive data
+exposed in plain text
+
+19
+00:00:37.620 --> 00:00:39.650
+if not properly secured.
+
+20
+00:00:39.650 --> 00:00:42.380
+Exposing these passwords
+as strings in the YAML
+
+21
+00:00:42.380 --> 00:00:45.380
+can complicate auditing within
+an organization in addition
+
+22
+00:00:45.380 --> 00:00:49.100
+to deepening the fallout in the
+event of a system compromise.
+
+23
+00:00:49.100 --> 00:00:51.950
+So instead of pointing
+MongoD to a config file
+
+24
+00:00:51.950 --> 00:00:54.950
+and storing security
+parameters in this file,
+
+25
+00:00:54.950 --> 00:00:56.810
+we can reference some
+environmental variable
+
+26
+00:00:56.810 --> 00:00:58.383
+on the local system.
+
+27
+00:00:58.383 --> 00:01:00.050
+In this case, the
+environmental variable
+
+28
+00:01:00.050 --> 00:01:01.700
+has to be a
+function, which means
+
+29
+00:01:01.700 --> 00:01:04.980
+that we can do something simple
+like just returning a string.
+
+30
+00:01:04.980 --> 00:01:07.370
+This is probably
+not the most secure.
+
+31
+00:01:07.370 --> 00:01:10.250
+So like any other bash function,
+we can make a web request here
+
+32
+00:01:10.250 --> 00:01:11.115
+if we want.
+
+33
+00:01:11.115 --> 00:01:12.740
+This web request can
+retrieve something
+
+34
+00:01:12.740 --> 00:01:16.390
+from an external service, for
+example, a password vault.
+
+35
+00:01:16.390 --> 00:01:17.890
+So just to see how
+this works, we're
+
+36
+00:01:17.890 --> 00:01:20.000
+going to take a look at
+the old configuration file
+
+37
+00:01:20.000 --> 00:01:23.550
+format, where we had to pass
+the password as a string.
+
+38
+00:01:23.550 --> 00:01:25.490
+So in this example,
+the tls certificate
+
+39
+00:01:25.490 --> 00:01:28.700
+we're using to start up MongoD
+is protected with a password.
+
+40
+00:01:28.700 --> 00:01:31.460
+And in our configuration
+file, the certificate key
+
+41
+00:01:31.460 --> 00:01:35.990
+file password is passed as
+a string just m042password.
+
+42
+00:01:35.990 --> 00:01:37.590
+This variable is
+pretty sensitive.
+
+43
+00:01:37.590 --> 00:01:40.810
+So let's pass it as an
+environmental variable instead.
+
+44
+00:01:40.810 --> 00:01:43.420
+So in this example, we
+passed this exec parameter
+
+45
+00:01:43.420 --> 00:01:45.970
+and asked it to execute
+the environmental variable
+
+46
+00:01:45.970 --> 00:01:48.120
+get_certificate_password.
+
+47
+00:01:48.120 --> 00:01:49.580
+So get_certificate_password
+is just
+
+48
+00:01:49.580 --> 00:01:52.122
+a function on the local system
+that returns our certificate's
+
+49
+00:01:52.122 --> 00:01:53.130
+password.
+
+50
+00:01:53.130 --> 00:01:56.040
+Here the -n removes the
+new line and white space
+
+51
+00:01:56.040 --> 00:01:58.350
+around the string m042password.
+
+52
+00:01:58.350 --> 00:02:00.630
+This way, the configuration
+file can use this string
+
+53
+00:02:00.630 --> 00:02:03.257
+without manipulating it further.
+
+54
+00:02:03.257 --> 00:02:05.090
+So we can use this
+configuration to start up
+
+55
+00:02:05.090 --> 00:02:07.230
+MongoD with this command.
+
+56
+00:02:07.230 --> 00:02:09.470
+Note that we need to pass
+this additional parameter
+
+57
+00:02:09.470 --> 00:02:11.690
+configExpand and
+then specify that we
+
+58
+00:02:11.690 --> 00:02:15.430
+want to use the exec
+option in our config file.
+
+59
+00:02:15.430 --> 00:02:17.790
+We can see a log message
+noting that it did process
+
+60
+00:02:17.790 --> 00:02:20.520
+the exec config
+expansion, and the process
+
+61
+00:02:20.520 --> 00:02:22.420
+started successfully.
+
+62
+00:02:22.420 --> 00:02:24.330
+So we can also do
+instead of passing
+
+63
+00:02:24.330 --> 00:02:28.200
+an environmental variable is ask
+MongoDB to make a web request.
+
+64
+00:02:28.200 --> 00:02:30.312
+As we showed earlier, we
+can make a web request
+
+65
+00:02:30.312 --> 00:02:31.770
+through the
+environmental variable,
+
+66
+00:02:31.770 --> 00:02:33.900
+but MongoDB provides a
+way to do it directly
+
+67
+00:02:33.900 --> 00:02:35.770
+from the configuration file.
+
+68
+00:02:35.770 --> 00:02:37.710
+This option will use
+the local web request
+
+69
+00:02:37.710 --> 00:02:39.910
+library on whatever
+platform you're running on.
+
+70
+00:02:39.910 --> 00:02:43.590
+So that'll be WinHTTP
+on Windows or libcurl
+
+71
+00:02:43.590 --> 00:02:45.220
+on any other platform.
+
+72
+00:02:45.220 --> 00:02:48.060
+So in this example, the
+password for our tls certificate
+
+73
+00:02:48.060 --> 00:02:50.880
+we're using to start up MongoD
+is passed from a web request
+
+74
+00:02:50.880 --> 00:02:53.370
+with __rest.
+
+75
+00:02:53.370 --> 00:02:55.440
+We don't have as much
+control over the rest call
+
+76
+00:02:55.440 --> 00:02:57.660
+as we did on the local
+environment variable.
+
+77
+00:02:57.660 --> 00:02:59.970
+So while we could just
+trim out the whitespace
+
+78
+00:02:59.970 --> 00:03:03.480
+from the environmental variable,
+this file is on another server.
+
+79
+00:03:03.480 --> 00:03:05.730
+So we're going to specify
+that we want a string output
+
+80
+00:03:05.730 --> 00:03:08.890
+and then trim the
+whitespace around it.
+
+81
+00:03:08.890 --> 00:03:11.100
+And when we launched MongoD
+with this config file,
+
+82
+00:03:11.100 --> 00:03:13.183
+we need to specify that
+we're going to make a rest
+
+83
+00:03:13.183 --> 00:03:14.363
+call in the config.
+
+84
+00:03:14.363 --> 00:03:15.780
+And that took a
+minute, because it
+
+85
+00:03:15.780 --> 00:03:17.738
+needed to make a request
+to a different server,
+
+86
+00:03:17.738 --> 00:03:20.400
+but it eventually did
+start successfully.
+
+87
+00:03:20.400 --> 00:03:21.862
+So just to recap
+in this lesson, we
+
+88
+00:03:21.862 --> 00:03:23.570
+discussed the new
+alternatives to storing
+
+89
+00:03:23.570 --> 00:03:25.460
+passwords in config files.
+
+90
+00:03:25.460 --> 00:03:27.050
+As a reminder, those
+two alternatives
+
+91
+00:03:27.050 --> 00:03:30.730
+are environmental
+variables and web requests.

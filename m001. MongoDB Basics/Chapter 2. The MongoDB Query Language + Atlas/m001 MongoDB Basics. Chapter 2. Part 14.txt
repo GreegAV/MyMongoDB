@@ -1,0 +1,123 @@
+Now let's take a look at updating documents.
+
+Before we get started, I'd like to look at the movieDetails data set in Compass in just a little bit more detail.
+
+This data set includes the fields that you might expect, like title, year, and the MPAA rating.
+
+But it also includes fields that are important for building a website designed for movie buffs and others who just have a genuine interest in movies.
+
+There's a field for the countries in which the movie was filmed, who the writers were, the actors, of course, and even a field for the movie poster to provide a way of getting access to some visuals.
+
+In addition, we have the Rotten Tomatoes data for viewer ratings and awards that a given movie may have won.
+
+So for a movie's website, we can use this data to provide a really nice picture of what went into making this movie.
+
+As I mentioned, while not all movies in this data set include this field, many include a poster field.
+
+Let's take a look at one that doesn't actually include a poster.
+
+So here we have the movie The Martian.
+
+And as you can see on a quick scan of the fields for this document, there is no poster field.
+
+And in fact, there's no awards field either.
+
+Now, we won't spend too much time on this, but the difference between The Martian and other movies we've looked at illustrates something that sets MongoDB apart from relational databases.
+
+It's possible for documents in the same collection to have different schemas.
+
+And we take advantage of that in MongoDB in a variety of ways.
+
+This is an important difference from relational database tables in which all records must have exactly the same set of columns.
+
+One of the simplest ways in which we use this in a MongoDB database is that for documents for which we have no data for a field, we don't need to include the field at all.
+
+Going a bit further, many movies have not received awards.
+
+The flexibility of MongoDB's data model allows us to easily model awards for just those movies that have them without creating a second table or a collection that we must then join together in queries in order to get all necessary data for a movie.
+
+Now, there does, in fact, exist a movie poster for The Martian.
+
+And The Martian did win several awards.
+
+So as an example of updating documents in MongoDB, we're going to fix this document by adding a poster field and an awards field.
+
+Now, an application might do this type of update as the poster becomes available in an electronic form for use on the site or even in response to user-contributed and moderated content.
+
+In the MongoDB query language, the method for updating a single document is called updateOne.
+
+Now, of course, we could add this field in Compass by simply editing the document.
+
+But for most update use cases, you're going to be writing updates as part of your application logic, and not performing updates by hand, as we would in a GUI tool like Compass.
+
+So here's our call to updateOne.
+
+Let's talk briefly about the syntax.
+
+The basic idea here with updateOne and the other two update methods is that you first specify a filter.
+
+As with find, this will identify the document or documents that we want to update.
+
+updateOne will simply update the first document matching our filter.
+
+For example, if we had put something in here like year 1999, there would be dozens of documents that match in this collection.
+
+The first one retrieved by MongoDB would be the one that got updated.
+
+In this case, there is just one movie that is titled The Martian.
+
+Now, of course, in a web app, update script, or other software application, we'd be using a unique identifier such as the _id in order to specify the document to update.
+
+We're using the title here just so it's obvious exactly what movie we are updating.
+
+The second argument to updateOne specifies how we want to update the document.
+
+You must apply an update operator of some kind.
+
+In this case, we're using the $set operator.
+
+$set takes a document as an argument.
+
+It's expecting a document that has one or more fields listed.
+
+$set updates the document matching the filter such that all key value pairs in the update document are reflected in the new version of the document we are updating.
+
+For this call to updateOne, $set will add a field called poster, with this URL as the value.
+
+If there was an existing poster field in the document, this would modify its value.
+
+Now let's go ahead and copy this command, and run it in our shell.
+
+In this shell, we're connected to our Atlas sandbox cluster, and are using the video database so that we can access the movieDetails collection.
+
+The response we get back tells us that the update was acknowledged by the database.
+
+We matched just one document, as expected.
+
+If we had matched more, we'd get that count here.
+
+And then the response indicates how many documents were modified.
+
+For updateOne, this value should always be 1 or 0.
+
+Let's take a look at the document now to see what changes were made.
+
+And if I refresh the document, I can see that now, in fact, there is a poster field.
+
+Update operators, as you might imagine, aren't limited to scalar updates, like we just performed.
+
+We can update fields with any legal value.
+
+As a quick example, let's go ahead and supply the awards field for The Martian.
+
+Now, we can go ahead and execute this call to updateOne.
+
+And note that here, we're doing something very similar to what we did in our previous call to updateOne.
+
+But in this case, our $set operator is going to set an awards field such that the value of the awards key will be this document.
+
+Now, if we go ahead and run this, we see that, again, we matched one document and modified one document.
+
+Going back and taking a look at this document in Compass, we can see that our awards field is here, with the values specified in our call to updateOne.
+
+And with that, we've covered the fundamentals of using updateOne.

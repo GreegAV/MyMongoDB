@@ -1,0 +1,53 @@
+Let's walk through how to migrate from MONGODB-CR to SCRAM-SHA-1.
+
+SCRAM-SHA-1 is highly recommended over MONGODB-CR.
+
+And you should only ever encounter MONGODB-CR on a system something greater than 3.0 if that system used to be on an order system, less than 3.0, and that system was migrated to a 3.0 or greater system.
+
+The users that were created on that older system will still be using MONGODB-CR until you actually migrate them over to SCRAM-SHA-1.
+
+All your new users will still be using SCRAM-SHA-1 on your upgraded system.
+
+Many legacy users will still be using MONGODB-CR.
+
+So in this video, we're going to walk you through the process of how to migrate those old MONGODB-CR users over to using SCRAM-SHA-1, which is the much more recommended authentication mechanism.
+
+It's important to point out that upgrading from MONGODB-CR to SCRAM-SHA-1 might require you to upgrade your drivers.
+
+Just make sure that you understand what version of drivers you're currently using and what authentication mechanisms those currently support.
+
+It's just a good thing to keep in the back of your mind when going through this process.
+
+Let's go ahead and connect to our MONGOD instance and walk you through the process of how to migrate over your old MONGODB-CR users to SCRAM-SHA-1.
+
+On this computer, I was recently running a version of MongoDB 2.6.
+
+On the 2.6 server, I created a user called Kirby whose password is password.
+
+I then upgraded the server to 3.2.
+
+So we should now have a user in this 3.2 server's database that is currently using MONGODB-CR, which is not cool.
+
+We would much rather it be using SCRAM-SHA-1.
+
+Let's go ahead and switch to the admin database and authenticate.
+
+I'm now authenticated.
+
+Let's go ahead and verify that this user is still using MONGODB-CR.
+
+In the system.users collection, we can run find and see that the Kirby user is still using MONGODB-CR.
+
+In order to migrate over all these users-- in this case just one user-- over to using SCRAM-SHA-1, we just need to run the command db.adminCommand( {authSechemaUpgrade: 1}).
+
+And in running so, it says done.
+
+OK.
+
+And if we look at our users, we can see that Kirby is no longer using MONGODB-CR, but is rather using SCRAM-SHA-1.
+
+And that's how you migrate users from using MONGODB-CR to SCRAM-SHA-1.
+
+As a result of this, MONGODB-CR is now completely disabled on this database.
+
+It is impossible to create users that use MONGODB-CR on this database.

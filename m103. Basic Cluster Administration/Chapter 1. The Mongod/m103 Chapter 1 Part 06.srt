@@ -1,0 +1,563 @@
+1
+00:00:00,000 --> 00:00:00,210
+
+
+2
+00:00:00,210 --> 00:00:02,543
+Have you ever thought about
+the process required for you
+
+3
+00:00:02,543 --> 00:00:05,250
+to withdraw cash from an ATM?
+
+4
+00:00:05,250 --> 00:00:07,620
+How does the ATM
+figure out who you are,
+
+5
+00:00:07,620 --> 00:00:11,640
+and what accounts you have
+access to, and what you can do?
+
+6
+00:00:11,640 --> 00:00:13,710
+The ATM starts with a challenge.
+
+7
+00:00:13,710 --> 00:00:15,300
+Who are you?
+
+8
+00:00:15,300 --> 00:00:17,430
+Depending on your
+response, the ATM
+
+9
+00:00:17,430 --> 00:00:20,340
+can validate you as who you
+say you are and grant access
+
+10
+00:00:20,340 --> 00:00:21,790
+to the system.
+
+11
+00:00:21,790 --> 00:00:24,870
+This process of challenge,
+response, and validation
+
+12
+00:00:24,870 --> 00:00:26,860
+is authentication.
+
+13
+00:00:26,860 --> 00:00:29,070
+Now, there is a second
+step that takes place.
+
+14
+00:00:29,070 --> 00:00:33,350
+We know who you are, but how
+do we know what you can do?
+
+15
+00:00:33,350 --> 00:00:36,090
+The ATM first asks a question.
+
+16
+00:00:36,090 --> 00:00:38,760
+What does this user
+have access to?
+
+17
+00:00:38,760 --> 00:00:42,020
+The answer here are the
+resources you have access to
+
+18
+00:00:42,020 --> 00:00:43,500
+and the privileges
+or actions you
+
+19
+00:00:43,500 --> 00:00:46,050
+can execute on these resources.
+
+20
+00:00:46,050 --> 00:00:48,810
+The process of verifying
+the privileges and resource
+
+21
+00:00:48,810 --> 00:00:52,560
+access of an authenticated
+user is authorization.
+
+22
+00:00:52,560 --> 00:00:55,860
+In this case, the ATM
+authorizes you to only access
+
+23
+00:00:55,860 --> 00:00:57,180
+your own accounts.
+
+24
+00:00:57,180 --> 00:00:59,430
+Now, you're logged in
+and you can withdraw cash
+
+25
+00:00:59,430 --> 00:01:02,130
+because you authenticated,
+using your debit card and pin,
+
+26
+00:01:02,130 --> 00:01:06,100
+and were authorized to only
+access your own accounts.
+
+27
+00:01:06,100 --> 00:01:10,050
+MongoDB Security is built around
+the process of authentication
+
+28
+00:01:10,050 --> 00:01:12,000
+and authorization.
+
+29
+00:01:12,000 --> 00:01:14,730
+When you enable authentication
+on a MongoDB cluster,
+
+30
+00:01:14,730 --> 00:01:19,950
+every client must provide valid
+credentials for authentication.
+
+31
+00:01:19,950 --> 00:01:23,190
+MongoDB then authorizes the
+user with certain resources
+
+32
+00:01:23,190 --> 00:01:25,950
+and privilege access.
+
+33
+00:01:25,950 --> 00:01:28,300
+Let's start with authentication.
+
+34
+00:01:28,300 --> 00:01:30,960
+MongoDB supports four
+different client authentication
+
+35
+00:01:30,960 --> 00:01:32,760
+mechanisms.
+
+36
+00:01:32,760 --> 00:01:35,400
+SCRAM is the default
+and most basic form
+
+37
+00:01:35,400 --> 00:01:37,770
+of client authentication
+MongoDB provides
+
+38
+00:01:37,770 --> 00:01:42,150
+when you deploy in MongoD or
+MongoS with security enabled.
+
+39
+00:01:42,150 --> 00:01:46,290
+The SCRAM prefix stands for
+Salted Challenge Response
+
+40
+00:01:46,290 --> 00:01:48,840
+Authentication Mechanism.
+
+41
+00:01:48,840 --> 00:01:51,120
+The key here is
+challenge response.
+
+42
+00:01:51,120 --> 00:01:53,730
+Basically the MongoDB
+server presents a question
+
+43
+00:01:53,730 --> 00:01:57,570
+or challenge to the client who
+must provide a valid answer
+
+44
+00:01:57,570 --> 00:02:00,060
+or response for authentication.
+
+45
+00:02:00,060 --> 00:02:02,370
+This is basically
+password security.
+
+46
+00:02:02,370 --> 00:02:05,160
+You don't need to know the
+exact workings of the SCRAM
+
+47
+00:02:05,160 --> 00:02:06,840
+authentication mechanism.
+
+48
+00:02:06,840 --> 00:02:10,500
+Just remember that scram is
+basic security for your MongoDB
+
+49
+00:02:10,500 --> 00:02:11,640
+cluster.
+
+50
+00:02:11,640 --> 00:02:14,400
+Every MongoDB cluster should
+have authentication enabled
+
+51
+00:02:14,400 --> 00:02:17,797
+and at least SCRAM in place.
+
+52
+00:02:17,797 --> 00:02:19,380
+With the community
+version of MongoDB,
+
+53
+00:02:19,380 --> 00:02:23,190
+you also have the option of
+configuring X.509 security.
+
+54
+00:02:23,190 --> 00:02:25,920
+This form of security
+uses an X.509 certificate
+
+55
+00:02:25,920 --> 00:02:27,630
+for authentication.
+
+56
+00:02:27,630 --> 00:02:30,300
+This is a more secure,
+albeit more complex,
+
+57
+00:02:30,300 --> 00:02:33,850
+authentication mechanism that
+is also available to you.
+
+58
+00:02:33,850 --> 00:02:37,310
+MongoDB Enterprise includes
+two additional authentication
+
+59
+00:02:37,310 --> 00:02:40,370
+mechanisms designed for
+enterprise environments.
+
+60
+00:02:40,370 --> 00:02:43,460
+The first is the Lightweight
+Directory Access Protocol,
+
+61
+00:02:43,460 --> 00:02:45,116
+or LDAP for short.
+
+62
+00:02:45,116 --> 00:02:46,490
+If you haven't
+heard of LDAP, you
+
+63
+00:02:46,490 --> 00:02:49,190
+might have heard of Microsoft
+Active Directory, which
+
+64
+00:02:49,190 --> 00:02:51,600
+is built on the LDAP protocol.
+
+65
+00:02:51,600 --> 00:02:54,090
+MongoDB you can use an Active
+Directory or other LDAP
+
+66
+00:02:54,090 --> 00:02:56,270
+service as the authority
+on authentication
+
+67
+00:02:56,270 --> 00:02:58,950
+or authorization of users.
+
+68
+00:02:58,950 --> 00:03:01,660
+Finally, we have
+Kerberos authentication.
+
+69
+00:03:01,660 --> 00:03:04,010
+The bright folks at the
+Massachusetts Institute
+
+70
+00:03:04,010 --> 00:03:07,400
+of Technology designed Kerberos
+as a powerful authentication
+
+71
+00:03:07,400 --> 00:03:08,630
+mechanism.
+
+72
+00:03:08,630 --> 00:03:10,670
+Since this is a basic
+security course,
+
+73
+00:03:10,670 --> 00:03:12,300
+we're sticking to SCRAM.
+
+74
+00:03:12,300 --> 00:03:14,750
+Now, we're not quite done
+with authentication yet.
+
+75
+00:03:14,750 --> 00:03:17,760
+We've only talked about
+client authentication.
+
+76
+00:03:17,760 --> 00:03:21,050
+MongoDB also supports intra
+cluster authentication,
+
+77
+00:03:21,050 --> 00:03:23,330
+the mechanism by which nodes
+in a cluster authenticate
+
+78
+00:03:23,330 --> 00:03:24,650
+to each other.
+
+79
+00:03:24,650 --> 00:03:26,870
+Think of this like
+a secret handshake.
+
+80
+00:03:26,870 --> 00:03:30,140
+If you don't know the handshake,
+you can't join the cluster.
+
+81
+00:03:30,140 --> 00:03:33,690
+We'll talk more about intra
+cluster auth in a later lesson.
+
+82
+00:03:33,690 --> 00:03:35,180
+For now, just
+remember that MongoDB
+
+83
+00:03:35,180 --> 00:03:38,060
+provides both cluster
+and client authentication
+
+84
+00:03:38,060 --> 00:03:40,340
+for complete security.
+
+85
+00:03:40,340 --> 00:03:43,970
+To recap MongoDB provides
+four client authentication
+
+86
+00:03:43,970 --> 00:03:47,760
+mechanisms, in addition
+to cluster authentication.
+
+87
+00:03:47,760 --> 00:03:51,270
+All editions of MongoDB
+get SCRAM and X.509
+
+88
+00:03:51,270 --> 00:03:53,610
+for client authentication.
+
+89
+00:03:53,610 --> 00:03:57,510
+Enterprise editions of MongoDB
+also get LDAP and Kerberos
+
+90
+00:03:57,510 --> 00:03:59,370
+authentication.
+
+91
+00:03:59,370 --> 00:04:02,310
+At the very minimum, you should
+always configure your MongoDB
+
+92
+00:04:02,310 --> 00:04:04,260
+deployments with
+SCRAM where there
+
+93
+00:04:04,260 --> 00:04:06,300
+is a single administrative
+user protected
+
+94
+00:04:06,300 --> 00:04:09,660
+by a very strong password.
+
+95
+00:04:09,660 --> 00:04:11,910
+We'll be sticking to the
+basics in this course.
+
+96
+00:04:11,910 --> 00:04:15,930
+Take a look at M310 or
+our MongoDB documentation
+
+97
+00:04:15,930 --> 00:04:18,870
+for guidance on implementing
+other available authentication
+
+98
+00:04:18,870 --> 00:04:20,290
+mechanisms.
+
+99
+00:04:20,290 --> 00:04:23,070
+Now, we've covered
+the who are you.
+
+100
+00:04:23,070 --> 00:04:26,340
+What about the what
+are you allowed to do?
+
+101
+00:04:26,340 --> 00:04:28,800
+MongoDB uses role
+based access control
+
+102
+00:04:28,800 --> 00:04:32,490
+for authorizing an
+authenticated user.
+
+103
+00:04:32,490 --> 00:04:37,200
+Each MongoDB user has one or
+more roles associated to it.
+
+104
+00:04:37,200 --> 00:04:40,210
+Each role has one
+or more privileges.
+
+105
+00:04:40,210 --> 00:04:41,850
+These privileges
+represent a group
+
+106
+00:04:41,850 --> 00:04:46,920
+of actions and the resources
+that those actions apply to.
+
+107
+00:04:46,920 --> 00:04:48,900
+Role based access
+control allows you
+
+108
+00:04:48,900 --> 00:04:51,660
+to ensure a high level of
+responsibility isolation
+
+109
+00:04:51,660 --> 00:04:53,490
+among individual users.
+
+110
+00:04:53,490 --> 00:04:56,700
+That means a user can be
+granted the exact roles required
+
+111
+00:04:56,700 --> 00:05:00,270
+for that user to execute
+its expected workload.
+
+112
+00:05:00,270 --> 00:05:04,560
+Users exist per database, so you
+can isolate user privilege down
+
+113
+00:05:04,560 --> 00:05:06,510
+to the database or
+even the collection
+
+114
+00:05:06,510 --> 00:05:09,050
+that the user should
+have access to.
+
+115
+00:05:09,050 --> 00:05:10,740
+For the most basic
+security possible,
+
+116
+00:05:10,740 --> 00:05:13,290
+create a user on
+the Admin database
+
+117
+00:05:13,290 --> 00:05:15,750
+with one of our built in
+administrative super user
+
+118
+00:05:15,750 --> 00:05:17,700
+roles, such as root.
+
+119
+00:05:17,700 --> 00:00:00,000
+We're going to cover
+roles in detail later on.
+

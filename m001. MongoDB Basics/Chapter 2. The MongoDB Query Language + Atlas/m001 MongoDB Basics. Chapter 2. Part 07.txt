@@ -1,0 +1,51 @@
+Now let's connect Compass to your Atlas sandbox cluster.
+
+In order to do this, you'll want to look at the cluster view for your sandbox cluster.
+
+And click through the cluster name here.
+
+You might have named your cluster something else, but this is where you find the name of your cluster.
+
+Click through it.
+
+And then what we're looking for here is the primary.
+
+Compass currently only allows us to specify a single hostname in the Form field.
+
+It does a little bit to help us out if we have a connection URI.
+
+For our purposes, it's going to be simplest to simply identify the primary, and then click through to it.
+
+This is the hostname we want.
+
+Your hostname will be different because you have your own sandbox cluster.
+
+But for mine, this is the hostname.
+
+You can find yours in exactly the same place in the Compass UI.
+
+Copy it.
+
+Go back into Compass, and paste it into the Hostname box.
+
+The port is already provided for us by default.
+
+So at this point, what we'll need to do is simply specify the username and password.
+
+Now if you followed the instructions for setting up your sandbox cluster, to create an administrative user with the requested username and password, then here you should enter, for username, m001-students, and for password m001-mongodb-basics.
+
+The rest of the defaults should be fine.
+
+But you probably want to create a favorite.
+
+Then we can click Connect.
+
+And here we see that as we saw with show DBs, we have three databases.
+
+The one of interest is the video database.
+
+And in the video database, you should see a movie details collection with 2,295 documents.
+
+We can click through to that and look at documents in the same way we could and can with the class Atlas cluster.
+
+So that is how you connect Compass to your Atlas sandbox cluster.

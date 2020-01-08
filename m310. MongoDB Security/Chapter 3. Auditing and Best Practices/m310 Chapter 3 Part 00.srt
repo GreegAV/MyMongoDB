@@ -1,0 +1,127 @@
+
+1
+00:00:00.000 --> 00:00:00.500
+
+
+2
+00:00:00.500 --> 00:00:02.830
+In this video, we're going
+to talk about auditing
+
+3
+00:00:02.830 --> 00:00:04.820
+with MongoDB.
+
+4
+00:00:04.820 --> 00:00:07.770
+Auditing is an enterprise
+feature of MongoDB.
+
+5
+00:00:07.770 --> 00:00:10.380
+And for certain organizations
+and administrators,
+
+6
+00:00:10.380 --> 00:00:12.010
+auditing is a very
+important part
+
+7
+00:00:12.010 --> 00:00:13.970
+of security infrastructure.
+
+8
+00:00:13.970 --> 00:00:16.410
+Auditing can be used
+for a myriad of things.
+
+9
+00:00:16.410 --> 00:00:18.130
+But from a security
+perspective, it
+
+10
+00:00:18.130 --> 00:00:21.130
+is most often used for the
+following three things.
+
+11
+00:00:21.130 --> 00:00:23.520
+First, it's often used
+for accountability
+
+12
+00:00:23.520 --> 00:00:25.480
+of the users of our database.
+
+13
+00:00:25.480 --> 00:00:28.140
+Auditing is also commonly
+used to investigate
+
+14
+00:00:28.140 --> 00:00:29.840
+suspicious activity.
+
+15
+00:00:29.840 --> 00:00:32.350
+And finally, it is used
+to monitor and gather
+
+16
+00:00:32.350 --> 00:00:35.690
+data about specific
+database activities.
+
+17
+00:00:35.690 --> 00:00:37.760
+Once enabled, the
+auditing system
+
+18
+00:00:37.760 --> 00:00:41.250
+can record four different
+categories of operations.
+
+19
+00:00:41.250 --> 00:00:45.470
+First, we can monitor
+schema modification, or DDL.
+
+20
+00:00:45.470 --> 00:00:47.910
+We can also audit the
+management and configuration
+
+21
+00:00:47.910 --> 00:00:51.000
+operations used to configure
+our replica sets and sharded
+
+22
+00:00:51.000 --> 00:00:52.730
+clusters.
+
+23
+00:00:52.730 --> 00:00:56.307
+Of course, we can also audit the
+access to our database as well
+
+24
+00:00:56.307 --> 00:00:58.140
+as the authorization
+[? within ?] [? side ?]
+
+25
+00:00:58.140 --> 00:00:59.640
+of our database.
+
+26
+00:00:59.640 --> 00:01:03.210
+And finally, we can even
+audit CRUD operations
+
+27
+00:01:03.210 --> 00:01:05.040
+on our database.

@@ -1,0 +1,33 @@
+Once connected, you should see a screen that looks like this.
+
+Here in the main panel, we can see a list of the databases contained in this cluster.
+
+In MongoDB, a database serves as a namespace for collections.
+
+Collections store individual records called documents.
+
+This graphic illustrates the relationship between databases, collections, and documents.
+
+This hierarchy allows us to group together records of similar items within collections, and group collections required for the same application within the same database.
+
+We can also establish security policies that authorize users with different roles and different levels of access at the database, or collection, level.
+
+MongoDB does not currently support authorization settings specific to individual documents.
+
+Each database and collection combination define a namespace.
+
+We typically reference a specific collection by expressing the name of the database, followed by a dot, followed by the name of the collection.
+
+Returning to Compass, here we have a listing of all the databases in this cluster.
+
+With a little bit of information about the size of the database, the number of collections it contains, and the number of indexes on these collections.
+
+We won't say too much about indexes in this course.
+
+You'll want to take the MongoDB performance course for that.
+
+Just look for M201 on the MongoDB university website.
+
+By the way, if the list of databases you're seeing differs a little bit from what I'm showing here, don't worry about that.
+
+We update this cluster from time to time with new datasets.

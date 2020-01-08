@@ -1,0 +1,61 @@
+In this lesson, we'll look at aggregate value types MongoDB supports, and also discuss support for geospatial data.
+
+In Compass, let's look at the 100 year weather data set, by navigating to the 100 Year Weather dot data name space in our Atlas cluster.
+
+We can do that as follows.
+
+First we click on the database, and then the collection.
+
+Let's look at the schema view for this collection.
+
+Now, this dataset provides weather readings for locations throughout the world.
+
+For this dataset, it's important to understand that all readings are recorded with both a value and quality assessment, to provide a sense for how reliable the measurement was determined to be when taken.
+
+As an example, let's scroll down and look at the air temperature field.
+
+Note that the type specified for this field in the Compass UI is document.
+
+To the right of the field name, you should see a description that says document with two nested fields.
+
+In addition to scalar values, such as strings, integers, and doubles, MongoDB supports nesting a document as the value of a field within another document.
+
+Air temperature is an example.
+
+When expanded, we can see the nested fields for quality, and the air temperature value.
+
+So here I've expanded air temperature by clicking this caret.
+
+The value of air temperature is actually a nested document with two fields, quality and value.
+
+Quality is a string, and value is a number.
+
+For many applications, it's important to be able to model data, not just as a flat set of keys and values, but as hierarchical data structures that reflect the way a developer needs to work with the data in their application.
+
+If it's appropriate to your application, you can nest documents two or more levels deep.
+
+As an example, let's take a look at the atmospheric pressure observation field.
+
+Atmospheric pressure tells us the weight of the air at a given location.
+
+As an aside, atmospheric pressure affects how weather systems move across the surface of the Earth.
+
+It's one factor meteorologists use to predict the next day's weather.
+
+If we expand the atmospheric pressure observation field, we can see that this field has a value that is a document with two fields.
+
+Each of those fields are themselves nested documents, as we can see here by the type Compass provides to us.
+
+If we expand each of them, we see a reading and quality measure for the height above sea level at which the measure was taken, designated as the altimeter setting, and the actual atmospheric pressure reading and quality measure.
+
+With these documents expanded in this way, we can see that atmospheric pressure is modeled using two levels of nested documents.
+
+MongoDB's query language provides full support for filtering documents based on the values of fields in nested documents.
+
+MongoDB is designed to provide a great deal of flexibility in modeling your data, so that you can design a schema that is performant for your application's data access patterns.
+
+Your data model should support efficient handling of the reads and writes your application requires.
+
+Now, we address these aspects of data modeling and the MongoDB query language in detail in other lessons.
+
+At this point, I'm simply laying the groundwork for the flexibility you have in designing data models.

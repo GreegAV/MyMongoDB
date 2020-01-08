@@ -1,0 +1,379 @@
+
+1
+00:00:00.000 --> 00:00:00.520
+
+
+2
+00:00:00.520 --> 00:00:04.420
+When talking about performance,
+we cannot forget about
+
+3
+00:00:04.420 --> 00:00:07.900
+the actual hardware
+configuration that will support
+
+4
+00:00:07.900 --> 00:00:10.840
+our database and
+application deployments.
+
+5
+00:00:10.840 --> 00:00:16.329
+A full disclosure of how to tune
+and size your hardware needs,
+
+6
+00:00:16.329 --> 00:00:20.410
+for a given deployment, are
+out of scope for this course.
+
+7
+00:00:20.410 --> 00:00:23.770
+We have other specific
+courses on this subject.
+
+8
+00:00:23.770 --> 00:00:27.100
+That we recommend
+you guys to take.
+
+9
+00:00:27.100 --> 00:00:31.090
+But let's just do a quick
+pass on the hardware
+
+10
+00:00:31.090 --> 00:00:33.330
+and configuration of
+our system, and why
+
+11
+00:00:33.330 --> 00:00:35.620
+it becomes an
+essential consideration
+
+12
+00:00:35.620 --> 00:00:39.360
+for the overall performance
+of your deployments.
+
+13
+00:00:39.360 --> 00:00:42.550
+MongoDB is a high
+performance database.
+
+14
+00:00:42.550 --> 00:00:46.600
+But to operate correctly, while
+supporting your applications,
+
+15
+00:00:46.600 --> 00:00:49.600
+requires adequate
+hardware provisioning.
+
+16
+00:00:49.600 --> 00:00:53.530
+Let's review which hardware
+resources and configurations we
+
+17
+00:00:53.530 --> 00:00:54.520
+have available.
+
+18
+00:00:54.520 --> 00:00:59.320
+And how MongoDB uses those
+computational resources.
+
+19
+00:00:59.320 --> 00:01:04.000
+A computer or server can be
+represented in its essence
+
+20
+00:01:04.000 --> 00:01:06.720
+by the Von Neumann architecture.
+
+21
+00:01:06.720 --> 00:01:09.980
+Where we are going to
+have a CPU for processing
+
+22
+00:01:09.980 --> 00:01:11.890
+and calculations.
+
+23
+00:01:11.890 --> 00:01:14.710
+Memory for execution.
+
+24
+00:01:14.710 --> 00:01:18.690
+Disk and IO-- although
+you may consider Disk
+
+25
+00:01:18.690 --> 00:01:20.650
+as another type of IO.
+
+26
+00:01:20.650 --> 00:01:23.170
+For persistency
+and communications
+
+27
+00:01:23.170 --> 00:01:28.030
+between servers, or even
+within our host processes.
+
+28
+00:01:28.030 --> 00:01:31.600
+These are the main resources
+that MongoDB relies on
+
+29
+00:01:31.600 --> 00:01:33.920
+to operate adequately.
+
+30
+00:01:33.920 --> 00:01:39.010
+In MongoDB deployments, as in
+many other modern databases,
+
+31
+00:01:39.010 --> 00:01:42.430
+memory is a
+quintessential resource.
+
+32
+00:01:42.430 --> 00:01:45.510
+Over the past few years,
+the availability of RAM
+
+33
+00:01:45.510 --> 00:01:48.160
+and the fall of its
+production costs
+
+34
+00:01:48.160 --> 00:01:51.730
+contributed for the development
+of databases' architectures.
+
+35
+00:01:51.730 --> 00:01:55.960
+That privileged the users
+of this fast and performant
+
+36
+00:01:55.960 --> 00:01:57.860
+resource.
+
+37
+00:01:57.860 --> 00:02:03.080
+The fact that RAM or
+memory is 25 times faster
+
+38
+00:02:03.080 --> 00:02:07.130
+than common SSDs also makes
+this transition of Disk
+
+39
+00:02:07.130 --> 00:02:11.480
+oriented into RAM oriented a
+nice, strong appealing factor
+
+40
+00:02:11.480 --> 00:02:16.520
+for databases to be designed
+around usage of memory.
+
+41
+00:02:16.520 --> 00:02:20.150
+As a result of this,
+MongoDB has storage engines
+
+42
+00:02:20.150 --> 00:02:23.270
+that are either very
+dependent on RAM,
+
+43
+00:02:23.270 --> 00:02:27.050
+or even completely in
+memory [? execution ?] modes
+
+44
+00:02:27.050 --> 00:02:30.500
+for its data
+management operations.
+
+45
+00:02:30.500 --> 00:02:34.730
+A significant number of
+operations rely heavily in RAM.
+
+46
+00:02:34.730 --> 00:02:38.760
+Like the aggregation
+pipeline operations,
+
+47
+00:02:38.760 --> 00:02:42.020
+the index traversing.
+
+48
+00:02:42.020 --> 00:02:47.540
+Writes are first performed
+in RAM allocated pages.
+
+49
+00:02:47.540 --> 00:02:52.800
+The query engine requires RAM
+to retrieve the quarter results.
+
+50
+00:02:52.800 --> 00:02:56.540
+And finally, connections
+are handling memory.
+
+51
+00:02:56.540 --> 00:02:59.960
+Roughly, one megabyte per
+established connection.
+
+52
+00:02:59.960 --> 00:03:03.560
+And therefore they
+require memory space.
+
+53
+00:03:03.560 --> 00:03:07.760
+It is safe to say that the
+more RAM you have available,
+
+54
+00:03:07.760 --> 00:03:10.960
+the more performance your
+department of MongoDB
+
+55
+00:03:10.960 --> 00:03:12.690
+will tend to be.
+
+56
+00:03:12.690 --> 00:03:18.860
+CPU is used by all applications
+for computational processing.
+
+57
+00:03:18.860 --> 00:03:23.190
+Databases are just another
+category of applications.
+
+58
+00:03:23.190 --> 00:03:25.080
+MongoDB is no different.
+
+59
+00:03:25.080 --> 00:03:27.080
+But the utilization
+of this resource
+
+60
+00:03:27.080 --> 00:03:30.470
+is generally more attached
+with two main factors.
+
+61
+00:03:30.470 --> 00:03:33.380
+Storage engines
+that we are using,
+
+62
+00:03:33.380 --> 00:03:35.850
+and the concurrency
+level that your MongoDB
+
+63
+00:03:35.850 --> 00:03:38.030
+instance will be subjected to.
+
+64
+00:03:38.030 --> 00:03:42.170
+By default, MongoDB will
+try to use all available CPU
+
+65
+00:03:42.170 --> 00:03:45.950
+cores to respond to
+incoming requests.
+
+66
+00:03:45.950 --> 00:03:49.700
+Our non-locking concurrency
+control mechanism,
+
+67
+00:03:49.700 --> 00:03:51.620
+using wired tag
+or storage engine,
+
+68
+00:03:51.620 --> 00:03:56.690
+rely heavily in the CPU
+to process these requests.
+
+69
+00:03:56.690 --> 00:04:01.640
+This means that if we have
+non-blocking operations,
+
+70
+00:04:01.640 --> 00:04:05.360
+like writing different documents
+concurrently or responding
+
+71
+00:04:05.360 --> 00:04:08.990
+to an incoming query
+requests like Reads,
+
+72
+00:04:08.990 --> 00:04:12.380
+MongoDB will perform
+better the more CPU
+
+73
+00:04:12.380 --> 00:04:15.950
+resources we have available.
+
+74
+00:04:15.950 --> 00:04:19.279
+Also, there are certain
+operations, like page
+
+75
+00:04:19.279 --> 00:04:22.220
+compression, data
+calculation operations,
+
+76
+00:04:22.220 --> 00:04:24.260
+aggregation
+framework operations,
+
+77
+00:04:24.260 --> 00:04:28.100
+and map reduce, amongst
+others that will require
+
+78
+00:04:28.100 --> 00:04:31.382
+the availability of CPU cycles.
+
+79
+00:04:31.382 --> 00:04:31.881

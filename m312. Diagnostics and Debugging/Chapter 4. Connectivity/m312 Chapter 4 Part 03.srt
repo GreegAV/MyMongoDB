@@ -1,0 +1,240 @@
+
+1
+00:00:00.000 --> 00:00:00.520
+
+
+2
+00:00:00.520 --> 00:00:03.290
+Our max time milliseconds value.
+
+3
+00:00:03.290 --> 00:00:06.150
+For this, I'm going to be
+using the help of my friends.
+
+4
+00:00:06.150 --> 00:00:08.990
+I'm going to import them
+into our data sets, test,
+
+5
+00:00:08.990 --> 00:00:11.150
+and a collection called friends.
+
+6
+00:00:11.150 --> 00:00:14.690
+Once this is fully
+imported, I'm going
+
+7
+00:00:14.690 --> 00:00:22.210
+to be able to do some queries
+using my maxTimeMS parameter.
+
+8
+00:00:22.210 --> 00:00:24.495
+I'm going to connect
+to my primary.
+
+9
+00:00:24.495 --> 00:00:26.620
+And here, I'm going to
+express the following query.
+
+10
+00:00:26.620 --> 00:00:29.050
+I'm going to find from
+my friends everyone that
+
+11
+00:00:29.050 --> 00:00:32.860
+has an e, h value
+within their email.
+
+12
+00:00:32.860 --> 00:00:38.050
+But I'm going to set the special
+parameter called maxTimeMS
+
+13
+00:00:38.050 --> 00:00:40.990
+and I'm going to say,
+anything above one
+
+14
+00:00:40.990 --> 00:00:43.930
+millisecond, if it
+takes more to complete,
+
+15
+00:00:43.930 --> 00:00:45.610
+I don't want to know about it.
+
+16
+00:00:45.610 --> 00:00:47.520
+I want it to be killed.
+
+17
+00:00:47.520 --> 00:00:50.800
+And I don't want to have
+anything to do with that.
+
+18
+00:00:50.800 --> 00:00:53.090
+So I'm going to throw
+that into a cursor.
+
+19
+00:00:53.090 --> 00:00:56.020
+And I'm going to iterate
+over the full amount
+
+20
+00:00:56.020 --> 00:00:59.050
+of the results of my cursor.
+
+21
+00:00:59.050 --> 00:01:02.890
+Boom, I get an
+operation exceeded time,
+
+22
+00:01:02.890 --> 00:01:05.500
+exceeded time limit code.
+
+23
+00:01:05.500 --> 00:01:11.260
+And this will result in an
+execution timeout error.
+
+24
+00:01:11.260 --> 00:01:14.950
+I can still see
+some of the results.
+
+25
+00:01:14.950 --> 00:01:18.229
+And this is because the
+cursor will act in batches.
+
+26
+00:01:18.229 --> 00:01:20.020
+So the first batch will
+be very, very quick
+
+27
+00:01:20.020 --> 00:01:21.970
+because data will be in memory.
+
+28
+00:01:21.970 --> 00:01:23.980
+But then after that,
+a few pages will
+
+29
+00:01:23.980 --> 00:01:27.940
+need to be fetched from
+disk or some new indexes
+
+30
+00:01:27.940 --> 00:01:31.350
+will need to be traversed
+to get the result back.
+
+31
+00:01:31.350 --> 00:01:32.860
+And some of those
+operations will
+
+32
+00:01:32.860 --> 00:01:39.190
+take more than the expected
+one millisecond maxTimeMS.
+
+33
+00:01:39.190 --> 00:01:43.600
+And therefore I will
+get that error back.
+
+34
+00:01:43.600 --> 00:01:47.590
+From the application, we will
+need to manage these timeouts.
+
+35
+00:01:47.590 --> 00:01:49.540
+And they are a
+signal that we may
+
+36
+00:01:49.540 --> 00:01:53.170
+want to change our
+settings, maybe having
+
+37
+00:01:53.170 --> 00:01:56.650
+less aggressive
+timeouts for maxTimeMS
+
+38
+00:01:56.650 --> 00:02:01.300
+or do something about our query
+that will not get into trouble
+
+39
+00:02:01.300 --> 00:02:05.440
+more than our SLA, for
+example, will require.
+
+40
+00:02:05.440 --> 00:02:07.440
+So a few things that
+we've learned today,
+
+41
+00:02:07.440 --> 00:02:09.039
+timeouts generate
+some exceptions.
+
+42
+00:02:09.039 --> 00:02:10.539
+We've seen that.
+
+43
+00:02:10.539 --> 00:02:14.890
+Your application needs to be
+ready to catch those timeouts.
+
+44
+00:02:14.890 --> 00:02:16.947
+So if your developers
+come up to you
+
+45
+00:02:16.947 --> 00:02:19.030
+and say that they are
+seeing those kinds of errors
+
+46
+00:02:19.030 --> 00:02:21.520
+and asking why,
+you should explain
+
+47
+00:02:21.520 --> 00:02:24.220
+what those mean for
+their application and how
+
+48
+00:02:24.220 --> 00:02:26.650
+they should be treating them.
+
+49
+00:02:26.650 --> 00:02:30.370
+And timeouts should be
+set so they happen rarely,
+
+50
+00:02:30.370 --> 00:02:34.020
+so that your application
+can respond properly.

@@ -1,0 +1,1060 @@
+
+1
+00:00:00.000 --> 00:00:00.120
+
+
+2
+00:00:00.120 --> 00:00:01.770
+In this lesson,
+we will learn how
+
+3
+00:00:01.770 --> 00:00:04.950
+to identify the workload
+for a given application.
+
+4
+00:00:04.950 --> 00:00:07.080
+To help us in this
+quest, we are going
+
+5
+00:00:07.080 --> 00:00:10.990
+to use an Internet
+of Things use case.
+
+6
+00:00:10.990 --> 00:00:13.860
+The organization has 100
+million water sensors
+
+7
+00:00:13.860 --> 00:00:15.420
+deployed around the world.
+
+8
+00:00:15.420 --> 00:00:17.520
+The requirement is
+to collect this data
+
+9
+00:00:17.520 --> 00:00:21.630
+and make it available to a
+team of 10 data scientists.
+
+10
+00:00:21.630 --> 00:00:25.110
+Going back to our methodology,
+we start with the first phase,
+
+11
+00:00:25.110 --> 00:00:29.470
+identifying, quantifying,
+and qualifying the workload.
+
+12
+00:00:29.470 --> 00:00:32.680
+Here's the information
+we have to begin with.
+
+13
+00:00:32.680 --> 00:00:34.500
+We don't have production
+logs and stats.
+
+14
+00:00:34.500 --> 00:00:37.210
+However, we do have a prototype.
+
+15
+00:00:37.210 --> 00:00:40.240
+We can't rely on the
+business domain expert.
+
+16
+00:00:40.240 --> 00:00:43.090
+However, there is only a
+handful of things to understand.
+
+17
+00:00:43.090 --> 00:00:45.690
+So I think we'll be able
+to do it by ourselves.
+
+18
+00:00:45.690 --> 00:00:47.640
+As for the data
+modeling expert, we
+
+19
+00:00:47.640 --> 00:00:51.120
+have a MongoDB certified
+developer in our team.
+
+20
+00:00:51.120 --> 00:00:52.890
+As noted earlier,
+our previous team
+
+21
+00:00:52.890 --> 00:00:54.510
+has written a
+prototype that captures
+
+22
+00:00:54.510 --> 00:00:56.530
+the data we see
+under the collection
+
+23
+00:00:56.530 --> 00:01:00.390
+data in the database,
+sample_weatherdata.
+
+24
+00:01:00.390 --> 00:01:03.780
+You can explore this data
+set on Atlas with Compass.
+
+25
+00:01:03.780 --> 00:01:08.070
+A unique string identifies
+each device using the device
+
+26
+00:01:08.070 --> 00:01:09.930
+position in the field.
+
+27
+00:01:09.930 --> 00:01:14.070
+Additional fields store metrics
+like air temperature, dew
+
+28
+00:01:14.070 --> 00:01:18.000
+point, pressure, wind,
+for a given measure.
+
+29
+00:01:18.000 --> 00:01:22.680
+A numeric value and the relative
+quality on the scale of 1 to 9
+
+30
+00:01:22.680 --> 00:01:24.960
+describe these metrics.
+
+31
+00:01:24.960 --> 00:01:27.090
+Note that a metric
+like the wind may
+
+32
+00:01:27.090 --> 00:01:29.790
+be represented by sub-metrics.
+
+33
+00:01:29.790 --> 00:01:31.650
+The prototype was
+useful to see which
+
+34
+00:01:31.650 --> 00:01:34.980
+queries our meteorologists
+wanted to run.
+
+35
+00:01:34.980 --> 00:01:37.590
+Now it is our job to
+scale up the prototype
+
+36
+00:01:37.590 --> 00:01:41.940
+to collecting data from a few
+million devices in the field.
+
+37
+00:01:41.940 --> 00:01:43.710
+So far, we know the following.
+
+38
+00:01:43.710 --> 00:01:46.540
+10 million devices
+are collecting data.
+
+39
+00:01:46.540 --> 00:01:50.730
+Data can be collected every
+minute and sent every minute.
+
+40
+00:01:50.730 --> 00:01:53.370
+Any trend calculated with
+the granularity of one hour
+
+41
+00:01:53.370 --> 00:01:55.560
+is nearly as precise
+as the ones calculated
+
+42
+00:01:55.560 --> 00:01:58.080
+with data for each
+minute, except for periods
+
+43
+00:01:58.080 --> 00:02:01.500
+of special events like
+tornadoes and hurricanes.
+
+44
+00:02:01.500 --> 00:02:03.720
+We need to keep the data
+for at least 10 years.
+
+45
+00:02:03.720 --> 00:02:07.230
+This period may be extended for
+irregularity or expanded use
+
+46
+00:02:07.230 --> 00:02:08.070
+cases.
+
+47
+00:02:08.070 --> 00:02:09.539
+However, the
+changing requirements
+
+48
+00:02:09.539 --> 00:02:11.340
+may have a massive
+impact on your design,
+
+49
+00:02:11.340 --> 00:02:13.440
+so ensure you take the
+appropriate time and effort
+
+50
+00:02:13.440 --> 00:02:15.690
+to validate them if needed.
+
+51
+00:02:15.690 --> 00:02:17.610
+The ops team needs to
+be able to identify
+
+52
+00:02:17.610 --> 00:02:20.950
+faulty and
+non-transmitting devices.
+
+53
+00:02:20.950 --> 00:02:23.820
+We also need to run some
+script to aggregate data,
+
+54
+00:02:23.820 --> 00:02:26.370
+to make the data
+simpler to analyze.
+
+55
+00:02:26.370 --> 00:02:29.400
+Our goal for data
+scientists is to analyze
+
+56
+00:02:29.400 --> 00:02:31.110
+the data to find trends.
+
+57
+00:02:31.110 --> 00:02:33.810
+Maybe some queries are fixed,
+while the other ones are
+
+58
+00:02:33.810 --> 00:02:36.930
+exploratory ones, meaning
+they are difficult to predict
+
+59
+00:02:36.930 --> 00:02:38.790
+in advance.
+
+60
+00:02:38.790 --> 00:02:41.310
+Translating what we just
+said in these statements,
+
+61
+00:02:41.310 --> 00:02:43.860
+these are the scenarios we
+want to capture and support
+
+62
+00:02:43.860 --> 00:02:46.090
+with our application.
+
+63
+00:02:46.090 --> 00:02:48.540
+Now that we know for how
+long we need to hold data,
+
+64
+00:02:48.540 --> 00:02:50.010
+what's the frequency
+by which data
+
+65
+00:02:50.010 --> 00:02:53.190
+is transmitted to the system
+and the number of devices that
+
+66
+00:02:53.190 --> 00:02:55.140
+are going to be sending data?
+
+67
+00:02:55.140 --> 00:02:57.960
+Let's make a list of the
+CRUD operations, specifically
+
+68
+00:02:57.960 --> 00:03:01.290
+the read and write operations,
+the system needs to handle.
+
+69
+00:03:01.290 --> 00:03:05.070
+Each actor produces
+one or more operations,
+
+70
+00:03:05.070 --> 00:03:08.880
+which translates to
+entities and field,
+
+71
+00:03:08.880 --> 00:03:10.950
+and we need to
+identify each operation
+
+72
+00:03:10.950 --> 00:03:13.710
+as a read or a write operation.
+
+73
+00:03:13.710 --> 00:03:17.040
+In a more complex model,
+you could have more queries,
+
+74
+00:03:17.040 --> 00:03:19.770
+and you would expand on the
+type and the fields that
+
+75
+00:03:19.770 --> 00:03:22.080
+are used by the operations.
+
+76
+00:03:22.080 --> 00:03:23.980
+We have attached
+the lecture notes
+
+77
+00:03:23.980 --> 00:03:27.120
+for this lesson as a spreadsheet
+that helps with this workload
+
+78
+00:03:27.120 --> 00:03:28.410
+calculation.
+
+79
+00:03:28.410 --> 00:03:30.210
+In the context of
+this calculation,
+
+80
+00:03:30.210 --> 00:03:32.880
+we need to identify the
+most critical operation.
+
+81
+00:03:32.880 --> 00:03:36.690
+Most of the time, there is
+only one query that stands out.
+
+82
+00:03:36.690 --> 00:03:39.870
+In this case, writing the
+data sent by the device
+
+83
+00:03:39.870 --> 00:03:41.730
+dwarfs the other operation.
+
+84
+00:03:41.730 --> 00:03:44.700
+So this suggests that the system
+should be sized and optimized
+
+85
+00:03:44.700 --> 00:03:48.210
+for incoming writes
+from our data sensors.
+
+86
+00:03:48.210 --> 00:03:50.910
+Let's look closer
+at this operation.
+
+87
+00:03:50.910 --> 00:03:53.640
+The workload comes
+from the sensors,
+
+88
+00:03:53.640 --> 00:03:56.310
+sending weather
+data to our system.
+
+89
+00:03:56.310 --> 00:04:00.210
+They are mostly write
+operations of new documents.
+
+90
+00:04:00.210 --> 00:04:03.990
+The operation carries a
+device ID, a time stamp,
+
+91
+00:04:03.990 --> 00:04:05.790
+and a device matrix.
+
+92
+00:04:05.790 --> 00:04:09.450
+The data is sent every minute
+by 100 million devices,
+
+93
+00:04:09.450 --> 00:04:13.530
+or translate to 1.6
+million writes per second.
+
+94
+00:04:13.530 --> 00:04:15.880
+Each write is about 1,000 bytes.
+
+95
+00:04:15.880 --> 00:04:18.579
+So this is the size we
+observe for the document
+
+96
+00:04:18.579 --> 00:04:20.399
+in a prototype.
+
+97
+00:04:20.399 --> 00:04:24.660
+It is a requirement to keep
+each piece of data for 10 years.
+
+98
+00:04:24.660 --> 00:04:27.070
+In the case of these
+write operations,
+
+99
+00:04:27.070 --> 00:04:29.550
+we don't need to wait
+for a majority of nodes
+
+100
+00:04:29.550 --> 00:04:32.320
+to acknowledge the
+write operation.
+
+101
+00:04:32.320 --> 00:04:34.230
+What do we mean by this?
+
+102
+00:04:34.230 --> 00:04:36.750
+Each sensor reading
+sent to the system
+
+103
+00:04:36.750 --> 00:04:39.790
+gets replicated to other hosts.
+
+104
+00:04:39.790 --> 00:04:42.270
+However, we are not going
+to wait for the replication
+
+105
+00:04:42.270 --> 00:04:43.542
+process to complete.
+
+106
+00:04:43.542 --> 00:04:45.000
+It is sufficient
+for an application
+
+107
+00:04:45.000 --> 00:04:48.840
+to know that the primary
+has received the data.
+
+108
+00:04:48.840 --> 00:04:51.600
+Each single minute reading
+is not a crucial piece
+
+109
+00:04:51.600 --> 00:04:53.070
+of information,
+mainly because we
+
+110
+00:04:53.070 --> 00:04:54.870
+aggregate the data over time.
+
+111
+00:04:54.870 --> 00:04:58.290
+In the event of issues with
+the network or the host,
+
+112
+00:04:58.290 --> 00:05:01.420
+because we did not wait for
+a majority of nodes writing
+
+113
+00:05:01.420 --> 00:05:04.570
+the data, it could result
+in a piece of data missing
+
+114
+00:05:04.570 --> 00:05:06.970
+on the newly elected primary.
+
+115
+00:05:06.970 --> 00:05:09.690
+Typically for IoT projects,
+entering a single write
+
+116
+00:05:09.690 --> 00:05:13.060
+as on the primary
+node is sufficient.
+
+117
+00:05:13.060 --> 00:05:14.860
+Lowering data
+durability requirements
+
+118
+00:05:14.860 --> 00:05:17.380
+is in contrast to writing a
+crucial piece of information,
+
+119
+00:05:17.380 --> 00:05:21.610
+like an operation involving
+money, updates to user account,
+
+120
+00:05:21.610 --> 00:05:23.950
+or anything that you
+don't want to lose.
+
+121
+00:05:23.950 --> 00:05:26.740
+For this type of data,
+you want to confirm
+
+122
+00:05:26.740 --> 00:05:28.720
+that it is written to
+a majority of nodes
+
+123
+00:05:28.720 --> 00:05:31.480
+before the cluster acknowledges
+your write operation back
+
+124
+00:05:31.480 --> 00:05:33.220
+to the application.
+
+125
+00:05:33.220 --> 00:05:36.820
+On the other hand, some
+data aggregated or refreshed
+
+126
+00:05:36.820 --> 00:05:39.460
+frequently may not
+need the same care
+
+127
+00:05:39.460 --> 00:05:41.770
+in terms of data durability.
+
+128
+00:05:41.770 --> 00:05:43.240
+Understanding your
+data and being
+
+129
+00:05:43.240 --> 00:05:45.370
+able to make this
+compromise early
+
+130
+00:05:45.370 --> 00:05:49.870
+has a considerable impact on
+the performance of your system.
+
+131
+00:05:49.870 --> 00:05:54.250
+Did we say 1.6 million
+operations per second?
+
+132
+00:05:54.250 --> 00:05:56.290
+Hosts with many cores
+in [? fastest ?]
+
+133
+00:05:56.290 --> 00:05:59.560
+can sustain around
+100,000 writes per second.
+
+134
+00:05:59.560 --> 00:06:01.720
+To satisfy this
+order of operation,
+
+135
+00:06:01.720 --> 00:06:04.540
+you could estimate a cluster
+with a data-partition
+
+136
+00:06:04.540 --> 00:06:08.057
+in 10 to 20 shards to handle
+this kind of workload.
+
+137
+00:06:08.057 --> 00:06:09.640
+Now that you know
+what's the estimated
+
+138
+00:06:09.640 --> 00:06:11.380
+workload and requirements,
+you can start
+
+139
+00:06:11.380 --> 00:06:13.750
+budgeting your hardware needs.
+
+140
+00:06:13.750 --> 00:06:16.090
+Alternatively to
+provisioning a cluster
+
+141
+00:06:16.090 --> 00:06:17.950
+to support all
+this data, you may
+
+142
+00:06:17.950 --> 00:06:22.370
+want to ask if you absolutely
+need to record all the data.
+
+143
+00:06:22.370 --> 00:06:25.050
+Understanding what data
+drop rate is acceptable
+
+144
+00:06:25.050 --> 00:06:26.650
+is an important
+strategy that needs
+
+145
+00:06:26.650 --> 00:06:30.400
+to be used by systems that
+collect data from many devices.
+
+146
+00:06:30.400 --> 00:06:33.040
+You should ask yourself these
+interesting questions as
+
+147
+00:06:33.040 --> 00:06:34.860
+early as possible.
+
+148
+00:06:34.860 --> 00:06:37.420
+In this use case, the
+system presents a workload
+
+149
+00:06:37.420 --> 00:06:41.290
+where writes correspond to 99%
+of all database operations.
+
+150
+00:06:41.290 --> 00:06:44.240
+Optimizing for writes has a
+lot to do with the hardware.
+
+151
+00:06:44.240 --> 00:06:46.450
+However, on the
+data modeling side,
+
+152
+00:06:46.450 --> 00:06:48.520
+we want to look into
+patterns or techniques that
+
+153
+00:06:48.520 --> 00:06:51.220
+allow for reducing the
+number of individual writes
+
+154
+00:06:51.220 --> 00:06:54.880
+or grouping information in
+individual data structures.
+
+155
+00:06:54.880 --> 00:06:57.070
+Reads are also
+essentials, perhaps not
+
+156
+00:06:57.070 --> 00:06:59.200
+based on the quantity
+of these operations,
+
+157
+00:06:59.200 --> 00:07:01.762
+but on the user experience
+that they represent.
+
+158
+00:07:01.762 --> 00:07:03.220
+Let's look at the
+most crucial read
+
+159
+00:07:03.220 --> 00:07:06.930
+operation, which are performed
+by our data scientists.
+
+160
+00:07:06.930 --> 00:07:09.880
+The data scientists run
+this read operation.
+
+161
+00:07:09.880 --> 00:07:13.570
+It is a read operation on
+the metrics of the device.
+
+162
+00:07:13.570 --> 00:07:16.310
+Working with the data scientist
+and asking more questions,
+
+163
+00:07:16.310 --> 00:07:18.700
+let us understand that
+most of the queries
+
+164
+00:07:18.700 --> 00:07:21.230
+are on temperature data.
+
+165
+00:07:21.230 --> 00:07:25.730
+Each data scientist runs
+about 10 queries per hour.
+
+166
+00:07:25.730 --> 00:07:28.750
+So we do get 100 of
+these analytic queries
+
+167
+00:07:28.750 --> 00:07:30.580
+run every hour.
+
+168
+00:07:30.580 --> 00:07:32.050
+The surface area
+of these queries
+
+169
+00:07:32.050 --> 00:07:34.540
+tend to span the whole data set.
+
+170
+00:07:34.540 --> 00:07:37.300
+That said, the
+analytic queries do not
+
+171
+00:07:37.300 --> 00:07:39.280
+have to run on
+the data collected
+
+172
+00:07:39.280 --> 00:07:40.850
+in the last few minutes.
+
+173
+00:07:40.850 --> 00:07:43.090
+Any data newer
+than the last hour
+
+174
+00:07:43.090 --> 00:07:45.340
+is good enough
+for those queries.
+
+175
+00:07:45.340 --> 00:07:48.100
+There is a bunch of
+interesting information here.
+
+176
+00:07:48.100 --> 00:07:51.490
+Collection scan on data
+that is one hour old,
+
+177
+00:07:51.490 --> 00:07:54.820
+for these type of queries,
+using nodes dedicated to data
+
+178
+00:07:54.820 --> 00:07:57.850
+analytics this is
+a viable solution.
+
+179
+00:07:57.850 --> 00:08:01.480
+Our primary node is likely to
+be very busy processing writes.
+
+180
+00:08:01.480 --> 00:08:05.200
+So we may want to dedicate
+a node to process the reads
+
+181
+00:08:05.200 --> 00:08:07.630
+and isolate all the
+collection scans they
+
+182
+00:08:07.630 --> 00:08:10.330
+may require from other nodes.
+
+183
+00:08:10.330 --> 00:08:12.970
+Collection scans are
+usually pretty bad news
+
+184
+00:08:12.970 --> 00:08:14.440
+for the primary.
+
+185
+00:08:14.440 --> 00:08:16.450
+We could also consider
+other strategies,
+
+186
+00:08:16.450 --> 00:08:19.270
+such as providing the data
+scientist with a staging
+
+187
+00:08:19.270 --> 00:08:22.390
+environment so they can
+prepare the analytic queries
+
+188
+00:08:22.390 --> 00:08:23.950
+on the smaller data set.
+
+189
+00:08:23.950 --> 00:08:27.070
+Or we could also consider
+pre-aggregating the data.
+
+190
+00:08:27.070 --> 00:08:28.990
+We talk more about this
+kind of optimization
+
+191
+00:08:28.990 --> 00:08:31.960
+in the chapter on patterns.
+
+192
+00:08:31.960 --> 00:08:34.710
+Putting everything together
+results in the following.
+
+193
+00:08:34.710 --> 00:08:37.750
+Use the attached
+handout for full review.
+
+194
+00:08:37.750 --> 00:08:40.240
+Note the section assumption.
+
+195
+00:08:40.240 --> 00:08:43.299
+When you make one assumption to
+the analysis of a requirement,
+
+196
+00:08:43.299 --> 00:08:44.500
+ensure you capture it.
+
+197
+00:08:44.500 --> 00:08:47.980
+Changing assumptions or
+even invalidating them
+
+198
+00:08:47.980 --> 00:08:51.580
+may have a considerable
+impact on your design.
+
+199
+00:08:51.580 --> 00:08:54.910
+To summarize the findings we
+have on this project so far,
+
+200
+00:08:54.910 --> 00:08:57.280
+the workload is mostly
+composed of writes,
+
+201
+00:08:57.280 --> 00:08:59.200
+so we need to
+optimize for writes,
+
+202
+00:08:59.200 --> 00:09:02.240
+first by ensuring proper
+write distribution,
+
+203
+00:09:02.240 --> 00:09:05.710
+but also by applying techniques
+and patterns that can reduce
+
+204
+00:09:05.710 --> 00:09:08.140
+the number of write operations.
+
+205
+00:09:08.140 --> 00:09:11.470
+As for the read operation, even
+if we execute them less often
+
+206
+00:09:11.470 --> 00:09:13.450
+than the write
+operations, they may still
+
+207
+00:09:13.450 --> 00:09:15.740
+require a considerable
+amount of data.
+
+208
+00:09:15.740 --> 00:09:18.250
+So we need to map out
+the most common queries
+
+209
+00:09:18.250 --> 00:09:20.740
+to shape the
+documents accordingly.
+
+210
+00:09:20.740 --> 00:09:23.050
+We cover more on this
+optimization when we discuss,
+
+211
+00:09:23.050 --> 00:09:25.480
+again, schema design patterns.
+
+212
+00:09:25.480 --> 00:09:28.180
+In summary, give a try
+at estimating the numbers
+
+213
+00:09:28.180 --> 00:09:29.290
+for your system.
+
+214
+00:09:29.290 --> 00:09:33.890
+Try to quantify and quantify
+the queries as much as you can.
+
+215
+00:09:33.890 --> 00:09:35.410
+Once you collect
+the real metrics
+
+216
+00:09:35.410 --> 00:09:38.110
+on your operational
+system, contrast these
+
+217
+00:09:38.110 --> 00:09:40.090
+with your initial assumption.
+
+218
+00:09:40.090 --> 00:09:42.430
+These differences you
+observe are needed
+
+219
+00:09:42.430 --> 00:09:44.560
+to adapt the schema design.
+
+220
+00:09:44.560 --> 00:09:47.560
+Moreover, it is likely
+that a few CRUD operations
+
+221
+00:09:47.560 --> 00:09:49.860
+will drive your design.

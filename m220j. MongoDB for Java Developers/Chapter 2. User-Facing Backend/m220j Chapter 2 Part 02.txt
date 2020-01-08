@@ -1,0 +1,113 @@
+In this lesson, we are going to walk you through how to build complex aggregation framework pipelines using the Java driver aggregation builders.
+
+But before we get into the complex parts.
+
+first, we are going to see how to create a single stage aggregation.
+
+In this case, I would like to know how many movies have been produced in Portugal.
+
+I can express a variable here specifying the country that I want to filter on, and then what I'm going to do is use an aggregation framework to answer that question.
+
+For that, what I'll need to have is a pipeline defined to hold all of our aggregation stages.
+
+In this particular case, there will be just one stage in our pipeline, the $match .
+
+Stage The $match stage will require an expression, a filtering criteria, a match criteria.
+
+And in that case I'm going just to say that the field countries need to match, or be equals, to the country that I'm defining here, which is Portugal.
+
+Now, instead of manually constructing the BSON document that expresses the aggregation stage, you should use the Aggregates builder class.
+
+Aggregates provides a set of syntactic sugar class builders and methods for each one of the supported aggregation stages.
+
+Although we can build any aggregation stage by appending document, or our BSON objects with their respective expressions, Aggregates allows us to be more concise in the stage build up, with less typing.
+
+So, in this case here, the $match method takes in arguments, which is a filter expression that we defined previously.
+
+And sets it into the variable matchStage I can then add to an array pipeline of stages.
+
+And once we have appended the matchStage to the array pipeline, we can then execute by calling the collection command aggregate.
+
+As a result of the aggregate method, we get back an aggregate iterable Similar to the other iterable, this object allows us to iterate over the result sets.
+
+In this case, I'm going to iterate into buildMatchStageResults.
+
+By running this, this should be producing a list of 152 movies produced in Portugal.
+
+So let's look into that.
+
+And our assert is correct.
+
+A single aggregation pipeline, in particular, the $match stage, could be achieved by using the find command.
+
+So let's use something a little bit more interesting, which is exactly what we should be using the aggregation framework for.
+
+So let's build here our pipeline again of BSON objects.
+
+And what I want to know now is for all movies in Portugal, sum the number of times a particular cast member gets to visit such a lovely place.
+
+How many times has an individual cast member participated in a movie produced in this country?
+
+And of course, let's not forget to return the results sorted ascending regarding the number of gigs, and number of counts of times that they produced, or been part of a movie produced in Portugal.
+
+The aggregation command that we would operate in the Mongo shell should be something similar to this, where we match, unwind, and then group based on the sum of counts, and then, at the end, sort on it.
+
+So, the match stage will be very similar to what we already done before, where we have the country, the filter equality, and creating the matchStage object.
+
+Then we have to unwind using Aggregates.unwind and passing the field we want to unwind on.
+
+Group based on the cast name, and count the number of times a cast member appears in the result set.
+
+So we need to first specify what kind of field we're going to use to group on.
+
+It's going to be called a groupIdcast.
+
+Group operations are in place to do some sort of completion operation.
+
+Operations like sum, average, min, max, are all good candidates be used alongside with group operations.
+
+And there is a Java builder for that.
+
+The Accumulators class handles all accumulation operations within a group stage.
+
+So we can use here the Accumulators.sum method, specifying the field name where we want to collect the values of the sum.
+
+And, obviously, passing 1, which in this case, we are summing 1.
+
+But it could be any expression, like for example, summing all fields of a given value.
+
+After that, we just need to build our group stage by calling Aggregates.group and passing on the groupIdcast and sum1 accumulation.
+
+And finally, we want to sort.
+
+And for sorting, we can just call a Sorts expression, the sort order, and call the sort stage by building it via the Aggregates.sort and passing on the sort order.
+
+With all these stages, we are now ready to call our aggregate method with a bit more complex of a pipeline than a single $match stage.
+
+So we need to add all of those stages to our pipeline in the order that we want it to be executed, and call the aggregate method on the collection, passing on that pipeline.
+
+The aggregation framework also provides stages that combine operations that are typically expressed by several stages.
+
+For example, $sortByCount combines both the group, with a sum accumulator, with the source stage.
+
+Don't believe me?
+
+Well, let's check it out.
+
+First of all, let's build this shorter pipeline variable, which is again, an array of BSON objects.
+
+Then, we need to build a slightly shorter pipeline.
+
+We have already built our $match and $unwind, so let's add them here.
+
+And then we can create the $sortByCount stage, which should do exactly the same thing as our group and our sort stages that we defined before.
+
+And in this case, what we just need to do is call the Aggregates.sortByCount, pass on the field expression saying that we want to do it on cast.
+
+Then finally, we can assert that both pipelines provide the same results.
+
+So let's check it out.
+
+And that is absolutely correct.
+
+Both results will have the same, even though they were built with different stages in their pipelines.

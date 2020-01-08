@@ -1,0 +1,365 @@
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:04.110
+So your application is
+taking its first baby steps.
+
+3
+00:00:04.110 --> 00:00:07.170
+You start getting some decent
+load, and with that you start
+
+4
+00:00:07.170 --> 00:00:10.470
+to understand if the choices
+that you've made, in terms
+
+5
+00:00:10.470 --> 00:00:14.490
+of hardware provisioning, schema
+design, and overall system
+
+6
+00:00:14.490 --> 00:00:18.060
+configuration, meet
+the expected load.
+
+7
+00:00:18.060 --> 00:00:21.960
+One of the first obvious aspects
+will be the response time
+
+8
+00:00:21.960 --> 00:00:23.740
+of your system.
+
+9
+00:00:23.740 --> 00:00:26.520
+If we have a web
+application, a role of thumb
+
+10
+00:00:26.520 --> 00:00:29.910
+is that any end-to-end
+Application Request should
+
+11
+00:00:29.910 --> 00:00:32.130
+be under 200 milliseconds.
+
+12
+00:00:32.130 --> 00:00:35.070
+After that, operations
+become noticeably slow
+
+13
+00:00:35.070 --> 00:00:38.640
+by the end user and impact
+the perceived performance
+
+14
+00:00:38.640 --> 00:00:40.960
+of your application.
+
+15
+00:00:40.960 --> 00:00:44.130
+This does not apply
+to all operations.
+
+16
+00:00:44.130 --> 00:00:46.290
+There are several
+operations that are expected
+
+17
+00:00:46.290 --> 00:00:48.160
+to take longer response times.
+
+18
+00:00:48.160 --> 00:00:50.610
+Especially if you rely
+on external services
+
+19
+00:00:50.610 --> 00:00:52.290
+to accomplish a task.
+
+20
+00:00:52.290 --> 00:00:54.660
+Like a payment service,
+or a booking service,
+
+21
+00:00:54.660 --> 00:00:56.890
+and other similar services.
+
+22
+00:00:56.890 --> 00:00:59.550
+However, if we are building
+an application that
+
+23
+00:00:59.550 --> 00:01:03.340
+relies on intermediary
+API, like a REST API.
+
+24
+00:01:03.340 --> 00:01:07.380
+Or just simple, ordinary HTP
+request, the 200 milliseconds
+
+25
+00:01:07.380 --> 00:01:10.080
+mark is something to consider.
+
+26
+00:01:10.080 --> 00:01:12.570
+Keeping this in mind,
+any operation that
+
+27
+00:01:12.570 --> 00:01:16.040
+takes over 100 milliseconds,
+in regards to MongoDB,
+
+28
+00:01:16.040 --> 00:01:18.420
+is considered slow
+by default. This
+
+29
+00:01:18.420 --> 00:01:20.460
+means that if
+requests to database,
+
+30
+00:01:20.460 --> 00:01:23.700
+which tends to be where the
+significant amount of the work
+
+31
+00:01:23.700 --> 00:01:25.080
+ends up happening.
+
+32
+00:01:25.080 --> 00:01:27.030
+Having 100
+milliseconds threshold
+
+33
+00:01:27.030 --> 00:01:29.730
+allows you to
+understand, very quickly,
+
+34
+00:01:29.730 --> 00:01:32.430
+that some operation might
+be taking longer than
+
+35
+00:01:32.430 --> 00:01:33.750
+originally expected.
+
+36
+00:01:33.750 --> 00:01:35.490
+Regardless of your SLA's.
+
+37
+00:01:35.490 --> 00:01:38.070
+Your service level agreement.
+
+38
+00:01:38.070 --> 00:01:40.230
+For these reasons,
+you can in fact
+
+39
+00:01:40.230 --> 00:01:43.260
+set the threshold value
+to something different.
+
+40
+00:01:43.260 --> 00:01:45.960
+This small command
+here that I am showing
+
+41
+00:01:45.960 --> 00:01:49.110
+does the trick
+for us in MongoDB.
+
+42
+00:01:49.110 --> 00:01:51.570
+If you are in the
+financial trading business,
+
+43
+00:01:51.570 --> 00:01:54.930
+or your use case requires
+high speed processing,
+
+44
+00:01:54.930 --> 00:01:58.600
+your SLA's will probably be
+a few orders magnitude lower.
+
+45
+00:01:58.600 --> 00:02:02.400
+Therefore, you can set up that
+threshold to what you need.
+
+46
+00:02:02.400 --> 00:02:06.240
+The notion of slow queries,
+or operations for that matter,
+
+47
+00:02:06.240 --> 00:02:09.150
+in an application will be
+affected by your SLA's.
+
+48
+00:02:09.150 --> 00:02:12.330
+Any external dependency to
+services that you do not make
+
+49
+00:02:12.330 --> 00:02:16.470
+part of your stack, and
+therefore you cannot control.
+
+50
+00:02:16.470 --> 00:02:19.520
+The workload your
+application is subjected to,
+
+51
+00:02:19.520 --> 00:02:23.490
+and the infrastructure
+that you set in place.
+
+52
+00:02:23.490 --> 00:02:26.580
+All of these need
+to be considered.
+
+53
+00:02:26.580 --> 00:02:28.860
+When using [INAUDIBLE],
+we will look
+
+54
+00:02:28.860 --> 00:02:33.450
+into this topic from three
+different perspectives.
+
+55
+00:02:33.450 --> 00:02:36.580
+How much time does it take
+to read from the database?
+
+56
+00:02:36.580 --> 00:02:39.810
+Where should we be looking
+to resolve any issues
+
+57
+00:02:39.810 --> 00:02:42.480
+with the read response time?
+
+58
+00:02:42.480 --> 00:02:46.360
+How much time does it take
+to write the database?
+
+59
+00:02:46.360 --> 00:02:48.970
+Which components will affect
+the write performance?
+
+60
+00:02:48.970 --> 00:02:54.560
+And what indicators will we
+follow to deal with them?
+
+61
+00:02:54.560 --> 00:02:57.650
+Lastly, the end-to-end
+response analysis.
+
+62
+00:02:57.650 --> 00:02:59.660
+This is the
+cumulative time taken
+
+63
+00:02:59.660 --> 00:03:02.960
+to provide the response
+back to the client, when
+
+64
+00:03:02.960 --> 00:03:05.900
+multiple different
+operations in the database
+
+65
+00:03:05.900 --> 00:03:08.760
+need to be packaged together.
+
+66
+00:03:08.760 --> 00:03:11.420
+Not the response time of
+a single query or write
+
+67
+00:03:11.420 --> 00:03:13.460
+operation.
+
+68
+00:03:13.460 --> 00:03:16.790
+In this chapter, we will
+use sample application,
+
+69
+00:03:16.790 --> 00:03:20.960
+and analyze scenarios where we
+have to detect slow queries.
+
+70
+00:03:20.960 --> 00:03:24.530
+Situations where the response
+time degrades over time.
+
+71
+00:03:24.530 --> 00:03:26.390
+Or when a single
+operation impacts
+
+72
+00:03:26.390 --> 00:03:30.650
+expected load, and some
+other similar situations.
+
+73
+00:03:30.650 --> 00:03:33.290
+We will use the previously
+introduced tools
+
+74
+00:03:33.290 --> 00:03:36.420
+so we can diagnose
+these scenarios.
+
+75
+00:03:36.420 --> 00:03:40.150
+But in essence, this chapter
+is all about slowness.
+
+76
+00:03:40.150 --> 00:03:45.280
+How to identify, measure,
+and correct its occurrence.

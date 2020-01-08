@@ -1,0 +1,55 @@
+In this lesson, we'll begin our exploration of MongoDB.
+
+To do this we'll use Compass, which is the MongoDB GUI client.
+
+If you've not already done so, please open Compass and follow along as we move through this lesson.
+
+I've included instructions for download and launch of Compass in the lecture notes for this lesson.
+
+Compass provides a UI for viewing MongoDB databases and the documents they contain.
+
+It also supports the MongoDB query language, and enables us to read and write data using a number of conveniences for building queries.
+
+Here we're looking at Compass's connection screen.
+
+On the left side, you should see a navigation bar, with sections for Favorites and Recent Connections.
+
+In the center view here, you should see a form we can use to establish a connection to a MongoDB cluster.
+
+Please note that Compass is actively developed.
+
+There might be differences between the UI I show here and what you are seeing now.
+
+In a moment, we'll connect to a MongoDB cluster we have set up for this class.
+
+This cluster is running in Atlas, which is MongoDB's hosted MongoDB as a service platform.
+
+See the lecture notes for more information on MongoDB Atlas.
+
+Also don't worry about my use of the term cluster.
+
+If it is unfamiliar to you.
+
+For now, it's not important.
+
+In a later lesson, we'll dive into what a MongoDB cluster is.
+
+OK, so now we're ready to connect.
+
+You can see the hostname for our cluster here.
+
+I've also included it in the lecture notes below.
+
+We will connect on the default port of 27017.
+
+As the authentication method, we'll use username password.
+
+Please use the username m001-student.
+
+And the password m001-mongodb-basics We'll use admin as the authentication database, and specify Use System CA slash Atlas Deployment for the SSL field.
+
+This simply means that we will encrypt traffic between Compass and our Atlas cluster.
+
+Finally, before we press the connect button, please create a favorite for this connection that you can easily get back to.
+
+Now click Connect, and load the databases in the M001 class MongoDB deployment.

@@ -1,0 +1,260 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:00.499
+
+
+2
+00:00:00.499 --> 00:00:02.400
+Hi, my name is
+Sam, and I'm going
+
+3
+00:00:02.400 --> 00:00:05.520
+to talk to you about an
+exciting new tool for MongoDB
+
+4
+00:00:05.520 --> 00:00:07.650
+called MongoDB Compass.
+
+5
+00:00:07.650 --> 00:00:09.990
+Compass was developed
+with one goal in mind--
+
+6
+00:00:09.990 --> 00:00:13.380
+to give you a powerful user
+interface for understanding,
+
+7
+00:00:13.380 --> 00:00:16.309
+exploring, and editing
+your MongoDB data,
+
+8
+00:00:16.309 --> 00:00:18.990
+and providing you with insights
+into your current server
+
+9
+00:00:18.990 --> 00:00:20.460
+and query performance.
+
+10
+00:00:20.460 --> 00:00:22.910
+Let's jump right
+in and take a look.
+
+11
+00:00:22.910 --> 00:00:26.490
+MongoDB Compass was originally
+designed and developed
+
+12
+00:00:26.490 --> 00:00:29.230
+with the intention of being
+a full graphical shell
+
+13
+00:00:29.230 --> 00:00:31.200
+replacement for MongoDB.
+
+14
+00:00:31.200 --> 00:00:34.549
+Once you've downloaded and
+opened MongoDB Compass,
+
+15
+00:00:34.549 --> 00:00:36.090
+this is the first
+window you're going
+
+16
+00:00:36.090 --> 00:00:39.240
+to see, the Connect screen.
+
+17
+00:00:39.240 --> 00:00:42.510
+There's a bunch of options
+that we can fill out in order
+
+18
+00:00:42.510 --> 00:00:45.420
+to get connected to
+a MongoDB instance,
+
+19
+00:00:45.420 --> 00:00:49.230
+and the first one is the host
+name and the port of where
+
+20
+00:00:49.230 --> 00:00:51.120
+that instance is listening to.
+
+21
+00:00:51.120 --> 00:00:54.780
+So I'm actually going to use
+one of my recent connections
+
+22
+00:00:54.780 --> 00:00:59.070
+and connect to this
+IP on this port.
+
+23
+00:00:59.070 --> 00:01:00.990
+I also have the
+ability to connect
+
+24
+00:01:00.990 --> 00:01:05.040
+to MongoDBs that are running
+with authentication enabled,
+
+25
+00:01:05.040 --> 00:01:09.510
+such as a username and
+password, Kerberos or LDAP,
+
+26
+00:01:09.510 --> 00:01:12.870
+or whether they're
+enabled with SSL,
+
+27
+00:01:12.870 --> 00:01:16.350
+or simply I must use an SSH
+tunnel to connect to them.
+
+28
+00:01:16.350 --> 00:01:20.280
+Right here I just have a test
+instance running on a test
+
+29
+00:01:20.280 --> 00:01:23.160
+machine, and I don't have
+any authentication, SSL,
+
+30
+00:01:23.160 --> 00:01:26.190
+or SSH tunneling
+enabled, so I can just
+
+31
+00:01:26.190 --> 00:01:28.650
+go ahead and hit Connect.
+
+32
+00:01:28.650 --> 00:01:32.010
+Now once I've connected to my
+MongoDB instance, what you'll
+
+33
+00:01:32.010 --> 00:01:35.220
+immediately see is
+a list presented
+
+34
+00:01:35.220 --> 00:01:39.720
+to me of the database names
+within the MongoDB instance
+
+35
+00:01:39.720 --> 00:01:40.560
+itself.
+
+36
+00:01:40.560 --> 00:01:44.400
+In this case you'll see I
+have three-- admin, local,
+
+37
+00:01:44.400 --> 00:01:45.754
+and MongoDB.
+
+38
+00:01:45.754 --> 00:01:47.670
+You'll see I have some
+other information here,
+
+39
+00:01:47.670 --> 00:01:50.250
+such as the storage size
+of the databases, a number
+
+40
+00:01:50.250 --> 00:01:52.200
+of collections within
+those databases,
+
+41
+00:01:52.200 --> 00:01:55.080
+and the number of indexes
+on those collections.
+
+42
+00:01:55.080 --> 00:01:57.490
+If I do want to
+add a new database,
+
+43
+00:01:57.490 --> 00:01:59.310
+I can do so from this screen.
+
+44
+00:01:59.310 --> 00:02:02.070
+I simply just hit
+Create Database.
+
+45
+00:02:02.070 --> 00:02:04.500
+And what I'll need to do
+is fill in a new database
+
+46
+00:02:04.500 --> 00:02:07.050
+name and a new collection
+name, and then I
+
+47
+00:02:07.050 --> 00:02:11.130
+have the option of making it
+a capped collection or not.
+
+48
+00:02:11.130 --> 00:02:14.920
+And when I'm ready, I can go
+ahead and Create Database.
+
+49
+00:02:14.920 --> 00:02:17.250
+And you'll see that gets
+added to the list here.
+
+50
+00:02:17.250 --> 00:02:20.860
+If I do decide that I actually
+want to delete that database,
+
+51
+00:02:20.860 --> 00:02:22.890
+I can do that through
+the Compass interface
+
+52
+00:02:22.890 --> 00:02:25.380
+by clicking on
+the trash can icon
+
+53
+00:02:25.380 --> 00:02:28.290
+and simply typing in
+the name of the database
+
+54
+00:02:28.290 --> 00:02:30.380
+that I want to drop.

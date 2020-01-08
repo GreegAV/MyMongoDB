@@ -1,0 +1,65 @@
+In this lesson, we are going to talk about benchmarking.
+
+Now we are not going to be going through the full process of benchmarking.
+
+But basically just highlighting some things that you should take in consideration if you are going to benchmark MongoDB.
+
+Once we start analyzing a given software product like a database, operating system, or application server we need to understand the benefits that such component brings to our application.
+
+And for that we use benchmarking.
+
+Now there are different types how to perform benchmarking.
+
+Also, there's the other concept of bench marketing.
+
+Now there's a big difference between benchmarking and bench marketing.
+
+Both have related value, depending on the audience.
+
+But we will be focusing on the first one.
+
+The one that allows us to correlate with performance indicators and metrics that we can use to assess if a given product is actually good for our system or not.
+
+Benchmarking assumes that you are going to perform some sort of comparison.
+
+You can use publicly available test suites, and we're going to talk about a bunch of those, or you can also perform your own private testing that correlates better with your use case or application.
+
+Now there are different types for each kind of performance benchmarking that get more specific or more broad aspects of the benchmarking that you might be trying to do.
+
+So let's have a look to a few of them.
+
+We can perform low level benchmarking.
+
+Now what I mean by low level benchmarking, our benchmarking that are designed to look into file I/O performance, or scheduler performance, or even memory allocation and transfer speeds.
+
+There are benchmarking that look into thread performance, database server performance, transaction isolation, and multiple of other parameters.
+
+Tools like sysbench, or even iibench are good tools that allow you to go very deep into the low level benchmarking kind of testing.
+
+Now there's also another type of benchmarking, which is the database server benchmarking.
+
+Now these tests are more concerned about things like data set load, writes per second, reads per second, balanced workloads, read and write ratios.
+
+Things that will allow you to understand how a database will react with generic data sets, but will take into consideration the output of a given node, and look into metrics to correlate if there's been some sort of advantage or disadvantage of using a specific product.
+
+Some tools like YCSB, originally developed by Yahoo, or even the TCP ones, which are industry benchmarks in all it's sorts and different variations, are good test base that you can submit a database to.
+
+Now do not forget that a bunch of these tools that do database server benchmarking have been original developed for relational systems.
+
+And if you are testing those with MongoDB in mind, some variations might need to be applied because a lot of the different functionality you might be expecting does not behave in the same way.
+
+So if you're looking for YCSB, make sure that you look for a variation that correlates better to MongoDB, or does it perfect what MongoDB does to actually get some solid results?
+
+And then we also have distributed systems benchmarking, which for MongoDB is a big thing because given that we are a distributed database, it is important not only to look into a particular node, but also how things react under a distributed system.
+
+Here, you want to do very, very hard tests like linearization, serialization, fault tolerance, where we will look into a bunch of different perspectives on how things occur over time, how we can deal with the serialization of requests, the linearization of reads and writes.
+
+And also, when we have different DataNodes.
+
+And if those nodes fail, how does the overall system behave under those conditions?
+
+You can do that your own set of testing for distributed systems.
+
+Now there are very good data sets out there like iBench, which is more related to Hadoop environments, and Jepsen, which actually does a very nice set of reports on how different databases react under a very specific setting of conditions.
+
+In this case, we actually include Jepsen tests in our MongoDB build continuous integration tooling.

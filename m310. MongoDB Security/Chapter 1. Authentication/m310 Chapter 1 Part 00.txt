@@ -1,0 +1,51 @@
+Hi I'm Kirby and I'll be your instructor for this course.
+
+Security is a key aspect of any mission critical application and enterprise environment.
+
+During this course we're going to cover what security features MongoDB has to offer, and the best practices associated with administering a secure deployment.
+
+This course is three weeks long.
+
+Each week we'll release a new lesson video, typically accompanied by a quiz to assess your learning of the material.
+
+At the end of each week there will be a set of homework exercises.
+
+Let's go ahead and cover a few of the logistics of this course.
+
+Target audience.
+
+This is considered an advanced course.
+
+It's expected that you already have an understanding of how to install and run MongoDB, set up a replica set or sharded cluster, and have a good understanding of the MongoDB query language.
+
+How does grading work?
+
+There are quizzes, homeworks, and a final exam as deliverables on your part of the course.
+
+Quizzes exist as a formative measure to make sure you understand the content.
+
+But your grade will be based on how well you do on the homeworks and on the final exam, each of these being worth 50% of your final grade.
+
+I'd highly recommend you take advantage of the discussion forums.
+
+We have very experienced teaching assistants who are there to help answer your questions.
+
+And your fellow classmates are also there to help answer your questions and are very often helpful and knowledgeable resources.
+
+Based on our experience, we've seen that students who perform best in the course are those who take advantage of the discussion forums.
+
+As far as course content is concerned, we'll take a deep dive into the different authentication mechanisms that MongoDB provides.
+
+We'll talk about MongoDB's different authorization models and how to configure it to your needs.
+
+We'll then cover how to configure and enable encryption for your database.
+
+After that we'll discuss auditing capabilities that MongoDb provides.
+
+And finally, we'll discuss some security best practices that anyone running a production system should follow.
+
+By the end of this course, you should feel confident that you can deploy a secure MongoDB deployment where you can configure the role based authorization model to your needs, set up encryption, do proper auditing, and follow security best practices.
+
+With all that being said, we're super excited to have you as a student in this course.
+
+Best of luck.

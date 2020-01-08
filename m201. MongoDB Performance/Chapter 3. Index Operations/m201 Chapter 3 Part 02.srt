@@ -1,0 +1,659 @@
+
+1
+00:00:00.000 --> 00:00:00.600
+
+
+2
+00:00:00.600 --> 00:00:04.790
+In this lesson, we're going
+to look at the explain method.
+
+3
+00:00:04.790 --> 00:00:07.250
+And we're going to talk about
+what kind of information
+
+4
+00:00:07.250 --> 00:00:11.750
+explain provides us, how it,
+works what this output looks
+
+5
+00:00:11.750 --> 00:00:13.910
+like on sharded
+cluster, and we'll also
+
+6
+00:00:13.910 --> 00:00:17.240
+see how to use explain
+in MongoDB Compass.
+
+7
+00:00:17.240 --> 00:00:19.130
+Using explain on a
+query is the best way
+
+8
+00:00:19.130 --> 00:00:22.560
+to analyze what happens
+when the query is executed.
+
+9
+00:00:22.560 --> 00:00:24.140
+Explain can also
+be used to tell us
+
+10
+00:00:24.140 --> 00:00:27.470
+what would happen without
+the query being executed.
+
+11
+00:00:27.470 --> 00:00:30.054
+More on those modes of operation
+a little later in the lesson.
+
+12
+00:00:30.054 --> 00:00:31.553
+Here's all the
+different information
+
+13
+00:00:31.553 --> 00:00:33.020
+that explain can tell us.
+
+14
+00:00:33.020 --> 00:00:35.450
+It can tell us, is our
+query using the index
+
+15
+00:00:35.450 --> 00:00:37.140
+that we expected?
+
+16
+00:00:37.140 --> 00:00:39.740
+Is our index
+providing us a sort?
+
+17
+00:00:39.740 --> 00:00:42.140
+Can our index
+provide a projection?
+
+18
+00:00:42.140 --> 00:00:44.120
+How selective is our index?
+
+19
+00:00:44.120 --> 00:00:47.040
+And it can also tell us,
+what's the most expensive stage
+
+20
+00:00:47.040 --> 00:00:48.670
+in our query plan?
+
+21
+00:00:48.670 --> 00:00:51.620
+Running explain is as easy as
+appending the explain method
+
+22
+00:00:51.620 --> 00:00:53.760
+to the end of our query.
+
+23
+00:00:53.760 --> 00:00:56.630
+However, that mode of operation
+has a few limitations.
+
+24
+00:00:56.630 --> 00:00:58.510
+So if you have more
+complex commands,
+
+25
+00:00:58.510 --> 00:01:01.470
+or if you need to
+rerun several queries,
+
+26
+00:01:01.470 --> 00:01:04.519
+it's suggested that we
+create an explainable object.
+
+27
+00:01:04.519 --> 00:01:08.810
+From this explainable object, we
+can then run our query like so.
+
+28
+00:01:08.810 --> 00:01:10.820
+We can also run multiple
+queries right off
+
+29
+00:01:10.820 --> 00:01:14.120
+of the same explainable
+object, which is really handy.
+
+30
+00:01:14.120 --> 00:01:15.980
+For both of these
+examples, the shell
+
+31
+00:01:15.980 --> 00:01:18.650
+would return what would
+happen without actually
+
+32
+00:01:18.650 --> 00:01:20.480
+executing the query.
+
+33
+00:01:20.480 --> 00:01:22.122
+Now, this might
+sound silly at first.
+
+34
+00:01:22.122 --> 00:01:24.080
+However, if you're dealing
+with a server that's
+
+35
+00:01:24.080 --> 00:01:27.230
+under tremendous load, you might
+want to validate your command
+
+36
+00:01:27.230 --> 00:01:29.027
+before executing it.
+
+37
+00:01:29.027 --> 00:01:30.860
+This is also the reason
+why it's the default
+
+38
+00:01:30.860 --> 00:01:33.260
+mode of operation for explain.
+
+39
+00:01:33.260 --> 00:01:36.140
+Passing the parameter
+query planner to explain
+
+40
+00:01:36.140 --> 00:01:38.220
+does the exact
+same thing as if we
+
+41
+00:01:38.220 --> 00:01:40.310
+ran explain with no parameters.
+
+42
+00:01:40.310 --> 00:01:42.290
+This is the default behavior.
+
+43
+00:01:42.290 --> 00:01:47.390
+We can also pass executionStats
+as an argument to explain.
+
+44
+00:01:47.390 --> 00:01:48.900
+This will execute
+the query and then
+
+45
+00:01:48.900 --> 00:01:52.120
+return different
+statistics about the query.
+
+46
+00:01:52.120 --> 00:01:54.270
+And finally, we have
+allPlansExecution.
+
+47
+00:01:54.270 --> 00:01:58.530
+This is the most verbose way
+that we can get explain output.
+
+48
+00:01:58.530 --> 00:01:59.952
+We generally run
+this when we want
+
+49
+00:01:59.952 --> 00:02:02.160
+to look at the alternative
+plans that were considered
+
+50
+00:02:02.160 --> 00:02:03.990
+by the query planner,
+but got rejected
+
+51
+00:02:03.990 --> 00:02:06.060
+in favor of the winning plan.
+
+52
+00:02:06.060 --> 00:02:07.920
+But remember, both
+of these commands
+
+53
+00:02:07.920 --> 00:02:11.629
+actually execute the queries,
+whereas this command does not.
+
+54
+00:02:11.629 --> 00:02:13.212
+Let's go ahead and
+jump into the shell
+
+55
+00:02:13.212 --> 00:02:15.460
+and look at some examples.
+
+56
+00:02:15.460 --> 00:02:18.850
+So go ahead and use
+the m201 database,
+
+57
+00:02:18.850 --> 00:02:20.970
+and then we'll create our
+regular explain object
+
+58
+00:02:20.970 --> 00:02:22.447
+on the people collection.
+
+59
+00:02:22.447 --> 00:02:24.780
+But we'll go ahead and create
+another explainable object
+
+60
+00:02:24.780 --> 00:02:30.540
+for executionStats, and even
+another for allPlansExecution.
+
+61
+00:02:30.540 --> 00:02:32.970
+And here we can go ahead
+and execute our query
+
+62
+00:02:32.970 --> 00:02:35.250
+on the explainable
+object, where we're going
+
+63
+00:02:35.250 --> 00:02:37.000
+to look at execution stats.
+
+64
+00:02:37.000 --> 00:02:40.140
+And so from this output we
+can go up to the winning plan,
+
+65
+00:02:40.140 --> 00:02:42.780
+and see that the winning plan
+is to do a collection scan.
+
+66
+00:02:42.780 --> 00:02:45.530
+And we can also see
+some execution stats.
+
+67
+00:02:45.530 --> 00:02:48.540
+We can see that we had to
+look at 50,000 documents
+
+68
+00:02:48.540 --> 00:02:51.925
+to return seven, and we
+looked at 0 index keys.
+
+69
+00:02:51.925 --> 00:02:53.550
+And by this time, we
+know that we don't
+
+70
+00:02:53.550 --> 00:02:55.590
+want to do collection scans.
+
+71
+00:02:55.590 --> 00:02:57.660
+We should probably
+create an index instead.
+
+72
+00:02:57.660 --> 00:02:59.020
+So let's do that.
+
+73
+00:02:59.020 --> 00:03:02.850
+And here we're creating an
+index on the family name.
+
+74
+00:03:02.850 --> 00:03:05.960
+And now we can rerun
+that same query.
+
+75
+00:03:05.960 --> 00:03:07.470
+And now we can go up here.
+
+76
+00:03:07.470 --> 00:03:09.090
+Now we can see that
+our winning plan
+
+77
+00:03:09.090 --> 00:03:12.490
+is to do an index scan
+followed by a fetch.
+
+78
+00:03:12.490 --> 00:03:14.460
+And now under
+execution stats, we're
+
+79
+00:03:14.460 --> 00:03:16.830
+only looking at
+about 800 documents,
+
+80
+00:03:16.830 --> 00:03:19.740
+examining 800 keys to
+return our seven documents.
+
+81
+00:03:19.740 --> 00:03:22.160
+Way better than
+the 50,000 before.
+
+82
+00:03:22.160 --> 00:03:24.870
+It's important to point out that
+for our most optimized queries,
+
+83
+00:03:24.870 --> 00:03:28.500
+we want the total documents
+examined and the nReturned,
+
+84
+00:03:28.500 --> 00:03:30.670
+to be very close
+to the same number.
+
+85
+00:03:30.670 --> 00:03:32.220
+Similarly, with
+12 keys examined,
+
+86
+00:03:32.220 --> 00:03:34.930
+we also want this to be very
+close the amount of documents
+
+87
+00:03:34.930 --> 00:03:36.720
+we actually return.
+
+88
+00:03:36.720 --> 00:03:38.790
+But we know this
+is always possible.
+
+89
+00:03:38.790 --> 00:03:40.740
+So the general rule
+of thumb is that you
+
+90
+00:03:40.740 --> 00:03:44.370
+want these numbers to be close
+to each other for your queries
+
+91
+00:03:44.370 --> 00:03:47.070
+that are ran most frequently.
+
+92
+00:03:47.070 --> 00:03:48.810
+Now let's go and
+create another index,
+
+93
+00:03:48.810 --> 00:03:51.310
+and see how this affects
+our explain output.
+
+94
+00:03:51.310 --> 00:03:53.790
+So we'll rerun the same query.
+
+95
+00:03:53.790 --> 00:03:57.210
+And now when we do so,
+there's a new field up here.
+
+96
+00:03:57.210 --> 00:04:00.150
+And this field is
+called rejectedPlans.
+
+97
+00:04:00.150 --> 00:04:03.709
+So we still have our
+winningPlan field,
+
+98
+00:04:03.709 --> 00:04:06.000
+which includes the fact that
+we're doing an index scan,
+
+99
+00:04:06.000 --> 00:04:07.800
+followed by a fetch.
+
+100
+00:04:07.800 --> 00:04:09.420
+But now we also
+have rejected plans,
+
+101
+00:04:09.420 --> 00:04:11.594
+which were the other plans
+that were considered.
+
+102
+00:04:11.594 --> 00:04:13.260
+Before, we never had
+this, because there
+
+103
+00:04:13.260 --> 00:04:16.140
+were no other indexes that
+the query planner was even
+
+104
+00:04:16.140 --> 00:04:17.220
+considering.
+
+105
+00:04:17.220 --> 00:04:19.990
+Now, there are two indexes
+for them to consider.
+
+106
+00:04:19.990 --> 00:04:24.900
+There's first the
+state, last name index,
+
+107
+00:04:24.900 --> 00:04:27.150
+and then there's also
+our original index,
+
+108
+00:04:27.150 --> 00:04:29.530
+which is on just last name.
+
+109
+00:04:29.530 --> 00:04:31.950
+And as we can see, we now
+have a much better index
+
+110
+00:04:31.950 --> 00:04:35.160
+where we have a really, really
+great ratio, and an even better
+
+111
+00:04:35.160 --> 00:04:37.050
+execution time.
+
+112
+00:04:37.050 --> 00:04:38.700
+We can also look at sorts.
+
+113
+00:04:38.700 --> 00:04:41.360
+Here I'm appending explain
+to the end of our query,
+
+114
+00:04:41.360 --> 00:04:44.010
+so that we can store a variable
+and access some of the fields
+
+115
+00:04:44.010 --> 00:04:45.636
+more easily.
+
+116
+00:04:45.636 --> 00:04:47.010
+In this case, I
+can look directly
+
+117
+00:04:47.010 --> 00:04:49.290
+at the execution status field.
+
+118
+00:04:49.290 --> 00:04:52.920
+And in here, we can see that
+we're doing an index scan.
+
+119
+00:04:52.920 --> 00:04:56.560
+But after our index scan,
+we're doing a fetch.
+
+120
+00:04:56.560 --> 00:05:00.400
+And after that fetch, we're
+doing sort key generator.
+
+121
+00:05:00.400 --> 00:05:03.330
+And this means that we're
+doing an in memory sort.
+
+122
+00:05:03.330 --> 00:05:06.150
+And this is because we don't
+have any indexes to support
+
+123
+00:05:06.150 --> 00:05:07.740
+our sorting.
+
+124
+00:05:07.740 --> 00:05:10.270
+So there's two things I
+want to point out here.
+
+125
+00:05:10.270 --> 00:05:12.110
+First, there is
+memory usage, which
+
+126
+00:05:12.110 --> 00:05:15.120
+is how much memory
+was used by the sort.
+
+127
+00:05:15.120 --> 00:05:19.040
+Here, we are using about 2.8k.
+
+128
+00:05:19.040 --> 00:05:20.910
+And there's also
+the memory limit.
+
+129
+00:05:20.910 --> 00:05:22.860
+And this is 32 megabytes.
+
+130
+00:05:22.860 --> 00:05:24.810
+And what this means
+is, is if we ever
+
+131
+00:05:24.810 --> 00:05:28.380
+have a sort that uses
+more than 32 megabytes,
+
+132
+00:05:28.380 --> 00:05:32.240
+then the server is going
+to cancel that query.
+
+133
+00:05:32.240 --> 00:05:33.810
+And so we can do
+some simple math.
+
+134
+00:05:33.810 --> 00:05:37.080
+We can say, OK, how many
+documents are we returning?
+
+135
+00:05:37.080 --> 00:05:39.724
+What's the average
+size of our documents?
+
+136
+00:05:39.724 --> 00:05:41.640
+And if we multiply those
+two numbers together,
+
+137
+00:05:41.640 --> 00:05:43.980
+and that's bigger
+than 32 megabytes,
+
+138
+00:05:43.980 --> 00:05:47.870
+then we can predict that
+the sort is going to cancel.

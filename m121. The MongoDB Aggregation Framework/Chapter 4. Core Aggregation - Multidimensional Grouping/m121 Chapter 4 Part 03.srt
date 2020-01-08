@@ -1,0 +1,773 @@
+
+1
+00:00:00.000 --> 00:00:00.660
+
+
+2
+00:00:00.660 --> 00:00:04.059
+So now let's have a look into
+buckets, or better saying,
+
+3
+00:00:04.059 --> 00:00:06.750
+looking to bucketing strategies.
+
+4
+00:00:06.750 --> 00:00:11.160
+Now bucketing is a very common
+operation associated facets,
+
+5
+00:00:11.160 --> 00:00:14.970
+where we group data
+by a range of values,
+
+6
+00:00:14.970 --> 00:00:17.910
+as opposed for
+individual values.
+
+7
+00:00:17.910 --> 00:00:21.810
+So basically, we group
+sorts of documents
+
+8
+00:00:21.810 --> 00:00:29.490
+based on some specific
+brackets or boundaries where
+
+9
+00:00:29.490 --> 00:00:33.160
+our documents will fit in
+based on a particular value
+
+10
+00:00:33.160 --> 00:00:37.110
+comprehended on those ranges.
+
+11
+00:00:37.110 --> 00:00:40.650
+In our example, we might
+want to bucket companies
+
+12
+00:00:40.650 --> 00:00:42.810
+based on the size
+of their workforce,
+
+13
+00:00:42.810 --> 00:00:45.270
+the number of employees.
+
+14
+00:00:45.270 --> 00:00:49.680
+Now to do that, if we
+look into for example,
+
+15
+00:00:49.680 --> 00:00:52.470
+the range of values that
+we have in our data sets,
+
+16
+00:00:52.470 --> 00:00:54.960
+we can see that we go from
+the very large workforce
+
+17
+00:00:54.960 --> 00:00:57.630
+for companies to
+companies that don't even
+
+18
+00:00:57.630 --> 00:01:01.620
+have number of employees
+set or are set to 0.
+
+19
+00:01:01.620 --> 00:01:05.290
+And this will give us the
+ranges and an opportunity
+
+20
+00:01:05.290 --> 00:01:07.890
+to establish boundaries
+for those buckets,
+
+21
+00:01:07.890 --> 00:01:10.410
+if we want to group the
+different companies based
+
+22
+00:01:10.410 --> 00:01:12.750
+on the number of
+employees that they have.
+
+23
+00:01:12.750 --> 00:01:17.640
+But then again, not individual
+values, but ranges of values.
+
+24
+00:01:17.640 --> 00:01:22.890
+So to put this in place,
+let's use a simple aggregation
+
+25
+00:01:22.890 --> 00:01:24.400
+example.
+
+26
+00:01:24.400 --> 00:01:26.880
+So in my particular
+case, for this example,
+
+27
+00:01:26.880 --> 00:01:31.920
+we're going to have the
+companies founded after 1980.
+
+28
+00:01:31.920 --> 00:01:35.610
+And we are going to have
+on the same data set
+
+29
+00:01:35.610 --> 00:01:40.770
+only companies that have a
+number of employees value sets.
+
+30
+00:01:40.770 --> 00:01:42.720
+Basically, not no.
+
+31
+00:01:42.720 --> 00:01:46.020
+And then we are going to
+bucket those results using
+
+32
+00:01:46.020 --> 00:01:49.020
+a new stage of the
+aggregation pipeline
+
+33
+00:01:49.020 --> 00:01:51.210
+called buckets,
+where are we going
+
+34
+00:01:51.210 --> 00:01:54.840
+to be using a group
+by in boundary fields
+
+35
+00:01:54.840 --> 00:01:57.540
+to define exactly how our
+buckets are going to be looking
+
+36
+00:01:57.540 --> 00:01:59.550
+like, and which
+field we are going
+
+37
+00:01:59.550 --> 00:02:04.530
+to be using for our
+grouping, which in this case,
+
+38
+00:02:04.530 --> 00:02:06.690
+is number of employees.
+
+39
+00:02:06.690 --> 00:02:11.220
+Once we run this, we can see
+that we are going to have
+
+40
+00:02:11.220 --> 00:02:16.590
+a result which contains an _id
+field pointing to the bucket
+
+41
+00:02:16.590 --> 00:02:19.530
+name or bucket
+value in this case,
+
+42
+00:02:19.530 --> 00:02:22.740
+where we can see a count of the
+number of companies that fall
+
+43
+00:02:22.740 --> 00:02:24.420
+into that bucket.
+
+44
+00:02:24.420 --> 00:02:27.090
+For the following
+bucket, which is 20,
+
+45
+00:02:27.090 --> 00:02:30.450
+we see a different count, 1,172.
+
+46
+00:02:30.450 --> 00:02:33.990
+Now the boundaries
+define the brackets
+
+47
+00:02:33.990 --> 00:02:39.600
+where the lower bound in this
+case, here 0, is inclusive,
+
+48
+00:02:39.600 --> 00:02:43.690
+and upper bound, 20,
+will be exclusive.
+
+49
+00:02:43.690 --> 00:02:49.495
+So meaning that there
+are 5,447 companies that
+
+50
+00:02:49.495 --> 00:02:55.350
+have been founded after
+1980, which have either
+
+51
+00:02:55.350 --> 00:02:59.250
+0 up to 19 employees.
+
+52
+00:02:59.250 --> 00:03:07.560
+In the case of from 20 to
+50, we have 1,172, 50 to 100,
+
+53
+00:03:07.560 --> 00:03:11.530
+we have 652, and so forth.
+
+54
+00:03:11.530 --> 00:03:14.250
+Now an important
+aspect to keep in mind
+
+55
+00:03:14.250 --> 00:03:17.460
+is that if we have
+documents with the field
+
+56
+00:03:17.460 --> 00:03:21.750
+number of employees in this
+case, which we are grouping
+
+57
+00:03:21.750 --> 00:03:29.490
+by our boundaries array
+here, these field types
+
+58
+00:03:29.490 --> 00:03:31.080
+need to be the same.
+
+59
+00:03:31.080 --> 00:03:36.510
+Meaning that if we have a number
+of employees that doesn't have
+
+60
+00:03:36.510 --> 00:03:41.760
+in this case, a numerical
+value, here infinity
+
+61
+00:03:41.760 --> 00:03:44.490
+is a double value that
+we are using to define,
+
+62
+00:03:44.490 --> 00:03:48.660
+or even if they fall
+outside the buckets,
+
+63
+00:03:48.660 --> 00:03:51.140
+we will have an error generated.
+
+64
+00:03:51.140 --> 00:03:52.740
+Let's see an example of that.
+
+65
+00:03:52.740 --> 00:03:56.850
+So let's say that we have
+this particular document
+
+66
+00:03:56.850 --> 00:04:01.500
+on this call collection
+where x equals a string of a.
+
+67
+00:04:01.500 --> 00:04:04.200
+If we run this
+aggregation pipeline
+
+68
+00:04:04.200 --> 00:04:06.030
+on this particular
+collection where
+
+69
+00:04:06.030 --> 00:04:12.080
+we bucket grouping by x, and
+with the boundaries of 0,
+
+70
+00:04:12.080 --> 00:04:15.630
+50, and 100, we will
+get back an error saying
+
+71
+00:04:15.630 --> 00:04:19.560
+that the switch will not find
+a matching branch for an input,
+
+72
+00:04:19.560 --> 00:04:22.980
+and no default was specified.
+
+73
+00:04:22.980 --> 00:04:25.350
+Basically what it's
+trying to say here
+
+74
+00:04:25.350 --> 00:04:32.370
+is that our boundaries do not
+have a place for our documents.
+
+75
+00:04:32.370 --> 00:04:35.560
+Since our document is
+defined with a value x equals
+
+76
+00:04:35.560 --> 00:04:40.860
+a, and our boundaries are
+from 0 to 50, 50 to 100,
+
+77
+00:04:40.860 --> 00:04:45.540
+we do not have a place to
+put this particular document.
+
+78
+00:04:45.540 --> 00:04:50.490
+Therefore, we error out saying
+that we cannot find a place
+
+79
+00:04:50.490 --> 00:04:54.390
+to put it inside the buckets
+that we are asking for.
+
+80
+00:04:54.390 --> 00:04:59.190
+To avoid these
+scenarios, bucket stage
+
+81
+00:04:59.190 --> 00:05:06.300
+contains a default option
+where we can define field,
+
+82
+00:05:06.300 --> 00:05:09.480
+or in this case, the name
+of a bucket, which doesn't
+
+83
+00:05:09.480 --> 00:05:12.990
+fit the described boundaries.
+
+84
+00:05:12.990 --> 00:05:14.490
+So in our match
+query, you are going
+
+85
+00:05:14.490 --> 00:05:18.420
+to change it slightly
+to include again,
+
+86
+00:05:18.420 --> 00:05:22.470
+all founded
+companies after 1980.
+
+87
+00:05:22.470 --> 00:05:24.780
+But now let's remove
+the restriction
+
+88
+00:05:24.780 --> 00:05:31.410
+on having our nots the no values
+for the number of employees.
+
+89
+00:05:31.410 --> 00:05:34.260
+So basically what it is
+saying is if a company does
+
+90
+00:05:34.260 --> 00:05:40.020
+not that field particular set,
+and since we wouldn't find
+
+91
+00:05:40.020 --> 00:05:45.600
+a bucket, a manual bucket to
+place that particular field,
+
+92
+00:05:45.600 --> 00:05:49.850
+we will be placing it in other.
+
+93
+00:05:49.850 --> 00:05:56.700
+Once we run this, we can
+see that the normal buckets,
+
+94
+00:05:56.700 --> 00:06:03.090
+with it's previously
+provided number
+
+95
+00:06:03.090 --> 00:06:08.670
+of documents that fit those
+buckets, are correctly placed.
+
+96
+00:06:08.670 --> 00:06:11.880
+And for all other
+field values that
+
+97
+00:06:11.880 --> 00:06:14.130
+are not contained
+within this range
+
+98
+00:06:14.130 --> 00:06:16.320
+or have a different
+data type, we
+
+99
+00:06:16.320 --> 00:06:20.880
+will place it on other and
+with its [INAUDIBLE] count.
+
+100
+00:06:20.880 --> 00:06:24.020
+Another important
+aspect of bucket stage
+
+101
+00:06:24.020 --> 00:06:27.260
+and in regard to boundaries
+defined manually,
+
+102
+00:06:27.260 --> 00:06:30.060
+is that all values
+inside the array that
+
+103
+00:06:30.060 --> 00:06:34.770
+defines our boundaries need
+to have the same data type.
+
+104
+00:06:34.770 --> 00:06:37.170
+In case that we do
+not do so, we'll
+
+105
+00:06:37.170 --> 00:06:40.200
+get an error back saying that
+all values in the boundaries
+
+106
+00:06:40.200 --> 00:06:44.220
+option to bucket must
+have the same type.
+
+107
+00:06:44.220 --> 00:06:46.650
+And in our case, it
+found conflicting types
+
+108
+00:06:46.650 --> 00:06:49.050
+between string and double.
+
+109
+00:06:49.050 --> 00:06:52.190
+So young padawans, be
+careful about that.
+
+110
+00:06:52.190 --> 00:06:55.860
+Once defining our manual
+boundaries for our buckets,
+
+111
+00:06:55.860 --> 00:07:00.060
+make sure that our boundary's
+array only contains
+
+112
+00:07:00.060 --> 00:07:03.090
+values of the same data type.
+
+113
+00:07:03.090 --> 00:07:06.690
+The output result
+of the bucket stage
+
+114
+00:07:06.690 --> 00:07:09.510
+will be this plain
+simple document,
+
+115
+00:07:09.510 --> 00:07:13.110
+where we're going to have the
+underscore ID and accounts.
+
+116
+00:07:13.110 --> 00:07:15.557
+That's pretty much
+straightforward.
+
+117
+00:07:15.557 --> 00:07:17.640
+But let's say that we would
+like to have something
+
+118
+00:07:17.640 --> 00:07:18.960
+a little bit more elaborate.
+
+119
+00:07:18.960 --> 00:07:21.690
+Now the other option
+that bucket stage
+
+120
+00:07:21.690 --> 00:07:24.660
+allows us to set is
+our output field,
+
+121
+00:07:24.660 --> 00:07:26.880
+or how the output
+would be looking like.
+
+122
+00:07:26.880 --> 00:07:31.170
+The shape of our output
+result for this facet.
+
+123
+00:07:31.170 --> 00:07:34.440
+In our case, let's assume that
+we don't want just a total.
+
+124
+00:07:34.440 --> 00:07:35.190
+That's fine.
+
+125
+00:07:35.190 --> 00:07:36.810
+And with sum 1, that's OK.
+
+126
+00:07:36.810 --> 00:07:40.050
+But we also want to get
+back the average value
+
+127
+00:07:40.050 --> 00:07:45.870
+of the number of employees, or
+even a set of all categories
+
+128
+00:07:45.870 --> 00:07:48.840
+that match that
+particular bucket.
+
+129
+00:07:48.840 --> 00:07:53.010
+That can be set through this
+optional field output, where
+
+130
+00:07:53.010 --> 00:07:55.830
+we define exactly that.
+
+131
+00:07:55.830 --> 00:07:58.710
+In this case, the
+aggregate operators that
+
+132
+00:07:58.710 --> 00:08:01.710
+will give me that
+particular grouping.
+
+133
+00:08:01.710 --> 00:08:05.850
+Once we run this particular
+aggregation pipeline,
+
+134
+00:08:05.850 --> 00:08:10.800
+in a pretty fashion we will
+see that we will get the list,
+
+135
+00:08:10.800 --> 00:08:13.560
+or in this case, a
+set of all categories
+
+136
+00:08:13.560 --> 00:08:19.980
+that match the other bucket
+with a total of 4,522.
+
+137
+00:08:19.980 --> 00:08:24.550
+An average of no, because
+averaging no by no gives me no.
+
+138
+00:08:24.550 --> 00:08:26.620
+That's pretty OK.
+
+139
+00:08:26.620 --> 00:08:28.950
+But in the case of the
+bucket for companies
+
+140
+00:08:28.950 --> 00:08:35.820
+above 1,000 employees,
+we have the total of 137.
+
+141
+00:08:35.820 --> 00:08:41.820
+The average being a
+little bit above 13,000
+
+142
+00:08:41.820 --> 00:08:46.890
+in all sorts of different
+categories for those companies.
+
+143
+00:08:46.890 --> 00:08:52.300
+Same thing for the
+500 buckets and so on.
+
+144
+00:08:52.300 --> 00:08:55.530
+So to recap, we have
+a new operator stage
+
+145
+00:08:55.530 --> 00:09:00.930
+or new mongodb aggregation
+stage called dollar bucket
+
+146
+00:09:00.930 --> 00:09:05.430
+that we need to set the group
+by elements specifying the field
+
+147
+00:09:05.430 --> 00:09:08.460
+that we want to group by.
+
+148
+00:09:08.460 --> 00:09:11.130
+We need to specify
+the boundaries, which
+
+149
+00:09:11.130 --> 00:09:15.010
+tells us the brackets in
+which our documents will
+
+150
+00:09:15.010 --> 00:09:17.750
+be grouping by.
+
+151
+00:09:17.750 --> 00:09:21.120
+Don't forget they need
+to be the same data type.
+
+152
+00:09:21.120 --> 00:09:27.030
+We can specify a default bucket
+for all documents that do not
+
+153
+00:09:27.030 --> 00:09:29.580
+fit the boundaries or
+the buckets defined
+
+154
+00:09:29.580 --> 00:09:31.650
+by the boundaries that
+we are specifying.
+
+155
+00:09:31.650 --> 00:09:34.800
+They are all going to be
+placed under the default
+
+156
+00:09:34.800 --> 00:09:37.620
+with the appropriate
+value associated to it.
+
+157
+00:09:37.620 --> 00:09:41.100
+And also we can define a
+different document shape
+
+158
+00:09:41.100 --> 00:09:45.300
+for our output by specifying
+different operators
+
+159
+00:09:45.300 --> 00:09:48.570
+that we might find useful,
+given the bucketing
+
+160
+00:09:48.570 --> 00:09:50.390
+that we are doing.
